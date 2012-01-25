@@ -108,13 +108,25 @@ public class MultiChannelFilterTest {
     }
 
     @Test
-    public void testProperChannelGetsSetAnAggregationState() throws Exception {
+    public void testALLGetsSetWhenThereIsNoResolver() throws Exception {
+        // GIVEN
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://bla/context/root.selector.html"));
+
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        assertEquals(ChannelResolver.ALL, MgnlContext.getAggregationState().getChannel().getName());
+    }
+
+    @Test
+    public void testChannelFromResolverGetsSet() throws Exception {
         // GIVEN
         final ChannelConfiguration unresolvedChannel = new ChannelConfiguration();
         unresolvedChannel.setResolver(new TestChannelResolver(ChannelResolver.UNRESOLVED));
         channelManager.addChannel(ChannelResolver.UNRESOLVED, unresolvedChannel);
 
-        final ChannelConfiguration resolvedChannel  = new ChannelConfiguration();
+        final ChannelConfiguration resolvedChannel = new ChannelConfiguration();
 
         final String testChannel = "test";
         resolvedChannel.setResolver(new TestChannelResolver(testChannel));
@@ -128,4 +140,25 @@ public class MultiChannelFilterTest {
         // THEN
         assertEquals(testChannel, MgnlContext.getAggregationState().getChannel().getName());
     }
+
+    @Test
+    public void testChannelParameterValueGetsSet() throws Exception {
+        // GIVEN
+        final ChannelConfiguration resolvedChannel = new ChannelConfiguration();
+        final String testChannel = "channelFromResolver";
+        resolvedChannel.setResolver(new TestChannelResolver(testChannel));
+        channelManager.addChannel(testChannel, resolvedChannel);
+
+        final String channelParamValue = "channelFromParam";
+        MgnlContext.setAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, channelParamValue);
+
+        when(request.getRequestURL()).thenReturn(new StringBuffer("http://bla/context/root.selector.html"));
+
+        // WHEN
+        filter.doFilter(request, response, chain);
+
+        // THEN
+        assertEquals(channelParamValue, MgnlContext.getAggregationState().getChannel().getName());
+    }
+
 }

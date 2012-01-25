@@ -61,6 +61,8 @@ import org.slf4j.LoggerFactory;
 public class MultiChannelFilter extends OncePerRequestAbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(MultiChannelFilter.class);
 
+    public static String ENFORCE_CHANNEL_PARAMETER = "mgnlChannel";
+
     private ChannelManager channelManager;
 
     @Inject
@@ -82,19 +84,26 @@ public class MultiChannelFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     protected String resolveChannel(HttpServletRequest request) {
-        ChannelConfiguration currentChannelConfig;
-        ChannelResolver resolver;
-        final Iterator<ChannelConfiguration> channelConfigIterator = channelManager.getChannels().values().iterator();
-        String channelName = ChannelResolver.UNRESOLVED;
+        String channelName;
+        final String channelParameterValue = MgnlContext.getAttribute(ENFORCE_CHANNEL_PARAMETER);
+        if (channelParameterValue != null) {
+            channelName = channelParameterValue;
+        } else {
+            channelName = ChannelResolver.UNRESOLVED;
+            final Iterator<ChannelConfiguration> channelConfigIterator =
+                    channelManager.getChannels().values().iterator();
 
-        // proceed as long as it could not be resolved - first match wins
-        while (channelConfigIterator.hasNext() && channelName == ChannelResolver.UNRESOLVED) {
-            currentChannelConfig = channelConfigIterator.next();
-            resolver = currentChannelConfig.getResolver();
+            ChannelConfiguration currentChannelConfig;
+            ChannelResolver resolver;
+            // proceed as long as it could not be resolved - first match wins
+            while (channelConfigIterator.hasNext() && channelName == ChannelResolver.UNRESOLVED) {
+                currentChannelConfig = channelConfigIterator.next();
+                resolver = currentChannelConfig.getResolver();
 
-            if (resolver != null) {
-                channelName = resolver.resolveChannel(request);
-                log.debug("Type {} resolved channel to '{}'", resolver.getClass().getName(), channelName);
+                if (resolver != null) {
+                    channelName = resolver.resolveChannel(request);
+                    log.debug("Type {} resolved channel to '{}'", resolver.getClass().getName(), channelName);
+                }
             }
         }
 
