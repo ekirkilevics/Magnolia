@@ -227,7 +227,7 @@ button.mgnlEditorButton:active {
 
 .mobilePreview.tabletLandscape .popupContent {
   position: absolute;
-    top: 120px;
+  top: 120px;
   left: 42px;
   width: 1024px;
   height: 690px;
