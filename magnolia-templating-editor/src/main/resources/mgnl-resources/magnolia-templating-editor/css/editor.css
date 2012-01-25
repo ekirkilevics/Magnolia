@@ -210,11 +210,44 @@ button.mgnlEditorButton:active {
   z-index:900;
 }
 
-.mobile {
-  padding: 10px;
-  background: #808080;
-  width: 80%;
-  height: 80%;
+.mobilePreview {
   z-index: 901;
-  border-radius: 7px 7px 7px 7px;
+  /*border-radius: 7px 7px 7px 7px;
+    padding: 10px;
+    background: gray;
+  */
+  cursor: pointer;
+}
+
+.mobilePreview.tabletLandscape {
+  background: url(../img/preview/mobile/landscape.png) no-repeat;
+  width: 1108px;
+  height: 852px;
+}
+
+.mobilePreview.tabletLandscape .popupContent {
+  position: absolute;
+    top: 120px;
+  left: 42px;
+  width: 1024px;
+  height: 690px;
+}
+.mobilePreview.tabletPortrait {
+  background: url(../img/preview/mobile/portrait.png) no-repeat;
+  width: 852px;
+  height: 1108px;
+}
+
+.mobilePreview.tabletPortrait .popupContent {
+  position: absolute;
+  top: 120px;
+  left: 42px;
+  height: 946px;
+  width: 768px;
+}
+.mobilePreviewIframe {
+  border: none;
+  width:100%;
+  height:100%;
+  background: center no-repeat url(../img/preview/mobile/loading.gif);
 }

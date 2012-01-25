@@ -119,7 +119,7 @@ public class PageBarWidget extends AbstractBarWidget {
         mobile.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.createPreviewForChannel("mobile");
+                pageEditor.createChannelPreview("mobile");
             }
         });
         addButton(mobile, Float.LEFT);

@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client;
 
 
+import info.magnolia.templating.editor.client.PreviewChannelWidget.ORIENTATION;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
@@ -251,12 +252,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     //TODO we will get the channel type and consequently the style to be passed to PreviewWidget via UI (dropdown/split button?)
     //What we ideally would need is a split/menu button like these http://www.sencha.com/examples/pages/button/buttons.html
-    public void createPreviewForChannel(final String channelType) {
+    public void createChannelPreview(final String channelType) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.setParameter("channel", channelType);
         urlBuilder.setParameter("mgnlPreview", "true");
-        new PreviewWidget(urlBuilder.buildString(), "mobile", true);
+        new PreviewChannelWidget(urlBuilder.buildString(), ORIENTATION.LANDSCAPE);
     }
 
     /**
