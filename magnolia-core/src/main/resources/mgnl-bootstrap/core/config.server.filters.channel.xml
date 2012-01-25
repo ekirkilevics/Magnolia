@@ -10,7 +10,7 @@
     <sv:value>b2fafa53-fc7b-4835-ae1b-7ed879cd4001</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.templatingkit.filters.MultiChannelFilter</sv:value>
+    <sv:value>info.magnolia.cms.filters.MultiChannelFilter</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:createdBy" sv:type="String">
     <sv:value>admin</sv:value>
