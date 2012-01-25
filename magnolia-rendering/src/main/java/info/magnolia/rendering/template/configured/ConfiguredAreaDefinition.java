@@ -49,7 +49,9 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     private Map<String, ComponentAvailability> availableComponents = new LinkedHashMap<String, ComponentAvailability>();
 
-    private boolean enabled = true;
+    // default value is undefined to allow for merging with possibly defined values by parents
+    private Boolean enabled;
+
     private boolean optional = false;
     private String type;
     private InheritanceConfiguration inheritance = new ConfiguredInheritance();
@@ -68,11 +70,11 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     }
 
     @Override
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return this.enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 

@@ -39,7 +39,6 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
-import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
@@ -53,6 +52,7 @@ import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
 
-    private boolean commentClosed = false;
+    private final boolean commentClosed = false;
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -304,7 +304,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
      * the area node gets created (always) the script is always executed.
      */
     private boolean canRenderAreaScript() {
-        return (areaDefinition != null && areaDefinition.isEnabled()) && (areaNode !=null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
+        return (areaDefinition != null && areaDefinition.isEnabled() != null && areaDefinition.isEnabled()) && (areaNode != null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
     }
 
     private String resolveDialog() {
@@ -335,7 +335,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         try {
             return NodeUtil.getNodes(parent, MgnlNodeType.NT_COMPONENT).iterator().hasNext();
         } catch (RepositoryException e) {
-           throw new RenderException(e);
+            throw new RenderException(e);
         }
     }
 

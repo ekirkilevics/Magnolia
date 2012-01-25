@@ -51,7 +51,7 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
 
     Map<String, ComponentAvailability> getAvailableComponents();
 
-    boolean isEnabled();
+    Boolean isEnabled();
 
     String getType();
 
