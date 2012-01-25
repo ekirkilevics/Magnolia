@@ -48,6 +48,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.MetaElement;
@@ -102,10 +103,13 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     @Override
     public void onModuleLoad() {
+
         if(Window.Location.getParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING) != null) {
             GWT.log("Found " + SKIP_PAGE_EDITOR_DOM_PROCESSING + " in request, skipping DOM processing...");
+            processLinks(Document.get().getDocumentElement());
             return;
         }
+
         Element documentElement = Document.get().getDocumentElement();
 
         locale = detectCurrentLocale(documentElement);
@@ -403,6 +407,21 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             processCmsComments(childNode, mgnlElement);
         }
 
+    }
+
+    private void processLinks(Element root) {
+        NodeList<Element> anchors = root.getElementsByTagName("a");
+
+        for (int i = 0; i < anchors.getLength(); i++) {
+            AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
+            anchor.setHref(anchor.getHref().concat("?"+SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile"));
+        }
+        /*NodeList<Element> forms = root.getElementsByTagName("form");
+
+        for (int i = 0; i < forms.getLength(); i++) {
+            FormElement form = FormElement.as(forms.getItem(i));
+            form.setAction(form.getAction().concat("?"+SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile"));
+        }*/
     }
 
     public native void disableLink(Element element) /*-{
