@@ -33,7 +33,9 @@
  */
 package info.magnolia.beanmerger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,7 +134,7 @@ public class ProxyBasedBeanMergerTest {
 
     public static class BeanWithMap {
 
-        private Map<String, BeanAB> beans = new HashMap<String, ProxyBasedBeanMergerTest.BeanAB>();
+        private final Map<String, BeanAB> beans = new HashMap<String, ProxyBasedBeanMergerTest.BeanAB>();
 
         public BeanWithMap() {
         }
@@ -147,7 +149,7 @@ public class ProxyBasedBeanMergerTest {
 
     }
 
-    private ProxyBasedBeanMerger proxyBasedBeanMerger = new ProxyBasedBeanMerger();
+    private final ProxyBasedBeanMerger proxyBasedBeanMerger = new ProxyBasedBeanMerger();
 
     public <T> T merge(Object... sources) {
         final ArrayList<Object> list = new ArrayList<Object>();
@@ -169,6 +171,19 @@ public class ProxyBasedBeanMergerTest {
     @Test
     public void testMergeUsesSubClassIfAssignable() {
         Object result = merge(new BeanA("a"), new BeanB("b"), new BeanAB("a", "b"));
+        // both interfaces are implemented
+        assertTrue(result instanceof InterfaceA);
+        assertTrue(result instanceof InterfaceB);
+        // but is an instance of BeanAB
+        assertTrue(result instanceof BeanAB);
+        assertTrue(result instanceof BeanA);
+        assertFalse(result instanceof BeanB);
+    }
+
+    @Test
+    public void testMergeMergedClass() {
+        Object firstMerge = merge(new BeanA("a"), new BeanB("b"), new BeanAB("a", "b"));
+        Object result = merge(firstMerge, new BeanB("b-b"));
         // both interfaces are implemented
         assertTrue(result instanceof InterfaceA);
         assertTrue(result instanceof InterfaceB);

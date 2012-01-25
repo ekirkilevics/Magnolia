@@ -41,11 +41,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.sf.cglib.proxy.Enhancer;
+
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.proxy.Invoker;
 import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
-
-import net.sf.cglib.proxy.Enhancer;
 
 
 /**
@@ -59,6 +59,9 @@ public class ProxyBasedBeanMerger extends BeanMergerBase {
     protected Object mergeBean(List sources) {
         Set<Class> types = new HashSet<Class>();
         Class< ? > mostSpecificAssignableClass = sources.get(0).getClass();
+        while (Enhancer.isEnhanced(mostSpecificAssignableClass)) {
+            mostSpecificAssignableClass = mostSpecificAssignableClass.getSuperclass();
+        }
 
         for (Object source : sources) {
 
@@ -75,8 +78,12 @@ public class ProxyBasedBeanMerger extends BeanMergerBase {
             }
         }
         types.add(mostSpecificAssignableClass);
-
-        return new CglibProxyFactory().createInvokerProxy(newInvoker(sources), types.toArray(new Class< ? >[types.size()]));
+        try {
+            return new CglibProxyFactory().createInvokerProxy(newInvoker(sources), types.toArray(new Class< ? >[types.size()]));
+        } catch (RuntimeException e) {
+            log.error("Failed to create proxy for sources {} with types {}", sources, types);
+            throw e;
+        }
     }
 
     protected MergeInvoker newInvoker(List sources) {
@@ -92,7 +99,7 @@ public class ProxyBasedBeanMerger extends BeanMergerBase {
 
         private final List sources;
 
-        private BeanMerger merger;
+        private final BeanMerger merger;
 
         private MergeInvoker(BeanMerger merger, List sources) {
             this.merger = merger;
