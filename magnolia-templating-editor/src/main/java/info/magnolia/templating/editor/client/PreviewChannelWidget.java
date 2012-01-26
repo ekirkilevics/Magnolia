@@ -89,9 +89,6 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         });
 
         add(iframe);
-
-        //this causes the pop up to show
-        center();
     }
 
     public ORIENTATION getOrientation() {

@@ -66,7 +66,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.i18n.client.Dictionary;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -97,7 +96,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
-    private static Dictionary dictionary;
     private static ModelStorage storage = ModelStorage.getInstance();
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
@@ -113,9 +111,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         Element documentElement = Document.get().getDocumentElement();
 
         locale = detectCurrentLocale(documentElement);
-        //TODO move messages we need to this module?
-        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
-        dictionary = Dictionary.getDictionary("mgnlGwtMessages");
 
         long startTime = System.currentTimeMillis();
         processCmsComments(Document.get().getDocumentElement(), null);
@@ -269,14 +264,9 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.setParameter("mgnlChannel", channelType);
         urlBuilder.setParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING, "true");
-        new PreviewChannelWidget(urlBuilder.buildString(), orientation, deviceType);
-    }
-
-    /**
-     * Provides dynamic string lookup of key/value string pairs defined in a module's host HTML page.
-     */
-    public static Dictionary getDictionary() {
-        return dictionary;
+        final PreviewChannelWidget previewChannelWidget = new PreviewChannelWidget(urlBuilder.buildString(), orientation, deviceType);
+        //this causes the pop up to show
+        previewChannelWidget.center();
     }
 
     /**
@@ -411,10 +401,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     private void processLinks(Element root) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
-
+        String parameters = SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile";
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
-            anchor.setHref(anchor.getHref().concat("?"+SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile"));
+            String currentHref = anchor.getHref();
+            anchor.setHref(currentHref.contains("?") || currentHref.contains("#") ? currentHref.concat("&"+ parameters) : currentHref.concat("?"+ parameters));
         }
         /*NodeList<Element> forms = root.getElementsByTagName("form");
 

@@ -36,6 +36,7 @@ package info.magnolia.templating.editor.client;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,7 +49,6 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Button;
 
-import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 
 /**
  * Edit bar.
@@ -126,7 +126,7 @@ public class EditBarWidget extends AbstractBarWidget {
     private void createButtons(final PageEditor pageEditor) {
 
         if (!this.isInherited) {
-            final Button edit = new Button(getDictionary().get("buttons.edit.js"));
+            final Button edit = new Button(LegacyJavascript.getI18nMessage("buttons.edit.js"));
             edit.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -139,7 +139,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
         //single area component obviously cannot be moved
         if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
-            final Button move = new Button(getDictionary().get("buttons.move.js"));
+            final Button move = new Button(LegacyJavascript.getI18nMessage("buttons.move.js"));
             move.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -150,7 +150,7 @@ public class EditBarWidget extends AbstractBarWidget {
         }
 
         if (!this.isInherited) {
-            final Button removeButton = new Button(getDictionary().get("buttons.delete.js"));
+            final Button removeButton = new Button(LegacyJavascript.getI18nMessage("buttons.delete.js"));
             removeButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {

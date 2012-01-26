@@ -34,7 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import static info.magnolia.templating.editor.client.PageEditor.getDictionary;
 import info.magnolia.templating.editor.client.PreviewChannelWidget.ORIENTATION;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
@@ -98,7 +97,7 @@ public class PageBarWidget extends AbstractBarWidget {
         //the placeholder must be added as the first child of the bar element (before the buttons wrapper) so that the style applied to it centers it correctly.
         getElement().insertFirst(mainbarPlaceholder.getElement());
 
-        Button properties = new Button(getDictionary().get("buttons.properties.js"));
+        Button properties = new Button(LegacyJavascript.getI18nMessage("buttons.properties.js"));
         properties.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -107,7 +106,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(properties, Float.RIGHT);
 
-        Button preview = new Button(getDictionary().get("buttons.preview.js"));
+        Button preview = new Button(LegacyJavascript.getI18nMessage("buttons.preview.js"));
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -117,7 +116,7 @@ public class PageBarWidget extends AbstractBarWidget {
         addButton(preview, Float.LEFT);
 
         //FIXME mobile preview are here temporarily for testing purposes. They have to be replaced by some kind of dropdown menu button.
-        Button mobileIpad = new Button(getDictionary().get("buttons.preview.mobile.test.tablet.js"));
+        Button mobileIpad = new Button(LegacyJavascript.getI18nMessage("buttons.preview.mobile.test.tablet.js"));
         mobileIpad.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -127,7 +126,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(mobileIpad, Float.LEFT);
 
-        Button mobileIphone = new Button(getDictionary().get("buttons.preview.mobile.test.smartphone.js"));
+        Button mobileIphone = new Button(LegacyJavascript.getI18nMessage("buttons.preview.mobile.test.smartphone.js"));
         mobileIphone.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -137,7 +136,7 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(mobileIphone, Float.LEFT);
 
-        Button adminCentral = new Button(getDictionary().get("buttons.admincentral.js"));
+        Button adminCentral = new Button(LegacyJavascript.getI18nMessage("buttons.admincentral.js"));
         adminCentral.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -152,7 +151,7 @@ public class PageBarWidget extends AbstractBarWidget {
     }
 
     private void createPreviewModeBar() {
-        Button preview = new Button(getDictionary().get("buttons.preview.hidden.js"));
+        Button preview = new Button(LegacyJavascript.getI18nMessage("buttons.preview.hidden.js"));
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {

@@ -33,12 +33,24 @@
  */
 package info.magnolia.templating.editor.client.jsni;
 
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Dictionary;
+
 /**
  * A JSNI wrapper around native javascript functions found in general.js, inline.js and others plus some utilities.
  * @version $Id$
  *
  */
 public final class LegacyJavascript {
+
+    private static Dictionary dictionary;
+
+    static {
+        //TODO move messages we need to this module?
+        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
+        dictionary = Dictionary.getDictionary("mgnlGwtMessages");
+    }
 
     private LegacyJavascript() {
         //do not instantiate it.
@@ -100,5 +112,20 @@ public final class LegacyJavascript {
 
     public static boolean isEmpty(final String string) {
         return string == null || string.length() == 0;
+    }
+
+    /**
+     * Will look for the specified key inside the GWT {@link Dictionary}. If the does not exist it will return a string
+     * in the form <code>???missing.key???</code>. The keys looked for must reside in <code>info.magnolia.module.admininterface.messages</code> and
+     * MUST end with the special suffix <code>.js</code> (i.e. <code>my.cool.i18nkey.js</code>).
+     * <p><strong>WARNING: this way of exposing i18n messages to GWT is very likely to change in 5.0</strong>
+     */
+    public static String getI18nMessage(final String key) {
+        try {
+            return dictionary.get(key);
+        } catch(RuntimeException e) {
+            GWT.log("key ["+ key +"] was not found in dictionary", e);
+            return "???" + key + "???";
+        }
     }
 }
