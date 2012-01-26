@@ -37,7 +37,7 @@ package info.magnolia.templating.editor.client;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Float;
@@ -120,7 +120,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     private void createButtons(final PageEditor pageEditor, final CMSComment comment) {
         if(this.optional) {
             if(!this.created) {
-                Button createButton = new Button(LegacyJavascript.getI18nMessage("buttons.create.js"));
+                Button createButton = new Button(getI18nMessage("buttons.create.js"));
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
@@ -132,7 +132,7 @@ public class AreaBarWidget extends AbstractBarWidget {
             } else {
                 createEditAndAddComponentButtons(pageEditor, comment);
 
-                Button removeButton = new Button(LegacyJavascript.getI18nMessage("buttons.remove.js"));
+                Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
@@ -149,7 +149,7 @@ public class AreaBarWidget extends AbstractBarWidget {
 
     private void createEditAndAddComponentButtons(final PageEditor pageEditor, final CMSComment comment) {
         if (comment.hasAttribute("dialog")) {
-            Button editButton = new Button(LegacyJavascript.getI18nMessage("buttons.edit.js"));
+            Button editButton = new Button(getI18nMessage("buttons.edit.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -160,7 +160,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
         if (this.showAddButton) {
-            Button addButton = new Button(LegacyJavascript.getI18nMessage("buttons.add.js"));
+            Button addButton = new Button(getI18nMessage("buttons.add.js"));
             addButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {

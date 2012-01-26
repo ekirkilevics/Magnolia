@@ -34,6 +34,8 @@
 package info.magnolia.templating.editor.client;
 
 
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -75,6 +77,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         setAutoHideEnabled(true);
         setModal(true);
         setGlassEnabled(true);
+        setTitle(getI18nMessage("editor.preview.rotate.js"));
 
         addClickHandler(this);
 
