@@ -51,7 +51,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
@@ -104,13 +103,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
         if(Window.Location.getParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING) != null) {
             GWT.log("Found " + SKIP_PAGE_EDITOR_DOM_PROCESSING + " in request, skipping DOM processing...");
-            processLinks(Document.get().getDocumentElement());
+            postProcessLinksOnMobilePreview(Document.get().getDocumentElement());
             return;
         }
 
-        Element documentElement = Document.get().getDocumentElement();
-
-        locale = detectCurrentLocale(documentElement);
+        locale = LegacyJavascript.detectCurrentLocale();
 
         long startTime = System.currentTimeMillis();
         processCmsComments(Document.get().getDocumentElement(), null);
@@ -269,24 +266,6 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         previewChannelWidget.center();
     }
 
-    /**
-     * A String representing the value for the GWT meta property whose content is <em>locale</em>.
-     * See also <a href='http://code.google.com/webtoolkit/doc/latest/DevGuideI18nLocale.html#LocaleSpecifying'>GWT Dev Guide to i18n</a>
-     */
-    private String detectCurrentLocale(Element element) {
-        final NodeList<Element> meta = element.getOwnerDocument().getElementsByTagName("meta");
-        for (int i = 0; i < meta.getLength(); i++) {
-            MetaElement metaTag = ((MetaElement) meta.getItem(i));
-            if ("gwt:property".equals(metaTag.getName()) && metaTag.getContent().contains("locale")) {
-                String[] split = metaTag.getContent().split("=");
-                locale = split.length == 2 ? split[1] : "en";
-                GWT.log("Detected Locale " + locale);
-                break;
-            }
-        }
-        return locale;
-    }
-
     private void processCmsComments(Node node, MgnlElement mgnlElement) {
         for (int i = 0; i < node.getChildCount(); i++) {
             Node childNode = node.getChild(i);
@@ -399,8 +378,8 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
-    //FIXME submitting forms still renders website and edit bars
-    private void processLinks(Element root) {
+    //FIXME submitting forms still renders website channel and edit bars
+    private void postProcessLinksOnMobilePreview(Element root) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
         String mobilePreviewParams = "mgnlChannel=mobile&skipPageEditorDOMProcessing=true";
         for (int i = 0; i < anchors.getLength(); i++) {

@@ -35,6 +35,10 @@ package info.magnolia.templating.editor.client.jsni;
 
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.MetaElement;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.i18n.client.Dictionary;
 
 /**
@@ -127,5 +131,24 @@ public final class LegacyJavascript {
             GWT.log("key ["+ key +"] was not found in dictionary", e);
             return "???" + key + "???";
         }
+    }
+
+    /**
+     * A String representing the value for the GWT meta property whose content is <em>locale</em>.
+     * See also <a href='http://code.google.com/webtoolkit/doc/latest/DevGuideI18nLocale.html#LocaleSpecifying'>GWT Dev Guide to i18n</a>
+     */
+    public static String detectCurrentLocale() {
+        String locale = "en";
+        final NodeList<Element> meta = Document.get().getDocumentElement().getElementsByTagName("meta");
+        for (int i = 0; i < meta.getLength(); i++) {
+            MetaElement metaTag = MetaElement.as(meta.getItem(i));
+            if ("gwt:property".equals(metaTag.getName()) && metaTag.getContent().contains("locale")) {
+                String[] split = metaTag.getContent().split("=");
+                locale = split.length == 2 ? split[1] : "en";
+                GWT.log("Detected Locale " + locale);
+                break;
+            }
+        }
+        return locale;
     }
 }
