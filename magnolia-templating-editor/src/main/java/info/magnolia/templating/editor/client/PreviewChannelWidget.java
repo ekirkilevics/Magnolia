@@ -53,6 +53,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * TODO find a way to keep special params (e.g. mgnlChannel and skipPageEditorDOMProcessing) in request when navigating the preview else the author mode is displayed.
  */
 public class PreviewChannelWidget extends PopupPanel implements ClickHandler, HasClickHandlers {
+
     private String landscapeCssStyleSuffix = "Landscape";
     private String portraitCssStyleSuffix = "Portrait";
     private String deviceType = "smartphone";
@@ -68,16 +69,19 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
 
     public PreviewChannelWidget(final String url, final ORIENTATION orientation, final String deviceType) {
         this.deviceType = deviceType;
+        this.currentOrientation = orientation;
+
         setStylePrimaryName("mobilePreview");
-        currentOrientation = orientation;
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
         addStyleName(orientation == ORIENTATION.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
         setGlassStyleName("mgnlEditorPreviewBackground");
+
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
         setModal(true);
         setGlassEnabled(true);
-        setTitle(getI18nMessage("editor.preview.rotate.js"));
+
+        getElement().setTitle(getI18nMessage("editor.preview.rotate.js"));
 
         addClickHandler(this);
 
