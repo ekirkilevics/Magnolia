@@ -45,12 +45,14 @@ import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 /**
  * Holds the basic server configuration info.
  *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
+@Singleton
 public class ServerConfiguration {
     private String defaultExtension;
     private String defaultBaseUrl;
