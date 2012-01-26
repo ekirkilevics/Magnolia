@@ -115,7 +115,7 @@ public final class LegacyJavascript {
     }
 
     /**
-     * Will look for the specified key inside the GWT {@link Dictionary}. If the does not exist it will return a string
+     * This method will look for the specified key inside a GWT {@link Dictionary}. If the key does not exist it will return a string
      * in the form <code>???missing.key???</code>. The keys looked for must reside in <code>info.magnolia.module.admininterface.messages</code> and
      * MUST end with the special suffix <code>.js</code> (i.e. <code>my.cool.i18nkey.js</code>).
      * <p><strong>WARNING: this way of exposing i18n messages to GWT is very likely to change in 5.0</strong>
