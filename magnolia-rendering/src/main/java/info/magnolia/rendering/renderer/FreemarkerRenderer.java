@@ -42,7 +42,6 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -82,12 +81,9 @@ public class FreemarkerRenderer extends AbstractRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            // FIXME we should not buffer, this is just to facilitate the STK migration
-            StringWriter buffer = new StringWriter();
             AppendableWriter out = renderingCtx.getAppendable();
             try {
-                fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, buffer);
-                out.append(buffer.toString());
+                fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
             }
             catch (Throwable e) {
                 // FIXME we don't throw exceptions to not block the rendering
