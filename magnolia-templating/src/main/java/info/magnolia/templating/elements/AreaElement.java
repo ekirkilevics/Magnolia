@@ -326,7 +326,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private boolean isInheritanceEnabled() {
-        return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled();
+        return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled() != null && areaDefinition.getInheritance().isEnabled();
     }
 
     private boolean isOptionalAreaCreated() {

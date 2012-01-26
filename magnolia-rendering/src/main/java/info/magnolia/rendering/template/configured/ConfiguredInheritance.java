@@ -39,11 +39,13 @@ import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.InheritanceConfiguration;
-import org.apache.commons.lang.StringUtils;
+
+import java.util.Comparator;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import java.util.Comparator;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Defines behavior for inheritance. Allows for enabling
@@ -59,18 +61,18 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     public static final String PROPERTIES_ALL = "all";
     public static final String PROPERTIES_NONE = "none";
 
-    private boolean enabled = false;
+    private Boolean enabled = false;
     private String components = COMPONENTS_FILTERED;
     private String properties = PROPERTIES_ALL;
     private Class<? extends AbstractPredicate<Node>> predicateClass;
     private Class<? extends Comparator<Node>> nodeComparatorClass;
 
     @Override
-    public boolean isEnabled() {
+    public Boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -83,18 +85,18 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     }
 
     @Override
-    public boolean isInheritsProperties() {
-        return isEnabled() && StringUtils.equalsIgnoreCase(StringUtils.trim(properties), PROPERTIES_ALL);
+    public Boolean isInheritsProperties() {
+        return isEnabled() != null && isEnabled() && StringUtils.equalsIgnoreCase(StringUtils.trim(properties), PROPERTIES_ALL);
     }
 
     @Override
-    public boolean isInheritsComponents() {
-        return isEnabled() && (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL) || StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED));
+    public Boolean isInheritsComponents() {
+        return isEnabled() != null && isEnabled() && (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL) || StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED));
     }
 
     @Override
     public AbstractPredicate<Node> getComponentPredicate() {
-        if (!isEnabled()) {
+        if (isEnabled() == null || !isEnabled()) {
             return new InheritNothingInheritancePredicate();
         }
         if (predicateClass != null) {

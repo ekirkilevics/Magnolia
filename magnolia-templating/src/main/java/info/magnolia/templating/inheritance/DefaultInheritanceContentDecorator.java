@@ -38,16 +38,18 @@ import info.magnolia.jcr.inheritance.InheritanceContentDecorator;
 import info.magnolia.jcr.iterator.RangeIteratorImpl;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.rendering.template.InheritanceConfiguration;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Provides an inheritance model that can be customized with configuration on the nodes. Inheritance can be completely
@@ -64,8 +66,8 @@ import java.util.List;
 public class DefaultInheritanceContentDecorator extends InheritanceContentDecorator {
 
     private final InheritanceConfiguration configuration;
-    private AbstractPredicate<Node> componentPredicate;
-    private Comparator<Node> componentComparator;
+    private final AbstractPredicate<Node> componentPredicate;
+    private final Comparator<Node> componentComparator;
 
     public DefaultInheritanceContentDecorator(Node destination, InheritanceConfiguration configuration) throws RepositoryException {
         super(destination);
@@ -75,7 +77,7 @@ public class DefaultInheritanceContentDecorator extends InheritanceContentDecora
 
         componentComparator = configuration.getComponentComparator();
 
-        if (configuration.isEnabled()) {
+        if (configuration.isEnabled() != null && configuration.isEnabled()) {
 
             Node firstAnchor = findFirstAnchor();
 

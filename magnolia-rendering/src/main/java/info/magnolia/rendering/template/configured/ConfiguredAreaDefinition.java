@@ -52,7 +52,7 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     // default value is undefined to allow for merging with possibly defined values by parents
     private Boolean enabled;
 
-    private boolean optional = false;
+    private Boolean optional = false;
     private String type;
     private InheritanceConfiguration inheritance = new ConfiguredInheritance();
 
@@ -97,11 +97,11 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     }
 
     @Override
-    public boolean isOptional() {
+    public Boolean isOptional() {
         return optional;
     }
 
-    public void setOptional(boolean optional) {
+    public void setOptional(Boolean optional) {
         this.optional = optional;
     }
 

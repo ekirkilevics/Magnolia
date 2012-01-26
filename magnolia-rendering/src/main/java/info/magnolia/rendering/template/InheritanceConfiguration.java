@@ -35,8 +35,9 @@ package info.magnolia.rendering.template;
 
 import info.magnolia.jcr.predicate.AbstractPredicate;
 
-import javax.jcr.Node;
 import java.util.Comparator;
+
+import javax.jcr.Node;
 
 /**
  * Configuration for inheritance, allows for configuring inheritance for properties separately from inheritance of
@@ -46,11 +47,11 @@ import java.util.Comparator;
  */
 public interface InheritanceConfiguration {
 
-    boolean isEnabled();
+    Boolean isEnabled();
 
-    boolean isInheritsProperties();
+    Boolean isInheritsProperties();
 
-    boolean isInheritsComponents();
+    Boolean isInheritsComponents();
 
     AbstractPredicate<Node> getComponentPredicate();
 
