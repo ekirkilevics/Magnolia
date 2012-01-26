@@ -50,7 +50,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * PreviewChannelWidget.
  * TODO javadoc bien sure!
  * TODO extract base class with common functionality. Make this a MobilePreviewChannelWidget extending an AbstractPreviewChannelWidget.
- * TODO find a way to keep special params (e.g. mgnlChannel and skipPageEditorDOMProcessing) in request when navigating the preview else the author mode is displayed.
  */
 public class PreviewChannelWidget extends PopupPanel implements ClickHandler, HasClickHandlers {
 
