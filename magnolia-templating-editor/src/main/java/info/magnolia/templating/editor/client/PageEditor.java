@@ -399,17 +399,39 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
     }
 
+    //FIXME submitting forms still renders website and edit bars
     private void processLinks(Element root) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
-        String parameters = SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile";
+        String mobilePreviewParams = "mgnlChannel=mobile&skipPageEditorDOMProcessing=true";
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
-            String currentHref = anchor.getHref().replaceAll(parameters, "");
-            if(currentHref.contains("#")) {
-                anchor.setHref(currentHref);
-            } else {
-                anchor.setHref(currentHref.contains("?")? currentHref.concat("&"+ parameters) : currentHref.concat("?"+ parameters));
+
+            GWT.log("Starting to process link " + anchor.getHref());
+
+            if(LegacyJavascript.isEmpty(anchor.getHref())) {
+                continue;
             }
+            String manipulatedHref = anchor.getHref().replaceFirst(Window.Location.getProtocol() + "//" + Window.Location.getHost(), "");
+            String queryString = Window.Location.getQueryString() != null ? Window.Location.getQueryString() : "";
+
+            GWT.log("query string is " + queryString);
+
+            String queryStringRegex =  queryString.replaceFirst("\\?", "\\\\?");
+            manipulatedHref = manipulatedHref.replaceFirst(queryStringRegex, "");
+            int indexOfHash = manipulatedHref.indexOf("#");
+
+            if(indexOfHash != -1) {
+                manipulatedHref = manipulatedHref.substring(indexOfHash);
+            } else {
+                if(queryString.startsWith("?")) {
+                    queryString += "&" + mobilePreviewParams;
+                } else {
+                    queryString = "?" + mobilePreviewParams;
+                }
+                manipulatedHref += queryString;
+            }
+            GWT.log("Resulting link is " + manipulatedHref);
+            anchor.setHref(manipulatedHref);
         }
         /*NodeList<Element> forms = root.getElementsByTagName("form");
 
