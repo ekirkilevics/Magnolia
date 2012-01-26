@@ -311,7 +311,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                             storage.addEditBar(mgnlElement, pageBarWidget);
 
 
-                            if (pageBarWidget.isPreviewMode()) {
+                            if (pageBarWidget.isPreviewState()) {
                                 //we just need the preview bar here
                                 GWT.log("We're in preview mode, stop processing DOM.");
                                 break;
@@ -404,8 +404,12 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         String parameters = SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile";
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
-            String currentHref = anchor.getHref();
-            anchor.setHref(currentHref.contains("?") || currentHref.contains("#") ? currentHref.concat("&"+ parameters) : currentHref.concat("?"+ parameters));
+            String currentHref = anchor.getHref().replaceAll(parameters, "");
+            if(currentHref.contains("#")) {
+                anchor.setHref(currentHref);
+            } else {
+                anchor.setHref(currentHref.contains("?")? currentHref.concat("&"+ parameters) : currentHref.concat("?"+ parameters));
+            }
         }
         /*NodeList<Element> forms = root.getElementsByTagName("form");
 

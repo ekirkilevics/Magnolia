@@ -64,7 +64,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
     private String dialog;
-    private boolean previewMode = false;
+    private boolean previewState = false;
 
     public PageBarWidget(final PageEditor pageEditor, final CMSComment comment) {
         super(null, null);
@@ -147,7 +147,7 @@ public class PageBarWidget extends AbstractBarWidget {
 
         setClassName("mgnlEditorMainbar mgnlEditorBar");
 
-        previewMode = false;
+        previewState = false;
     }
 
     private void createPreviewModeBar() {
@@ -161,10 +161,10 @@ public class PageBarWidget extends AbstractBarWidget {
         addButton(preview, Float.LEFT);
         setClassName("mgnlEditorMainbarPreview");
 
-        previewMode = true;
+        previewState = true;
     }
 
-    public final boolean isPreviewMode() {
-        return previewMode;
+    public final boolean isPreviewState() {
+        return previewState;
     }
 }
