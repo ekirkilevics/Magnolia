@@ -34,15 +34,18 @@
 package info.magnolia.templating.editor.client;
 
 
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -73,12 +76,12 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         setStylePrimaryName("mobilePreview");
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
         addStyleName(orientation == ORIENTATION.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
-        setGlassStyleName("mgnlEditorPreviewBackground");
 
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
         setModal(true);
         setGlassEnabled(true);
+        setGlassStyleName("mgnlEditorPreviewBackground");
 
         getElement().setTitle(getI18nMessage("editor.preview.rotate.js"));
 
@@ -91,6 +94,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
             @Override
             public void onLoad(LoadEvent event) {
                //TODO nice animation before displaying the page preview?
+                //Window.alert("iframe onload");
             }
         });
 
@@ -135,4 +139,12 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         return addDomHandler(handler, ClickEvent.getType());
     }
 
+    @Override
+    //key press or key down handlers has issues, that's why we had to resort to this. See also http://code.google.com/p/google-web-toolkit/issues/detail?id=5558.
+    protected void onPreviewNativeEvent(NativePreviewEvent event) {
+        super.onPreviewNativeEvent(event);
+        if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+            hide();
+        }
+    }
 }
