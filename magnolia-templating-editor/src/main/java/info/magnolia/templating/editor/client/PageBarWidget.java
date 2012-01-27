@@ -114,7 +114,6 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(properties, Float.RIGHT);
 
-        // commands are already defined elsewhere
         MenuItem desktop = new MenuItem("Desktop", true, new DesktopPreviewCommand());
         MenuItem smartphone = new MenuItem("Smartphone", true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
         MenuItem tablet = new MenuItem("Tablet", true, new MobilePreviewCommand("tablet", Orientation.LANDSCAPE));
