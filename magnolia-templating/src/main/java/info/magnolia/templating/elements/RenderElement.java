@@ -36,16 +36,25 @@ package info.magnolia.templating.elements;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
+import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
+import info.magnolia.rendering.engine.DefaultRenderingEngine;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Renders a piece of content.
@@ -54,23 +63,52 @@ import javax.jcr.Node;
  */
 public class RenderElement extends AbstractContentTemplatingElement {
 
-    private boolean editable;
-    private String template;
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
     private Node content;
+    private TemplateDefinitionAssignment templateDefinitionAssignment;
 
-    public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
+    private String dialog;
+
+    @Inject
+    public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine, TemplateDefinitionAssignment templateDefinitionAssignment ) {
         super(server, renderingContext);
         this.renderingEngine = renderingEngine;
+        this.templateDefinitionAssignment = templateDefinitionAssignment;
     }
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
-        content = getTargetContent();
+
+        TemplateDefinition componentDefinition = null;
 
         if(isAdmin()){
-            new MarkupHelper(out).openComment("cms:component").append(" -->\n");
+            MarkupHelper helper = new MarkupHelper(out);
+
+            helper.openComment("cms:component");
+
+            content = getTargetContent();
+
+            if(content != null) {
+                helper.attribute("content", getNodePath(content));
+
+                if(content instanceof InheritanceNodeWrapper) {
+                    if (((InheritanceNodeWrapper) content).isInherited()) {
+                        helper.attribute("inherited", "true");
+                    }
+                }
+            }
+
+            try {
+                componentDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
+            } catch (RegistrationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            dialog = resolveDialog(componentDefinition);
+            helper.attribute("dialog", dialog);
+            helper.append(" -->\n");
         }
 
         // TODO not sure how to pass editable
@@ -78,8 +116,10 @@ public class RenderElement extends AbstractContentTemplatingElement {
         WebContext webContext = MgnlContext.getWebContext();
         webContext.push(webContext.getRequest(), webContext.getResponse());
         setAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
+
+
         try {
-            renderingEngine.render(content, new AppendableOnlyOutputProvider(out));
+            renderingEngine.render(content, componentDefinition, new HashMap<String, Object>(),  new AppendableOnlyOutputProvider(out));
         } finally {
             webContext.pop();
             webContext.setPageContext(null);
@@ -94,23 +134,6 @@ public class RenderElement extends AbstractContentTemplatingElement {
         }
     }
 
-    public boolean getEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
-
-    public String getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(String template) {
-        this.template = template;
-    }
-
-
     public Map<String, Object> getContextAttributes() {
         return contextAttributes;
     }
@@ -119,4 +142,22 @@ public class RenderElement extends AbstractContentTemplatingElement {
         this.contextAttributes = contextAttributes;
     }
 
+    private String resolveDialog(TemplateDefinition component) {
+        if (StringUtils.isNotEmpty(this.dialog)) {
+            return this.dialog;
+        }
+        String dialog = component.getDialog();
+        if (StringUtils.isNotEmpty(dialog)) {
+            return dialog;
+        }
+        return null;
+    }
+
+    private TemplateDefinition getRequiredTemplateDefinition() {
+        return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
+    }
+
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
+    }
 }
