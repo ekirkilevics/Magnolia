@@ -61,7 +61,7 @@ import org.apache.commons.lang.StringUtils;
 public class PlainTextTemplateRenderer extends AbstractRenderer {
 
     @Override
-    protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
+    protected String resolveTemplateScript(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
         return StringUtils.EMPTY;
     }
 
