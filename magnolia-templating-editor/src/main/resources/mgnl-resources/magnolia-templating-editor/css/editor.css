@@ -202,7 +202,7 @@ button.mgnlEditorButton:active {
 
 /* --- End of edit bars definitions --- */
 
-/* XXX experimenting with mobile preview*/
+/* TODO review preview styles */
 .mgnlEditorPreviewBackground {
   background-color: #000;
   opacity: 0.3;
@@ -232,6 +232,7 @@ button.mgnlEditorButton:active {
   width: 1024px;
   height: 690px;
 }
+
 .mobilePreview.tabletPortrait {
   background: url(../img/preview/mobile/tablet/portrait.png) no-repeat;
   width: 852px;
@@ -258,6 +259,7 @@ button.mgnlEditorButton:active {
   width: 480px;
   height: 210px;
 }
+
 .mobilePreview.smartphonePortrait {
   background: url(../img/preview/mobile/smartphone/portrait.png) no-repeat;
   width: 461px;
@@ -271,6 +273,7 @@ button.mgnlEditorButton:active {
   width: 320px;
   height: 355px;
 }
+
 .mobilePreviewIframe {
   border: none;
   width:100%;
@@ -281,6 +284,7 @@ button.mgnlEditorButton:active {
 .mgnlPreviewDropDown {
 
 }
+
 .mgnlPreviewDropDown table {
   margin-top: 0px !important;
   border-top: 1px solid #81A312;
@@ -300,6 +304,7 @@ button.mgnlEditorButton:active {
   font-size: 11px;
   cursor:pointer;
 }
+
 .mgnlPreviewMenuItem-selected {
   background: #A1BF39 !important;
 }
