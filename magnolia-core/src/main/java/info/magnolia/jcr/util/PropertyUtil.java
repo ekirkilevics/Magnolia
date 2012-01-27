@@ -140,9 +140,9 @@ public class PropertyUtil {
                 Calendar date = new GregorianCalendar();
                 try {
                     String newDateAndTime = valueStr;
-                    String[] dateAndTimeTokens = newDateAndTime.split("T"); //$NON-NLS-1$
+                    String[] dateAndTimeTokens = newDateAndTime.split("T");
                     String newDate = dateAndTimeTokens[0];
-                    String[] dateTokens = newDate.split("-"); //$NON-NLS-1$
+                    String[] dateTokens = newDate.split("-");
                     int hour = 0;
                     int minute = 0;
                     int second = 0;
@@ -151,7 +151,7 @@ public class PropertyUtil {
                     int day = Integer.parseInt(dateTokens[2]);
                     if (dateAndTimeTokens.length > 1) {
                         String newTime = dateAndTimeTokens[1];
-                        String[] timeTokens = newTime.split(":"); //$NON-NLS-1$
+                        String[] timeTokens = newTime.split(":");
                         hour = Integer.parseInt(timeTokens[0]);
                         minute = Integer.parseInt(timeTokens[1]);
                         second = Integer.parseInt(timeTokens[2]);
@@ -167,7 +167,7 @@ public class PropertyUtil {
                 }
                 value = valueFactory.createValue(date);
             } catch (Exception e) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                log.debug("Exception caught: " + e.getMessage(), e);
             }
         }
 
@@ -348,11 +348,10 @@ public class PropertyUtil {
             if (node.hasProperty(name)) {
                 return node.getProperty(name).getBoolean();
             }
-            return defaultValue;
         } catch (RepositoryException e) {
             log.error("can't read value '" + name + "' of the Node '" + node.toString() + "' will return default value", e);
-            return defaultValue;
         }
+        return defaultValue;
     }
 
     /**
