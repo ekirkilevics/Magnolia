@@ -140,7 +140,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
     }
 
     @Override
-    //key press or key down handlers has issues, that's why we had to resort to this. See also http://code.google.com/p/google-web-toolkit/issues/detail?id=5558.
+    //key press or key down handlers have issues, that's why we had to resort to this. See also http://code.google.com/p/google-web-toolkit/issues/detail?id=5558.
     protected void onPreviewNativeEvent(NativePreviewEvent event) {
         super.onPreviewNativeEvent(event);
         if (event.getTypeInt() == Event.ONKEYDOWN && event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
