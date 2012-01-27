@@ -60,7 +60,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  *  options.add(two);
  *  options.add(three);
  *
- *  DropdownButtonWidget dropdown = new DropdownButtonWidget(options);
+ *  DropdownButtonWidget dropdown = new DropdownButtonWidget("My cool caption", options);
  *  ...
  * </pre>
  *
@@ -71,7 +71,8 @@ public class DropdownButtonWidget extends Button {
     private final PopupPanel dropdownPanel = new PopupPanel(true);
     private final MenuBar dropdownMenuBar = new MenuBar(true);
 
-    public DropdownButtonWidget(List<MenuItem> menuItems) {
+    public DropdownButtonWidget(String caption, List<MenuItem> menuItems) {
+        super(caption);
         if(menuItems == null) {
             throw new IllegalArgumentException("menuItems cannot be null");
         }
@@ -79,20 +80,20 @@ public class DropdownButtonWidget extends Button {
         for(MenuItem item: menuItems) {
             dropdownMenuBar.addItem(item);
         }
-
+        //TODO add a onMouseOut event to the menu? This however will make it disappear also when when hovering back on the button itself.
         dropdownPanel.add(dropdownMenuBar);
-        dropdownPanel.setPopupPosition(this.getAbsoluteLeft(), this.getAbsoluteTop() + this.getOffsetHeight());
 
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
                 dropdownMenuBar.setVisible(true);
+                dropdownPanel.setPopupPosition(getAbsoluteLeft(), getAbsoluteTop() + getOffsetHeight());
                 dropdownPanel.show();
             }
         });
     }
 
-    public DropdownButtonWidget(MenuItem... menuItems) {
-        this(Arrays.asList(menuItems));
+    public DropdownButtonWidget(String caption, MenuItem... menuItems) {
+        this(caption, Arrays.asList(menuItems));
     }
 }
