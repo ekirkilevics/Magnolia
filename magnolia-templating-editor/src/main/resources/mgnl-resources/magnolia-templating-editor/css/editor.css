@@ -277,3 +277,29 @@ button.mgnlEditorButton:active {
   height:100%;
   background: center no-repeat url(../img/preview/mobile/loading.gif);
 }
+
+.mgnlPreviewDropDown {
+
+}
+.mgnlPreviewDropDown table {
+  margin-top: 0px !important;
+  border-top: 1px solid #81A312;
+  border-left: 1px solid #81A312;
+  border-bottom: 1px solid #305000;
+  border-right: 1px solid #305000;
+}
+
+.mgnlPreviewMenuItem {
+  border-left: 1px solid #91BA26;
+  border-bottom: 1px solid #305000;
+  background: #487000 !important;
+  color: #F0F2E6 !important;
+  height: 14px;
+  line-height: 11px;
+  font-family: Verdana, sans-serif;
+  font-size: 11px;
+  cursor:pointer;
+}
+.mgnlPreviewMenuItem-selected {
+  background: #A1BF39 !important;
+}

@@ -76,11 +76,12 @@ public class DropdownButtonWidget extends Button {
         if(menuItems == null) {
             throw new IllegalArgumentException("menuItems cannot be null");
         }
-
+        dropdownMenuBar.setStylePrimaryName("mgnlPreviewDropDown");
         for(MenuItem item: menuItems) {
+            item.setStylePrimaryName("mgnlPreviewMenuItem");
             dropdownMenuBar.addItem(item);
         }
-        //TODO add a onMouseOut event to the menu? This however will make it disappear also when when hovering back on the button itself.
+        //TODO add an onMouseOut event to the menu? This however will make it disappear also when hovering back on the button itself.
         dropdownPanel.add(dropdownMenuBar);
 
         addClickHandler(new ClickHandler() {
@@ -96,4 +97,5 @@ public class DropdownButtonWidget extends Button {
     public DropdownButtonWidget(String caption, MenuItem... menuItems) {
         this(caption, Arrays.asList(menuItems));
     }
+
 }

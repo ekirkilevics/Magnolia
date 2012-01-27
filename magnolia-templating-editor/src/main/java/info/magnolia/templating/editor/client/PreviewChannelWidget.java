@@ -63,19 +63,19 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
     /**
      * Orientation modes for this widget.
      */
-    public enum ORIENTATION {
+    public enum Orientation {
         PORTRAIT, LANDSCAPE
     }
 
-    private ORIENTATION currentOrientation = ORIENTATION.LANDSCAPE;
+    private Orientation currentOrientation = Orientation.LANDSCAPE;
 
-    public PreviewChannelWidget(final String url, final ORIENTATION orientation, final String deviceType) {
+    public PreviewChannelWidget(final String url, final Orientation orientation, final String deviceType) {
         this.deviceType = deviceType;
         this.currentOrientation = orientation;
 
         setStylePrimaryName("mobilePreview");
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
-        addStyleName(orientation == ORIENTATION.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
+        addStyleName(orientation == Orientation.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
 
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
@@ -101,7 +101,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         add(iframe);
     }
 
-    public ORIENTATION getOrientation() {
+    public Orientation getOrientation() {
         return currentOrientation;
     }
 
@@ -122,12 +122,12 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
         //change orientation
         GWT.log("currentOrientation is "+currentOrientation.toString());
 
-        if(currentOrientation == ORIENTATION.LANDSCAPE) {
-            currentOrientation = ORIENTATION.PORTRAIT;
+        if(currentOrientation == Orientation.LANDSCAPE) {
+            currentOrientation = Orientation.PORTRAIT;
             removeStyleName(getDeviceType() + landscapeCssStyleSuffix);
             addStyleName(getDeviceType() + portraitCssStyleSuffix);
         } else {
-            currentOrientation = ORIENTATION.LANDSCAPE;
+            currentOrientation = Orientation.LANDSCAPE;
             removeStyleName(getDeviceType() + portraitCssStyleSuffix);
             addStyleName(getDeviceType() + landscapeCssStyleSuffix);
         }

@@ -34,18 +34,24 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.PreviewChannelWidget.ORIENTATION;
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.isPreviewMode;
+import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
 import info.magnolia.templating.editor.client.dom.CMSComment;
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 import info.magnolia.templating.editor.client.model.ModelStorage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.MenuItem;
 
 /**
  * Page bar. The HTML output by this widget contains an empty <code>span</code> element with an id called <code>mgnlEditorMainbarPlaceholder</code> as a convenience which can be used by other modules to inject
@@ -56,6 +62,8 @@ import com.google.gwt.user.client.ui.InlineLabel;
  *  jQuery('#mgnlEditorMainbarPlaceholder').append('<p>Blah</p>')
  * }
  * <p>The placeholder is styled to be automatically centered in the main bar. See this module's editor.css file (id selector #mgnlEditorMainbarPlaceholder).
+ *
+ * TODO: review and clean up, especially the private Command classes.
  */
 public class PageBarWidget extends AbstractBarWidget {
 
@@ -106,7 +114,20 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(properties, Float.RIGHT);
 
-        Button preview = new Button(getI18nMessage("buttons.preview.js"));
+        // commands are already defined elsewhere
+        MenuItem desktop = new MenuItem("Desktop", true, new DesktopPreviewCommand());
+        MenuItem smartphone = new MenuItem("Smartphone", true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
+        MenuItem tablet = new MenuItem("Tablet", true, new MobilePreviewCommand("tablet", Orientation.LANDSCAPE));
+
+        List<MenuItem> options = new ArrayList<MenuItem>();
+        options.add(desktop);
+        options.add(smartphone);
+        options.add(tablet);
+
+        DropdownButtonWidget dropdown = new DropdownButtonWidget(getI18nMessage("buttons.preview.js"), options);
+        addButton(dropdown, Float.LEFT);
+
+        /*Button preview = new Button(getI18nMessage("buttons.preview.js"));
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
@@ -121,7 +142,7 @@ public class PageBarWidget extends AbstractBarWidget {
             @Override
             public void onClick(ClickEvent event) {
                 //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "tablet", ORIENTATION.LANDSCAPE);
+                pageEditor.createChannelPreview("mobile", "tablet", Orientation.LANDSCAPE);
             }
         });
         addButton(mobileIpad, Float.LEFT);
@@ -131,10 +152,11 @@ public class PageBarWidget extends AbstractBarWidget {
             @Override
             public void onClick(ClickEvent event) {
               //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "smartphone", ORIENTATION.PORTRAIT);
+                pageEditor.createChannelPreview("mobile", "smartphone", Orientation.PORTRAIT);
             }
         });
         addButton(mobileIphone, Float.LEFT);
+        */
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));
         adminCentral.addClickHandler(new ClickHandler() {
@@ -167,4 +189,29 @@ public class PageBarWidget extends AbstractBarWidget {
     public final boolean isPreviewState() {
         return previewState;
     }
+
+    private class MobilePreviewCommand implements Command {
+
+        private String deviceType;
+        private Orientation orientation;
+
+        public MobilePreviewCommand(final String deviceType, final Orientation orientation) {
+           this.deviceType = deviceType;
+           this.orientation = orientation;
+        }
+
+        @Override
+        public void execute() {
+            pageEditor.createChannelPreview("mobile", deviceType, orientation);
+        }
+    }
+
+    private class DesktopPreviewCommand implements Command {
+
+        @Override
+        public void execute() {
+            pageEditor.preview(true);
+        }
+    }
+
 }
