@@ -291,7 +291,7 @@ for Java Content Repositories (JCR).
         <groupId>org.mindrot</groupId>
         <artifactId>jbcrypt</artifactId>
         <version>0.3m</version>
-      </dependency>      
+      </dependency>
       <!-- gwt jars only needed at build time, which is why they are in scope:provided -->
       <dependency>
         <groupId>com.google.gwt</groupId>
@@ -944,6 +944,7 @@ for Java Content Repositories (JCR).
     <module>magnolia-templating</module>
     <module>magnolia-templating-editor</module>
     <module>magnolia-templating-samples</module>
+	<module>magnolia-templating-jsp</module>
 
     <module>magnolia-templating-compatibility</module>
     <module>magnolia-templating-compatibility-taglib-cms</module>
