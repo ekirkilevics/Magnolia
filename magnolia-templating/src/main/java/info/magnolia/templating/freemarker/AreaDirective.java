@@ -60,6 +60,9 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
         String availableComponents = string(params, "components", null);
         String dialog = string(params, "dialog", null);
         String type = string(params, "type", null);
+        String label = string(params, "label", null);
+        String description = string(params, "description", null);
+
         Map<String,Object> contextAttributes = (Map<String, Object>) object(params, "contextAttributes");
 
         templatingElement.setArea(area);
@@ -67,6 +70,9 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
         templatingElement.setAvailableComponents(availableComponents);
         templatingElement.setDialog(dialog);
         templatingElement.setType(type);
+        templatingElement.setLabel(label);
+        templatingElement.setDescription(description);
+
         templatingElement.setContextAttributes(contextAttributes);
     }
 }

@@ -84,7 +84,7 @@ public class EditElement extends AbstractContentTemplatingElement {
 
             if(content instanceof InheritanceNodeWrapper) {
                 if (((InheritanceNodeWrapper) content).isInherited()) {
-                    helper.attribute("inherited", "true");;
+                    helper.attribute("inherited", "true");
                 }
             }
         } else {
@@ -107,7 +107,7 @@ public class EditElement extends AbstractContentTemplatingElement {
         }
 
         helper.attribute("format", format);
-        String dialog = resolveDialog(templateDefinition);
+        dialog = resolveDialog(templateDefinition);
         helper.attribute("dialog", dialog);
 
         helper.attribute("template", templateDefinition.getId());

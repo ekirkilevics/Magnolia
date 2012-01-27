@@ -36,9 +36,12 @@ package info.magnolia.templating.elements;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
+import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
@@ -90,11 +93,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String dialog;
     private String availableComponents;
     private String label;
+    private String description;
     private boolean inherit;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
 
-    private final boolean commentClosed = false;
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -106,6 +109,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.parentNode = getTargetContent();
 
         this.templateDefinition = resolveTemplateDefinition();
+        Messages messages = MessagesManager.getMessages(templateDefinition.getI18nBasename());
+
         this.areaDefinition = resolveAreaDefinition();
 
         // set the values based on the area definition if not passed
@@ -116,12 +121,16 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.availableComponents = resolveAvailableComponents();
         this.inherit = isInheritanceEnabled();
 
+        this.description = templateDefinition.getDescription();
+
         // build an adhoc area definition if no area definition can be resolved
         if(areaDefinition == null){
             buildAdHocAreaDefinition();
         }
 
         this.areaNode = resolveAreaNode();
+
+
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
@@ -131,13 +140,17 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("availableComponents", this.availableComponents);
             helper.attribute("type", this.type);
             helper.attribute("dialog", this.dialog);
-            helper.attribute("label", this.label);
+            helper.attribute("label", messages.getWithDefault(this.label, this.label));
             helper.attribute("inherit", String.valueOf(this.inherit));
             helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
             if(isOptionalAreaCreated()) {
                 helper.attribute("created", "true");
             }
             helper.attribute("showAddButton", String.valueOf(shouldShowAddButton()));
+            if (StringUtils.isNotBlank(description)) {
+                helper.attribute("description", messages.getWithDefault(description, description));
+            }
+
             helper.append(" -->\n");
 
         }
@@ -406,6 +419,22 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setDialog(String dialog) {
         this.dialog = dialog;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isInherit() {

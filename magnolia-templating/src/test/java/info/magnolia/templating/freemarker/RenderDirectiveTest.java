@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.freemarker;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -44,6 +45,7 @@ import static org.junit.Assert.*;
 public class RenderDirectiveTest extends AbstractDirectiveTestCase {
 
     @Test
+    @Ignore
     public void testRenderSimpleBar() throws Exception {
         final String result = renderForTest("[@cms.render /]", null);
 

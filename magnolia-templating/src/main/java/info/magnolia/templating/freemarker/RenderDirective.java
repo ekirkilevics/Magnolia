@@ -54,11 +54,9 @@ public class RenderDirective extends AbstractDirective<RenderElement> {
 
         initContentElement(params, templatingElement);
 
-        boolean editable = bool(params, "editable", false);
-        String template = string(params, "template", null);
+        String dialog = string(params, "dialog", null);
         Map<String,Object> contextAttributes = (Map<String, Object>) object(params, "contextAttributes");
-        templatingElement.setEditable(editable);
-        templatingElement.setTemplate(template);
+        templatingElement.setDialog(dialog);
         templatingElement.setContextAttributes(contextAttributes);
     }
 }
