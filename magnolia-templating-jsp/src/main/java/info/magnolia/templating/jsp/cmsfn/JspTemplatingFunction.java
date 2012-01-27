@@ -95,7 +95,8 @@ public class JspTemplatingFunction {
     @Function()
     public static  ContentMap root(ContentMap contentMap, String nodeTypeName) throws RepositoryException {
         if(!nodeTypeName.isEmpty()) {
-            return getTemplatingFunctions().root(contentMap, nodeTypeName);
+            ContentMap root = getTemplatingFunctions().root(contentMap, nodeTypeName);
+            return root;
         }
         return getTemplatingFunctions().root(contentMap);
     }

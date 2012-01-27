@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,35 +33,49 @@
  */
 package info.magnolia.templating.jsp.cms;
 
-import static org.junit.Assert.assertNotNull;
-import info.magnolia.templating.jsp.AbstractTagTestCase;
+import info.magnolia.templating.elements.ComponentElement;
 
-import org.junit.Test;
+import java.util.Map;
 
-import com.meterware.httpunit.GetMethodWebRequest;
-import com.meterware.httpunit.WebRequest;
-import com.meterware.httpunit.WebResponse;
+import javax.servlet.jsp.JspException;
+
+import org.tldgen.annotations.Attribute;
+import org.tldgen.annotations.BodyContent;
+import org.tldgen.annotations.Tag;
+
+
 /**
+ * A jsp tag for rendering an arbitrary piece of content.
  * @version $Id$
  *
  */
-public class RenderBarTagTest extends AbstractTagTestCase {
 
-    @Test
-    public void testOutput() throws Exception {
-        // GIVEN
-        final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
-        final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
+@Tag(name="component", bodyContent=BodyContent.EMPTY)
 
-        final WebRequest request = new GetMethodWebRequest(jspUrl);
-        final WebResponse response = runner.getResponse(request);
+public class ComponentTag extends AbstractTag<ComponentElement> {
 
-        // WHEN
-        final String responseStr = response.getText();
+    // Edit Tag Variable
+    private String dialog;
+    private Object contextAttributes;
 
-        // THEN
-        assertNotNull(responseStr);
-  }
+    @Attribute(required=false, rtexprvalue=true)
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
+    }
 
+
+    @Attribute(required=false, rtexprvalue=true)
+    public void setContextAttributes(Object contextAttributes) {
+        this.contextAttributes = contextAttributes;
+    }
+
+    @Override
+    protected void prepareTemplatingElement(ComponentElement templatingElement) throws JspException{
+        initContentElement(templatingElement);
+
+        Map<String,Object> contextAttributes = mapConvertor(this.contextAttributes, "contextAttributes",false);
+        templatingElement.setDialog(dialog);
+        templatingElement.setContextAttributes(contextAttributes);
+    }
 
 }

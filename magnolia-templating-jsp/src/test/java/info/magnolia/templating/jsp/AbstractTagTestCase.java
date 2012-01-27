@@ -54,6 +54,8 @@ import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.assignment.MetaDataBasedTemplateDefinitionAssignment;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
@@ -185,6 +187,7 @@ public abstract class AbstractTagTestCase {
         ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         ComponentsTestUtil.setImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
         ComponentsTestUtil.setImplementation(ContextFactory.class,ContextFactory.class);
+        ComponentsTestUtil.setImplementation(TemplateDefinitionAssignment.class, MetaDataBasedTemplateDefinitionAssignment.class);
 
         MockContext systemContext = new MockContext();
         systemContext.addSession("website", session.getJcrSession());

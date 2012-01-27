@@ -32,13 +32,10 @@
  *
  */
 //package info.magnolia.templating.jsp.cms;
-@Library(uri = "http://magnolia-cms.com/taglib/templating-components/cms", shortName = "cms",
-license = NONE, version = VERSION_21, description="Magnolia is an open-source enterprise class Content Management System developed by Magnolia International Ltd., based on the standard API for Java Content Repositories (JCR).",
-displayName= "Magnolia Templating CMS Tag Support")
+@Library(version = org.tldgen.annotations.TldVersion.VERSION_21, uri = "http://magnolia-cms.com/taglib/templating-components/cms", shortName = "cms", license = NONE, description="Magnolia is an open-source enterprise class Content Management System developed by Magnolia International Ltd., based on the standard API for Java Content Repositories (JCR).", displayName= "Magnolia Templating CMS Tag Support")
 package info.magnolia.templating.jsp.cms;
 
 import static org.tldgen.annotations.License.NONE;
-import static org.tldgen.annotations.TldVersion.VERSION_21;
 
 import org.tldgen.annotations.Library;
 

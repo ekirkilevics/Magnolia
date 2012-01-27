@@ -33,45 +33,41 @@
  */
 package info.magnolia.templating.jsp.cms;
 
-import org.tldgen.annotations.Attribute;
-import org.tldgen.annotations.BodyContent;
-import org.tldgen.annotations.Tag;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
+import info.magnolia.templating.jsp.AbstractTagTestCase;
 
-import info.magnolia.templating.elements.EditElement;
+import org.junit.Test;
 
-
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
 /**
- * A jsp tag for the edit bar UI component.
- *
  * @version $Id$
  *
  */
-@Tag(name="edit", bodyContent=BodyContent.EMPTY)
 
-public class EditTag extends AbstractTag<EditElement>{
+public class ComponentBarTagTest extends AbstractTagTestCase {
 
-    //Edit Tag Variable
-    private String format;
-    private String dialog;
+    @Test
+    public void testOutput() throws Exception {
+        // GIVEN
+        final String jspPath = getClass().getName().replace('.', '/') + ".jsp";
+        final String jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
 
-    @Attribute(required=false, rtexprvalue=true)
-    public void setFormat(String format) {
-        this.format = format;
-    }
+        final WebRequest request = new GetMethodWebRequest(jspUrl);
+        final WebResponse response = runner.getResponse(request);
 
-    @Attribute(required=false, rtexprvalue=true)
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
+        // WHEN
+        final String responseStr = response.getText();
 
+        // THEN
+        //Check first div (default dialog)
+        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"testDialog\" -->"));
+        //Check second div (nyCustomDialog) defining a dialog
+        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"myCustomDialog\" -->\n<!-- /cms:component -->\n"));
 
+  }
 
-    @Override
-    protected void prepareTemplatingElement(EditElement templatingElement) {
-        initContentElement(templatingElement);
-
-        templatingElement.setFormat(format);
-        templatingElement.setDialog(dialog);
-    }
 
 }
