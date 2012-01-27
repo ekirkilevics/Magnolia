@@ -134,7 +134,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
 
         AbstractRenderer renderer = new DummyRenderer() {
             @Override
-            protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
+            protected String resolveTemplateScript(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
                 return null;
             }
         };
@@ -154,7 +154,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
 
         AbstractRenderer renderer = new DummyRenderer() {
             @Override
-            protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
+            protected String resolveTemplateScript(Node content, RenderableDefinition definition, RenderingModel<?> model, String actionResult) {
                 throw new RuntimeException("Should have exited method before this call!");
             }
         };

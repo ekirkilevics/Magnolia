@@ -115,7 +115,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             }
         }
 
-        String templatePath = determineTemplatePath(content, definition, model, actionResult);
+        String templatePath = resolveTemplateScript(content, definition, model, actionResult);
         if(templatePath == null){
             throw new RenderException("No template script defined for the template definition [" + definition + "]");
         }
@@ -131,16 +131,15 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         restoreContext(ctx, savedContextState);
     }
 
-    protected String determineTemplatePath(Node content, RenderableDefinition definition, RenderingModel<?> model, final String actionResult) {
-
-        // FIXME reactivate this code
+    /**
+     * Hook-method to be overriden when required. Default implementation ignores all arguments except definition.
+     *
+     * @param definition reference templateScript is retrieved from
+     *
+     * @return the templateScript to use
+     */
+    protected String resolveTemplateScript(Node content, RenderableDefinition definition, RenderingModel<?> model, final String actionResult) {
         return definition.getTemplateScript();
-        //        String templatePath = definition.determineTemplatePath(actionResult, model);
-        //
-        //        if (templatePath == null) {
-        //            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
-        //        }
-        //        return templatePath;
     }
 
     /**
