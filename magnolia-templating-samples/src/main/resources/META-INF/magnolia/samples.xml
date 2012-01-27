@@ -26,6 +26,10 @@
       <name>templating</name>
       <version>4.5/*</version>
     </dependency>
+    <dependency>
+      <name>templating-jsp</name>
+      <version>4.5/*</version>
+    </dependency>   
   </dependencies>
   <servlets>
     <servlet>
