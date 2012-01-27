@@ -58,6 +58,8 @@ import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.template.assignment.MetaDataBasedTemplateDefinitionAssignment;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
@@ -165,6 +167,7 @@ public abstract class AbstractDirectiveTestCase {
         configuration.registerImplementation(MessagesManager.class, DefaultMessagesManager.class);
         configuration.registerImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
         configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
+        configuration.registerImplementation(TemplateDefinitionAssignment.class, MetaDataBasedTemplateDefinitionAssignment.class);
         configuration.registerImplementation(ContextFactory.class);
 
         MockContext systemContext = new MockContext();

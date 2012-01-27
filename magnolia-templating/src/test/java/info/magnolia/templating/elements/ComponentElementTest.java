@@ -51,6 +51,8 @@ import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.DefaultRenderingEngine;
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
@@ -61,13 +63,15 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -75,14 +79,18 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class RenderElementTest {
+public class ComponentElementTest {
 
-    @Test
-    @Ignore
-    public void test() throws Exception {
+    private StringWriter out;
+    private ComponentElement marker;
+    private ConfiguredTemplateDefinition templateDefinition;
+
+    @Before
+    public void setUp() throws Exception {
         final MockHierarchyManager session = MockUtil.createHierarchyManager(
             "/foo/bar/baz/paragraphs/01@type=mgnl:component\n" +
-            "/foo/bar/baz/paragraphs/01.text=dummy");
+            "/foo/bar/baz/paragraphs/01.text=dummy" +
+            "/foo/bar/baz/paragraphs/01/MetaData.mgnl\\:template=testParagraph0");
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
@@ -106,7 +114,7 @@ public class RenderElementTest {
         ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
 
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        final ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
+        templateDefinition = new ConfiguredTemplateDefinition();
         templateDefinition.setRenderType("blah");
         when(templateDefinitionAssignment.getAssignedTemplateDefinition(currentContent.getJCRNode())).thenReturn(templateDefinition);
 
@@ -114,22 +122,63 @@ public class RenderElementTest {
         Renderer renderer = mock(Renderer.class);
         when(registry.getRenderer("blah")).thenReturn(renderer);
         final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        out = new StringWriter();
+        context.push(aggregationState.getCurrentContent().getJCRNode(), templateDefinition, new OutputProvider() {
+
+            @Override
+            public OutputStream getOutputStream() throws RenderException, IOException {
+                return null;
+            }
+
+            @Override
+            public Appendable getAppendable() throws RenderException, IOException {
+                return out;
+            }
+        });
+
+
         DefaultRenderingEngine engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new NoopVariationResolver(), new Provider<RenderingContext>() {
             @Override
             public RenderingContext get() {
                 return context;
             }
         });
-        final RenderElement renderElement = new RenderElement(serverCfg, context, engine, null);
 
-        StringWriter out = new StringWriter();
-        renderElement.begin(out);
-        assertEquals("<!-- cms:component -->\n", out.toString());
+        marker = new ComponentElement(serverCfg, context, engine, templateDefinitionAssignment);
+    }
 
-        out = new StringWriter();
-        renderElement.end(out);
+
+
+    @Test
+    public void testRenderBeginOnlyContent() throws Exception {
+        // GIVEN
+
+        // WHEN
+        marker.begin(out);
+
+        // THEN
+        assertEquals("<!-- cms:component content=\"testSession:/foo/bar/baz/paragraphs/01\" -->\n",out.toString());
+    }
+
+    @Test
+    public void testRenderBeginAll() throws Exception {
+        // GIVEN
+        templateDefinition.setDialog("dialog");
+
+        // WHEN
+        marker.begin(out);
+
+        // THEN
+        assertEquals("<!-- cms:component content=\"testSession:/foo/bar/baz/paragraphs/01\" dialog=\"dialog\" -->\n", out.toString());
+    }
+
+    @Test
+    public void testPostRender() throws Exception {
+        marker.end(out);
         assertEquals("<!-- /cms:component -->\n", out.toString());
     }
+
+
 
     @After
     public void tearDown() throws Exception {

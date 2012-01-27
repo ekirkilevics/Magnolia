@@ -40,17 +40,17 @@ import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.templating.elements.RenderElement;
+import info.magnolia.templating.elements.ComponentElement;
 
 /**
  * A freemarker directive for rendering an arbitrary piece of content.
  *
  * @version $Id$
  */
-public class RenderDirective extends AbstractDirective<RenderElement> {
+public class ComponentDirective extends AbstractDirective<ComponentElement> {
 
     @Override
-    protected void prepareTemplatingElement(RenderElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
+    protected void prepareTemplatingElement(ComponentElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
 
         initContentElement(params, templatingElement);
 

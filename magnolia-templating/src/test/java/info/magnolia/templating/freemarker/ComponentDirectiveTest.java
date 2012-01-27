@@ -33,49 +33,27 @@
  */
 package info.magnolia.templating.freemarker;
 
-import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import freemarker.template.TemplateModelException;
-import static org.junit.Assert.*;
 
 /**
  * $Id$
  */
-public class EditDirectiveTest extends AbstractDirectiveTestCase {
-    private ConfiguredTemplateDefinition renderableDef = new ConfiguredTemplateDefinition();
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        renderableDef.setId("testParagraph1");
-        renderableDef.setTitle("Test Paragraph 1");
-        renderableDef.setDialog("testDialog");
-    }
+public class ComponentDirectiveTest extends AbstractDirectiveTestCase {
 
     @Test
     public void testRenderSimpleBar() throws Exception {
-        String result = renderForTest("[@cms.edit /]", renderableDef);
-        assertEquals("<!-- cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\" -->\n<!-- /cms:edit -->\n", result);
+        final String result = renderForTest("[@cms.component /]", null);
+
+        assertEquals("<!-- cms:component content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" -->\n<!-- /cms:component -->\n", result);
     }
 
     @Test
     public void testRenderWithDialog() throws Exception {
-        final String result = renderForTest("[@cms.edit dialog='testDialog' /]", renderableDef);
-        assertEquals("<!-- cms:edit content=\"testWorkspace:/foo/bar/paragraphs/1\" label=\"Test Paragraph 1\" dialog=\"testDialog\" template=\"testParagraph1\" -->\n<!-- /cms:edit -->\n", result);
-    }
+        final String result = renderForTest("[@cms.component dialog='newDialog' /]", null);
 
-    @Test
-    public void testThrowsExceptionForUnknownParameters() throws Exception {
-        try {
-            renderForTest("[@cms.edit fake='lol' /]", null);
-            fail("should have failed");
-        } catch (TemplateModelException e) {
-            assertEquals("Unsupported parameter(s): {fake=lol}", e.getMessage());
-        }
+        assertEquals("<!-- cms:component content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"newDialog\" -->\n<!-- /cms:component -->\n", result);
     }
-
 }

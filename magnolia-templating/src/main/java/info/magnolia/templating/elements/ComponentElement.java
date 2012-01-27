@@ -40,14 +40,12 @@ import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
-import info.magnolia.rendering.engine.DefaultRenderingEngine;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +59,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-public class RenderElement extends AbstractContentTemplatingElement {
+public class ComponentElement extends AbstractContentTemplatingElement {
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
@@ -71,7 +69,7 @@ public class RenderElement extends AbstractContentTemplatingElement {
     private String dialog;
 
     @Inject
-    public RenderElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine, TemplateDefinitionAssignment templateDefinitionAssignment ) {
+    public ComponentElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine, TemplateDefinitionAssignment templateDefinitionAssignment ) {
         super(server, renderingContext);
         this.renderingEngine = renderingEngine;
         this.templateDefinitionAssignment = templateDefinitionAssignment;
@@ -102,11 +100,11 @@ public class RenderElement extends AbstractContentTemplatingElement {
             try {
                 componentDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
             } catch (RegistrationException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw new RenderException("No template definition found for the current content", e);
             }
-
-            dialog = resolveDialog(componentDefinition);
+            if(StringUtils.isEmpty(dialog)) {
+                dialog = resolveDialog(componentDefinition);
+            }
             helper.attribute("dialog", dialog);
             helper.append(" -->\n");
         }
@@ -119,7 +117,11 @@ public class RenderElement extends AbstractContentTemplatingElement {
 
 
         try {
-            renderingEngine.render(content, componentDefinition, new HashMap<String, Object>(),  new AppendableOnlyOutputProvider(out));
+            if(componentDefinition != null) {
+                renderingEngine.render(content, componentDefinition, new HashMap<String, Object>(), new AppendableOnlyOutputProvider(out));
+            } else {
+                renderingEngine.render(content, new AppendableOnlyOutputProvider(out));
+            }
         } finally {
             webContext.pop();
             webContext.setPageContext(null);
@@ -151,10 +153,6 @@ public class RenderElement extends AbstractContentTemplatingElement {
             return dialog;
         }
         return null;
-    }
-
-    private TemplateDefinition getRequiredTemplateDefinition() {
-        return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
     }
 
     public void setDialog(String dialog) {
