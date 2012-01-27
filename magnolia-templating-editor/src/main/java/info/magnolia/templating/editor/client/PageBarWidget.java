@@ -134,27 +134,6 @@ public class PageBarWidget extends AbstractBarWidget {
             }
         });
         addButton(preview, Float.LEFT);
-
-        //FIXME mobile preview are here temporarily for testing purposes. They have to be replaced by some kind of dropdown menu button.
-        Button mobileIpad = new Button(getI18nMessage("buttons.preview.mobile.test.tablet.js"));
-        mobileIpad.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "tablet", Orientation.LANDSCAPE);
-            }
-        });
-        addButton(mobileIpad, Float.LEFT);
-
-        Button mobileIphone = new Button(getI18nMessage("buttons.preview.mobile.test.smartphone.js"));
-        mobileIphone.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-              //FIXME do not hardcode these values
-                pageEditor.createChannelPreview("mobile", "smartphone", Orientation.PORTRAIT);
-            }
-        });
-        addButton(mobileIphone, Float.LEFT);
         */
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));
