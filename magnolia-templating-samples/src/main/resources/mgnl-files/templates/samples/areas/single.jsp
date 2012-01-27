@@ -3,10 +3,9 @@
 
 <div id="${def.parameters.divId}">
 
-    <cms:edit />
 
-	<c:if test="${not empty component}">
-       <cms:render content="${component}"/>
-  	</c:if>
+  <c:if test="${not empty component}">
+       <cms:component content="${component}"/>
+    </c:if>
 
 </div>

@@ -4,50 +4,49 @@
 <%@ taglib prefix="cms" uri="http://magnolia-cms.com/taglib/templating-components/cms"%>
 <%@ taglib prefix="cmsfn" uri="http://magnolia-cms.com/taglib/templating-components/cmsfn"%>
 
-<cms:edit />
 
 <h3>
-	<c:choose>
-		<c:when test="${not empty content.title}">
-			${content.title}
-		</c:when>
-		<c:otherwise>
-			${content['@name']}
-		</c:otherwise>
-	</c:choose>
+  <c:choose>
+    <c:when test="${not empty content.title}">
+      ${content.title}
+    </c:when>
+    <c:otherwise>
+      ${content['@name']}
+    </c:otherwise>
+  </c:choose>
 </h3>
 
 Text:
-	<c:choose>
-		<c:when test="${not empty content.text}">
-			${content.text}
-		</c:when>
-		<c:otherwise>
-			No text defined yet
-		</c:otherwise>
-	</c:choose>
+  <c:choose>
+    <c:when test="${not empty content.text}">
+      ${content.text}
+    </c:when>
+    <c:otherwise>
+      No text defined yet
+    </c:otherwise>
+  </c:choose>
 
 <p>
-	<c:choose>
-		<c:when test="${not empty content.image}">
-			Image: <img src="${cmsfn:link(content.image)}" />
-		</c:when>
-		<c:otherwise>
-			Image: No image uploaded yet.
-		</c:otherwise>
-	</c:choose>
+  <c:choose>
+    <c:when test="${not empty content.image}">
+      Image: <img src="${cmsfn:link(content.image)}" />
+    </c:when>
+    <c:otherwise>
+      Image: No image uploaded yet.
+    </c:otherwise>
+  </c:choose>
 </p>
 
 <p>
-	<c:choose>
-		<c:when test="${not empty content.date}">
-			<fmt:formatDate value="${content.date.time}" var="parsedDate" pattern="EEEE, d. MMMM yyyy" />
-    		The date you specified: <c:out value="${parsedDate}" />
-		</c:when>
-		<c:otherwise>
-			No date specified yet.
-		</c:otherwise>
-	</c:choose>
+  <c:choose>
+    <c:when test="${not empty content.date}">
+      <fmt:formatDate value="${content.date.time}" var="parsedDate" pattern="EEEE, d. MMMM yyyy" />
+        The date you specified: <c:out value="${parsedDate}" />
+    </c:when>
+    <c:otherwise>
+      No date specified yet.
+    </c:otherwise>
+  </c:choose>
 </p>
 
 <h4>New Search</h4>

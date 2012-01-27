@@ -4,12 +4,11 @@
 
 <div id="footer">
 
-    <cms:edit />
 
-	<c:forEach items="${components}" var="component">
-	    <div id="footer-element">
-            <cms:render content="${component}" />
+  <c:forEach items="${components}" var="component">
+      <div id="footer-element">
+            <cms:component content="${component}" />
         </div>
-	</c:forEach>
+  </c:forEach>
 
 </div>

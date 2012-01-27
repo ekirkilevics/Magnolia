@@ -13,7 +13,6 @@
     <body>
 
         [#-- ****** main page bar ****** --]
-        [@cms.edit /]
 
         <div id="wrapper">
             <div id="header">

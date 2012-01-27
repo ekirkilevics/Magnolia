@@ -1,7 +1,6 @@
 
 
 [#-------------- Fields Component --------------]
-[@cms.edit /]
 
 <h3>Fields Show-Room Component</h3>
 <p>This text is rendered statically.<p/>

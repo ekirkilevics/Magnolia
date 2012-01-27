@@ -1,7 +1,6 @@
 <%@ taglib prefix="cms" uri="http://magnolia-cms.com/taglib/templating-components/cms"%>
 
 <!-------------- Fields Component -------------->
-<cms:edit />
 
 <h3>Fields Show-Room Component</h3>
 <p>This text is rendered statically.<p/>

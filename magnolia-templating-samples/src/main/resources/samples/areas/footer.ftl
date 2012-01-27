@@ -2,11 +2,10 @@
 
 <div id="footer">
 
-    [@cms.edit/]
 
     [#list components as component ]
         <div id="footer-element">
-            [@cms.render content=component /]
+            [@cms.component content=component /]
         </div><!-- end ${def.parameters.divID!} -->
     [/#list]
 

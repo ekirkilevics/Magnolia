@@ -1,5 +1,4 @@
 
-[@cms.edit /]
 
 
 <h3>${content.title!content.@name}</h3>

@@ -11,7 +11,6 @@
 
     <body>
         [#-- ****** main page bar ****** --]
-        [@cms.edit/]
 
         <div id="wrapper">
 

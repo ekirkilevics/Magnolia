@@ -5,45 +5,44 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
  <head>
-  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link media="screen" href="${pageContext.request.contextPath}/.resources/samples/css/samples.css" type="text/css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link media="screen" href="${pageContext.request.contextPath}/.resources/samples/css/samples.css" type="text/css" rel="stylesheet">
 
-	<cms:init />
+  <cms:init />
 
-	<title>
-		<c:choose>
-			<c:when test="${not empty content.title}">
-				${content.title}
-			</c:when>
-			<c:otherwise>
-				${content['@name']}
-			</c:otherwise>
-		</c:choose>
+  <title>
+    <c:choose>
+      <c:when test="${not empty content.title}">
+        ${content.title}
+      </c:when>
+      <c:otherwise>
+        ${content['@name']}
+      </c:otherwise>
+    </c:choose>
     </title>
  </head>
  <body>
-	<!-- ****** main page bar ****** -->
-	<cms:edit />
+  <!-- ****** main page bar ****** -->
 
     <div id="wrapper">
 
 
-    		<div id="header">
-				<!-- ****** navigation area ****** -->
-				<cms:area name="navigation" />
+        <div id="header">
+        <!-- ****** navigation ****** -->
+        <jsp:include page="/templates/samples/areas/navigation.jsp" />
             </div><!-- end header -->
 
 
-			<h1>
-	  		  <c:choose>
-				<c:when test="${not empty content.title}">
-						${content.title}
-					</c:when>
-					<c:otherwise>
-						${content['@name']}
-					</c:otherwise>
-				</c:choose>
-			</h1>
+      <h1>
+          <c:choose>
+        <c:when test="${not empty content.title}">
+            ${content.title}
+          </c:when>
+          <c:otherwise>
+            ${content['@name']}
+          </c:otherwise>
+        </c:choose>
+      </h1>
 
             <div id="main">
                 <p>Select a product:
@@ -53,14 +52,14 @@
                 </p>
                 <p>You selected:
                   <b>
-                  	<c:choose>
-						<c:when test="${not empty param.product}">
-							${param.product}
-						</c:when>
-						<c:otherwise>
-							none yet
-						</c:otherwise>
-					</c:choose>
+                    <c:choose>
+            <c:when test="${not empty param.product}">
+              ${param.product}
+            </c:when>
+            <c:otherwise>
+              none yet
+            </c:otherwise>
+          </c:choose>
                   </b>
                 </p>
                 <br />
