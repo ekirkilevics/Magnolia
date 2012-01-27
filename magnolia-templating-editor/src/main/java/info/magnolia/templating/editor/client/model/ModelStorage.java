@@ -35,6 +35,9 @@ package info.magnolia.templating.editor.client.model;
 
 import info.magnolia.templating.editor.client.AbstractBarWidget;
 import info.magnolia.templating.editor.client.AbstractOverlayWidget;
+import info.magnolia.templating.editor.client.AbstractPlaceHolder;
+import info.magnolia.templating.editor.client.AreaPlaceHolderWidget;
+import info.magnolia.templating.editor.client.ComponentPlaceHolderWidget;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.model.focus.FocusModel;
 import info.magnolia.templating.editor.client.model.focus.FocusModelImpl3;
@@ -59,6 +62,8 @@ public class ModelStorage {
     private Map<MgnlElement, AbstractOverlayWidget> overlays = new HashMap<MgnlElement, AbstractOverlayWidget>();
     private Map<MgnlElement, List<Element>> elements = new HashMap<MgnlElement, List<Element>>();
     private Map<Element, MgnlElement> mgnlElements = new HashMap<Element, MgnlElement>();
+    private Map<MgnlElement, AreaPlaceHolderWidget> areaPlaceHolders = new HashMap<MgnlElement, AreaPlaceHolderWidget>();
+    private Map<MgnlElement, ComponentPlaceHolderWidget> componentPlaceHolders = new HashMap<MgnlElement, ComponentPlaceHolderWidget>();
 
 
     public List<MgnlElement> rootElements = new LinkedList<MgnlElement>();
@@ -129,6 +134,22 @@ public class ModelStorage {
 
     public FocusModel getFocusModel() {
         return focusModel;
+    }
+
+    public void addAreaPlaceHolder(MgnlElement mgnlElement, AreaPlaceHolderWidget placeHolder) {
+        areaPlaceHolders.put(mgnlElement, placeHolder);
+    }
+
+    public AbstractPlaceHolder getAreaPlaceHolder(MgnlElement mgnlElement) {
+        return areaPlaceHolders.get(mgnlElement);
+    }
+
+    public void addComponentPlaceHolder(MgnlElement mgnlElement, ComponentPlaceHolderWidget placeHolder) {
+        componentPlaceHolders.put(mgnlElement, placeHolder);
+    }
+
+    public ComponentPlaceHolderWidget getComponentPlaceHolder(MgnlElement mgnlElement) {
+        return componentPlaceHolders.get(mgnlElement);
     }
 
 }

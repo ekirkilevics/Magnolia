@@ -31,32 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.templating.freemarker;
+package info.magnolia.templating.editor.client;
 
-import java.io.IOException;
-import java.util.Map;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.model.ModelStorage;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.templating.elements.InitElement;
+
+import com.google.gwt.user.client.ui.Label;
 
 /**
- * A freemarker directive for adding Magnolia specific javascripts and css.
- *
- * @version $Id$
+ * Widget for area placeholders.
  */
-public class InitDirective extends AbstractDirective<InitElement> {
+public class AreaPlaceHolderWidget extends AbstractPlaceHolder {
 
-    @Override
-    protected void prepareTemplatingElement(InitElement templatingElement, Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateModelException, IOException {
-        checkBody(body, false);
+    private final MgnlElement mgnlElement;
 
-        initContentElement(params, templatingElement);
+    public AreaPlaceHolderWidget(PageEditor pageEditor, MgnlElement mgnlElement) {
 
-        String dialog = string(params, "dialog", null);
 
-        templatingElement.setDialog(dialog);
+        this.mgnlElement = mgnlElement;
+        this.addStyleName("area");
+        String label = mgnlElement.getComment().getAttribute("label");
+        Label areaName = new Label(label + " Placeholder");
+
+        if (mgnlElement.getRootArea() != mgnlElement) {
+            setVisible(false);
+        }
+        add(areaName);
+
+        ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(pageEditor, mgnlElement);
+        ModelStorage.getInstance().addComponentPlaceHolder(mgnlElement, placeHolder);
+
+
+        add(placeHolder);
     }
+
 }

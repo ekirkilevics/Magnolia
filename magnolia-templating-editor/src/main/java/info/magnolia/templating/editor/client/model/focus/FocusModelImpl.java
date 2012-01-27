@@ -90,10 +90,8 @@ public class FocusModelImpl implements FocusModel {
                 if (storage.getOverlay(mgnlElement) != null) {
                     storage.getOverlay(mgnlElement).setVisible(false);
                 }
-                if (mgnlElement != null) {
-                    if (storage.getEditBar(mgnlElement) != null) {
-                        storage.getEditBar(mgnlElement).setVisible(true);
-                    }
+                if (storage.getEditBar(mgnlElement) != null) {
+                    storage.getEditBar(mgnlElement).setVisible(true);
                 }
 
                 for (MgnlElement component : mgnlElement.getComponents()) {

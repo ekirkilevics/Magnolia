@@ -34,10 +34,10 @@
 package info.magnolia.templating.editor.client;
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -62,36 +62,39 @@ public class EditBarWidget extends AbstractBarWidget {
     private String parentAreaType;
     private boolean isInherited;
 
-    public EditBarWidget(MgnlElement mgnlElement, CMSComment comment, final PageEditor pageEditor) {
+    public EditBarWidget(MgnlElement mgnlElement, final PageEditor pageEditor) {
 
-        super(mgnlElement, comment);
-        String content = comment.getAttribute("content");
-        int i = content.indexOf(':');
-        this.workspace = content.substring(0, i);
-        this.path = content.substring(i + 1);
-
-        this.id = path.substring(path.lastIndexOf("/") + 1);
-
-        setId("__"+id);
-
-        this.dialog = comment.getAttribute("dialog");
+        super(mgnlElement);
 
         if(mgnlElement.getParentArea() != null) {
-            this.parentAreaType = mgnlElement.getParentArea().getComment().getAttribute("type");
-        }
 
-        this.isInherited = Boolean.parseBoolean(comment.getAttribute("inherited"));
+            MgnlElement area = mgnlElement.getParentArea();
+            String content = mgnlElement.getComment().getAttribute("content");
+            int i = content.indexOf(':');
+            this.workspace = content.substring(0, i);
+            this.path = content.substring(i + 1);
+
+            this.id = path.substring(path.lastIndexOf("/") + 1);
+
+            setId("__"+id);
+
+            this.dialog = mgnlElement.getComment().getAttribute("dialog");
+
+            this.parentAreaType = area.getComment().getAttribute("type");
+        }
+        this.isInherited = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("inherited"));
 
         createButtons(pageEditor);
 
         createMouseEventsHandlers(pageEditor);
 
         addStyleName("component");
-        if (this.isInherited) {
+        if (isInherited) {
             addStyleName("mgnlInherited");
         }
 //        getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         setVisible(false);
+        attach(mgnlElement);
     }
 
     private void createMouseEventsHandlers(final PageEditor pageEditor) {
@@ -160,6 +163,14 @@ public class EditBarWidget extends AbstractBarWidget {
             removeButton.addStyleName("mgnlRemoveButton");
             addButton(removeButton, Float.RIGHT);
         }
+    }
+
+    private void attach(MgnlElement mgnlElement) {
+        Element element = mgnlElement.getFirstElement();
+        if (element != null) {
+            element.insertFirst(getElement());
+        }
+        onAttach();
     }
 
 }

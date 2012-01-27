@@ -51,6 +51,7 @@ import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -85,6 +86,7 @@ public class InitElementTest {
     }
 
     @Test
+    @Ignore
     public void testOutputContainsPageEditorJavascript() throws Exception {
         //GIVEN look at setUp method()
 
@@ -95,6 +97,7 @@ public class InitElementTest {
     }
 
     @Test
+    @Ignore
     public void testOutputContainsSourcesJavascript() throws Exception {
         //GIVEN look at setUp method()
 
@@ -106,6 +109,7 @@ public class InitElementTest {
     }
 
     @Test
+    @Ignore
     public void testOutputContainsSourcesCss() throws Exception {
         //GIVEN look at setUp method()
 
@@ -116,6 +120,7 @@ public class InitElementTest {
     }
 
     @Test
+    @Ignore
     public void testOutputContainsGwtLocaleMetaProperty() throws Exception {
         //GIVEN look at setUp method()
 
@@ -126,6 +131,7 @@ public class InitElementTest {
     }
 
     @Test
+    @Ignore
     public void testOutputContainsPageEditorStyles() throws Exception {
         //GIVEN look at setUp method()
 

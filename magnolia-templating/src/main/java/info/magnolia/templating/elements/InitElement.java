@@ -40,8 +40,13 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.TemplateDefinition;
 
 import java.io.IOException;
+
+import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -53,8 +58,10 @@ public class InitElement extends AbstractContentTemplatingElement {
 
     public static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
     public static final String PAGE_EDITOR_CSS =  MgnlContext.getContextPath() + "/.resources/magnolia-templating-editor/css/editor.css";
+    private static final String CMS_TAG = "cms:page";
 
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private String dialog;
 
     public InitElement(ServerConfiguration server, RenderingContext renderingContext) {
         super(server, renderingContext);
@@ -66,6 +73,12 @@ public class InitElement extends AbstractContentTemplatingElement {
             return;
         }
 
+        Node content = getTargetContent();
+
+        TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
+
+        dialog = resolveDialog(templateDefinition);
+
         Sources src = new Sources(MgnlContext.getContextPath());
         MarkupHelper helper = new MarkupHelper(out);
         helper.append("<!-- begin js and css added by @cms.init -->\n");
@@ -74,6 +87,17 @@ public class InitElement extends AbstractContentTemplatingElement {
         helper.append(src.getHtmlJs());
         helper.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + PAGE_EDITOR_CSS + "\"></link>\n");
         helper.append("<script type=\"text/javascript\" src=\"" + PAGE_EDITOR_JS_SOURCE + "\"></script>\n");
+
+
+
+        helper.openComment(CMS_TAG);
+        if(content != null) {
+            helper.attribute("content", getNodePath(content));
+        }
+        helper.attribute("dialog", dialog);
+        helper.append(" -->\n");
+        helper.closeComment(CMS_TAG);
+
     }
 
     @Override
@@ -83,5 +107,25 @@ public class InitElement extends AbstractContentTemplatingElement {
         }
         MarkupHelper helper = new MarkupHelper(out);
         helper.append("\n<!-- end js and css added by @cms.init -->\n");
+    }
+
+
+    private TemplateDefinition getRequiredTemplateDefinition() {
+        return (TemplateDefinition) getRenderingContext().getRenderableDefinition();
+    }
+
+    private String resolveDialog(TemplateDefinition component) {
+        if (StringUtils.isNotEmpty(this.dialog)) {
+            return this.dialog;
+        }
+        String dialog = component.getDialog();
+        if (StringUtils.isNotEmpty(dialog)) {
+            return dialog;
+        }
+        return null;
+    }
+
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
     }
 }

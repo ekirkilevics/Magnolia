@@ -66,7 +66,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -89,13 +88,13 @@ import com.google.gwt.user.client.ui.RootPanel;
  *
  * TODO clean up/refactoring: this class is getting messy.
  */
-public class PageEditor extends HTML implements EventListener, EntryPoint {
+public class PageEditor extends HTML implements EntryPoint {
 
     public static final String SKIP_PAGE_EDITOR_DOM_PROCESSING = "skipPageEditorDOMProcessing";
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
-    private static ModelStorage storage = ModelStorage.getInstance();
+    static ModelStorage model = ModelStorage.getInstance();
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
     @Override
@@ -110,16 +109,16 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         locale = LegacyJavascript.detectCurrentLocale();
 
         long startTime = System.currentTimeMillis();
-        processCmsComments(Document.get().getDocumentElement(), null);
+        processDocument(Document.get().getDocumentElement(), null);
         GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
-        cleanRootElements();
-        storage.getFocusModel().reset();
+        processMgnlElements();
+        model.getFocusModel().reset();
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
             @Override
             public void onMouseUp(MouseUpEvent event) {
 
-                storage.getFocusModel().onMouseUp((Element)event.getNativeEvent().getEventTarget().cast());
+                model.getFocusModel().onMouseUp((Element)event.getNativeEvent().getEventTarget().cast());
                 event.stopPropagation();
             }
         }, MouseUpEvent.getType());
@@ -128,7 +127,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
             @Override
             public void onMouseDown(MouseDownEvent event) {
 
-                storage.getFocusModel().onMouseDown((Element)event.getNativeEvent().getEventTarget().cast());
+                model.getFocusModel().onMouseDown((Element)event.getNativeEvent().getEventTarget().cast());
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());
@@ -264,78 +263,14 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         previewChannelWidget.center();
     }
 
-    private void processCmsComments(Node node, MgnlElement mgnlElement) {
+    private void processDocument(Node node, MgnlElement mgnlElement) {
         for (int i = 0; i < node.getChildCount(); i++) {
             Node childNode = node.getChild(i);
             if (childNode.getNodeType() == Comment.COMMENT_NODE) {
 
                 try {
+                    mgnlElement = processCmsComment(childNode, mgnlElement);
 
-                    CMSComment comment = new CMSComment(((Comment)childNode.cast()).getData());
-
-                    // this should be refactored after cms:edit tag is gone
-
-                    if (comment.getTagName().equals("cms:edit") && !comment.isClosing()) {
-
-                        GWT.log("processing comment " + comment);
-                        //We assume the first cms:edit we encounter in DOM is the page edit bar.
-                        if (!pageEditBarAlreadyProcessed) {
-                            GWT.log("element was detected as page edit bar. Injecting it...");
-                            PageBarWidget pageBarWidget = new PageBarWidget(this, comment);
-                            pageBarWidget.attach(childNode);
-                            pageEditBarAlreadyProcessed = true;
-
-                            storage.addEditBar(mgnlElement, pageBarWidget);
-
-
-                            if (pageBarWidget.isPreviewState()) {
-                                //we just need the preview bar here
-                                GWT.log("We're in preview mode, stop processing DOM.");
-                                break;
-                            }
-                        }
-                        else if (mgnlElement != null && mgnlElement.isComponent()) {
-                            GWT.log("element is a plain edit bar. Injecting it...");
-                            EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, comment, this);
-
-                            editBarWidget.attach(childNode);
-                            storage.addEditBar(mgnlElement, editBarWidget);
-
-                        }
-                        else if (mgnlElement != null && mgnlElement.isArea()) {
-                            GWT.log("element was detected as area edit bar. Injecting it...");
-
-                            AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, comment, this);
-                            if (areaBarWidget.hasControls) {
-                                areaBarWidget.attach(childNode);
-                                storage.addEditBar(mgnlElement, areaBarWidget);
-                            }
-                            AbstractOverlayWidget overlay = new AreaOverlayWidget(mgnlElement);
-                            overlay.attach();
-                            storage.addOverlay(mgnlElement, overlay);
-
-                        }
-                    }
-                    else if (mgnlElement != null && comment.isClosing() && !comment.getTagName().equals("cms:edit")) {
-
-                            mgnlElement = mgnlElement.getParent();
-                    }
-                    else {
-                        try {
-                            mgnlElement = new MgnlElement(comment, mgnlElement);
-
-                            if (mgnlElement.getParent() == null) {
-                                storage.addRoot(mgnlElement);
-                            }
-                            else {
-                                mgnlElement.getParent().getChildren().add(mgnlElement);
-                            }
-
-                        }
-                        catch (IllegalArgumentException e) {
-                            GWT.log("Not MgnlElement, skipping: " + e.toString());
-                        }
-                    }
                 }
                 catch (IllegalArgumentException e) {
                     GWT.log("Not CMSComment element, skipping: " + e.toString());
@@ -346,34 +281,218 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
 
                 }
             }
-            else if (childNode.getNodeType() == Element.ELEMENT_NODE && mgnlElement != null) {
+            else if (childNode.getNodeType() == Node.ELEMENT_NODE && mgnlElement != null) {
+                processElement(childNode, mgnlElement);
+            }
 
-                Element element = childNode.cast();
-                if (element.hasTagName("A")) {
-                    disableLink(element);
+            processDocument(childNode, mgnlElement);
+        }
+
+    }
+
+    private MgnlElement processCmsComment(Node node, MgnlElement mgnlElement) throws Exception {
+
+        CMSComment comment = new CMSComment(((Comment)node.cast()).getData());
+
+        GWT.log("processing comment " + comment);
+
+        if (!comment.isClosing()) {
+
+            if (comment.getTagName().equals("cms:page")) {
+                GWT.log("element was detected as page edit bar. Injecting it...");
+                PageBarWidget pageBarWidget = new PageBarWidget(this, comment);
+                pageBarWidget.attach();
+                pageEditBarAlreadyProcessed = true;
+
+                if (pageBarWidget.isPreviewState()) {
+                    //we just need the preview bar here
+                    GWT.log("We're in preview mode, stop processing DOM.");
                 }
-                storage.addElement(mgnlElement, element);
+            }
 
-                if (!element.getClassName().equals("mgnlAreaEditBar") && !element.getClassName().equals("mgnlEditBar") && element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 && element.getOffsetHeight() != 0) {
+            else {
+                try {
+                    mgnlElement = new MgnlElement(comment, mgnlElement);
+
+                    if (mgnlElement.getParent() == null) {
+                        model.addRoot(mgnlElement);
+                    }
+                    else {
+                        mgnlElement.getParent().getChildren().add(mgnlElement);
+                    }
+
+                }
+                catch (IllegalArgumentException e) {
+                    GWT.log("Not MgnlElement, skipping: " + e.toString());
+                }
+            }
+        }
+
+        else if (mgnlElement != null) {
+            mgnlElement = mgnlElement.getParent();
+        }
+
+        return mgnlElement;
+
+        // this should be refactored after cms:edit tag is gone
+
+        /*
+         *             if (mgnlElement.isArea()  && model.getEditBar(mgnlElement) != null) {
+
+                if (mgnlElement.getComponents().size() < 1 && model.getAreaPlaceHolder(mgnlElement) == null) {
+
+                    AreaPlaceHolderWidget areaPlaceHolder = new AreaPlaceHolderWidget(this, mgnlElement);
+
+                    model.addAreaPlaceHolder(mgnlElement, areaPlaceHolder);
+                    model.addElement(mgnlElement, areaPlaceHolder.getElement());
+
+                    areaPlaceHolder.attach(model.getEditBar(mgnlElement).getElement());
+                }
+                else if (model.getComponentPlaceHolder(mgnlElement) == null) {
+                    ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, mgnlElement);
+
+                    model.addComponentPlaceHolder(mgnlElement, placeHolder);
+                    model.addElement(mgnlElement, placeHolder.getElement());
+
+                    placeHolder.attach(mgnlElement);
+                }
+            }
+         *
+         *
+         *
+         *      else if (comment.getTagName().equals("cms:edit") && !comment.isClosing()) {
+
+
+                    if (mgnlElement != null && mgnlElement.isComponent()) {
+
+                        GWT.log("element is a plain edit bar. Injecting it...");
+                        EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
+
+                        editBarWidget.attach(node);
+                        model.addEditBar(mgnlElement, editBarWidget);
+
+                    }
+                    else if (mgnlElement != null && mgnlElement.isArea()) {
+                        GWT.log("element was detected as area edit bar. Injecting it...");
+
+                        AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, this);
+                        if (areaBarWidget.hasControls) {
+                            areaBarWidget.attach(node);
+                            model.addEditBar(mgnlElement, areaBarWidget);
+                        }
+
+                                   AbstractOverlayWidget overlay = new AreaOverlayWidget(mgnlElement);
+                        overlay.attach();
+
+                    }
+                }
+                else if (comment.getTagName().equals("cms:placeholder") && !comment.isClosing()) {
+                    AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(this, mgnlElement);
+
+                    model.addAreaPlaceHolder(mgnlElement, placeHolder);
+                    placeHolder.attach(node);
+                }
+                else if (comment.getTagName().equals("cms:add") && !comment.isClosing()) {
                     MgnlElement area = mgnlElement;
-                    if (mgnlElement.isComponent()) {
+                    if (!mgnlElement.isArea()) {
                         area = mgnlElement.getParentArea();
                     }
-                    if (area != null) {
-                        if (area.getFirstElement() == null) {
-                            area.setFirstElement(element);
-                        }
+                    ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, area);
+
+                    model.addComponentPlaceHolder(mgnlElement, placeHolder);
+                    placeHolder.attach(node);
+                }*/
+    }
+
+    private void processElement(Node node, MgnlElement mgnlElement) {
+        Element element = node.cast();
+        if (element.hasTagName("A")) {
+            disableLink(element);
+        }
+        model.addElement(mgnlElement, element);
+
+        if (element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 && element.getOffsetHeight() != 0) {
+
+            if (mgnlElement.getFirstElement() == null) {
+                mgnlElement.setFirstElement(element);
+
+                if (mgnlElement.isComponent()) {
+                    MgnlElement area = mgnlElement.getParentArea();
+                    if (area != null && area.getFirstElement() == null) {
+                        area.setFirstElement(element);
+
                         if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
                             area.setLastElement(element);
                         }
                     }
                 }
-
+            }
+            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
+                mgnlElement.setLastElement(element);
             }
 
-            processCmsComments(childNode, mgnlElement);
         }
 
+        if (element.hasAttribute("cms:add")) {
+
+            GWT.log("element is component invitation placeholder. Injecting it...");
+
+            MgnlElement area = mgnlElement;
+            if (!mgnlElement.isArea()) {
+                area = mgnlElement.getParentArea();
+            }
+            ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, area);
+
+            model.addComponentPlaceHolder(mgnlElement, placeHolder);
+            placeHolder.attach(node);
+        }
+
+        else if (element.hasAttribute("cms:placeholder")) {
+
+            // this will probably not work, as it shoiuldn't be shown when there are components.. or should it?
+            GWT.log("element is area placeholder. Injecting it...");
+
+            AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(this, mgnlElement);
+
+            model.addAreaPlaceHolder(mgnlElement, placeHolder);
+            placeHolder.attach(node);
+        }
+
+        else if (element.hasAttribute("cms:edit")) {
+
+            GWT.log("element is edit bar placeholder. Injecting it...");
+            EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
+
+            editBarWidget.attach(node);
+            model.addEditBar(mgnlElement, editBarWidget);
+
+        }
+
+    }
+
+    private void processMgnlElements() {
+        for (MgnlElement root :model.getRootElements()) {
+            LinkedList<MgnlElement> els = new LinkedList<MgnlElement>();
+            els.add(root);
+            els.addAll(root.getDescendants());
+            for (MgnlElement mgnlElement : els) {
+                if (model.getEditBar(mgnlElement) == null) {
+                    if (mgnlElement.isArea()) {
+
+                        GWT.log("element was detected as area edit bar. Injecting it...");
+                        AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, this);
+                        model.addEditBar(mgnlElement, areaBarWidget);
+
+                    }
+                    else if (mgnlElement.isComponent()) {
+                        GWT.log("element is edit bar placeholder. Injecting it...");
+                        EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
+
+                        model.addEditBar(mgnlElement, editBarWidget);
+                    }
+                }
+            }
+        }
     }
 
     //FIXME submitting forms still renders website channel and edit bars
@@ -418,6 +537,7 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
         }*/
     }
 
+
     public native void disableLink(Element element) /*-{
         if (element.onclick == null) {
             element.onclick = function() {
@@ -429,11 +549,11 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
     private void cleanRootElements() {
 
         List<MgnlElement> newRoots = new LinkedList<MgnlElement>();
-        GWT.log(String.valueOf(storage.rootElements.size()));
-        Iterator<MgnlElement> it = storage.rootElements.iterator();
+        GWT.log(String.valueOf(model.rootElements.size()));
+        Iterator<MgnlElement> it = model.rootElements.iterator();
         while (it.hasNext()) {
             MgnlElement root = it.next();
-            if (storage.getEditBar(root) == null) {
+            if (model.getEditBar(root) == null) {
                 for (MgnlElement child : root.getChildren()) {
                         child.setParent(null);
                         newRoots.add(child);
@@ -441,10 +561,10 @@ public class PageEditor extends HTML implements EventListener, EntryPoint {
                 it.remove();
             }
         }
-        GWT.log(String.valueOf(storage.rootElements.size()));
+        GWT.log(String.valueOf(model.rootElements.size()));
 
-        storage.rootElements.addAll(newRoots);
-        GWT.log(String.valueOf(storage.rootElements.size()));
+        model.rootElements.addAll(newRoots);
+        GWT.log(String.valueOf(model.rootElements.size()));
 
     }
 

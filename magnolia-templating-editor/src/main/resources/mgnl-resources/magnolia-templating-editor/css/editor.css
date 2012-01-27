@@ -200,6 +200,25 @@ button.mgnlEditorButton:active {
   position: absolute;
 }
 
+.mgnlPlaceHolder.component {
+    padding: 10px;
+      border-radius: 7px;
+      border: 1px solid #517600;
+  background-color: #9EBA34;
+    cursor: pointer;
+    clear: both;
+}
+
+.mgnlPlaceHolder.area{
+    padding: 25px 15px;
+    border: 4px dotted #396101;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.mgnlPlaceHolder p {
+}
+
 /* --- End of edit bars definitions --- */
 
 /* TODO review preview styles */

@@ -34,7 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
@@ -52,32 +51,30 @@ import com.google.gwt.user.client.ui.Label;
  */
 public abstract class AbstractBarWidget extends FlowPanel {
 
-    private MgnlElement boundary;
     protected boolean hasControls = false;
     private String label = "";
     private FlowPanel buttonWrapper;
 
-    public AbstractBarWidget(MgnlElement boundary, CMSComment comment) {
+    public AbstractBarWidget(MgnlElement mgnlElement) {
 
-        this.setBoundary(boundary);
-        if (comment != null) {
-            this.label = comment.getAttribute("label");
+        if (mgnlElement != null) {
+            this.label = mgnlElement.getComment().getAttribute("label");
+            if (label != null && !label.isEmpty()) {
+                Label areaName = new Label(this.label);
+                //tooltip. Nice to have when area label is truncated because too long.
+                areaName.setTitle(this.label);
+                areaName.setStylePrimaryName("mgnlEditorBarLabel");
+
+                //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
+                add(areaName);
+            }
         }
-
         buttonWrapper = new FlowPanel();
         buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
 
         add(buttonWrapper);
 
-        if (this.label != null && !this.label.isEmpty()) {
-            Label areaName = new Label(this.label);
-            //tooltip. Nice to have when area label is truncated because too long.
-            areaName.setTitle(this.label);
-            areaName.setStylePrimaryName("mgnlEditorBarLabel");
 
-            //setStylePrimaryName(..) replaces gwt default css class, in this case gwt-Label
-            add(areaName);
-        }
         setClassName("mgnlEditorBar");
 
     }
@@ -122,11 +119,8 @@ public abstract class AbstractBarWidget extends FlowPanel {
         parentNode.insertAfter(getElement(), node);
         onAttach();
     }
-    public void setBoundary(MgnlElement boundary) {
-        this.boundary = boundary;
-    }
 
-    public MgnlElement getBoundary() {
-        return boundary;
+    public void toggleVisible() {
+        setVisible(!isVisible());
     }
 }

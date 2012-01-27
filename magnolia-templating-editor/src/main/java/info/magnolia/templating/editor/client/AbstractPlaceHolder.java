@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,67 +33,53 @@
  */
 package info.magnolia.templating.editor.client;
 
-
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-
 /**
- * Base class for overlay widgets.
+ * Abstract Widget for area and component placeholder.
+ *
+ * @version $Id$
  */
-public class AbstractOverlayWidget extends FlowPanel {
+public class AbstractPlaceHolder extends FlowPanel {
 
-    protected String label;
-    protected int level = 1;
-    private double top;
-    public AbstractOverlayWidget(MgnlElement element) {
+    public AbstractPlaceHolder() {
+        super();
 
-        this.label = element.getComment().getAttribute("label");
-
-        for (MgnlElement parent = element.getParent(); parent != null; parent = parent.getParent()) {
-            this.level++;
-        }
-
-
-        this.setStyleName("mgnlEditorOverlay");
-
-        this.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-        this.getElement().getStyle().setZIndex(level);
-
+        setStylePrimaryName("mgnlPlaceHolder");
     }
 
-    public void attach() {
-        Element body = Document.get().getBody();
-        body.appendChild(this.getElement());
+    /**
+     *  TODO: we should not have to call onAttach ourself?
+     */
+    public void attach(Node node) {
+        final Node parentNode = node.getParentNode();
+        parentNode.insertAfter(getElement(), node);
+        onAttach();
+    }
+
+    public void attach(MgnlElement mgnlElement) {
+        if (mgnlElement.getFirstElement() != null) {
+            if (mgnlElement.getFirstElement() == mgnlElement.getLastElement()) {
+                mgnlElement.getFirstElement().appendChild(getElement());
+            }
+            else {
+                Element parent = mgnlElement.getFirstElement().getParentElement();
+                parent.insertAfter(getElement(), mgnlElement.getLastElement());
+            }
+        }
+        else {
+            PageEditor.model.getEditBar(mgnlElement).getElement().getParentElement().appendChild(getElement());
+        }
         onAttach();
     }
 
     public void toggleVisible() {
+        isVisible();
         setVisible(!isVisible());
     }
-
-    public void setTop(double top) {
-        this.top = top;
-        this.getElement().getStyle().setTop(top, Style.Unit.PX);
-    }
-    public double getTop() {
-        return top;
-    }
-    public void setLeft(double left) {
-        this.getElement().getStyle().setLeft(left, Style.Unit.PX);
-    }
-
-    public void setWidth(double width) {
-        this.getElement().getStyle().setWidth(width, Style.Unit.PX);
-    }
-
-    public void setHeight(double height) {
-        this.getElement().getStyle().setHeight(height, Style.Unit.PX);
-    }
-
 
 }

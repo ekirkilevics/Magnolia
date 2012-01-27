@@ -65,6 +65,7 @@ public class FocusModelImpl3 implements FocusModel {
 
         if (mgnlElement == null) {
             reset();
+            storage.setSelectedMgnlElement(mgnlElement);
             return;
         }
 
@@ -75,13 +76,13 @@ public class FocusModelImpl3 implements FocusModel {
         MgnlElement area = mgnlElement.getParentArea();
 
         if (area != null) {
-            deSelect();
-            hideRoot();
-            boolean selected = select(area);
-            if (!selected) {
-                reset();
+            if (storage.getSelectedMgnlElement() != null && area == storage.getSelectedMgnlElement().getParentArea()) {
                 return;
             }
+            deSelect();
+            hideRoot();
+            toggleSelection(area, true);
+
         }
         computeOverlay();
         storage.setSelectedMgnlElement(mgnlElement);
@@ -99,43 +100,49 @@ public class FocusModelImpl3 implements FocusModel {
         computeOverlay();
     }
 
-    protected boolean select(MgnlElement mgnlElement) {
-
-        boolean selected = false;
+    protected void toggleSelection(MgnlElement mgnlElement, boolean visible) {
 
         if (storage.getEditBar(mgnlElement) != null) {
-            storage.getEditBar(mgnlElement).setVisible(true);
-            selected = true;
+            storage.getEditBar(mgnlElement).setVisible(visible);
+        }
+
+        // toggle all direct child-areas placeholders visibility
+        for (MgnlElement area : mgnlElement.getAreas()) {
+
+            if (storage.getAreaPlaceHolder(area) != null) {
+                storage.getAreaPlaceHolder(area).setVisible(visible);
+            }
         }
 
         for (MgnlElement component : mgnlElement.getComponents()) {
 
+            // toggle all child-components editbar visibility - does this case occure?
             if (storage.getEditBar(component) != null) {
-                storage.getEditBar(component).setVisible(true);
-                selected = true;
+                storage.getEditBar(component).setVisible(visible);
+            }
+            // toggle all child-components-area placeholder visibility
+            for (MgnlElement area : component.getAreas()) {
+
+                if (storage.getAreaPlaceHolder(area) != null) {
+                    storage.getAreaPlaceHolder(area).setVisible(visible);
+                    storage.getComponentPlaceHolder(area).setVisible(visible);
+                }
             }
         }
 
-        return selected;
+        if (storage.getAreaPlaceHolder(mgnlElement) != null) {
+            storage.getAreaPlaceHolder(mgnlElement).setVisible(visible);
+        }
+
+        if (storage.getComponentPlaceHolder(mgnlElement) != null) {
+            storage.getComponentPlaceHolder(mgnlElement).setVisible(visible);
+        }
+
     }
 
     public void deSelect() {
         if (storage.getSelectedMgnlElement() != null && storage.getSelectedMgnlElement().getParentArea() != null) {
-            deSelect(storage.getSelectedMgnlElement().getParentArea());
-        }
-    }
-
-    public void deSelect(MgnlElement mgnlElement) {
-
-        if (storage.getEditBar(mgnlElement) != null) {
-            storage.getEditBar(mgnlElement).setVisible(false);
-        }
-
-        for (MgnlElement component : mgnlElement.getComponents()) {
-
-            if (storage.getEditBar(component) != null) {
-                storage.getEditBar(component).setVisible(false);
-            }
+            toggleSelection(storage.getSelectedMgnlElement().getParentArea(), false);
         }
     }
 
@@ -144,6 +151,11 @@ public class FocusModelImpl3 implements FocusModel {
                 if (storage.getEditBar(root) != null) {
                     storage.getEditBar(root).setVisible(true);
                 }
+                if (storage.getAreaPlaceHolder(root) != null) {
+                    storage.getAreaPlaceHolder(root).setVisible(true);
+                    storage.getComponentPlaceHolder(root).setVisible(true);
+
+                }
         }
     }
     public void hideRoot() {
@@ -151,6 +163,9 @@ public class FocusModelImpl3 implements FocusModel {
             if (storage.getEditBar(root) != null) {
                 storage.getEditBar(root).setVisible(false);
 
+            }
+            if (storage.getComponentPlaceHolder(root) != null) {
+                storage.getComponentPlaceHolder(root).setVisible(false);
             }
         }
     }

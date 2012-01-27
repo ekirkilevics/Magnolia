@@ -40,14 +40,15 @@ import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
+import com.google.gwt.dom.client.Document;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.MouseDownEvent;
+import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -75,7 +76,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private boolean previewState = false;
 
     public PageBarWidget(final PageEditor pageEditor, final CMSComment comment) {
-        super(null, null);
+        super(null);
         this.pageEditor = pageEditor;
 
         String content = comment.getAttribute("content");
@@ -90,12 +91,13 @@ public class PageBarWidget extends AbstractBarWidget {
             createAuthoringModeBar();
         }
 
-        addDomHandler(new MouseUpHandler() {
+        addDomHandler(new MouseDownHandler() {
             @Override
-            public void onMouseUp(MouseUpEvent event) {
+            public void onMouseDown(MouseDownEvent event) {
                 ModelStorage.getInstance().getFocusModel().reset();
             }
-        }, MouseUpEvent.getType());
+        }, MouseDownEvent.getType());
+
     }
 
     private void createAuthoringModeBar() {
@@ -167,7 +169,7 @@ public class PageBarWidget extends AbstractBarWidget {
     public final boolean isPreviewState() {
         return previewState;
     }
-
+    
     private class MobilePreviewCommand implements Command {
 
         private String deviceType;
@@ -192,4 +194,8 @@ public class PageBarWidget extends AbstractBarWidget {
         }
     }
 
+    public void attach() {
+        Document.get().getBody().insertFirst(getElement());
+        onAttach();
+    }
 }

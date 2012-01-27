@@ -45,6 +45,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.dom.client.Element;
 
 
 /**
@@ -66,8 +67,8 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(MgnlElement mgnlElement, CMSComment comment, final PageEditor pageEditor) {
-        super(mgnlElement, comment);
+    public AreaBarWidget(MgnlElement mgnlElement, final PageEditor pageEditor) {
+        super(mgnlElement);
 
         String content = mgnlElement.getComment().getAttribute("content");
         if (content != null) {
@@ -95,11 +96,11 @@ public class AreaBarWidget extends AbstractBarWidget {
             this.availableComponents = mgnlElement.getComment().getAttribute("availableComponents");
         }
 
-        this.dialog = comment.getAttribute("dialog");
+        this.dialog = mgnlElement.getComment().getAttribute("dialog");
         if (mgnlElement.getComment().hasAttribute("showAddButton")) {
             this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
         }
-        if (comment.hasAttribute("optional")) {
+        if (mgnlElement.getComment().hasAttribute("optional")) {
             this.optional = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("optional"));
             this.created = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("created"));
         }
@@ -107,6 +108,15 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         createButtons(pageEditor, mgnlElement.getComment());
         this.addStyleName("area");
+        attach(mgnlElement);
+    }
+
+    private void attach(MgnlElement mgnlElement) {
+        Element element = mgnlElement.getFirstElement();
+        if (element != null) {
+            element.insertFirst(getElement());
+        }
+        onAttach();
     }
 
     public String getAvailableComponents() {
@@ -172,4 +182,6 @@ public class AreaBarWidget extends AbstractBarWidget {
             addButton(addButton, Float.RIGHT);
         }
     }
+
+
 }
