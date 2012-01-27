@@ -81,13 +81,13 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
         createNode(parent, autoGenerationConfig.getContent());
     }
 
-    @SuppressWarnings("unchecked")
     private void createNode(Node parentNode, Map<String,Object> content) throws RenderException {
         if(content == null) {
             return;
         }
         for(Entry<String, Object> entry: content.entrySet()) {
 
+            @SuppressWarnings("unchecked")
             final Map<String, Object> newNodeConfig = (Map<String, Object>) entry.getValue();
 
             if(!newNodeConfig.containsKey(NODE_TYPE)) {
