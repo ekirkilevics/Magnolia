@@ -33,6 +33,25 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.annotation.RequestScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockWebContext;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
@@ -47,23 +66,6 @@ import com.google.inject.ProvisionException;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockHttpSession;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.annotation.RequestScoped;
-import info.magnolia.objectfactory.annotation.SessionScoped;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockWebContext;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class GuiceScopesTest {
 
@@ -111,16 +113,9 @@ public class GuiceScopesTest {
 
         // THEN
         assertSame(context, component.contextProvider.get());
-        try {
-            component.webContextProvider.get();
-            fail();
-        } catch (ProvisionException expected) {
-        }
-        try {
-            component.aggregationStateProvider.get();
-            fail();
-        } catch (ProvisionException expected) {
-        }
+        // HAD: web context provider is called also on preDestroy
+        assertNull(component.webContextProvider.get());
+        assertNull(component.aggregationStateProvider.get());
     }
 
     // TODO its unfortunate that these throw ProvisionException
@@ -173,21 +168,13 @@ public class GuiceScopesTest {
         MockSingletonWithContextProviders component = provider.getComponent(MockSingletonWithContextProviders.class);
 
         // THEN
-        try {
-            component.requestProvider.get();
-            fail();
-        } catch (ProvisionException expected) {
-        }
+        assertNull(component.requestProvider.get());
         try {
             component.sessionProvider.get();
             fail();
         } catch (ProvisionException expected) {
         }
-        try {
-            component.responseProvider.get();
-            fail();
-        } catch (ProvisionException expected) {
-        }
+        assertNull(component.responseProvider.get());
     }
     @Test
     public void testRequestScope() {
@@ -217,16 +204,14 @@ public class GuiceScopesTest {
         assertNotSame(component2, component);
     }
 
-    @Test(expected = ProvisionException.class)
+    @Test
     public void testRequestScopeFailsWhenNotInWebContext() {
         // GIVEN
         MgnlContext.setInstance(mock(Context.class));
         GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockRequestScopedObject.class);
 
-        // WHEN
-        provider.getComponent(MockRequestScopedObject.class);
-
-        // THEN we expect an exception
+        // WHEN - THEN
+        assertNull(provider.getComponent(MockRequestScopedObject.class));
     }
     @Test
     public void testSessionScope() {
