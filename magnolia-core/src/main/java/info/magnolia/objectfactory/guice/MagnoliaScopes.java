@@ -33,6 +33,9 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -42,8 +45,6 @@ import com.google.inject.Provider;
 import com.google.inject.Scope;
 import com.google.inject.Scopes;
 import com.mycila.inject.annotation.Jsr250Singleton;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 /**
  * Servlet scopes that use WebContext to get request and session.
@@ -110,6 +111,10 @@ public class MagnoliaScopes {
                 public T get() {
 
                     HttpServletRequest request = getRequest();
+
+                    if (request == null) {
+                        return null;
+                    }
 
                     synchronized (request) {
                         Object obj = request.getAttribute(name);
@@ -187,7 +192,11 @@ public class MagnoliaScopes {
     private static HttpServletRequest getRequest() {
         WebContext webContext;
         try {
-            webContext = MgnlContext.getWebContext();
+            webContext = MgnlContext.getWebContextOrNull();
+            // when injecting request to objects outside of the request scope (e.g. on destroy)
+            if (webContext == null) {
+                return null;
+            }
         } catch (IllegalStateException e) {
             throw new OutOfScopeException("Cannot access scoped object." +
                     " MgnlContext does not have a WebContext set, this is most likely" +
@@ -197,7 +206,7 @@ public class MagnoliaScopes {
         if (request == null) {
             throw new OutOfScopeException("Cannot access scoped object." +
                     " MgnlContext does not have a HttpServletRequest set, this is most likely" +
-                    " because we are not currently processing a HTTP request.");
+            " because we are not currently processing a HTTP request.");
         }
         return request;
     }
