@@ -33,16 +33,6 @@
  */
 package info.magnolia.objectfactory.guice;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.binder.ScopedBindingBuilder;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.annotation.LazySingleton;
@@ -55,6 +45,18 @@ import info.magnolia.objectfactory.configuration.ImplementationConfiguration;
 import info.magnolia.objectfactory.configuration.InstanceConfiguration;
 import info.magnolia.objectfactory.configuration.ProviderConfiguration;
 
+import java.lang.annotation.Annotation;
+import java.util.Map;
+
+import javax.inject.Provider;
+import javax.inject.Singleton;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+import com.google.inject.binder.ScopedBindingBuilder;
+
 
 /**
  * Guice configuration module that adds bindings based on a ComponentProviderConfiguration.
@@ -63,7 +65,7 @@ import info.magnolia.objectfactory.configuration.ProviderConfiguration;
  */
 public class GuiceComponentConfigurationModule extends AbstractModule {
 
-    private ComponentProviderConfiguration configuration;
+    private final ComponentProviderConfiguration configuration;
 
     public GuiceComponentConfigurationModule(ComponentProviderConfiguration configuration) {
         this.configuration = configuration;

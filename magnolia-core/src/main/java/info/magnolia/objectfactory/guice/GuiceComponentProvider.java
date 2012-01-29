@@ -33,8 +33,16 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import info.magnolia.objectfactory.CandidateParameterResolver;
+import info.magnolia.objectfactory.ComponentFactory;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.NoSuchComponentException;
+import info.magnolia.objectfactory.ObjectManufacturer;
+import info.magnolia.objectfactory.ParameterResolver;
+
 import java.util.Arrays;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -44,12 +52,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
 import com.mycila.inject.jsr250.Jsr250Injector;
-import info.magnolia.objectfactory.CandidateParameterResolver;
-import info.magnolia.objectfactory.ComponentFactory;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.NoSuchComponentException;
-import info.magnolia.objectfactory.ObjectManufacturer;
-import info.magnolia.objectfactory.ParameterResolver;
 
 
 /**
@@ -67,7 +69,7 @@ public class GuiceComponentProvider implements ComponentProvider {
     private Jsr250Injector injector;
     private ObjectManufacturer manufacturer;
     private final Map<Class<?>, Class<?>> typeMappings;
-    private GuiceComponentProvider parentComponentProvider;
+    private final GuiceComponentProvider parentComponentProvider;
 
     public GuiceComponentProvider(Map<Class<?>, Class<?>> typeMappings, GuiceComponentProvider parentComponentProvider) {
         this.parentComponentProvider = parentComponentProvider;
