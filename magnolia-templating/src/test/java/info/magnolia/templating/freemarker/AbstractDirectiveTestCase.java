@@ -45,6 +45,7 @@ import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
@@ -174,6 +175,7 @@ public abstract class AbstractDirectiveTestCase {
         systemContext.addSession("testWorkspace", session.getJcrSession());
         configuration.registerInstance(SystemContext.class, systemContext);
 
+
         aggState.setCurrentContent(session.getContent("/foo/bar/paragraphs/1"));
         renderingContext = new AggregationStateBasedRenderingContext(aggState);
         final RenderingEngine renderingEngine = mock(RenderingEngine.class);
@@ -199,7 +201,10 @@ public abstract class AbstractDirectiveTestCase {
         when(ctx.getLocale()).thenReturn(Locale.US);
         when(ctx.getResponse()).thenReturn(res);
         when(ctx.getRequest()).thenReturn(req);
-
+        MgnlUser mockUser = mock(MgnlUser.class);
+        when(mockUser.getLanguage()).thenReturn("en");
+        when(ctx.getUser()).thenReturn(mockUser);
+        when(ctx.getContextPath()).thenReturn("test");
         when(ctx.getHierarchyManager("testWorkspace")).thenReturn(session);
 
         setupExpectations(ctx, req);
