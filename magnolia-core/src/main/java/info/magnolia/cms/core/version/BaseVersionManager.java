@@ -167,7 +167,7 @@ public abstract class BaseVersionManager {
      */
     public synchronized Version addVersion(final Node node, final Rule rule) throws UnsupportedRepositoryOperationException,
     RepositoryException {
-        MgnlContext.doInSystemContext(new JCRSessionOp<Version>(node.getSession().getWorkspace().getName()) {
+        Version version = MgnlContext.doInSystemContext(new JCRSessionOp<Version>(node.getSession().getWorkspace().getName()) {
 
             @Override
             public Version exec(Session session) throws RepositoryException {
@@ -183,16 +183,7 @@ public abstract class BaseVersionManager {
                 }
 
             }});
-        try {
-            return this.createVersion(node, rule);
-        }
-        catch (RepositoryException re) {
-            // since add version is synchronized on a singleton object, its safe to revert all changes made in
-            // the session attached to workspace - mgnlVersion
-            log.error("failed to copy versionable node to version store, reverting all changes made in this session");
-            getSession().refresh(false);
-            throw re;
-        }
+        return version;
     }
 
     /**

@@ -38,17 +38,22 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
 
+import javax.jcr.LoginException;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.version.Version;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
@@ -133,6 +138,34 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         nodeInVersionWS = versionMan.getVersionedNode(node);
 
         assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
+    }
+
+    @Test
+    public void testNumberOfCreatedVersions() throws LoginException, RepositoryException{
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        Node root = session.getRootNode();
+
+        root.addNode("firstPage", MgnlNodeType.NT_PAGE);
+
+        session.save();
+        VersionManager versionManager = VersionManager.getInstance();
+
+        final Rule rule = new Rule();
+        rule.addAllowType(MgnlNodeType.NT_PAGE);
+        rule.addAllowType(MgnlNodeType.NT_CONTENTNODE);
+        rule.addAllowType(MgnlNodeType.NT_RESOURCE);
+
+        versionManager.addVersion(root.getNode("firstPage"), rule);
+        assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 2);
+        
+        versionManager.addVersion(root.getNode("firstPage"), rule);
+        assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 3);
+    }
+
+    @After
+    public void tearDown(){
+        MgnlContext.setInstance(null);
+        SystemProperty.clear();
     }
 
 }
