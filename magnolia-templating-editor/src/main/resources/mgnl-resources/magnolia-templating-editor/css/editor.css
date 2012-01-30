@@ -332,4 +332,5 @@ button.mgnlEditorButton:active {
 .mgnlEditorButton-previewRight {
   background: center no-repeat url(../img/preview/down-arrow-white.gif);
   margin-right: 4px !important;
+  border-left: 0px !important;
 }
