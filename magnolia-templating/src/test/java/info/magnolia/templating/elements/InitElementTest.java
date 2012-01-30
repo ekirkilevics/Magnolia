@@ -33,25 +33,33 @@
  */
 package info.magnolia.templating.elements;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockUtil;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Locale;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -62,9 +70,24 @@ public class InitElementTest {
 
     private InitElement element;
     private StringWriter out;
+    private ConfiguredTemplateDefinition templateDefinition;
+    private AggregationState aggregationState;
 
     @Before
     public void setUp() throws Exception {
+
+        final MockHierarchyManager session = MockUtil.createHierarchyManager(
+            "/foo/bar/baz@type=mgnl:page\n" +
+            "/foo/bar/baz/main@type=mgnl:area\n" +
+            "/foo/bar/baz/main/01@type=mgnl:component\n" +
+            "/foo/bar/baz/main/01.text=dummy" +
+            "/foo/bar/baz/main/01/MetaData.mgnl\\:template=testParagraph0");
+
+        aggregationState = new AggregationState();
+        aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
+        Content currentContent = session.getContent("/foo/bar/baz/main/01");
+        aggregationState.setCurrentContent(currentContent);
+
 
         final WebContext ctx = mock(WebContext.class);
         final User user = mock(User.class);
@@ -81,64 +104,119 @@ public class InitElementTest {
         when(defSupport.getLocale()).thenReturn(localeEn);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, defSupport);
 
-        element = new InitElement(serverCfg, new AggregationStateBasedRenderingContext(new AggregationState()));
+        //set Rendering context
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         out = new StringWriter();
+        templateDefinition = new ConfiguredTemplateDefinition();
+        templateDefinition.setDialog("customDialog");
+        context.push(aggregationState.getCurrentContent().getJCRNode(), templateDefinition, new OutputProvider() {
+
+            @Override
+            public OutputStream getOutputStream() throws RenderException, IOException {
+                return null;
+            }
+
+            @Override
+            public Appendable getAppendable() throws RenderException, IOException {
+                return out;
+            }
+        });
+
+        element = new InitElement(serverCfg,context);
     }
 
     @Test
-    @Ignore
     public void testOutputContainsPageEditorJavascript() throws Exception {
         //GIVEN look at setUp method()
 
         //WHEN
         element.begin(out);
         //THEN
-        assertTrue(out.toString().contains(InitElement.PAGE_EDITOR_JS_SOURCE));
+        assertThat(out.toString(),containsString(InitElement.PAGE_EDITOR_JS_SOURCE));
     }
 
     @Test
-    @Ignore
     public void testOutputContainsSourcesJavascript() throws Exception {
         //GIVEN look at setUp method()
 
         //WHEN
         element.begin(out);
         //THEN
-        assertTrue(out.toString().contains("/.magnolia/pages/javascript.js"));
-        assertTrue(out.toString().contains("/.resources/admin-js/dialogs/dialogs.js"));
+        assertThat(out.toString(),containsString("/.magnolia/pages/javascript.js"));
+        assertThat(out.toString(),containsString("/.resources/admin-js/dialogs/dialogs.js"));
     }
 
     @Test
-    @Ignore
     public void testOutputContainsSourcesCss() throws Exception {
         //GIVEN look at setUp method()
 
         //WHEN
         element.begin(out);
         //THEN
-        assertTrue(out.toString().contains("/.resources/admin-css/admin-all.css"));
+        assertThat(out.toString(),containsString("/.resources/admin-css/admin-all.css"));
     }
 
     @Test
-    @Ignore
     public void testOutputContainsGwtLocaleMetaProperty() throws Exception {
         //GIVEN look at setUp method()
 
         //WHEN
         element.begin(out);
         //THEN
-        assertTrue(out.toString().contains("<meta name=\"gwt:property\" content=\"locale=en\"/>"));
+        assertThat(out.toString(),containsString("<meta name=\"gwt:property\" content=\"locale=en\"/>"));
     }
 
     @Test
-    @Ignore
     public void testOutputContainsPageEditorStyles() throws Exception {
         //GIVEN look at setUp method()
 
         //WHEN
         element.begin(out);
         //THEN
-        assertTrue(out.toString().contains(InitElement.PAGE_EDITOR_CSS));
+        assertThat(out.toString(),containsString(InitElement.PAGE_EDITOR_CSS));
+    }
+
+
+
+    @Test
+    public void testOutputContainsContent() throws Exception {
+        //GIVEN
+
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertThat(out.toString(),containsString("<!-- cms:page content=\"testSession:/foo/bar/baz/main/01\""));
+        assertThat(out.toString(),containsString("<!-- /cms:page -->"));
+    }
+
+    @Test
+    public void testOutputWithoutContent() throws Exception {
+        //GIVEN
+        aggregationState.setCurrentContent(null);
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertThat(out.toString(),containsString("<!-- cms:page dialog=\"customDialog\" -->"));
+    }
+
+    @Test
+    public void testOutputContainsContentAndDialog() throws Exception {
+        //GIVEN
+        templateDefinition.setDialog("testDialog");
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertThat(out.toString(),containsString("<!-- cms:page content=\"testSession:/foo/bar/baz/main/01\" dialog=\"testDialog\" -->"));
+    }
+
+    @Test
+    public void testOutputEndPart() throws Exception {
+        //GIVEN
+
+        //WHEN
+        element.end(out);
+        //THEN
+        assertThat(out.toString(),containsString("<!-- end js and css added by @cms.init -->"));
     }
 
     @After
