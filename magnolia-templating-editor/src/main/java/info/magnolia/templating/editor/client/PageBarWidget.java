@@ -37,15 +37,14 @@ package info.magnolia.templating.editor.client;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.isPreviewMode;
 import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
-import info.magnolia.templating.editor.client.button.DropdownButtonWidget;
 import info.magnolia.templating.editor.client.button.PreviewButtonWidget;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
-import com.google.gwt.dom.client.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -127,8 +126,7 @@ public class PageBarWidget extends AbstractBarWidget {
         options.add(smartphone);
         options.add(tablet);
 
-        DropdownButtonWidget dropdown = new PreviewButtonWidget.PreviewDropdownButtonWidget(options);
-        PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), dropdown);
+        PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), options);
         addButton(preview, Float.LEFT, "mgnlPreviewButton");
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));

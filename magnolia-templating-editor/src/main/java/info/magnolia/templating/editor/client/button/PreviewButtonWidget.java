@@ -53,7 +53,7 @@ public final class PreviewButtonWidget extends Composite {
     private static FlowPanel panel = new FlowPanel();
     private Button defaultActionButton = new Button();
 
-    public PreviewButtonWidget(final String caption, final Command defaultAction, final DropdownButtonWidget dropdown) {
+    public PreviewButtonWidget(final String caption, final Command defaultAction, final List<MenuItem> menuItems) {
         initWidget(panel);
         defaultActionButton.setHTML(caption);
         defaultActionButton.setStylePrimaryName("mgnlEditorButton");
@@ -67,6 +67,7 @@ public final class PreviewButtonWidget extends Composite {
 
         panel.add(defaultActionButton);
 
+        final PreviewDropdownButtonWidget dropdown = new PreviewDropdownButtonWidget(menuItems);
         dropdown.setStylePrimaryName("mgnlEditorButton");
         dropdown.addStyleDependentName("previewRight");
         panel.add(dropdown);
@@ -76,7 +77,7 @@ public final class PreviewButtonWidget extends Composite {
      * Extends {@link DropdownButtonWidget} in order to left align itself with the default (lhs) button.
      * @version $Id$
      */
-    public static final class PreviewDropdownButtonWidget extends DropdownButtonWidget {
+    private static final class PreviewDropdownButtonWidget extends DropdownButtonWidget {
 
         public PreviewDropdownButtonWidget(final List<MenuItem> menuItems) {
             super("---", menuItems); //FIXME in order to have this top aligned correctly, we need to set a dummy text and then hide it with a negative text-indent. See also editor.css
