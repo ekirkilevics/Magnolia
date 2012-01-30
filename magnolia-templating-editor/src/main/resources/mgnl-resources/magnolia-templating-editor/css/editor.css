@@ -315,7 +315,7 @@ button.mgnlEditorButton:active {
 }
 
 .mgnlPreviewMenuPanel {
-  /*not used now, just a placeholder*/
+  z-index: 800;
 }
 
 .mgnlPreviewMenuItem {
