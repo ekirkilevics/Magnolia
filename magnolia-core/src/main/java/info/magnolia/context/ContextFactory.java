@@ -58,14 +58,18 @@ public class ContextFactory {
 
     /**
      * @return singleton instance of the <code>SystemContext</code>.
+     * @deprecated since 4.5, use IoC, i.e., declare a dependency on SystemContext in your component.
      */
+    @Deprecated
     public SystemContext getSystemContext() {
         return Components.getComponent(SystemContext.class);
     }
 
     /**
      * @return singleton instance of itself.
+     * @deprecated since 4.5, use IoC, i.e., declare a dependency on ContextFactory in your component.
      */
+    @Deprecated
     public static ContextFactory getInstance() {
         return Components.getComponent(ContextFactory.class);
     }
