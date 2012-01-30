@@ -46,6 +46,7 @@ import java.util.Date;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,5 +98,10 @@ public class MetaDataUtilTest {
 
         String authorId = metaData.getAuthorId();
         assertEquals(testUserName,authorId);
+    }
+
+    @After
+    public void tearDown(){
+        MgnlContext.setInstance(null);
     }
 }
