@@ -37,6 +37,8 @@ package info.magnolia.templating.editor.client;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.isPreviewMode;
 import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
+import info.magnolia.templating.editor.client.button.DropdownButtonWidget;
+import info.magnolia.templating.editor.client.button.PreviewButtonWidget;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
@@ -125,19 +127,9 @@ public class PageBarWidget extends AbstractBarWidget {
         options.add(smartphone);
         options.add(tablet);
 
-        DropdownButtonWidget dropdown = new DropdownButtonWidget("", options);
+        DropdownButtonWidget dropdown = new PreviewButtonWidget.PreviewDropdownButtonWidget(options);
         PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), dropdown);
         addButton(preview, Float.LEFT, "mgnlPreviewButton");
-
-        /*Button preview = new Button(getI18nMessage("buttons.preview.js"));
-        preview.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                pageEditor.preview(true);
-            }
-        });
-        addButton(preview, Float.LEFT);
-        */
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));
         adminCentral.addClickHandler(new ClickHandler() {

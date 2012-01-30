@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.button;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,11 +76,12 @@ public class DropdownButtonWidget extends Button {
         if(menuItems == null) {
             throw new IllegalArgumentException("menuItems cannot be null");
         }
-        dropdownMenuBar.setStylePrimaryName("mgnlPreviewDropDown");
+        dropdownMenuBar.setStylePrimaryName("mgnlPreviewMenuDropdown");
         for(MenuItem item: menuItems) {
             item.setStylePrimaryName("mgnlPreviewMenuItem");
             dropdownMenuBar.addItem(item);
         }
+        dropdownPanel.setStylePrimaryName("mgnlPreviewMenuPanel");
         //TODO add an onMouseOut event to the menu? This however will make it disappear also when hovering back on the button itself.
         dropdownPanel.add(dropdownMenuBar);
 
@@ -88,7 +89,7 @@ public class DropdownButtonWidget extends Button {
             @Override
             public void onClick(ClickEvent event) {
                 dropdownMenuBar.setVisible(true);
-                dropdownPanel.setPopupPosition(getAbsoluteLeft(), getAbsoluteTop() + getOffsetHeight());
+                setDropdownPosition(getAbsoluteLeft(), getAbsoluteTop() + getOffsetHeight());
                 dropdownPanel.show();
             }
         });
@@ -96,6 +97,17 @@ public class DropdownButtonWidget extends Button {
 
     public DropdownButtonWidget(String caption, MenuItem... menuItems) {
         this(caption, Arrays.asList(menuItems));
+    }
+
+    /**
+     * Callback method invoked when clicking on the drop-down button. By default the menu will appear just beneath the button, left aligned with it.
+     */
+    protected void setDropdownPosition(int left, int top) {
+        dropdownPanel.setPopupPosition(left, top);
+    }
+
+    protected PopupPanel getDropdownPanel() {
+        return dropdownPanel;
     }
 
 }

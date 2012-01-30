@@ -31,7 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.button;
+
+import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,13 +41,16 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.MenuItem;
 
 /**
  * Preview button composed by two buttons: left-hand side button is for the default action, whereas right-hand side button will display a dropdown menu with further options.
+ * @version $Id$
  *
  */
-public class PreviewButtonWidget extends Composite {
-    private FlowPanel panel = new FlowPanel();
+public final class PreviewButtonWidget extends Composite {
+
+    private static FlowPanel panel = new FlowPanel();
     private Button defaultActionButton = new Button();
 
     public PreviewButtonWidget(final String caption, final Command defaultAction, final DropdownButtonWidget dropdown) {
@@ -65,6 +70,23 @@ public class PreviewButtonWidget extends Composite {
         dropdown.setStylePrimaryName("mgnlEditorButton");
         dropdown.addStyleDependentName("previewRight");
         panel.add(dropdown);
+    }
+
+    /**
+     * Extends {@link DropdownButtonWidget} in order to left align itself with the default (lhs) button.
+     * @version $Id$
+     */
+    public static final class PreviewDropdownButtonWidget extends DropdownButtonWidget {
+
+        public PreviewDropdownButtonWidget(final List<MenuItem> menuItems) {
+            super("---", menuItems); //FIXME in order to have this top aligned correctly, we need to set a dummy text and then hide it with a negative text-indent. See also editor.css
+        }
+        @Override
+        protected void setDropdownPosition(int left, int top) {
+            getDropdownPanel().setPopupPosition(panel.getAbsoluteLeft(), panel.getAbsoluteTop() + panel.getOffsetHeight());
+            //TODO does this have the desired effect?
+            getDropdownPanel().setWidth(panel.getOffsetWidth()+"px");
+        }
     }
 
 }
