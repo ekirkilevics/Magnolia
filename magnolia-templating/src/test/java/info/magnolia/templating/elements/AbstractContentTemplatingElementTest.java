@@ -63,13 +63,13 @@ public class AbstractContentTemplatingElementTest extends AbstractElementTestCas
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
 
-        Node node = compo.getTargetContent();
-        assertEquals(expectedNode, node);
+        Node node = compo.getPassedContent();
+        assertNull(node);
 
         compo.setWorkspace("workspace");
 
         try {
-            compo.getTargetContent();
+            compo.getPassedContent();
             fail("Expceted IllegalArguementException as workspace is set but not uuid or path");
         } catch (IllegalArgumentException e) {
             assertTrue(true);

@@ -83,7 +83,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private final RenderingEngine renderingEngine;
 
-    private Node parentNode;
     private Node areaNode;
     private TemplateDefinition templateDefinition;
     private AreaDefinition areaDefinition;
@@ -97,6 +96,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
 
+    private String areaPath;
+
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -105,7 +106,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
-        this.parentNode = getTargetContent();
 
         this.templateDefinition = resolveTemplateDefinition();
         Messages messages = MessagesManager.getMessages(templateDefinition.getI18nBasename());
@@ -127,14 +127,23 @@ public class AreaElement extends AbstractContentTemplatingElement {
             buildAdHocAreaDefinition();
         }
 
-        this.areaNode = resolveAreaNode();
-
-
+        // read area node and calculate the area path
+        this.areaNode = getPassedContent();
+        if(this.areaNode != null){
+            this.areaPath = getNodePath(areaNode);
+        }
+        else{
+            // will be null if no area has been created (for instance for optional areas)
+            // current content is the parent node
+            Node parentNode = currentContent();
+            this.areaNode = tryToCreateAreaNode(parentNode);
+            this.areaPath = getNodePath(parentNode) + "/" + name;
+        }
 
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
 
-            helper.openComment(CMS_AREA).attribute("content", getNodePath(parentNode));
+            helper.openComment(CMS_AREA).attribute("content", this.areaPath);
             helper.attribute("name", this.name);
             helper.attribute("availableComponents", this.availableComponents);
             helper.attribute("type", this.type);
@@ -155,9 +164,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
         }
     }
 
-    private Node createNewAreaNode() throws RepositoryException {
-        final String parentId = this.parentNode.getIdentifier();
-        final String workspaceName = this.parentNode.getSession().getWorkspace().getName();
+    private Node createNewAreaNode(Node parentNode) throws RepositoryException {
+        final String parentId = parentNode.getIdentifier();
+        final String workspaceName = parentNode.getSession().getWorkspace().getName();
 
         MgnlContext.doInSystemContext(new MgnlContext.Op<Void, RepositoryException>() {
             @Override
@@ -169,7 +178,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 return null;
             }
         });
-        return this.parentNode.getNode(this.name);
+        return parentNode.getNode(this.name);
     }
 
     protected void buildAdHocAreaDefinition() {
@@ -186,6 +195,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         try {
             if (canRenderAreaScript()) {
+                if(isInherit()) {
+                    try {
+                        areaNode = new DefaultInheritanceContentDecorator(areaNode, areaDefinition.getInheritance()).wrapNode(areaNode);
+                    } catch (RepositoryException e) {
+                        throw new RuntimeRepositoryException(e);
+                    }
+                }
                 Map<String, Object> contextObjects = new HashMap<String, Object>();
 
                 List<ContentMap> components = new ArrayList<ContentMap>();
@@ -240,21 +256,20 @@ public class AreaElement extends AbstractContentTemplatingElement {
         }
     }
 
-    protected Node resolveAreaNode() throws RenderException {
-        final Node content = getTargetContent();
+    protected Node tryToCreateAreaNode(Node parentNode) throws RenderException {
         Node area = null;
         try {
-            if(content.hasNode(name)){
-                area = content.getNode(name);
+            if(parentNode.hasNode(name)){
+                area = parentNode.getNode(name);
             } else {
                 //autocreate and save area only if it's not optional
                 if(!areaDefinition.isOptional()) {
-                    area = createNewAreaNode();
+                    area = createNewAreaNode(parentNode);
                 }
             }
         }
         catch (RepositoryException e) {
-            throw new RenderException("Can't access area node [" + name + "] on [" + content + "]", e);
+            throw new RenderException("Can't access area node [" + name + "] on [" + parentNode + "]", e);
         }
         //at this stage we can be sure that the target area, unless optional, has been created.
         if(area != null) {
@@ -262,13 +277,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
             final AutoGenerationConfiguration autoGeneration = areaDefinition.getAutoGeneration();
             if (autoGeneration != null && autoGeneration.getGeneratorClass() != null) {
                 Components.newInstance(autoGeneration.getGeneratorClass(), area).generate(autoGeneration);
-            }
-            if(isInherit()) {
-                try {
-                    area = new DefaultInheritanceContentDecorator(area, areaDefinition.getInheritance()).wrapNode(area);
-                } catch (RepositoryException e) {
-                    throw new RuntimeRepositoryException(e);
-                }
             }
         }
         return area;

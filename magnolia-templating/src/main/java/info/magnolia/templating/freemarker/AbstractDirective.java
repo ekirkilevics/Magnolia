@@ -260,12 +260,12 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
      * Init attributes common to all {@link AbstractContentTemplatingElement}.
      */
     protected void initContentElement(Map<String, TemplateModel> params, AbstractContentTemplatingElement component) throws TemplateModelException {
-        Node target = node(params, CONTENT_ATTRIBUTE, null);
+        Node content = node(params, CONTENT_ATTRIBUTE, null);
         String workspace = string(params, WORKSPACE_ATTRIBUTE, null);
         String nodeIdentifier = string(params, UUID_ATTRIBUTE, null);
         String path = string(params, PATH_ATTRIBUTE, null);
 
-        component.setContent(target);
+        component.setContent(content);
         component.setWorkspace(workspace);
         component.setNodeIdentifier(nodeIdentifier);
         component.setPath(path);

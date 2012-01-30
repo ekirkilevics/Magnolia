@@ -68,6 +68,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 
 import javax.inject.Provider;
+import javax.jcr.Node;
 import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
@@ -84,6 +85,7 @@ public class ComponentElementTest {
     private StringWriter out;
     private ComponentElement marker;
     private ConfiguredTemplateDefinition templateDefinition;
+    private Node componentNode;
 
     @Before
     public void setUp() throws Exception {
@@ -94,7 +96,8 @@ public class ComponentElementTest {
 
         final AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(session.getContent("/foo/bar/baz"));
-        Content currentContent = session.getContent("/foo/bar/baz/paragraphs/01");
+        Content currentContent = session.getContent("/foo/bar/baz/paragraphs");
+        componentNode = session.getContent("/foo/bar/baz/paragraphs/01").getJCRNode();
         aggregationState.setCurrentContent(currentContent);
         final WebContext ctx = mock(WebContext.class);
         final HttpServletResponse response = mock(HttpServletResponse.class);
@@ -116,7 +119,7 @@ public class ComponentElementTest {
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         templateDefinition = new ConfiguredTemplateDefinition();
         templateDefinition.setRenderType("blah");
-        when(templateDefinitionAssignment.getAssignedTemplateDefinition(currentContent.getJCRNode())).thenReturn(templateDefinition);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(componentNode)).thenReturn(templateDefinition);
 
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
@@ -152,6 +155,7 @@ public class ComponentElementTest {
     @Test
     public void testRenderBeginOnlyContent() throws Exception {
         // GIVEN
+        marker.setContent(componentNode);
 
         // WHEN
         marker.begin(out);
@@ -164,6 +168,7 @@ public class ComponentElementTest {
     public void testRenderBeginAll() throws Exception {
         // GIVEN
         templateDefinition.setDialog("dialog");
+        marker.setContent(componentNode);
 
         // WHEN
         marker.begin(out);

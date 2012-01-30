@@ -73,7 +73,10 @@ public class InitElement extends AbstractContentTemplatingElement {
             return;
         }
 
-        Node content = getTargetContent();
+        Node content = getPassedContent();
+        if(content == null){
+            content = currentContent();
+        }
 
         TemplateDefinition templateDefinition = getRequiredTemplateDefinition();
 

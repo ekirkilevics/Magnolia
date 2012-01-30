@@ -85,15 +85,17 @@ public class ComponentElement extends AbstractContentTemplatingElement {
 
             helper.openComment("cms:component");
 
-            content = getTargetContent();
+            content = getPassedContent();
 
-            if(content != null) {
-                helper.attribute("content", getNodePath(content));
+            if(content == null) {
+                throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to rendre a component.");
+            }
 
-                if(content instanceof InheritanceNodeWrapper) {
-                    if (((InheritanceNodeWrapper) content).isInherited()) {
-                        helper.attribute("inherited", "true");
-                    }
+            helper.attribute("content", getNodePath(content));
+
+            if(content instanceof InheritanceNodeWrapper) {
+                if (((InheritanceNodeWrapper) content).isInherited()) {
+                    helper.attribute("inherited", "true");
                 }
             }
 

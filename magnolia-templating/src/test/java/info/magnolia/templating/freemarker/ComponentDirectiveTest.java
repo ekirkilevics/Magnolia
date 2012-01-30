@@ -45,14 +45,14 @@ public class ComponentDirectiveTest extends AbstractDirectiveTestCase {
 
     @Test
     public void testRenderSimpleBar() throws Exception {
-        final String result = renderForTest("[@cms.component /]", null);
+        final String result = renderForTest("[@cms.component workspace=\"testWorkspace\" path=\"/foo/bar/paragraphs/1\"/]", null);
 
         assertEquals("<!-- cms:component content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"testDialog\" -->\n<!-- /cms:component -->\n", result);
     }
 
     @Test
     public void testRenderWithDialog() throws Exception {
-        final String result = renderForTest("[@cms.component dialog='newDialog' /]", null);
+        final String result = renderForTest("[@cms.component workspace=\"testWorkspace\" path=\"/foo/bar/paragraphs/1\" dialog='newDialog' /]", null);
 
         assertEquals("<!-- cms:component content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"newDialog\" -->\n<!-- /cms:component -->\n", result);
     }

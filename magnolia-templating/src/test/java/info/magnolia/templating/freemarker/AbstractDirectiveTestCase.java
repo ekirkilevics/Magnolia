@@ -206,6 +206,7 @@ public abstract class AbstractDirectiveTestCase {
         when(ctx.getUser()).thenReturn(mockUser);
         when(ctx.getContextPath()).thenReturn("test");
         when(ctx.getHierarchyManager("testWorkspace")).thenReturn(session);
+        when(ctx.getJCRSession("testWorkspace")).thenReturn(session.getJcrSession());
 
         setupExpectations(ctx, req);
 

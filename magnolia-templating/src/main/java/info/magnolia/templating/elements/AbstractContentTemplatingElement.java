@@ -75,7 +75,10 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
         }
     }
 
-    protected Node getTargetContent() throws RenderException {
+    /**
+     * Returns the content passed to the element (content or workspace/path attribute) or null if nothing was passed.
+     */
+    protected Node getPassedContent() throws RenderException {
 
         // TODO should we default workspace to 'website' ?
         // TODO should we be strict and fail on invalid combinations ?
@@ -103,9 +106,7 @@ public abstract class AbstractContentTemplatingElement extends AbstractTemplatin
             throw new IllegalArgumentException("Need to specify either uuid or path in combination with workspace");
         }
 
-        // TODO this default might not be suitable for render and paragraph, why would they render the current content again by default?
-
-        return currentContent();
+        return null;
     }
 
     public Node getContent() {
