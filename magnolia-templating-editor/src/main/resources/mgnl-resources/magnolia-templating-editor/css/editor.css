@@ -221,6 +221,7 @@ button.mgnlEditorButton:active {
 
 /* --- End of edit bars definitions --- */
 
+
 /* TODO review preview styles */
 .mgnlEditorPreviewBackground {
   background-color: #000;
@@ -326,4 +327,9 @@ button.mgnlEditorButton:active {
 
 .mgnlPreviewMenuItem-selected {
   background: #A1BF39 !important;
+}
+
+.mgnlEditorButton-previewRight {
+  background: center no-repeat url(../img/preview/down-arrow-white.gif);
+  margin-right: 4px !important;
 }

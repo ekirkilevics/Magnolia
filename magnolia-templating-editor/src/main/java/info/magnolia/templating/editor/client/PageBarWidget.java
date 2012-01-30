@@ -125,8 +125,9 @@ public class PageBarWidget extends AbstractBarWidget {
         options.add(smartphone);
         options.add(tablet);
 
-        DropdownButtonWidget dropdown = new DropdownButtonWidget(getI18nMessage("buttons.preview.js"), options);
-        addButton(dropdown, Float.LEFT);
+        DropdownButtonWidget dropdown = new DropdownButtonWidget("", options);
+        PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), dropdown);
+        addButton(preview, Float.LEFT, "mgnlPreviewButton");
 
         /*Button preview = new Button(getI18nMessage("buttons.preview.js"));
         preview.addClickHandler(new ClickHandler() {
@@ -169,7 +170,7 @@ public class PageBarWidget extends AbstractBarWidget {
     public final boolean isPreviewState() {
         return previewState;
     }
-    
+
     private class MobilePreviewCommand implements Command {
 
         private String deviceType;

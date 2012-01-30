@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client;
 
 
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -42,9 +43,9 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 
 
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Base class for horizontal bars with buttons.
@@ -83,8 +84,26 @@ public abstract class AbstractBarWidget extends FlowPanel {
         getElement().setId(id);
     }
 
-    protected void addButton(final Button button, final Float cssFloat) {
+    /**
+     * Adds this widget to this bar as a button. The default (primary) style applied is <code>mgnlEditorButton</code>. See also <code>editor.css</code>.
+     */
+    protected void addButton(final Widget button, final Float cssFloat) {
         button.setStylePrimaryName("mgnlEditorButton");
+        button.getElement().getStyle().setFloat(cssFloat);
+
+        buttonWrapper.add(button);
+        hasControls = true;
+    }
+
+    /**
+     * Adds this widget to this bar as a button. It allows overriding the default (primary) style applied <code>mgnlEditorButton</code>. See also <code>editor.css</code>.
+     */
+    protected void addButton(final Widget button, final Float cssFloat, final String primaryStyleName) {
+        if(LegacyJavascript.isEmpty(primaryStyleName)) {
+             addButton(button, cssFloat);
+             return;
+        }
+        button.setStylePrimaryName(primaryStyleName);
         button.getElement().getStyle().setFloat(cssFloat);
 
         buttonWrapper.add(button);
