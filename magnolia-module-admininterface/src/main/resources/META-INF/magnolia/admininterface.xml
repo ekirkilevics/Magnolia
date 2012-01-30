@@ -22,6 +22,10 @@
       <implementation>info.magnolia.module.admininterface.DialogHandlerManager</implementation>
     </component>
     <component>
+      <type>info.magnolia.module.admininterface.ConfiguredDialogHandlerManager</type>
+      <implementation>info.magnolia.module.admininterface.ConfiguredDialogHandlerManager</implementation>
+    </component>
+    <component>
       <type>info.magnolia.module.admininterface.PageHandlerManager</type>
       <implementation>info.magnolia.module.admininterface.PageHandlerManager</implementation>
     </component>

@@ -50,6 +50,18 @@ public class AdminInterfaceModule implements ModuleLifecycle {
 
     private SecurityConfiguration securityConfiguration;
 
+    private ConfiguredDialogHandlerManager configuredDialogHandlerManager;
+    private ControlsManager controlsManager;
+    private PageHandlerManager pageHandlerManager;
+    private TreeHandlerManager treeHandlerManager;
+
+    public AdminInterfaceModule(ConfiguredDialogHandlerManager configuredDialogHandlerManager, ControlsManager controlsManager, PageHandlerManager pageHandlerManager, TreeHandlerManager treeHandlerManager) {
+        this.configuredDialogHandlerManager = configuredDialogHandlerManager;
+        this.controlsManager = controlsManager;
+        this.pageHandlerManager = pageHandlerManager;
+        this.treeHandlerManager = treeHandlerManager;
+    }
+
     /**
      * @deprecated since 4.5, use IoC !
      */
@@ -61,10 +73,11 @@ public class AdminInterfaceModule implements ModuleLifecycle {
 
     @Override
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("controls", ControlsManager.getInstance());
-        ctx.registerModuleObservingComponent("dialogs", DialogHandlerManager.getInstance());
-        ctx.registerModuleObservingComponent("pages", PageHandlerManager.getInstance());
-        ctx.registerModuleObservingComponent("trees", TreeHandlerManager.getInstance());
+        ctx.registerModuleObservingComponent("controls", controlsManager);
+        ctx.registerModuleObservingComponent("pages", pageHandlerManager);
+        ctx.registerModuleObservingComponent("trees", treeHandlerManager);
+
+        configuredDialogHandlerManager.start();
 
         // register the admin renderer kit
         RenderKitFactory.registerRenderKit(RenderKitFactory.ADMIN_INTERFACE_RENDER_KIT, new AdminInterfaceRenderKit());

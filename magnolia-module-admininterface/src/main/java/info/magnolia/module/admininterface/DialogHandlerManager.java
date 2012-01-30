@@ -33,242 +33,76 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.Dialog;
-import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.ExtendingContentWrapper;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
-import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
+import info.magnolia.registry.RegistryMap;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-
 
 /**
  * Manages all the dialog handlers.
  */
 @Singleton
-public class DialogHandlerManager extends ObservedManager {
+public class DialogHandlerManager {
 
-    private static final String CLASS = "class";
+    private final RegistryMap<String, DialogHandlerProvider> registry = new RegistryMap<String, DialogHandlerProvider>() {
 
-    private static final String ND_NAME = "name";
-
-    /**
-     * All handlers are registered here.
-     */
-    private final Map<String, Object[]> dialogHandlers = new HashMap<String, Object[]>();
-
-    /**
-     * register the dialogs from the config.
-     */
-    @Override
-    protected void onRegister(Content node) {
-        final List<Content> dialogNodes = new ArrayList<Content>();
-        try {
-            collectDialogNodes(node, dialogNodes);
+        @Override
+        protected String keyFromValue(DialogHandlerProvider value) {
+            return value.getId();
         }
-        catch (RepositoryException e) {
-            log.error("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
-            throw new IllegalStateException("Can't collect dialog nodes for [" + node.getHandle() + "]: " + ExceptionUtils.getMessage(e));
-        }
+    };
 
-        for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext();) {
-            Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
-            try {
-                if (dialogNode.getItemType().equals(ItemType.CONTENT)) {
-                    log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
-                }
-            }
-            catch (RepositoryException e) {
-                log.error("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
-                throw new IllegalStateException("Can't check for node type of the dialog node ["
-                        + dialogNode.getHandle()
-                        + "]: "
-                        + ExceptionUtils.getMessage(e));
-            }
-
-            String newFormatName;
-            try {
-                newFormatName = getDialogName(dialogNode);
-            } catch (RepositoryException e) {
-                log.warn("Can't establish name for dialog [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
-                continue;
-            }
-
-            String name = dialogNode.getNodeData(ND_NAME).getString();
-            if (StringUtils.isEmpty(name)) {
-                name = dialogNode.getName();
-            }
-
-            // dialog class is not mandatory
-            String className = NodeDataUtil.getString(dialogNode, CLASS);
-            Class< ? extends DialogMVCHandler> dialogClass = null;
-            try {
-                if (StringUtils.isNotEmpty(className)) {
-                    dialogClass = Classes.getClassFactory().forName(className);
-                }
-
-                registerDialogHandler(name, dialogClass, dialogNode);
-                registerDialogHandler(newFormatName, dialogClass, dialogNode);
-            }
-            catch (ClassNotFoundException e) {
-                log.warn("Can't find dialog handler class " + className, e);
-            }
-        }
+    public void register(DialogHandlerProvider provider) {
+        registry.put(provider.getId(), provider);
     }
 
-    protected String getDialogName(Content node) throws RepositoryException {
-        Content moduleNode = node.getAncestor(2);
-        Content dialogsNode = node.getAncestor(3);
-        return moduleNode.getName() + ":" + StringUtils.removeStart(node.getHandle(), dialogsNode.getHandle() + "/");
+    public void unregister(String id) {
+        registry.remove(id);
     }
 
-    @Override
-    protected void onClear() {
-        this.dialogHandlers.clear();
-    }
-
-    protected void registerDialogHandler(String name, Class< ? extends DialogMVCHandler> dialogHandler, Content configNode) {
-        log.debug("Registering dialog handler [{}] from {}", name, configNode.getHandle());
-
-        // remember the uuid for a reload
-        dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    public Set<String> unregisterAndRegister(Set<String> registeredIds, List<DialogHandlerProvider> providers) {
+        return this.registry.removeAndPutAll(registeredIds, providers);
     }
 
     /**
      * @deprecated since 4.3.2, is obsolete since fix for MAGNOLIA-2907
      */
     @Deprecated
-    public Content getDialogConfigNode(String dialogName) {
-        final Object[] handlerConfig = dialogHandlers.get(dialogName);
-        if (handlerConfig == null) {
-            throw new InvalidDialogHandlerException(dialogName, dialogHandlers.keySet().toString());
+    public Content getDialogConfigNode(String id) {
+        DialogHandlerProvider provider = registry.get(id);
+        if (provider == null) {
+            throw new InvalidDialogHandlerException(id, registry.keySet().toString());
         }
-        return (Content) handlerConfig[1];
+        return provider.getDialogConfigNode();
     }
 
-    public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
-
-        Object[] handlerConfig = dialogHandlers.get(name);
-
-        if (handlerConfig == null) {
-            throw new InvalidDialogHandlerException(name, dialogHandlers.keySet().toString());
+    public DialogMVCHandler getDialogHandler(String id, HttpServletRequest request, HttpServletResponse response) {
+        DialogHandlerProvider provider = registry.get(id);
+        if (provider == null) {
+            throw new InvalidDialogHandlerException(id, registry.keySet().toString());
         }
-
-        if (name.indexOf(':') == -1) {
-            try {
-                log.info("Using old naming style for dialog [" + name + "]." +
-                         " As of version 4.5 of Magnolia you should use the new style [" + getDialogName((Content) handlerConfig[1]) + "] to access this dialog.");
-            } catch (RepositoryException e) {
-                log.info("Using old naming style for dialog [" + name + "]." +
-                         " As of version 4.5 of Magnolia you should use the new style <moduleName>:path to access your dialogs");
-            }
-        }
-
-        return instantiateHandler(name, request, response, handlerConfig);
+        return provider.getDialogHandler(request, response);
     }
 
     /**
      * Caution: use this method with care, as it creates an Dialog instance having ServletRequest
      * and -Response as well as StorageNode being null.
      */
-    public Dialog getDialog(String dialogName) throws RepositoryException {
-        return DialogFactory.getDialogInstance(null, null, null, getDialogConfigNode(dialogName));
-    }
-
-    protected DialogMVCHandler instantiateHandler(String name, HttpServletRequest request,
-            HttpServletResponse response, Object[] handlerConfig) {
-
-        try {
-            Class< ? extends DialogMVCHandler> dialogHandlerClass = (Class< ? extends DialogMVCHandler>) handlerConfig[0];
-            if (dialogHandlerClass == null) {
-                dialogHandlerClass = ConfiguredDialog.class;
-            }
-            Content configNode = (Content) handlerConfig[1];
-            if (configNode != null) {
-                try {
-                    Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                            String.class,
-                            HttpServletRequest.class,
-                            HttpServletResponse.class,
-                            Content.class});
-                    return constructor.newInstance(name, request, response, configNode);
-                }
-                catch (NoSuchMethodException e) {
-                    Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                            String.class,
-                            HttpServletRequest.class,
-                            HttpServletResponse.class});
-                    return constructor.newInstance(name, request, response);
-                }
-            }
-
-            Constructor< ? extends DialogMVCHandler> constructor = dialogHandlerClass.getConstructor(new Class[]{
-                    String.class,
-                    HttpServletRequest.class,
-                    HttpServletResponse.class});
-            return constructor.newInstance(name, request, response);
+    public Dialog getDialog(String id) throws RepositoryException {
+        DialogHandlerProvider provider = registry.get(id);
+        if (provider == null) {
+            throw new InvalidDialogHandlerException(id, registry.keySet().toString());
         }
-        catch (Exception e) {
-            throw new InvalidDialogHandlerException(name, e);
-        }
-    }
-
-    protected void collectDialogNodes(Content current, List<Content> dialogNodes) throws RepositoryException {
-        if (isDialogNode(current)) {
-            dialogNodes.add(current);
-            return;
-        }
-        for (Content child : ContentUtil.getAllChildren(current)) {
-            collectDialogNodes(child, dialogNodes);
-        }
-    }
-
-    protected boolean isDialogNode(Content node) throws RepositoryException {
-        if (isDialogControlNode(node)) {
-            return false;
-        }
-
-        // if leaf
-        if (ContentUtil.getAllChildren(node).isEmpty()) {
-            return true;
-        }
-
-        // if has node datas
-        if (!node.getNodeDataCollection().isEmpty()) {
-            return true;
-        }
-
-        // if one subnode is a control
-        for (Content child : node.getChildren(ItemType.CONTENTNODE)) {
-            if (isDialogControlNode(child)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean isDialogControlNode(Content node) throws RepositoryException {
-        return node.hasNodeData("controlType") || node.hasNodeData("reference");
+        return provider.getDialog();
     }
 
     /**
