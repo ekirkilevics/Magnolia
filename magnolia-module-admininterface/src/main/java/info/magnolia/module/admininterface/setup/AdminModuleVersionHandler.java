@@ -156,8 +156,9 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new BootstrapSingleResource("Security", "Bootstraps password hashing control.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.controls.passwordHash.xml"))
                 .addTask(new CheckAndModifyPropertyValueTask("Security", "Update user dialog to hash passwords.", "config", "/modules/adminInterface/dialogs/useredit/tabUser/pswd", "controlType", "password", "passwordHash"))
-                .addTask(new CheckAndModifyPropertyValueTask("Security", "Update user properties dialog to hash passwords.", "config", "/modules/adminInterface/dialogs/userpreferences/tabUser/pswd", "controlType", "password", "passwordHash")));
-
+                .addTask(new CheckAndModifyPropertyValueTask("Security", "Update user properties dialog to hash passwords.", "config", "/modules/adminInterface/dialogs/userpreferences/tabUser/pswd", "controlType", "password", "passwordHash"))
+                .addTask(new BootstrapConditionally("Add tool permission list", "Bootstraps permission list page", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.permission.xml"))
+                .addTask(new BootstrapConditionally("Add tool permission list", "Bootstraps permission list to menu", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.menu.tools.permission.xml")));
     }
 
     @Override
