@@ -114,7 +114,6 @@ public class PageEditor extends HTML implements EntryPoint {
         processDocument(Document.get().getDocumentElement(), null);
 
         processMgnlElements();
-        cleanRootElements();
         GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
 
         model.getFocusModel().reset();
@@ -340,74 +339,6 @@ public class PageEditor extends HTML implements EntryPoint {
 
         return mgnlElement;
 
-        // this should be refactored after cms:edit tag is gone
-
-        /*
-         *             if (mgnlElement.isArea()  && model.getEditBar(mgnlElement) != null) {
-
-                if (mgnlElement.getComponents().size() < 1 && model.getAreaPlaceHolder(mgnlElement) == null) {
-
-                    AreaPlaceHolderWidget areaPlaceHolder = new AreaPlaceHolderWidget(this, mgnlElement);
-
-                    model.addAreaPlaceHolder(mgnlElement, areaPlaceHolder);
-                    model.addElement(mgnlElement, areaPlaceHolder.getElement());
-
-                    areaPlaceHolder.attach(model.getEditBar(mgnlElement).getElement());
-                }
-                else if (model.getComponentPlaceHolder(mgnlElement) == null) {
-                    ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, mgnlElement);
-
-                    model.addComponentPlaceHolder(mgnlElement, placeHolder);
-                    model.addElement(mgnlElement, placeHolder.getElement());
-
-                    placeHolder.attach(mgnlElement);
-                }
-            }
-         *
-         *
-         *
-         *      else if (comment.getTagName().equals("cms:edit") && !comment.isClosing()) {
-
-
-                    if (mgnlElement != null && mgnlElement.isComponent()) {
-
-                        GWT.log("element is a plain edit bar. Injecting it...");
-                        EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
-
-                        editBarWidget.attach(node);
-                        model.addEditBar(mgnlElement, editBarWidget);
-
-                    }
-                    else if (mgnlElement != null && mgnlElement.isArea()) {
-                        GWT.log("element was detected as area edit bar. Injecting it...");
-
-                        AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, this);
-                        if (areaBarWidget.hasControls) {
-                            areaBarWidget.attach(node);
-                            model.addEditBar(mgnlElement, areaBarWidget);
-                        }
-
-                                   AbstractOverlayWidget overlay = new AreaOverlayWidget(mgnlElement);
-                        overlay.attach();
-
-                    }
-                }
-                else if (comment.getTagName().equals("cms:placeholder") && !comment.isClosing()) {
-                    AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(this, mgnlElement);
-
-                    model.addAreaPlaceHolder(mgnlElement, placeHolder);
-                    placeHolder.attach(node);
-                }
-                else if (comment.getTagName().equals("cms:add") && !comment.isClosing()) {
-                    MgnlElement area = mgnlElement;
-                    if (!mgnlElement.isArea()) {
-                        area = mgnlElement.getParentArea();
-                    }
-                    ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, area);
-
-                    model.addComponentPlaceHolder(mgnlElement, placeHolder);
-                    placeHolder.attach(node);
-                }*/
     }
 
     private void processElement(Node node, MgnlElement mgnlElement) {
@@ -417,27 +348,28 @@ public class PageEditor extends HTML implements EntryPoint {
         }
         model.addElement(mgnlElement, element);
 
-
             if (mgnlElement.getFirstElement() == null) {
                 mgnlElement.setFirstElement(element);
-
-                if (mgnlElement.isComponent()) {
-                    MgnlElement area = mgnlElement.getParentArea();
-                    if (area != null && area.getFirstElement() == null) {
-                        area.setFirstElement(element);
-
-                        if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
-                            area.setLastElement(element);
-                        }
-                    }
-                }
             }
-            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
+
+            if (!mgnlElement.getLastElement().isOrHasChild(element)) {
                 mgnlElement.setLastElement(element);
             }
 
+            if (mgnlElement.isComponent()) {
+                MgnlElement area = mgnlElement.getParentArea();
 
-        if (element.hasAttribute("cms:add")) {
+                if (area != null) {
+                    if (area.getFirstElement() == null) {
+                        area.setFirstElement(element);
+                    }
+                    if (!area.getLastElement().isOrHasChild(element)) {
+                        area.setLastElement(element);
+                    }
+                }
+            }
+
+/*        if (element.hasAttribute("cms:add")) {
 
             GWT.log("element is component invitation placeholder. Injecting it...");
 
@@ -470,12 +402,14 @@ public class PageEditor extends HTML implements EntryPoint {
             editBarWidget.attach(node);
             model.addEditBar(mgnlElement, editBarWidget);
 
-        }
+        }*/
 
     }
 
     private void processMgnlElements() {
-        List<MgnlElement> deletedElements = new LinkedList<MgnlElement>();
+        List<MgnlElement> deleteElements = new LinkedList<MgnlElement>();
+        List<MgnlElement> addElements = new LinkedList<MgnlElement>();
+
         for (MgnlElement root :model.getRootElements()) {
             LinkedList<MgnlElement> els = new LinkedList<MgnlElement>();
             els.add(root);
@@ -484,27 +418,29 @@ public class PageEditor extends HTML implements EntryPoint {
                 if (model.getEditBar(mgnlElement) == null) {
                     if (mgnlElement.isArea()) {
 
-                        GWT.log("element was detected as area edit bar. Injecting it...");
-                        AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, this);
-                        if (areaBarWidget.hasControls) {
+                        boolean injected = AreaInjector.inject(this, mgnlElement);
 
-                            boolean hasSharedRoot = false;
-                            for (MgnlElement component : mgnlElement.getComponents()) {
-                                if (mgnlElement.getFirstElement() == component.getFirstElement()) {
-                                    hasSharedRoot = true;
-                                    break;
+
+                        if (!injected) {
+                            // if the area has no controls we, don't want it in the structure.
+                            MgnlElement parent = mgnlElement.getParent();
+
+                            // if area is root remove it from the roots
+                            if (parent == null) {
+                                deleteElements.add(mgnlElement);
+                            }
+                            // set all child parents to parent
+                            for (MgnlElement child : mgnlElement.getChildren()) {
+                                if (parent == null) {
+                                    addElements.add(child);
                                 }
-                            }
+                                else {
+                                    parent.getChildren().add(child);
+                                }
+                                child.setParent(parent);
 
-                            if (mgnlElement.getFirstElement() == null || hasSharedRoot) {
-                                areaBarWidget.attach(mgnlElement.getComment().getElement());
                             }
-                            else {
-                                areaBarWidget.attach(mgnlElement);
-                            }
-
-                            model.addEditBar(mgnlElement, areaBarWidget);
-
+                            model.removeMgnlElement(mgnlElement);
                         }
                     }
                     else if (mgnlElement.isComponent()) {
@@ -516,6 +452,9 @@ public class PageEditor extends HTML implements EntryPoint {
                 }
             }
         }
+        model.rootElements.removeAll(deleteElements);
+        model.rootElements.addAll(addElements);
+
 
     }
 

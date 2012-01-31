@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import com.google.gwt.dom.client.Node;
 
 import com.google.gwt.dom.client.Element;
 
@@ -108,6 +109,18 @@ public class ModelStorage {
         }
     }
 
+    public void addElements(MgnlElement mgnlElement, Element element) {
+
+        addElement(mgnlElement, element);
+        for (int i = 0; i < element.getChildCount(); i++) {
+            Node childNode = element.getChild(i);
+            if (childNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element child = childNode.cast();
+                addElement(mgnlElement, child);
+            }
+        }
+
+    }
     public MgnlElement getMgnlElement(Element element) {
         return mgnlElements.get(element);
     }
@@ -150,6 +163,13 @@ public class ModelStorage {
 
     public ComponentPlaceHolderWidget getComponentPlaceHolder(MgnlElement mgnlElement) {
         return componentPlaceHolders.get(mgnlElement);
+    }
+
+    public void removeMgnlElement(MgnlElement mgnlElement) {
+        if (mgnlElements.containsValue(mgnlElement)) {
+            while(mgnlElements.values().remove(mgnlElement));
+        }
+        elements.remove(mgnlElement);
     }
 
 }

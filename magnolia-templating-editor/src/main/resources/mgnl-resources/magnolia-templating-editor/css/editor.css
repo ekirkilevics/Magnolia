@@ -208,19 +208,24 @@ button.mgnlEditorButton:active {
 .mgnlPlaceHolder.component {
   padding: 10px;
   border-radius: 7px;
-  border: 1px solid #517600;
-  background-color: #9EBA34;
+  border: 2px solid #487000;
+  background-color: #95E88E;
   cursor: pointer;
   clear: both;
 }
 
 .mgnlPlaceHolder.area {
   padding: 25px 15px;
-  border: 4px dotted #396101;
-  border-radius: 15px;
+  border: 2px solid #487000;
+  border-radius: 0 0 15px 15px;
+  background-color: #DEFCDC;
   cursor: pointer;
+  clear: both;
 }
+.mgnlPlaceHolder.area.inactive {
+  border-radius: 15px;
 
+}
 .mgnlPlaceHolder p {
 
 }

@@ -58,6 +58,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
     public ComponentPlaceHolderWidget(PageEditor pageEditor, MgnlElement mgnlElement) {
 
+        super(mgnlElement);
         this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
         this.optional = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("optional"));
         this.created = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("created"));
@@ -115,4 +116,10 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
             }, MouseDownEvent.getType());
         }
     }
+
+    public void attach() {
+        PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement().appendChild(getElement());
+        onAttach();
+    }
+
 }

@@ -33,44 +33,48 @@
  */
 package info.magnolia.templating.editor.client;
 
+import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.model.ModelStorage;
 
-
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.ui.Label;
 
 /**
- * Widget for area placeholders.
+ * Helper class for injecting the placeholder, editbars on the right spot.
  */
-public class AreaPlaceHolderWidget extends AbstractPlaceHolder {
+public class AreaInjector {
 
+    public static boolean inject(PageEditor pageEditor, MgnlElement mgnlElement) {
 
-    public AreaPlaceHolderWidget(PageEditor pageEditor, MgnlElement mgnlElement) {
+        AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, pageEditor);
+        if (areaBarWidget.hasControls) {
 
-        super(mgnlElement);
+            if (mgnlElement.getFirstElement() != null && mgnlElement.getFirstElement() == mgnlElement.getLastElement()) {
+                    areaBarWidget.attach(mgnlElement);
+            }
+            else {
+                areaBarWidget.attach(mgnlElement.getComment().getElement());
+            }
 
-        this.addStyleName("area");
-        String label = mgnlElement.getComment().getAttribute("label");
-        Label areaName = new Label(label + " Placeholder");
+            pageEditor.model.addEditBar(mgnlElement, areaBarWidget);
 
-        if (mgnlElement.getRootArea() != mgnlElement) {
-            setVisible(false);
+            boolean noComponent = mgnlElement.getComment().getAttribute("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
+            if (mgnlElement.getComponents().isEmpty() && !noComponent) {
+
+                AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(pageEditor, mgnlElement);
+
+                pageEditor.model.addAreaPlaceHolder(mgnlElement, placeHolder);
+            }
+
+            else if (!noComponent) {
+                ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(pageEditor, mgnlElement);
+
+                pageEditor.model.addComponentPlaceHolder(mgnlElement, placeHolder);
+                placeHolder.attach();
+            }
+            return true;
         }
-        add(areaName);
 
-        ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(pageEditor, mgnlElement);
-        ModelStorage.getInstance().addComponentPlaceHolder(mgnlElement, placeHolder);
+        return false;
 
-        add(placeHolder);
-        attach();
-    }
-
-    public void attach() {
-        Element parent = PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement();
-        parent.insertAfter(getElement(), PageEditor.model.getEditBar(getMgnlElement()).getElement());
-
-        onAttach();
-    }
-
+        }
 }
+

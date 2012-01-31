@@ -35,7 +35,6 @@ package info.magnolia.templating.editor.client;
 
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
@@ -98,9 +97,9 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
 
-        createButtons(pageEditor, mgnlElement.getComment());
-        this.addStyleName("area");
+        createButtons(pageEditor);
 
+        this.addStyleName("area");
     }
 
     public void attach(MgnlElement mgnlElement) {
@@ -119,7 +118,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         return type;
     }
 
-    private void createButtons(final PageEditor pageEditor, final CMSComment comment) {
+    private void createButtons(final PageEditor pageEditor) {
         if(this.optional) {
             if(!this.created) {
                 Button createButton = new Button(getI18nMessage("buttons.create.js"));
@@ -132,7 +131,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(createButton, Float.RIGHT);
 
             } else {
-                createEditAndAddComponentButtons(pageEditor, comment);
+                createEditAndAddComponentButtons(pageEditor);
 
                 Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
@@ -145,12 +144,12 @@ public class AreaBarWidget extends AbstractBarWidget {
                 addButton(removeButton, Float.RIGHT);
             }
         } else {
-            createEditAndAddComponentButtons(pageEditor, comment);
+            createEditAndAddComponentButtons(pageEditor);
         }
     }
 
-    private void createEditAndAddComponentButtons(final PageEditor pageEditor, final CMSComment comment) {
-        if (comment.hasAttribute("dialog")) {
+    private void createEditAndAddComponentButtons(final PageEditor pageEditor) {
+        if (this.dialog != null) {
             Button editButton = new Button(getI18nMessage("buttons.edit.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override

@@ -95,7 +95,7 @@ public class EditBarWidget extends AbstractBarWidget {
         }
 //        getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
         setVisible(false);
-        attach(mgnlElement);
+        attach();
     }
 
     private void createMouseEventsHandlers(final PageEditor pageEditor) {
@@ -166,8 +166,8 @@ public class EditBarWidget extends AbstractBarWidget {
         }
     }
 
-    private void attach(MgnlElement mgnlElement) {
-        Element element = mgnlElement.getFirstElement();
+    private void attach() {
+        Element element = getMgnlElement().getFirstElement();
         if (element != null) {
             if (element.getFirstChild() != null && element.getFirstChild().getNodeType() == Node.ELEMENT_NODE) {
                 Element child = element.getFirstChild().cast();

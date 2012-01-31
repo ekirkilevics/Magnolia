@@ -36,10 +36,7 @@ package info.magnolia.templating.editor.client.model.focus;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
-import java.util.List;
-
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Unit;
 
 /**
  * Helper class to keep tack on selected items.
@@ -65,17 +62,10 @@ public class FocusModelImpl3 implements FocusModel {
 
         if (mgnlElement == null) {
             reset();
-            storage.setSelectedMgnlElement(mgnlElement);
-            return;
         }
 
-        if (mgnlElement == storage.getSelectedMgnlElement()) {
-            return;
-        }
-
-        MgnlElement area = mgnlElement.getParentArea();
-
-        if (area != null) {
+        else if (mgnlElement != storage.getSelectedMgnlElement() && mgnlElement.getParentArea() != null) {
+            MgnlElement area = mgnlElement.getParentArea();
             if (storage.getSelectedMgnlElement() != null && area == storage.getSelectedMgnlElement().getParentArea()) {
                 return;
             }
@@ -84,7 +74,6 @@ public class FocusModelImpl3 implements FocusModel {
             toggleSelection(area, true);
 
         }
-        computeOverlay();
         storage.setSelectedMgnlElement(mgnlElement);
 
     }
@@ -97,7 +86,6 @@ public class FocusModelImpl3 implements FocusModel {
     public void reset() {
         deSelect();
         showRoot();
-        computeOverlay();
     }
 
     protected void toggleSelection(MgnlElement mgnlElement, boolean visible) {
@@ -124,14 +112,25 @@ public class FocusModelImpl3 implements FocusModel {
             for (MgnlElement area : component.getAreas()) {
 
                 if (storage.getAreaPlaceHolder(area) != null) {
+                    storage.getEditBar(area).setVisible(visible);
                     storage.getAreaPlaceHolder(area).setVisible(visible);
+
                     storage.getComponentPlaceHolder(area).setVisible(visible);
                 }
             }
         }
 
-        if (storage.getAreaPlaceHolder(mgnlElement) != null) {
+        if (storage.getAreaPlaceHolder(mgnlElement) != null && mgnlElement.getParent() != null) {
             storage.getAreaPlaceHolder(mgnlElement).setVisible(visible);
+        }
+
+        if (mgnlElement.getParent() == null && storage.getAreaPlaceHolder(mgnlElement) != null) {
+            if (visible && storage.getAreaPlaceHolder(mgnlElement).getStyleName().contains("inactive")) {
+                storage.getAreaPlaceHolder(mgnlElement).removeStyleName("inactive");
+            }
+            else if (!visible){
+                storage.getAreaPlaceHolder(mgnlElement).addStyleName("inactive");
+            }
         }
 
         if (storage.getComponentPlaceHolder(mgnlElement) != null) {
@@ -153,6 +152,9 @@ public class FocusModelImpl3 implements FocusModel {
                 }
                 if (storage.getAreaPlaceHolder(root) != null) {
                     storage.getAreaPlaceHolder(root).setVisible(true);
+                    if (storage.getAreaPlaceHolder(root).getStyleName().contains("inactive")) {
+                        storage.getAreaPlaceHolder(root).removeStyleName("inactive");
+                    }
                     storage.getComponentPlaceHolder(root).setVisible(true);
 
                 }
@@ -167,31 +169,8 @@ public class FocusModelImpl3 implements FocusModel {
             if (storage.getComponentPlaceHolder(root) != null) {
                 storage.getComponentPlaceHolder(root).setVisible(false);
             }
-        }
-    }
-
-    public void computeOverlay () {
-        for (MgnlElement root : storage.getRootElements()) {
-            List<MgnlElement> mgnlElements = root.getDescendants();
-            mgnlElements.add(root);
-            for (MgnlElement mgnlElement : mgnlElements) {
-
-                if (storage.getOverlay(mgnlElement) == null) {
-                    continue;
-                }
-
-                Element firstElement = mgnlElement.getFirstElement();
-                if (firstElement == null) {
-                    continue;
-                }
-                storage.getOverlay(mgnlElement).getElement().getStyle().setTop(firstElement.getAbsoluteTop(), Unit.PX);
-                storage.getOverlay(mgnlElement).getElement().getStyle().setLeft(firstElement.getAbsoluteLeft(), Unit.PX);
-                storage.getOverlay(mgnlElement).getElement().getStyle().setWidth(firstElement.getAbsoluteRight() - firstElement.getAbsoluteLeft(), Unit.PX);
-
-                Element lastElement = mgnlElement.getLastElement();
-                if (lastElement != null) {
-                    storage.getOverlay(mgnlElement).getElement().getStyle().setHeight(lastElement.getAbsoluteBottom() - storage.getOverlay(mgnlElement).getElement().getAbsoluteTop(), Unit.PX);
-                }
+            if (storage.getAreaPlaceHolder(root) != null) {
+                storage.getAreaPlaceHolder(root).addStyleName("inactive");
             }
         }
     }

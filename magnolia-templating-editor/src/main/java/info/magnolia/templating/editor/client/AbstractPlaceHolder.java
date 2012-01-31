@@ -35,8 +35,6 @@ package info.magnolia.templating.editor.client;
 
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
@@ -46,40 +44,34 @@ import com.google.gwt.user.client.ui.FlowPanel;
  */
 public class AbstractPlaceHolder extends FlowPanel {
 
-    public AbstractPlaceHolder() {
+    private MgnlElement mgnlElement;
+
+    public AbstractPlaceHolder(MgnlElement mgnlElement) {
         super();
+        this.setMgnlElement(mgnlElement);
 
         setStylePrimaryName("mgnlPlaceHolder");
-    }
-
-    /**
-     *  TODO: we should not have to call onAttach ourself?
-     */
-    public void attach(Node node) {
-        final Node parentNode = node.getParentNode();
-        parentNode.insertAfter(getElement(), node);
-        onAttach();
-    }
-
-    public void attach(MgnlElement mgnlElement) {
-        if (mgnlElement.getFirstElement() != null) {
-            if (mgnlElement.getFirstElement() == mgnlElement.getLastElement()) {
-                mgnlElement.getFirstElement().appendChild(getElement());
-            }
-            else {
-                Element parent = mgnlElement.getFirstElement().getParentElement();
-                parent.insertAfter(getElement(), mgnlElement.getLastElement());
-            }
-        }
-        else {
-            PageEditor.model.getEditBar(mgnlElement).getElement().getParentElement().appendChild(getElement());
-        }
-        onAttach();
     }
 
     public void toggleVisible() {
         isVisible();
         setVisible(!isVisible());
     }
+
+    @Override
+    protected void onAttach() {
+        PageEditor.model.addElements(this.getMgnlElement(), getElement());
+        super.onAttach();
+    }
+
+    public void setMgnlElement(MgnlElement mgnlElement) {
+        this.mgnlElement = mgnlElement;
+    }
+
+    public MgnlElement getMgnlElement() {
+        return mgnlElement;
+    }
+
+
 
 }

@@ -55,9 +55,11 @@ public abstract class AbstractBarWidget extends FlowPanel {
     protected boolean hasControls = false;
     private String label = "";
     private FlowPanel buttonWrapper;
+    private MgnlElement mgnlElement;
 
     public AbstractBarWidget(MgnlElement mgnlElement) {
 
+        this.setMgnlElement(mgnlElement);
         if (mgnlElement != null) {
             this.label = mgnlElement.getComment().getAttribute("label");
             if (label != null && !label.isEmpty()) {
@@ -130,16 +132,22 @@ public abstract class AbstractBarWidget extends FlowPanel {
         onAttach();
     }
 
-    /**
-     *  TODO: we should not have to call onAttach ourself?
-     */
-    public void attach(Node node) {
-        final Node parentNode = node.getParentNode();
-        parentNode.insertAfter(getElement(), node);
-        onAttach();
-    }
-
     public void toggleVisible() {
         setVisible(!isVisible());
     }
+
+    @Override
+    protected void onAttach() {
+        PageEditor.model.addElements(this.getMgnlElement(), getElement());
+        super.onAttach();
+    }
+
+    public void setMgnlElement(MgnlElement mgnlElement) {
+        this.mgnlElement = mgnlElement;
+    }
+
+    public MgnlElement getMgnlElement() {
+        return mgnlElement;
+    }
+
 }
