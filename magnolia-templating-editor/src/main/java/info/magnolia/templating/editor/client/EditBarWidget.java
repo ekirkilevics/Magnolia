@@ -33,13 +33,12 @@
  */
 package info.magnolia.templating.editor.client;
 
-import org.dom4j.Node;
-
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
