@@ -43,10 +43,14 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /**
- * Exception handler providing different output based on the configuration of the current instance. Full stacktrace gets rendered on the author instance only, while ignoring the stacktraces in preview mode and on public instances.
+ * Exception handler providing different output based on the configuration of the current instance. Full stacktrace gets
+ * rendered on the author instance only, while ignoring the stacktraces in preview mode and on public instances.
  *
- * @author gjoseph
  * @version $Id: $
+ *
+ * @deprecated since 4.5 - Replaced by {@link
+ *             info.magnolia.rendering.engine.ModeDependentRenderExceptionHandler.ModeDependentRenderExceptionHandler(
+ *             ServerConfiguration)} that can be set on the {@link info.magnolia.rendering.engine.RenderingEngine}.
  */
 public class ModeDependentTemplateExceptionHandler implements TemplateExceptionHandler {
     @Override

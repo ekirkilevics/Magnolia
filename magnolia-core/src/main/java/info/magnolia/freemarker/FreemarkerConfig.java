@@ -75,7 +75,7 @@ public class FreemarkerConfig {
     private final List<MagnoliaModelFactory> registeredModelFactories;
     private final List<TemplateLoader> templateLoaders;
     private final Map<String, TemplateModel> sharedVariables;
-    private TemplateExceptionHandler templateExceptionHandler = new ModeDependentTemplateExceptionHandler();
+    private TemplateExceptionHandler templateExceptionHandler = TemplateExceptionHandler.IGNORE_HANDLER;
 
     private ObjectWrapper objectWrapper;
     private TemplateLoader multiTL;
