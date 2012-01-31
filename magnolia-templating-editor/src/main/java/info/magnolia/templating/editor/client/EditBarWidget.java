@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.editor.client;
 
+import org.dom4j.Node;
+
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
@@ -168,9 +170,19 @@ public class EditBarWidget extends AbstractBarWidget {
     private void attach(MgnlElement mgnlElement) {
         Element element = mgnlElement.getFirstElement();
         if (element != null) {
+            if (element.getFirstChild() != null && element.getFirstChild().getNodeType() == Node.ELEMENT_NODE) {
+                Element child = element.getFirstChild().cast();
+                String classname = child.getClassName();
+                if (classname.contains("mgnlEditorBar")) {
+                    element.insertAfter(getElement(), child);
+                    onAttach();
+                    return;
+                }
+            }
+
             element.insertFirst(getElement());
+            onAttach();
         }
-        onAttach();
     }
 
 }

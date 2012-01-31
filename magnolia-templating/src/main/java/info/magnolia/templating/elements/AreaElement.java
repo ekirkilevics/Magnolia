@@ -98,6 +98,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private String areaPath;
 
+    private boolean isAreaDefinitionEnabled;
+
 
     public AreaElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine) {
         super(server, renderingContext);
@@ -112,6 +114,11 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         this.areaDefinition = resolveAreaDefinition();
 
+        this.isAreaDefinitionEnabled = areaDefinition != null && (areaDefinition.isEnabled() == null || areaDefinition.isEnabled());
+
+        if (!this.isAreaDefinitionEnabled) {
+            return;
+        }
         // set the values based on the area definition if not passed
         this.name = resolveName();
         this.dialog = resolveDialog();
@@ -123,7 +130,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.description = templateDefinition.getDescription();
 
         // build an adhoc area definition if no area definition can be resolved
-        if(areaDefinition == null){
+        if(this.areaDefinition == null){
             buildAdHocAreaDefinition();
         }
 
@@ -247,7 +254,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
             }
 
-            if (isAdmin()) {
+            if (isAdmin() && this.isAreaDefinitionEnabled) {
                 MarkupHelper helper = new MarkupHelper(out);
                 helper.closeComment(CMS_AREA);
             }
@@ -325,8 +332,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
      */
     private boolean canRenderAreaScript() {
         // FYI: areaDefinition == null when it is not set explicitly and can't be merged with the parent. In such case we will render it as if it was enabled
-        final boolean isAreaDefinitionEnabled = areaDefinition != null && (areaDefinition.isEnabled() == null || areaDefinition.isEnabled());
-        return isAreaDefinitionEnabled && (areaNode != null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
+        return this.isAreaDefinitionEnabled && (areaNode != null || (areaNode == null && areaDefinition.isOptional() && !MgnlContext.getAggregationState().isPreviewMode()));
     }
 
     private String resolveDialog() {

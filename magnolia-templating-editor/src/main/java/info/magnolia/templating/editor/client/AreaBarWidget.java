@@ -56,9 +56,6 @@ public class AreaBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
 
-    private String areaWorkspace;
-    private String areaPath;
-
     private String name;
     private String availableComponents;
     private String type;
@@ -79,11 +76,6 @@ public class AreaBarWidget extends AbstractBarWidget {
            }
 
         setVisible(false);
-
-        String areaContent = mgnlElement.getComment().getAttribute("content");
-        int i = areaContent.indexOf(':');
-        this.areaWorkspace = areaContent.substring(0, i);
-        this.areaPath = areaContent.substring(i + 1);
 
         this.name = mgnlElement.getComment().getAttribute("name");
         this.type = mgnlElement.getComment().getAttribute("type");
@@ -108,10 +100,10 @@ public class AreaBarWidget extends AbstractBarWidget {
 
         createButtons(pageEditor, mgnlElement.getComment());
         this.addStyleName("area");
-        attach(mgnlElement);
+
     }
 
-    private void attach(MgnlElement mgnlElement) {
+    public void attach(MgnlElement mgnlElement) {
         Element element = mgnlElement.getFirstElement();
         if (element != null) {
             element.insertFirst(getElement());
@@ -134,7 +126,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createComponent(areaWorkspace, areaPath, name, "mgnl:area");
+                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
                     }
                 });
                 addButton(createButton, Float.RIGHT);
@@ -175,7 +167,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
-                        pageEditor.addComponent(areaWorkspace, areaPath, name, null, availableComponents);
+                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
                     }
                 }
             });

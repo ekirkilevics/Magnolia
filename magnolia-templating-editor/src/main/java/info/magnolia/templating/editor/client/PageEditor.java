@@ -53,7 +53,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -110,8 +109,11 @@ public class PageEditor extends HTML implements EntryPoint {
 
         long startTime = System.currentTimeMillis();
         processDocument(Document.get().getDocumentElement(), null);
-        GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
+
         processMgnlElements();
+        cleanRootElements();
+        GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
+
         model.getFocusModel().reset();
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
@@ -292,7 +294,7 @@ public class PageEditor extends HTML implements EntryPoint {
 
     private MgnlElement processCmsComment(Node node, MgnlElement mgnlElement) throws Exception {
 
-        CMSComment comment = new CMSComment(((Comment)node.cast()).getData());
+        CMSComment comment = new CMSComment((Comment)node.cast());
 
         GWT.log("processing comment " + comment);
 
@@ -411,7 +413,6 @@ public class PageEditor extends HTML implements EntryPoint {
         }
         model.addElement(mgnlElement, element);
 
-        if (element.getStyle().getDisplay().compareToIgnoreCase(Style.Display.NONE.toString()) != 0 && element.getOffsetHeight() != 0) {
 
             if (mgnlElement.getFirstElement() == null) {
                 mgnlElement.setFirstElement(element);
@@ -431,7 +432,6 @@ public class PageEditor extends HTML implements EntryPoint {
                 mgnlElement.setLastElement(element);
             }
 
-        }
 
         if (element.hasAttribute("cms:add")) {
 
@@ -471,6 +471,7 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     private void processMgnlElements() {
+        List<MgnlElement> deletedElements = new LinkedList<MgnlElement>();
         for (MgnlElement root :model.getRootElements()) {
             LinkedList<MgnlElement> els = new LinkedList<MgnlElement>();
             els.add(root);
@@ -481,8 +482,26 @@ public class PageEditor extends HTML implements EntryPoint {
 
                         GWT.log("element was detected as area edit bar. Injecting it...");
                         AreaBarWidget areaBarWidget = new AreaBarWidget(mgnlElement, this);
-                        model.addEditBar(mgnlElement, areaBarWidget);
+                        if (areaBarWidget.hasControls) {
 
+                            boolean hasSharedRoot = false;
+                            for (MgnlElement component : mgnlElement.getComponents()) {
+                                if (mgnlElement.getFirstElement() == component.getFirstElement()) {
+                                    hasSharedRoot = true;
+                                    break;
+                                }
+                            }
+
+                            if (mgnlElement.getFirstElement() == null || hasSharedRoot) {
+                                areaBarWidget.attach(mgnlElement.getComment().getElement());
+                            }
+                            else {
+                                areaBarWidget.attach(mgnlElement);
+                            }
+
+                            model.addEditBar(mgnlElement, areaBarWidget);
+
+                        }
                     }
                     else if (mgnlElement.isComponent()) {
                         GWT.log("element is edit bar placeholder. Injecting it...");
@@ -493,6 +512,7 @@ public class PageEditor extends HTML implements EntryPoint {
                 }
             }
         }
+
     }
 
     //FIXME submitting forms still renders website channel and edit bars

@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client.dom;
 
 import java.util.HashMap;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -46,15 +47,16 @@ import com.google.gwt.regexp.shared.RegExp;
 */
 public class CMSComment {
 
-
+    private Element element;
     private String comment;
     private String tagName;
     private boolean isClosing = false;
 
     private HashMap<String, String> attributes;
 
-    public CMSComment(String comment) throws IllegalArgumentException {
-        this.comment = comment.trim();
+    public CMSComment(Comment comment) throws IllegalArgumentException {
+        this.setElement((Element)comment.cast());
+        this.comment = comment.getData().trim();
 
 
         int delimiter = this.comment.indexOf(" ");
@@ -113,6 +115,14 @@ public class CMSComment {
     @Override
     public String toString() {
         return this.comment;
+    }
+
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
+    public Element getElement() {
+        return element;
     }
 
 }
