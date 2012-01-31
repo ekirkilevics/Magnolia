@@ -157,11 +157,12 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
         versionManager.addVersion(root.getNode("firstPage"), rule);
         assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 2);
-        
+
         versionManager.addVersion(root.getNode("firstPage"), rule);
         assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 3);
     }
 
+    @Override
     @After
     public void tearDown(){
         MgnlContext.setInstance(null);
