@@ -230,7 +230,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
             tasks.add(new AddRoleToGroupTask("Update editors group with samples role", "editors","editors"));
         }
 
-        tasks.add(new AddUserToGroupTask("Superuser", "superuser", "publishers"));
+        tasks.add(new AddUserToGroupTask("Add superuser to the publishers group", "superuser", "publishers"));
 
         // MAGNOLIA-2603 and MAGNOLIA-2971
         // the worflow base role grants only read permission. Now that the superuser is added to the publisher group he gets this restrictive permission assigned
