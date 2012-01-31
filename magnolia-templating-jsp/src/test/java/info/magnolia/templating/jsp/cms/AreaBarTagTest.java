@@ -37,6 +37,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.jsp.AbstractTagTestCase;
 
@@ -64,6 +65,8 @@ public class AreaBarTagTest extends AbstractTagTestCase {
         jspUrl = "http://localhost" + CONTEXT + "/" + jspPath;
 
         ConfiguredTemplateDefinition renderableDefinition = new ConfiguredTemplateDefinition();
+        ConfiguredAreaDefinition areaDefinition = new ConfiguredAreaDefinition();
+        renderableDefinition.addArea("stage", areaDefinition);
         setRendableDefinition(renderableDefinition);
     }
 
