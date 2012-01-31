@@ -76,7 +76,6 @@ import javax.jcr.RepositoryException;
 /**
  * The {@link info.magnolia.module.ModuleVersionHandler} for the workflow module.
  *
- * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
@@ -225,8 +224,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
         // TODO: MAGNOLIA-2979, move that to the samples
         if (ctx.isModuleRegistered("samples")) {
-            tasks.add(new AddUserToGroupTask("Sample user", "eve", "editors"));
-            tasks.add(new AddUserToGroupTask("Sample user", "patrick", "publishers"));
+            tasks.add(new AddUserToGroupTask("Add sample user eve to the editors group", "eve", "editors"));
+            tasks.add(new AddUserToGroupTask("Add sample user patrick to the publishers group", "patrick", "publishers"));
             tasks.add(new AddRoleToGroupTask("Update editors group with samples role", "editors","editors"));
         }
 
