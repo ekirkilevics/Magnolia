@@ -194,6 +194,7 @@ button.mgnlEditorButton:active {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  float: left !important; /*Ensure the label does not let buttons drop off the bar.*/
 }
 
 .mgnlEditorOverlay {
