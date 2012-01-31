@@ -194,7 +194,7 @@ button.mgnlEditorButton:active {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  float: left !important; /*Ensure the label does not let buttons drop off the bar.*/
+  float: left !important; /* Ensure the label does not let buttons drop off the bar. */
 }
 
 .mgnlEditorOverlay {
@@ -211,19 +211,19 @@ button.mgnlEditorButton:active {
  */
 
 .mgnlPlaceHolder.component {
-    padding: 10px;
-      border-radius: 7px;
-      border: 1px solid #517600;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px solid #517600;
   background-color: #9EBA34;
-    cursor: pointer;
-    clear: both;
+  cursor: pointer;
+  clear: both;
 }
 
-.mgnlPlaceHolder.area{
-    padding: 25px 15px;
-    border: 4px dotted #396101;
-    border-radius: 15px;
-    cursor: pointer;
+.mgnlPlaceHolder.area {
+  padding: 25px 15px;
+  border: 4px dotted #396101;
+  border-radius: 15px;
+  cursor: pointer;
 }
 
 .mgnlPlaceHolder p {
