@@ -126,7 +126,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createComponent(workspace, path, name, "mgnl:area");
+                        pageEditor.createComponent(workspace, path, "mgnl:area");
                     }
                 });
                 addButton(createButton, Float.RIGHT);
@@ -167,7 +167,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
-                        pageEditor.addComponent(workspace, path, name, null, availableComponents);
+                        pageEditor.addComponent(workspace, path, null, availableComponents);
                     }
                 }
             });

@@ -93,7 +93,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
                     @Override
                     public void onMouseDown(MouseDownEvent event) {
-                        pageEditor.createComponent(areaWorkspace, areaPath, name, "mgnl:area");
+                        pageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
 
                     }
                 }, MouseDownEvent.getType());
@@ -109,7 +109,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
                 @Override
                 public void onMouseDown(MouseDownEvent event) {
-                    pageEditor.addComponent(areaWorkspace, areaPath, name, null, availableComponents);
+                    pageEditor.addComponent(areaWorkspace, areaPath, null, availableComponents);
 
                 }
             }, MouseDownEvent.getType());

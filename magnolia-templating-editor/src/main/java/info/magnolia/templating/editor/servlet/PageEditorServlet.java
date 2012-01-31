@@ -59,16 +59,19 @@ public class PageEditorServlet extends HttpServlet{
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action  = req.getParameter("action");
         String workspace = req.getParameter("workspace");
-        String parent = req.getParameter("parent");
-        String relPath = req.getParameter("relPath");
+        String path = req.getParameter("path");
         String itemType = req.getParameter("itemType");
+
+        int index = path.lastIndexOf("/");
+        String parent = path.substring(0, index);
+        String relPath = path.substring(index+1);
 
         StringBuilder jsonResponse = new StringBuilder("{");
         jsonResponse.append("\"action\":");
         jsonResponse.append("\""+ action +"\",");
 
         try {
-            checkMandatoryParameters(req.getParameterMap(), "action", "workspace", "parent", "relPath", "itemType");
+            checkMandatoryParameters(req.getParameterMap(), "action", "workspace", "path", "itemType");
             createNode(workspace, parent, relPath, itemType);
             jsonResponse.append("\"result\":");
             jsonResponse.append("\"OK\",");

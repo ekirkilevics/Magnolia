@@ -96,6 +96,9 @@ public class PageEditor extends HTML implements EntryPoint {
     static ModelStorage model = ModelStorage.getInstance();
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
+    // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
+    private boolean process = true;
+
     @Override
     public void onModuleLoad() {
 
@@ -177,10 +180,11 @@ public class PageEditor extends HTML implements EntryPoint {
         LegacyJavascript.mgnlDeleteNode(path);
     }
 
-    public void addComponent(String workspace, String path, String collectionName, String nodeName, String availableComponents) {
-        if (collectionName == null) {
-            collectionName = "";
-        }
+    public void addComponent(String workspace, String path, String nodeName, String availableComponents) {
+
+        // Not used anymore. The node is passed together with the path
+        String collectionName = null;
+
         if (nodeName == null) {
             nodeName = "mgnlNew";
         }
@@ -199,15 +203,14 @@ public class PageEditor extends HTML implements EntryPoint {
 
     }
 
-    public void createComponent(String workspace, String parent, String relPath, String itemType) {
-        GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + parent + "/" + relPath + "]");
+    public void createComponent(String workspace, String path, String itemType) {
+        GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + path + "]");
 
         final StringBuilder url = new StringBuilder();
         url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet");
         url.append("?action=create");
         url.append("&workspace=" + workspace);
-        url.append("&parent=" + parent);
-        url.append("&relPath=" + relPath);
+        url.append("&path=" + path);
         url.append("&itemType=" + itemType);
 
         RequestBuilder req = new RequestBuilder(RequestBuilder.GET, URL.encode(url.toString()));
@@ -266,30 +269,30 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     private void processDocument(Node node, MgnlElement mgnlElement) {
-        for (int i = 0; i < node.getChildCount(); i++) {
-            Node childNode = node.getChild(i);
-            if (childNode.getNodeType() == Comment.COMMENT_NODE) {
+        if(this.process) {
+            for (int i = 0; i < node.getChildCount(); i++) {
+                Node childNode = node.getChild(i);
+                if (childNode.getNodeType() == Comment.COMMENT_NODE) {
 
-                try {
-                    mgnlElement = processCmsComment(childNode, mgnlElement);
+                    try {
+                        mgnlElement = processCmsComment(childNode, mgnlElement);
 
+                    }
+                    catch (IllegalArgumentException e) {
+                        GWT.log("Not CMSComment element, skipping: " + e.toString());
+
+                    }
+                    catch (Exception e) {
+                        GWT.log("Caught undefined exception: " + e.toString());
+                    }
                 }
-                catch (IllegalArgumentException e) {
-                    GWT.log("Not CMSComment element, skipping: " + e.toString());
-
+                else if (childNode.getNodeType() == Node.ELEMENT_NODE && mgnlElement != null) {
+                    processElement(childNode, mgnlElement);
                 }
-                catch (Exception e) {
-                    GWT.log("Caught undefined exception: " + e.toString());
 
-                }
+                processDocument(childNode, mgnlElement);
             }
-            else if (childNode.getNodeType() == Node.ELEMENT_NODE && mgnlElement != null) {
-                processElement(childNode, mgnlElement);
-            }
-
-            processDocument(childNode, mgnlElement);
         }
-
     }
 
     private MgnlElement processCmsComment(Node node, MgnlElement mgnlElement) throws Exception {
@@ -309,6 +312,7 @@ public class PageEditor extends HTML implements EntryPoint {
                 if (pageBarWidget.isPreviewState()) {
                     //we just need the preview bar here
                     GWT.log("We're in preview mode, stop processing DOM.");
+                    this.process  = false;
                 }
             }
 
