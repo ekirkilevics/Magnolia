@@ -71,17 +71,17 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * Regexp pattern used in match().
      */
-    private Pattern pattern;
+    private final Pattern pattern;
 
     /**
      * Pattern length. Longer patterns have higher priority.
      */
-    private int length;
+    private final int length;
 
     /**
      * internal pattern string.
      */
-    private String patternString;
+    private final String patternString;
 
     /**
      * Compile a regexp pattern handling <code>*</code> and <code>?</code> chars.
@@ -140,6 +140,14 @@ public final class SimpleUrlPattern implements UrlPattern {
     @Override
     public int getLength() {
         return this.length;
+    }
+
+    /**
+     * @see info.magnolia.cms.util.UrlPattern#getString()
+     */
+    @Override
+    public String getPatternString() {
+        return patternString;
     }
 
     @Override

@@ -57,6 +57,12 @@ public interface UrlPattern extends Serializable {
     int getLength();
 
     /**
+     * Returns the pattern string.
+     * @return pattern string
+     */
+    String getPatternString();
+
+    /**
      * A pattern which matches any input.
      */
     UrlPattern MATCH_ALL = new MatchAllPattern();
@@ -94,5 +100,12 @@ public interface UrlPattern extends Serializable {
             return 1;
         }
 
+        /**
+         * @see info.magnolia.cms.util.UrlPattern#getString()
+         */
+        @Override
+        public String getPatternString() {
+            return "";
+        }
     }
 }

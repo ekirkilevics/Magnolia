@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Magnolia</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body id="mgnl" class="mgnlBgLight">
+  	<div class="page">
+  	[#if message?exists]
+      <pre>${message}</pre>
+      <hr />
+    [/#if]
+      <h2>${this.messages.get("permissionlist.title")}</h2>
+      <form method="get" action="">
+        <div class="formelement">
+          <label for="mgnlUser">${this.messages.get("permissionlist.user.name")}</label>
+          <input name="mgnlUser" value="" />
+        </div>
+        <div class="formelement">
+          <label for="mgnlGroup">${this.messages.get("permissionlist.group.name")}</label>
+          <input name="mgnlGroup" value="" />
+        </div>
+        <div class="formelement">
+          <label for="mgnlACLs">${this.messages.get("permissionlist.permission.show")}</label>
+          <input name="mgnlACLs" value="true" type="checkbox" />
+        </div>
+        <input type="hidden" name="command" value="createpermissionlist" />
+        <input type="submit" name="createpermissionlist" value="${this.messages.get("permissionlist.button")}" />
+      </form>
+
+      [#list this.permissionList as list]
+		${list}
+	  [/#list]
+	</div>
+  </body>
+</html>
