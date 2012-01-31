@@ -132,4 +132,11 @@ public class MgnlGroupTest {
         // THEN
         assertTrue(gman.getGroup("groupA").getRoles().contains("roleW"));
     }
+
+    @Test
+    public void testGetNotExistGroup() throws AccessDeniedException {
+        Group group = gman.getGroup("notExist");
+
+        assertNull(group);
+    }
 }

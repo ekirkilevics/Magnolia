@@ -90,10 +90,10 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
 
             @Override
             public Group doExec(Session session) throws RepositoryException {
-                Node groupNode = findPrincipalNode(name, session);
-                if(groupNode == null) {
+                if (!session.itemExists("/" + name)){
                     return null;
                 }
+                Node groupNode = session.getNode("/" + name);
                 return newGroupInstance(groupNode);
             }
 
