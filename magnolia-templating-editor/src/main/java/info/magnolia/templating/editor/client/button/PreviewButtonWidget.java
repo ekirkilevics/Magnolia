@@ -69,7 +69,7 @@ public final class PreviewButtonWidget extends Composite {
 
         final PreviewDropdownButtonWidget dropdown = new PreviewDropdownButtonWidget(menuItems);
         dropdown.setStylePrimaryName("mgnlEditorButton");
-        dropdown.addStyleDependentName("previewRight");
+        dropdown.addStyleDependentName("previewMenuButton");
         panel.add(dropdown);
     }
 
@@ -80,7 +80,7 @@ public final class PreviewButtonWidget extends Composite {
     private static final class PreviewDropdownButtonWidget extends DropdownButtonWidget {
 
         public PreviewDropdownButtonWidget(final List<MenuItem> menuItems) {
-            super("---", menuItems); //FIXME in order to have this top aligned correctly, we need to set a dummy text and then hide it with a negative text-indent. See also editor.css
+            super("-", menuItems); // We have to put at least a label here to ensure it gets properly aligned with other text buttons around.
         }
         @Override
         protected void setDropdownPosition(int left, int top) {

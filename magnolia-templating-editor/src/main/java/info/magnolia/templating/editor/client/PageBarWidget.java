@@ -127,7 +127,7 @@ public class PageBarWidget extends AbstractBarWidget {
         options.add(tablet);
 
         PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), options);
-        addButton(preview, Float.LEFT, "mgnlPreviewButton");
+        addButton(preview, Float.LEFT, "mgnlEditorPreviewButton");
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));
         adminCentral.addClickHandler(new ClickHandler() {

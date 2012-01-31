@@ -1,9 +1,6 @@
 /* ---------------------------
  * Edit bars definitions
- * ---------------------------
- *
- * TODO: remove old definitions from control.css in admininterface!
- */
+ * --------------------------- */
 
 /*
  * General appearance of edit bar.
@@ -12,25 +9,23 @@
  *   with overlaid gradient: #305000, transparency shifting from 100% to 0%
  */
 div.mgnlEditorBar {
-  width: 100 !important;	/* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
-  height: 20px;				/* Set height else on FF default buttons height screws up layout. */
-  line-height: 17px;	    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
-                            /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
-                            /* browsers, this has no effect. */
-                            /* Only works with single-line labels. */
-
-  padding: 2px 3px 0 3px;
-  margin: 0px;
-
+  width: 100 !important;
+    /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
+  height: 22px;
+    /* Set height else on FF default buttons height screws up layout. */
+  line-height: 21px;
+    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
+    /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
+    /* browsers, this has no effect. This only works with single-line labels. */
+  padding: 0 3px;
+  margin: 0;
   border-top: 1px solid #81a312;
   border-left: 1px solid #81a312;
   border-bottom: 1px solid #305000;
   border-right: 1px solid #305000;
-
   background-color: transparent;
   background-image: url("../img/mgnl-bar.png");
   background-repeat: repeat;
-
   color: #F0F2E6;
 }
 
@@ -40,7 +35,6 @@ div.mgnlEditorBar {
 .mgnlEditorMainbar {
   position: static;
   z-index: 900;
-
   margin: 0pt;
 }
 
@@ -65,16 +59,13 @@ div.mgnlEditorBar {
  *   with overlaid gradient: #81a312, transparency shifting from 100% to 0%
  */
 .mgnlEditorBar.component {
-
   border-top: 1px solid #91ba26;
   border-left: 1px solid #91ba26;
   border-bottom: 1px solid #719302;
   border-right: 1px solid #719302;
-
   background-color: transparent;
   background-image: url("../img/mgnl-bar.component.png");
   background-repeat: repeat;
-
   color: #004000;
 }
 
@@ -84,27 +75,35 @@ div.mgnlEditorBar {
 .mgnlEditorMainbarPreview {
   position: absolute;
   z-index: 900;
-
   top: 0pt;
   left: 0pt;
   margin: 0pt;
-
   padding: 2px 3px 0 3px;
   margin: 0px;
-
   height: 20px;
-
   background-color: transparent;
+}
+
+/*
+ * Div carrying buttons.
+ */
+.mgnlEditorBarButtons {
+  /* Some definitions for div containing bar buttons
+   required to make it work in the footer. */
+  float: right !important;
+  width: auto !important;
+    /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
+  margin: 0 !important;
+
+  padding-top: 1px;
 }
 
 /*
  * Buttons on component and area edit bars.
  */
-button.mgnlEditorButton {
-  height: 18px;
-  line-height: 11px;
+.mgnlEditorButton {
+  height: 20px; /* have to give the height for all browsers to properly calculate it. */
 
-  margin: 0;
   padding: 0 3px 0 3px;
 
   border-top: 1px solid #81a312;
@@ -114,6 +113,9 @@ button.mgnlEditorButton {
 
   color: #F0F2E6;
   background-color: #487000;
+
+  font-family: Verdana, sans-serif;
+  font-size: 11px;
 }
 
 .mgnlRemoveButton {
@@ -129,23 +131,18 @@ button.mgnlEditorButton {
   padding: 1px 10px;
 }
 
+.mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
+  padding: 1px 8px;
+}
+
 /* Buttons on component edit bar. */
 .mgnlEditorBar.component button.mgnlEditorButton {
   border-top: 1px solid #c1ea56;
   border-left: 1px solid #c1ea56;
   border-bottom: 1px solid #719302;
   border-right: 1px solid #719302;
-
   color: #004000;
   background-color: #91ba26;
-}
-
-/* Some definitions for div containing bar buttons
-   required to make it work in the footer. */
-.mgnlEditorBarButtons {
-  float: right !important;
-  width: auto !important;	/* Ensure that labels and buttons share the available space on the bar in all circumstances. */
-  margin: 0 !important;
 }
 
 .mgnlEditorMainbarPreview .mgnlEditorBarButtons {
@@ -178,15 +175,15 @@ button.mgnlEditorButton:active {
   border-right: 1px solid #c1ea56;
 }
 
-
 /*
  * Label on bars showing name of component or area.
  */
 .mgnlEditorBarLabel {
-  width: auto !important; /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
-
-  margin: 0 0 0 2px !important;	/* Move label a tad further in than buttons on the right, */
-                                /* but ensure that all other margins defined for labels are not applied. */
+  width: auto !important;
+    /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
+  margin: 0 0 0 2px !important;
+    /* Move label a tad further in than buttons on the right, */
+    /* but ensure that all other margins defined for labels are not applied. */
 
   font-family: Verdana, sans-serif;
   font-size: 11px;
@@ -202,14 +199,12 @@ button.mgnlEditorButton:active {
 }
 
 /* --- End of edit bars definitions --- */
-
 /* ----------------------------------
  * Definitions for edit place holders
  * ----------------------------------
  *
  * TODO: add "Editor" prefix for these defs as well (e.g. mgnlEditorPlaceHolder)
  */
-
 .mgnlPlaceHolder.component {
   padding: 10px;
   border-radius: 7px;
@@ -227,29 +222,29 @@ button.mgnlEditorButton:active {
 }
 
 .mgnlPlaceHolder p {
+
 }
 
 /* --- End of edit place holder definitions --- */
-
-
 /* -------------------------------
  *  Definitions for Mobile Preview
  * ------------------------------- */
-
 /*
  * Preview menu button on page edit bar.
  */
-
-.mgnlPreviewMenuDropdown {
- /*not used now, just a placeholder*/
-}
+.mgnlPreviewMenuDropdown { } /* not used now currently */
 
 .mgnlPreviewMenuDropdown table {
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-  border-top: 1px solid #81A312;
-  border-left: 1px solid #81A312;
-  border-bottom: 1px solid #305000;
+  width: 95px !important; /* FIXME Pseudo-align dropdown with buttons above - this is inflexible and should be changed. */
+
+  margin: -1px 0 0 0 !important;
+  padding: 0;
+
+  border-collapse: separate;
+  border-spacing: 0px;
+
+  border-top: 0;
+  border-left: 1px solid #91BA26;
   border-right: 1px solid #305000;
 }
 
@@ -258,28 +253,33 @@ button.mgnlEditorButton:active {
 }
 
 .mgnlPreviewMenuItem {
-  border-left: 1px solid #91BA26;
-  border-bottom: 1px solid #305000;
-  background: #487000 !important;
-  color: #F0F2E6 !important;
   height: 14px;
   line-height: 11px;
+
+  border-bottom: 1px solid #305000;
+
+  background-color: #487000 !important;
+  color: #F0F2E6 !important;
+  text-align: right;
+
   font-family: Verdana, sans-serif;
   font-size: 11px;
-  cursor:pointer;
-  width:150px; /*FIXME a trick to let menu item occupy all available space in width*/
+
+  cursor: pointer;
 }
 
 .mgnlPreviewMenuItem-selected {
   background: #A1BF39 !important;
+  color: #305000 !important;
 }
 
-.mgnlEditorButton-previewRight {
-  background: center no-repeat url(../img/preview/down-arrow-white.gif);
+.mgnlEditorButton-previewMenuButton {
   margin-right: 4px !important;
   border-left: 0px !important;
-  /*FIXME dirty trick to have the rhs button top aligned with the rest.*/
-  text-indent: -10000px;
+
+  background: center no-repeat url(../img/preview/down-arrow-white.gif);
+  background-color: #487000;
+  text-indent: -1000px; /* Ensure that the text on the button we need for aligning the button, is invisible. */
 }
 
 /*
@@ -288,8 +288,8 @@ button.mgnlEditorButton:active {
 .mgnlEditorPreviewBackground {
   background-color: #000;
   opacity: 0.3;
-  filter: alpha(opacity=30);
-  z-index:900;
+  filter: alpha(opacity = 30);
+  z-index: 900;
 }
 
 .mobilePreview {
@@ -328,8 +328,10 @@ button.mgnlEditorButton:active {
   height: 946px;
   width: 768px;
 }
+
 .mobilePreview.smartphoneLandscape {
-  background: url(../img/preview/mobile/smartphone/landscape.png) no-repeat;
+  background: url(../img/preview/mobile/smartphone/landscape.png)
+    no-repeat;
   width: 752px;
   height: 461px;
 }
@@ -358,8 +360,8 @@ button.mgnlEditorButton:active {
 
 .mobilePreviewIframe {
   border: none;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   background: center no-repeat url(../img/preview/mobile/loading.gif);
 }
 
