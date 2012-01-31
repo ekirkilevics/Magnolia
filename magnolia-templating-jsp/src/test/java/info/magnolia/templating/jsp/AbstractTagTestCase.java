@@ -193,7 +193,7 @@ public abstract class AbstractTagTestCase {
         ComponentsTestUtil.setInstance(SystemContext.class, systemContext);
 
         aggState.setCurrentContent(session.getContent("/foo/bar/paragraphs/1"));
-        renderingContext = new AggregationStateBasedRenderingContext(aggState);
+        renderingContext = new AggregationStateBasedRenderingContext(aggState, null);
         final RenderingEngine renderingEngine = mock(RenderingEngine.class);
         when(renderingEngine.getRenderingContext()).thenReturn(renderingContext);
 
