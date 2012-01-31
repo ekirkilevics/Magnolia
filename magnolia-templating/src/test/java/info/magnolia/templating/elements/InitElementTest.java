@@ -105,7 +105,7 @@ public class InitElementTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, defSupport);
 
         //set Rendering context
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState, null);
         out = new StringWriter();
         templateDefinition = new ConfiguredTemplateDefinition();
         templateDefinition.setDialog("customDialog");

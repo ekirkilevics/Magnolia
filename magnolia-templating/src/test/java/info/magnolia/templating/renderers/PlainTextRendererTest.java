@@ -111,7 +111,7 @@ public class PlainTextRendererTest {
         webctx.setAggregationState(state);
         state.setCurrentContent(content);
         state.setMainContent(content);
-        AggregationStateBasedRenderingContext ctx = new AggregationStateBasedRenderingContext(state);
+        AggregationStateBasedRenderingContext ctx = new AggregationStateBasedRenderingContext(state, null);
         ConfiguredRenderableDefinition renderableDefinition = new ConfiguredRenderableDefinition();
 
         ctx.push(content.getJCRNode(), renderableDefinition, new AppendableOnlyOutputProvider(out));
@@ -130,7 +130,7 @@ public class PlainTextRendererTest {
         webctx.setAggregationState(state);
         state.setCurrentContent(content);
         state.setMainContent(content);
-        AggregationStateBasedRenderingContext ctx = new AggregationStateBasedRenderingContext(state);
+        AggregationStateBasedRenderingContext ctx = new AggregationStateBasedRenderingContext(state, null);
         ConfiguredRenderableDefinition renderableDefinition = new ConfiguredRenderableDefinition();
 
         ctx.push(content.getJCRNode(), renderableDefinition, new AppendableOnlyOutputProvider(out));

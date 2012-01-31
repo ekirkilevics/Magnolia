@@ -16,6 +16,10 @@
       <scope>singleton</scope>
     </component>
     <component>
+      <type>info.magnolia.rendering.engine.RenderExceptionHandler</type>
+      <implementation>info.magnolia.rendering.engine.ModeDependentRenderExceptionHandler</implementation>
+    </component>
+    <component>
       <type>info.magnolia.rendering.context.RenderingContext</type>
       <implementation>info.magnolia.rendering.context.AggregationStateBasedRenderingContext</implementation>
     </component>

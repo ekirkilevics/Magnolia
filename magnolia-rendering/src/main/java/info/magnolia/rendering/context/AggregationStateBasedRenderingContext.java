@@ -39,11 +39,13 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.objectfactory.annotation.RequestScoped;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.engine.RenderExceptionHandler;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.util.AppendableWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -79,6 +81,7 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     private final Stack<StackState> stack = new Stack<StackState>();
     private RenderableDefinition currentRenderableDefinition;
     private OutputProvider currentOutputProvider;
+    private RenderExceptionHandler exceptionHandler;
 
     /**
      * We keep the current state in local variables and start using the stack only for the second push operation. This
@@ -88,12 +91,13 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     private int depth = 0;
 
     @Inject
-    public AggregationStateBasedRenderingContext(Provider<AggregationState> aggregationStateProvider) {
-        this.aggregationState = aggregationStateProvider.get();
+    public AggregationStateBasedRenderingContext(Provider<AggregationState> aggregationStateProvider, RenderExceptionHandler exceptionHandler) {
+        this(aggregationStateProvider.get(), exceptionHandler);
     }
 
-    public AggregationStateBasedRenderingContext(AggregationState aggregationState) {
+    public AggregationStateBasedRenderingContext(AggregationState aggregationState, RenderExceptionHandler exceptionHandler) {
         this.aggregationState = aggregationState;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -172,4 +176,8 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
         return this.currentOutputProvider.getOutputStream();
     }
 
+    @Override
+    public void handleException(RenderException renderException, Writer out) {
+        exceptionHandler.handleException(renderException, out);
+    }
 }

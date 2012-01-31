@@ -124,7 +124,7 @@ public class ComponentElementTest {
         RendererRegistry registry = mock(RendererRegistry.class);
         Renderer renderer = mock(Renderer.class);
         when(registry.getRenderer("blah")).thenReturn(renderer);
-        final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState, null);
         out = new StringWriter();
         context.push(aggregationState.getCurrentContent().getJCRNode(), templateDefinition, new OutputProvider() {
 

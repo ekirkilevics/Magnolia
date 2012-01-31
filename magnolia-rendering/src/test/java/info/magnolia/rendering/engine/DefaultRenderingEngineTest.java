@@ -38,6 +38,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
@@ -161,7 +164,9 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         final AppendableWriter writer = new AppendableWriter(builder);
         when(renderingCtx.getAppendable()).thenReturn(writer);
         when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
-        doThrow(new RenderException("")).when(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
+        final RenderException renderException = new RenderException("oh - oh!");
+        doThrow(renderException).when(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
+        doThrow(new IOException()).when(renderingCtx).getAppendable();
 
         // WHEN
         renderingEngine.render(content, builderWrapper);

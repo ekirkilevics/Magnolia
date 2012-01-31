@@ -80,7 +80,7 @@ public class AggregationStateBasedRenderingContextTest {
     public void setUp() throws Exception {
         aggregationState = new AggregationState();
         mainNode = mock(Node.class);
-        context = new AggregationStateBasedRenderingContext(aggregationState);
+        context = new AggregationStateBasedRenderingContext(aggregationState, null);
         session = mock(Session.class);
         when(mainNode.getSession()).thenReturn(session);
         Workspace wks = mock(Workspace.class);
@@ -106,12 +106,8 @@ public class AggregationStateBasedRenderingContextTest {
     @Test
     public void usesAggregationStateFromProvider() throws Exception {
         // GIVEN
-        Node mainNode = mock(Node.class);
-        Content mainContent = mock(Content.class);
-        when(mainContent.getJCRNode()).thenReturn(mainNode);
-        AggregationState aggregationState = new AggregationState();
         aggregationState.setMainContent(mainContent);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(Providers.of(aggregationState));
+        context = new AggregationStateBasedRenderingContext(Providers.of(aggregationState), null);
 
         // WHEN
         Node returnedMainContent = context.getMainContent();
@@ -123,12 +119,7 @@ public class AggregationStateBasedRenderingContextTest {
     @Test
     public void testGetMainContent() {
         // GIVEN
-        AggregationState aggregationState = new AggregationState();
-        Node mainNode = mock(Node.class);
-        Content mainContent = mock(Content.class);
-        when(mainContent.getJCRNode()).thenReturn(mainNode);
         aggregationState.setMainContent(mainContent);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
 
         // WHEN
         Node result = context.getMainContent();
@@ -140,18 +131,13 @@ public class AggregationStateBasedRenderingContextTest {
     @Test
     public void testGetCurrentContent() {
         // GIVEN
-        AggregationState aggregationState = new AggregationState();
-        Node currentNode = mock(Node.class);
-        Content currentContent = mock(Content.class);
-        when(currentContent.getJCRNode()).thenReturn(currentNode);
-        aggregationState.setCurrentContent(currentContent);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        aggregationState.setCurrentContent(mainContent);
 
         // WHEN
         Node result = context.getCurrentContent();
 
         // THEN
-        assertEquals(currentNode, result);
+        assertEquals(mainNode, result);
     }
 
     @Test
@@ -173,7 +159,6 @@ public class AggregationStateBasedRenderingContextTest {
         aggregationState.setMainContent(mainContent);
         aggregationState.setCurrentContent(mainContent);
         Node content = mock(Node.class);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
         when(content.getSession()).thenReturn(session);
 
         // WHEN
@@ -187,20 +172,14 @@ public class AggregationStateBasedRenderingContextTest {
     @Test
     public void testPushSetsCurrentContent() throws Exception {
         // GIVEN ... see setUp()
-        Node node = mock(Node.class);
-        when(node.getSession()).thenReturn(session);
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
-
-        Content currentContent = mock(Content.class);
-        when(node.getPath()).thenReturn("/boo");
-        when(hm.getContent("/boo")).thenReturn(currentContent);
-        when(currentContent.getJCRNode()).thenReturn(node);
+        when(mainNode.getPath()).thenReturn("/boo");
+        when(hm.getContent("/boo")).thenReturn(mainContent);
 
         // WHEN
-        context.push(node, null, null);
+        context.push(mainNode, null, null);
 
         // THEN
-        assertEquals(node, context.getCurrentContent());
+        assertEquals(mainNode, context.getCurrentContent());
     }
 
     @Test
@@ -282,9 +261,7 @@ public class AggregationStateBasedRenderingContextTest {
 
     @Test(expected = EmptyStackException.class)
     public void testPopWithoutPrecedingPush() {
-        // GIVEN
-        AggregationState aggregationState = new AggregationState();
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        // GIVEN - all done in setUp()
 
         // WHEN
         context.pop();
@@ -311,9 +288,8 @@ public class AggregationStateBasedRenderingContextTest {
 
     @Test
     public void testGetRenderableDefinitionBeforePushReturnsNull() {
-        // GIVEN
-        AggregationState aggregationState = new AggregationState();
-        AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState);
+        // GIVEN - all done in setUp()
+
         // WHEN
         RenderableDefinition result = context.getRenderableDefinition();
 

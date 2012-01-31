@@ -31,51 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.rendering.context;
+package info.magnolia.rendering.engine;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
-
-import javax.jcr.Node;
-
-import info.magnolia.rendering.engine.OutputProvider;
-import info.magnolia.rendering.engine.RenderException;
-import info.magnolia.rendering.template.RenderableDefinition;
-import info.magnolia.rendering.util.AppendableWriter;
 
 
 /**
- * Provides all information needed in the rendering process.
+ * Handler for RenderExceptions.
+ *
+ * @version $Id$
  */
-public interface RenderingContext {
+public interface RenderExceptionHandler {
 
-    Node getMainContent();
-
-    Node getCurrentContent();
-
-    RenderableDefinition getRenderableDefinition();
-
-    OutputProvider getOutputProvider();
-
-    /**
-     * Pushes the content and renderableDefinition to be used for rendering. Output will be written using the
-     * OutputProvider already set.
-     */
-    void push(Node content, RenderableDefinition renderableDefinition);
-
-    /**
-     * Pushes the content and renderableDefinition to be used for rendering.
-     *
-     * @param outputProvider the OutputProvider to be used for output or null to use the OutputProvider already set
-     */
-    void push(Node content, RenderableDefinition renderableDefinition, OutputProvider outputProvider);
-
-    void pop();
-
-    AppendableWriter getAppendable() throws RenderException, IOException;
-
-    OutputStream getOutputStream() throws RenderException, IOException;
-
-    void handleException(RenderException renderException, Writer out);
+    public void handleException(RenderException renderException, Writer out);
 }
