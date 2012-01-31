@@ -34,22 +34,42 @@
 package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
+
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 import javax.jcr.Node;
 
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * $Id$
  */
 public class AreaDirectiveTest extends AbstractDirectiveTestCase {
-    private ConfiguredTemplateDefinition renderableDef = new ConfiguredTemplateDefinition();
+    private ConfiguredTemplateDefinition renderableDef;
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        renderableDef = new ConfiguredTemplateDefinition();
+        ConfiguredAreaDefinition areaDefinition = new ConfiguredAreaDefinition();
+        renderableDef.addArea("stage", areaDefinition);
+    }
 
     @Test
     public void testRenderSimpleBarWithoutAreaNode() throws Exception {
+        // GIVEN
+
+        // WHEN
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
+
+        // THEN
         assertEquals(
                 "<!-- cms:area content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"
                 + "\n<!-- /cms:area -->\n", result);
@@ -57,13 +77,29 @@ public class AreaDirectiveTest extends AbstractDirectiveTestCase {
 
     @Test
     public void testRenderSimpleBar() throws Exception {
+        // GIVEN
         Node paragraph1 = getSession().getNode("/foo/bar/paragraphs/1");
         // make sure we have a areaNode...
         paragraph1.addNode("stage", MgnlNodeType.NT_AREA);
 
+        // WHEN
         final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
+
+        // THEN
         assertEquals(
                 "<!-- cms:area content=\"testWorkspace:/foo/bar/paragraphs/1/stage\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"
                 + "\n" + "<!-- /cms:area -->\n", result);
+    }
+
+    @Test
+    public void testRenderNoBar() throws Exception {
+        // GIVEN
+        renderableDef.setAreas(new HashMap<String, AreaDefinition>());
+
+        // WHEN
+        final String result = renderForTest("[@cms.area name=\"stage\" /]", renderableDef);
+
+        // THEN
+        assertEquals("", result);
     }
 }
