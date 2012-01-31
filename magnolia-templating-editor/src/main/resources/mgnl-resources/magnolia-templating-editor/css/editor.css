@@ -200,6 +200,15 @@ button.mgnlEditorButton:active {
   position: absolute;
 }
 
+/* --- End of edit bars definitions --- */
+
+/* ----------------------------------
+ * Definitions for edit place holders
+ * ----------------------------------
+ *
+ * TODO: add "Editor" prefix for these defs as well (e.g. mgnlEditorPlaceHolder)
+ */
+
 .mgnlPlaceHolder.component {
     padding: 10px;
       border-radius: 7px;
@@ -219,10 +228,62 @@ button.mgnlEditorButton:active {
 .mgnlPlaceHolder p {
 }
 
-/* --- End of edit bars definitions --- */
+/* --- End of edit place holder definitions --- */
 
 
-/* TODO review preview styles */
+/* -------------------------------
+ *  Definitions for Mobile Preview
+ * ------------------------------- */
+
+/*
+ * Preview menu button on page edit bar.
+ */
+
+.mgnlPreviewMenuDropdown {
+ /*not used now, just a placeholder*/
+}
+
+.mgnlPreviewMenuDropdown table {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  border-top: 1px solid #81A312;
+  border-left: 1px solid #81A312;
+  border-bottom: 1px solid #305000;
+  border-right: 1px solid #305000;
+}
+
+.mgnlPreviewMenuPanel {
+  z-index: 800;
+}
+
+.mgnlPreviewMenuItem {
+  border-left: 1px solid #91BA26;
+  border-bottom: 1px solid #305000;
+  background: #487000 !important;
+  color: #F0F2E6 !important;
+  height: 14px;
+  line-height: 11px;
+  font-family: Verdana, sans-serif;
+  font-size: 11px;
+  cursor:pointer;
+  width:150px; /*FIXME a trick to let menu item occupy all available space in width*/
+}
+
+.mgnlPreviewMenuItem-selected {
+  background: #A1BF39 !important;
+}
+
+.mgnlEditorButton-previewRight {
+  background: center no-repeat url(../img/preview/down-arrow-white.gif);
+  margin-right: 4px !important;
+  border-left: 0px !important;
+  /*FIXME dirty trick to have the rhs button top aligned with the rest.*/
+  text-indent: -10000px;
+}
+
+/*
+ * Smartphone and tablet previews.
+ */
 .mgnlEditorPreviewBackground {
   background-color: #000;
   opacity: 0.3;
@@ -301,44 +362,4 @@ button.mgnlEditorButton:active {
   background: center no-repeat url(../img/preview/mobile/loading.gif);
 }
 
-.mgnlPreviewMenuDropdown {
- /*not used now, just a placeholder*/
-}
-
-.mgnlPreviewMenuDropdown table {
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-  border-top: 1px solid #81A312;
-  border-left: 1px solid #81A312;
-  border-bottom: 1px solid #305000;
-  border-right: 1px solid #305000;
-}
-
-.mgnlPreviewMenuPanel {
-  z-index: 800;
-}
-
-.mgnlPreviewMenuItem {
-  border-left: 1px solid #91BA26;
-  border-bottom: 1px solid #305000;
-  background: #487000 !important;
-  color: #F0F2E6 !important;
-  height: 14px;
-  line-height: 11px;
-  font-family: Verdana, sans-serif;
-  font-size: 11px;
-  cursor:pointer;
-  width:150px; /*FIXME a trick to let menu item occupy all available space in width*/
-}
-
-.mgnlPreviewMenuItem-selected {
-  background: #A1BF39 !important;
-}
-
-.mgnlEditorButton-previewRight {
-  background: center no-repeat url(../img/preview/down-arrow-white.gif);
-  margin-right: 4px !important;
-  border-left: 0px !important;
-  /*FIXME dirty trick to have the rhs button top aligned with the rest.*/
-  text-indent: -10000px;
-}
+/* --- End of mobile preview definitions --- */
