@@ -137,7 +137,6 @@ public abstract class AbstractTagTestCase {
         params.put("engineOptionsClass", TestServletOptions.class.getName());
         runner = new ServletRunner(new File(path), CONTEXT);
         runner.registerServlet("*.jsp", "org.apache.jasper.servlet.JspServlet", params);
-
         // setup context
         session = MockUtil.createAndSetHierarchyManager("website", StringUtils.join(new String[]{
             "/foo/bar.@type=mgnl:page",
@@ -222,8 +221,7 @@ public abstract class AbstractTagTestCase {
         MgnlUser mockUser = mock(MgnlUser.class);
         when(mockUser.getLanguage()).thenReturn("en");
         when(ctx.getUser()).thenReturn(mockUser);
-
-
+        when(ctx.getContextPath()).thenReturn("contextPath");
         when(ctx.getHierarchyManager("website")).thenReturn(session);
         when(ctx.getJCRSession("website")).thenReturn(session.getJcrSession());
 

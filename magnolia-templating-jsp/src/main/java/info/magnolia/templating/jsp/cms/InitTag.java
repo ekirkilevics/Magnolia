@@ -33,6 +33,7 @@
  */
 package info.magnolia.templating.jsp.cms;
 
+import org.tldgen.annotations.Attribute;
 import org.tldgen.annotations.BodyContent;
 import org.tldgen.annotations.Tag;
 
@@ -51,11 +52,18 @@ import info.magnolia.templating.elements.InitElement;
 
 public class InitTag extends AbstractTag<InitElement>{
 
+    // Edit Tag Variable
+    private String dialog;
+
+    @Attribute(required=false, rtexprvalue=true)
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
+    }
 
     @Override
     protected void prepareTemplatingElement(InitElement templatingElement) {
         initContentElement(templatingElement);
-
+        templatingElement.setDialog(dialog);
     }
 
 }

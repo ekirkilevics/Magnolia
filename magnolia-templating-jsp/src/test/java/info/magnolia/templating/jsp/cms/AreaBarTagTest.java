@@ -79,7 +79,7 @@ public class AreaBarTagTest extends AbstractTagTestCase {
 
         // THEN
         assertNotNull(responseStr);
-        assertThat(responseStr, containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"));
+        assertThat(responseStr, containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/1/stage\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"));
    }
 
     @Test
@@ -97,7 +97,7 @@ public class AreaBarTagTest extends AbstractTagTestCase {
 
         // THEN
         assertNotNull(responseStr);
-        assertThat(responseStr, containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/1\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"));
+        assertThat(responseStr, containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/1/stage\" name=\"stage\" availableComponents=\"\" type=\"list\" label=\"Stage\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" -->"));
 
    }
 
