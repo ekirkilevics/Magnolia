@@ -49,6 +49,11 @@ import javax.inject.Inject;
  */
 public class ModeDependentRenderExceptionHandler implements RenderExceptionHandler {
 
+    public static final String RENDER_ERROR_MESSAGE_BEGIN =
+            "<!-- ERROR MESSAGE STARTS HERE --><script language=javascript>//\"></script><script language=javascript>//\'></script><script language=javascript>//\"></script><script language=javascript>//\'></script></title></xmp></script></noscript></style></object></head></pre></table></form></table></table></table></a></u></i></b><div align=left style='background-color:#FFFF00; color:#FF0000; display:block; border-top:double; padding:2pt; font-size:medium; font-family:Arial,sans-serif; font-style: normal; font-variant: normal; font-weight: normal; text-decoration: none; text-transform: none'><b style='font-size:medium'>FreeMarker template error!</b><pre><xmp>";
+
+    public static final String RENDER_ERROR_MESSAGE_END = "</xmp></pre></div></html>";
+
     private ServerConfiguration serverConfiguration;
 
     @Inject
@@ -58,9 +63,7 @@ public class ModeDependentRenderExceptionHandler implements RenderExceptionHandl
 
     @Override
     public void handleException(RenderException renderException, Writer out) {
-        final boolean isAuthorInstance = serverConfiguration.isAdmin();
-        final boolean isPreviewMode = MgnlContext.getAggregationState().isPreviewMode();
-        if (isAuthorInstance && !isPreviewMode) {
+        if ( serverConfiguration.isAdmin() && !MgnlContext.getAggregationState().isPreviewMode()) {
             inEditMode(renderException, out);
         } else {
             inPublicMode(renderException, out);
@@ -80,17 +83,9 @@ public class ModeDependentRenderExceptionHandler implements RenderExceptionHandl
 
     protected void inEditMode(RenderException renderException, Writer out) {
         final PrintWriter pw = getPrintWriterFor(out);
-        pw.println("<!-- ERROR MESSAGE STARTS HERE -->" + "<script language=javascript>//\"></script>"
-                + "<script language=javascript>//\'></script>" + "<script language=javascript>//\"></script>"
-                + "<script language=javascript>//\'></script>" + "</title></xmp></script></noscript></style></object>"
-                + "</head></pre></table>" + "</form></table></table></table></a></u></i></b>" + "<div align=left "
-                + "style='background-color:#FFFF00; color:#FF0000; "
-                + "display:block; border-top:double; padding:2pt; "
-                + "font-size:medium; font-family:Arial,sans-serif; " + "font-style: normal; font-variant: normal; "
-                + "font-weight: normal; text-decoration: none; " + "text-transform: none'>"
-                + "<b style='font-size:medium'>FreeMarker template error!</b>" + "<pre><xmp>");
+        pw.println(RENDER_ERROR_MESSAGE_BEGIN);
         renderException.printStackTrace(pw);
-        pw.println("</xmp></pre></div></html>");
+        pw.println(RENDER_ERROR_MESSAGE_END);
         pw.flush();
     }
 }
