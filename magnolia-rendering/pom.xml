@@ -10,7 +10,7 @@
   <artifactId>magnolia-rendering</artifactId>
   <name>magnolia-rendering</name>
   <properties>
-    <cloverCoverageThreshold>65</cloverCoverageThreshold>
+    <cloverCoverageThreshold>70</cloverCoverageThreshold>
   </properties>
   <dependencies>
     <dependency>

@@ -47,8 +47,10 @@ import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererProvider;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
+import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.rendering.template.variation.NoopVariationResolver;
 import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.test.AbstractMagnoliaTestCase;
@@ -98,7 +100,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
     @Test
     public void testGetRenderingContextWhenNotYetSet() {
         // GIVEN
-        final AggregationStateBasedRenderingContext renderingContext = mock(AggregationStateBasedRenderingContext.class);
+        final AggregationStateBasedRenderingContext renderingContext =
+                mock(AggregationStateBasedRenderingContext.class);
         DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(renderingContext);
 
         // WHEN
@@ -116,7 +119,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         RendererRegistry rendererRegistry = new RendererRegistry();
         TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         RenderingContext renderingCtx = mock(RenderingContext.class);
-        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
+        DefaultRenderingEngine renderingEngine =
+                createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
@@ -148,7 +152,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         RendererRegistry rendererRegistry = new RendererRegistry();
         TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         RenderingContext renderingCtx = mock(RenderingContext.class);
-        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
+        DefaultRenderingEngine renderingEngine =
+                createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
 
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
         when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
@@ -179,14 +184,63 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         // GIVEN
         final Node content = new MockNode("parent");
         TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        DefaultRenderingEngine renderingEngine = createDefaultRenderingEngine(templateDefinitionAssignment, mock(RenderingContext.class));
+        DefaultRenderingEngine renderingEngine =
+                createDefaultRenderingEngine(templateDefinitionAssignment, mock(RenderingContext.class));
 
-        doThrow(new RegistrationException("test")).when(templateDefinitionAssignment).getAssignedTemplateDefinition(content);
+        doThrow(new RegistrationException("test")).when(templateDefinitionAssignment).getAssignedTemplateDefinition(
+                content);
 
         // WHEN
         renderingEngine.render(content, null);
 
         // THEN - no code here as we expect an Exception
+    }
+
+    @Test
+    public void testRenderExceptionHandlerIsInvokedOnRenderException() throws Exception {
+        // GIVEN
+        final Node content = new MockNode("parent");
+
+        RendererRegistry rendererRegistry = new RendererRegistry();
+        TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        RenderingContext renderingCtx = mock(RenderingContext.class);
+        DefaultRenderingEngine renderingEngine =
+                createDefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, renderingCtx);
+
+        TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(content)).thenReturn(templateDefinition);
+
+        Renderer freemarkerRenderer = mock(Renderer.class);
+        RendererProvider freemarkerRendererProvider = mock(RendererProvider.class);
+        when(freemarkerRendererProvider.getType()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        when(freemarkerRendererProvider.getRenderer()).thenReturn(freemarkerRenderer);
+        rendererRegistry.register(freemarkerRendererProvider);
+
+        final StringBuilder builder = new StringBuilder();
+        OutputProvider builderWrapper = new AppendableOnlyOutputProvider(builder);
+        final AppendableWriter writer = new AppendableWriter(builder);
+        when(renderingCtx.getAppendable()).thenReturn(writer);
+        when(templateDefinition.getRenderType()).thenReturn(FREEMARKER_RENDERER_TYPE);
+        final RenderException e = new RenderException("TEST!");
+        doThrow(e).when(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
+
+        // WHEN
+        renderingEngine.render(content, builderWrapper);
+
+        // THEN
+        verify(renderingCtx).handleException(e, writer);
+    }
+
+    @Test(expected = RenderException.class)
+    public void testGetRendererForThrowsExceptionOnUnkownRenderType() throws RenderException {
+        // GIVEN
+        final RenderableDefinition def = new ConfiguredRenderableDefinition();
+        DefaultRenderingEngine renderingEngine = new DefaultRenderingEngine(null, null, null, null);
+
+        // WHEN
+        renderingEngine.getRendererFor(def);
+
+        // THEN
     }
 
     private DefaultRenderingEngine createDefaultRenderingEngine() {
@@ -203,7 +257,7 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
 
     private DefaultRenderingEngine createDefaultRenderingEngine(RendererRegistry rendererRegistry, TemplateDefinitionAssignment templateDefinitionAssignment, final RenderingContext renderingContext) {
         Provider<RenderingContext> renderingContextProvider = null;
-        if (renderingContext!= null) {
+        if (renderingContext != null) {
             renderingContextProvider = new Provider<RenderingContext>() {
                 @Override
                 public RenderingContext get() {
@@ -211,6 +265,7 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
                 }
             };
         }
-        return new DefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, new NoopVariationResolver(), renderingContextProvider);
+        return new DefaultRenderingEngine(rendererRegistry, templateDefinitionAssignment, new NoopVariationResolver(),
+                renderingContextProvider);
     }
 }
