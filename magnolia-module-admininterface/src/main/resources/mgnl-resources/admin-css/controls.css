@@ -1,11 +1,3 @@
-.mgnlMainbar,.mgnlMainbarPreview {
-    position: absolute;
-    z-index: 900;
-    top: 0pt;
-    right: 0pt;
-    margin: 0pt;
-}
-
 .mgnlBtnsLeft {
     text-align: left !important;
 }
