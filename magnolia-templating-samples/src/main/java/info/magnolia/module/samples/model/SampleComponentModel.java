@@ -52,6 +52,8 @@ import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This model class is defined in the component definition in the configuration
  * <code>(modules/samples/components/name-of-component/modelClass)</code>.
@@ -86,7 +88,9 @@ public class SampleComponentModel extends RenderingModelImpl<RenderableDefinitio
     }
 
     public List<ContentMap> getSearchResult() throws RepositoryException{
-
+        if( StringUtils.isEmpty(query)) {
+            return null;
+        }
         String rootPagePath = functions.root(content, MgnlNodeType.NT_PAGE).getPath();
 
         List<ContentMap> results = new ArrayList<ContentMap>();
