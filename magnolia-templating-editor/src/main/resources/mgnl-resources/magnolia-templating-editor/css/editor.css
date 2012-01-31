@@ -346,16 +346,16 @@ button.mgnlEditorButton:active {
 
 .mobilePreview.smartphonePortrait {
   background: url(../img/preview/mobile/smartphone/portrait.png) no-repeat;
-  width: 461px;
-  height: 752px;
+  width: 393px;
+  height: 756px;
 }
 
 .mobilePreview.smartphonePortrait .popupContent {
   position: absolute;
-  top: 214px;
-  left: 38px;
+  top: 213px;
+  left: 32px;
   width: 320px;
-  height: 355px;
+  height: 356px;
 }
 
 .mobilePreviewIframe {
