@@ -117,9 +117,9 @@ public class PageBarWidget extends AbstractBarWidget {
         });
         addButton(properties, Float.RIGHT);
 
-        MenuItem desktop = new MenuItem("Desktop", true, new DesktopPreviewCommand());
-        MenuItem smartphone = new MenuItem("Smartphone", true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
-        MenuItem tablet = new MenuItem("Tablet", true, new MobilePreviewCommand("tablet", Orientation.LANDSCAPE));
+        MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
+        MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
+        MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new MobilePreviewCommand("tablet", Orientation.LANDSCAPE));
 
         List<MenuItem> options = new ArrayList<MenuItem>();
         options.add(desktop);
