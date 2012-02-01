@@ -79,17 +79,17 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     public void begin(Appendable out) throws IOException, RenderException {
 
         TemplateDefinition componentDefinition = null;
+        content = getPassedContent();
+
+        if(content == null) {
+            throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to rendre a component.");
+        }
 
         if(isAdmin()){
             MarkupHelper helper = new MarkupHelper(out);
 
             helper.openComment("cms:component");
 
-            content = getPassedContent();
-
-            if(content == null) {
-                throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to rendre a component.");
-            }
 
             helper.attribute("content", getNodePath(content));
 
