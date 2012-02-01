@@ -53,6 +53,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -307,7 +308,7 @@ public class SaveHandlerImpl implements SaveHandler {
                     throw new ClassCastException("Class " + cshClazz + " must implement the FieldSaveHandler interface");
                 }
                 else {
-                    FieldSaveHandler csh = (FieldSaveHandler) Classes.getClassFactory().newInstance(cshClazz);
+                    FieldSaveHandler csh = (FieldSaveHandler)Components.newInstance(cshClazz);
                     HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(RepositoryConstants.CONFIG);
 
                     String configPath = this.getForm().getParameter(name + "_configNode");
