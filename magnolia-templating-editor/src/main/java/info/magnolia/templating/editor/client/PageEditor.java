@@ -352,7 +352,7 @@ public class PageEditor extends HTML implements EntryPoint {
                 mgnlElement.setFirstElement(element);
             }
 
-            if (!mgnlElement.getLastElement().isOrHasChild(element)) {
+            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
                 mgnlElement.setLastElement(element);
             }
 
@@ -363,7 +363,7 @@ public class PageEditor extends HTML implements EntryPoint {
                     if (area.getFirstElement() == null) {
                         area.setFirstElement(element);
                     }
-                    if (!area.getLastElement().isOrHasChild(element)) {
+                    if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
                         area.setLastElement(element);
                     }
                 }
