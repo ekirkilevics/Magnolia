@@ -77,7 +77,7 @@ public class InitDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.init /]", renderableDef);
 
         // THEN
-        assertThat(result, containsString("<!-- cms:page content=\"testWorkspace:/foo/bar/paragraphs/1\" -->\n<!-- /cms:page -->"));
+        assertThat(result, containsString("<!-- cms:page content=\"testWorkspace:/foo/bar/paragraphs/1\" preview=\"false\" -->\n<!-- /cms:page -->"));
 
     }
 
@@ -90,6 +90,6 @@ public class InitDirectiveTest extends AbstractDirectiveTestCase {
         final String result = renderForTest("[@cms.init dialog='newTagDefinedDialog' /]", renderableDef);
 
         // THEN
-        assertThat(result, containsString("<!-- cms:page content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"newTagDefinedDialog\" -->\n<!-- /cms:page -->"));
+        assertThat(result, containsString("<!-- cms:page content=\"testWorkspace:/foo/bar/paragraphs/1\" dialog=\"newTagDefinedDialog\" preview=\"false\" -->\n<!-- /cms:page -->"));
     }
 }

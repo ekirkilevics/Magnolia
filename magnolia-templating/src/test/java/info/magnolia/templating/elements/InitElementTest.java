@@ -94,6 +94,7 @@ public class InitElementTest {
         when(ctx.getUser()).thenReturn(user);
         final Locale localeEn = new Locale("en");
         when(ctx.getLocale()).thenReturn(localeEn);
+        when(ctx.getAggregationState()).thenReturn(aggregationState);
         MgnlContext.setInstance(ctx);
 
         final ServerConfiguration serverCfg = new ServerConfiguration();
@@ -196,7 +197,7 @@ public class InitElementTest {
         //WHEN
         element.begin(out);
         //THEN
-        assertThat(out.toString(),containsString("<!-- cms:page dialog=\"customDialog\" -->"));
+        assertThat(out.toString(),containsString("<!-- cms:page dialog=\"customDialog\" preview=\"false\" -->"));
     }
 
     @Test
@@ -206,7 +207,7 @@ public class InitElementTest {
         //WHEN
         element.begin(out);
         //THEN
-        assertThat(out.toString(),containsString("<!-- cms:page content=\"testSession:/foo/bar/baz/main/01\" dialog=\"testDialog\" -->"));
+        assertThat(out.toString(),containsString("<!-- cms:page content=\"testSession:/foo/bar/baz/main/01\" dialog=\"testDialog\" preview=\"false\" -->"));
     }
 
     @Test
@@ -217,6 +218,16 @@ public class InitElementTest {
         element.end(out);
         //THEN
         assertThat(out.toString(),containsString("<!-- end js and css added by @cms.init -->"));
+    }
+
+    @Test
+    public void testOutputPreviewTrueWhenAggregationStateHasPreviewModeTrue() throws Exception {
+        //GIVEN
+        aggregationState.setPreviewMode(true);
+        //WHEN
+        element.begin(out);
+        //THEN
+        assertThat(out.toString(),containsString("<!-- cms:page content=\"testSession:/foo/bar/baz/main/01\" dialog=\"customDialog\" preview=\"true\" -->"));
     }
 
     @After
