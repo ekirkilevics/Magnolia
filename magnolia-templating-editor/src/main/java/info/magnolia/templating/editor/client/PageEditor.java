@@ -204,7 +204,7 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
         urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
         if(isPreview) {
-            urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, "true");
+            urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview));
             urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
         }
 
