@@ -68,15 +68,14 @@ import com.google.gwt.user.client.ui.MenuItem;
  */
 public class PageBarWidget extends AbstractBarWidget {
 
-    private PageEditor pageEditor;
 
     private String workspace;
     private String path;
     private String dialog;
+    private boolean previewState = false;
 
-    public PageBarWidget(final PageEditor pageEditor, final CMSComment comment, final boolean isPreview) {
+    public PageBarWidget(final CMSComment comment) {
         super(null);
-        this.pageEditor = pageEditor;
 
         String content = comment.getAttribute("content");
         int i = content.indexOf(':');
@@ -84,7 +83,10 @@ public class PageBarWidget extends AbstractBarWidget {
         this.path = content.substring(i + 1);
         this.dialog = comment.getAttribute("dialog");
 
-        if(isPreview){
+        boolean isPreview = Boolean.parseBoolean(comment.getAttribute("preview"));
+        PageEditor.setPreview(isPreview);
+
+        if(PageEditor.isPreview()){
             createPreviewModeBar();
         } else {
             createAuthoringModeBar();
@@ -110,7 +112,7 @@ public class PageBarWidget extends AbstractBarWidget {
         properties.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.openDialog(dialog, workspace, path, null, null);
+                PageEditor.openDialog(dialog, workspace, path, null, null);
             }
         });
         addButton(properties, Float.RIGHT);
@@ -131,12 +133,14 @@ public class PageBarWidget extends AbstractBarWidget {
         adminCentral.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.showTree(workspace, path);
+                PageEditor.showTree(workspace, path);
             }
         });
         addButton(adminCentral, Float.LEFT);
 
         setClassName("mgnlEditorMainbar mgnlEditorBar");
+
+        previewState = false;
     }
 
     private void createPreviewModeBar() {
@@ -144,7 +148,8 @@ public class PageBarWidget extends AbstractBarWidget {
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.setPreview(false);
+                PageEditor.setPreview(false);
+                PageEditor.reload();
             }
         });
         addButton(preview, Float.LEFT);
@@ -163,7 +168,7 @@ public class PageBarWidget extends AbstractBarWidget {
 
         @Override
         public void execute() {
-            pageEditor.createChannelPreview("mobile", deviceType, orientation);
+            PageEditor.createChannelPreview("mobile", deviceType, orientation);
         }
     }
 
@@ -171,7 +176,8 @@ public class PageBarWidget extends AbstractBarWidget {
 
         @Override
         public void execute() {
-            pageEditor.setPreview(true);
+            PageEditor.setPreview(true);
+            PageEditor.reload();
         }
     }
 

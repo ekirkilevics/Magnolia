@@ -56,7 +56,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
     private String areaPath = "";
     private String name = "";
 
-    public ComponentPlaceHolderWidget(PageEditor pageEditor, MgnlElement mgnlElement) {
+    public ComponentPlaceHolderWidget(MgnlElement mgnlElement) {
 
         super(mgnlElement);
         this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
@@ -84,9 +84,9 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
         add(areaName);
 
-        createMouseEventsHandlers(pageEditor);
+        createMouseEventsHandlers();
     }
-    private void createMouseEventsHandlers(final PageEditor pageEditor) {
+    private void createMouseEventsHandlers() {
 
         if (this.optional) {
             if(!this.created) {
@@ -94,7 +94,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
                     @Override
                     public void onMouseDown(MouseDownEvent event) {
-                        pageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
+                        PageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
 
                     }
                 }, MouseDownEvent.getType());
@@ -110,7 +110,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
 
                 @Override
                 public void onMouseDown(MouseDownEvent event) {
-                    pageEditor.addComponent(areaWorkspace, areaPath, null, availableComponents);
+                    PageEditor.addComponent(areaWorkspace, areaPath, null, availableComponents);
 
                 }
             }, MouseDownEvent.getType());

@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.Label;
 public class AreaPlaceHolderWidget extends AbstractPlaceHolder {
 
 
-    public AreaPlaceHolderWidget(PageEditor pageEditor, MgnlElement mgnlElement) {
+    public AreaPlaceHolderWidget(MgnlElement mgnlElement) {
 
         super(mgnlElement);
 
@@ -59,7 +59,7 @@ public class AreaPlaceHolderWidget extends AbstractPlaceHolder {
         }
         add(areaName);
 
-        ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(pageEditor, mgnlElement);
+        ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(mgnlElement);
         ModelStorage.getInstance().addComponentPlaceHolder(mgnlElement, placeHolder);
 
         add(placeHolder);

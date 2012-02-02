@@ -31,21 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client.dom;
+package info.magnolia.templating.editor.client.dom.processor;
 
-import com.google.gwt.dom.client.Node;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 /**
- * This class implements the DOM Comment in gwt, as there is no type specified for it.
+ * Abstract Class for MgnlElement processors.
  */
-public class Comment extends Node {
-    public static final short COMMENT_NODE = 8;
+public abstract class MgnlElementProcessor {
 
-    /**
-     * Constructor must be protected.
-     */
-    protected Comment() {}
+    private MgnlElement mgnlElement;
 
-    public final native String getData() /*-{ return this.data; }-*/;
+    public MgnlElementProcessor(MgnlElement mgnlElement) {
+        this.setMgnlElement(mgnlElement);
+    }
+
+    public abstract void process();
+
+    public void setMgnlElement(MgnlElement mgnlElement) {
+        this.mgnlElement = mgnlElement;
+    }
+
+    public MgnlElement getMgnlElement() {
+        return mgnlElement;
+    }
 
 }

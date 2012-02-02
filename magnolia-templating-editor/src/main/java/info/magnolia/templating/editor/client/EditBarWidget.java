@@ -63,7 +63,7 @@ public class EditBarWidget extends AbstractBarWidget {
     private String parentAreaType;
     private boolean isInherited;
 
-    public EditBarWidget(MgnlElement mgnlElement, final PageEditor pageEditor) {
+    public EditBarWidget(MgnlElement mgnlElement) {
 
         super(mgnlElement);
 
@@ -85,9 +85,9 @@ public class EditBarWidget extends AbstractBarWidget {
         }
         this.isInherited = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("inherited"));
 
-        createButtons(pageEditor);
+        createButtons();
 
-        createMouseEventsHandlers(pageEditor);
+        createMouseEventsHandlers();
 
         addStyleName("component");
         if (isInherited) {
@@ -98,14 +98,14 @@ public class EditBarWidget extends AbstractBarWidget {
         attach();
     }
 
-    private void createMouseEventsHandlers(final PageEditor pageEditor) {
+    private void createMouseEventsHandlers() {
 
         addDomHandler(new MouseDownHandler() {
 
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 String parentPath = path.substring(0, path.lastIndexOf("/"));
-                pageEditor.moveComponentEnd((EditBarWidget)event.getSource(), parentPath);
+                PageEditor.moveComponentEnd((EditBarWidget)event.getSource(), parentPath);
 
             }
         }, MouseDownEvent.getType());
@@ -114,7 +114,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
             @Override
             public void onMouseOver(MouseOverEvent event) {
-                pageEditor.moveComponentOver((EditBarWidget)event.getSource());
+                PageEditor.moveComponentOver((EditBarWidget)event.getSource());
             }
         }, MouseOverEvent.getType());
 
@@ -122,19 +122,19 @@ public class EditBarWidget extends AbstractBarWidget {
 
             @Override
             public void onMouseOut(MouseOutEvent event) {
-                pageEditor.moveComponentOut((EditBarWidget)event.getSource());
+                PageEditor.moveComponentOut((EditBarWidget)event.getSource());
             }
         }, MouseOutEvent.getType());
     }
 
-    private void createButtons(final PageEditor pageEditor) {
+    private void createButtons() {
 
         if (!this.isInherited) {
             final Button edit = new Button(getI18nMessage("buttons.edit.js"));
             edit.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    pageEditor.openDialog(dialog, workspace, path, null, null);
+                    PageEditor.openDialog(dialog, workspace, path, null, null);
 
                 }
             });
@@ -147,7 +147,7 @@ public class EditBarWidget extends AbstractBarWidget {
             move.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    pageEditor.moveComponentStart(id);
+                    PageEditor.moveComponentStart(id);
                 }
             });
             addButton(move, Float.RIGHT);
@@ -158,7 +158,7 @@ public class EditBarWidget extends AbstractBarWidget {
             removeButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    pageEditor.deleteComponent(path);
+                    PageEditor.deleteComponent(path);
                 }
             });
             removeButton.addStyleName("mgnlRemoveButton");

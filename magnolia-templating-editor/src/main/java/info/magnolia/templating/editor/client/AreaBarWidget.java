@@ -63,7 +63,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(MgnlElement mgnlElement, final PageEditor pageEditor) {
+    public AreaBarWidget(MgnlElement mgnlElement) {
         super(mgnlElement);
 
         String content = mgnlElement.getComment().getAttribute("content");
@@ -97,7 +97,7 @@ public class AreaBarWidget extends AbstractBarWidget {
         }
 
 
-        createButtons(pageEditor);
+        createButtons();
 
         this.addStyleName("area");
     }
@@ -118,43 +118,43 @@ public class AreaBarWidget extends AbstractBarWidget {
         return type;
     }
 
-    private void createButtons(final PageEditor pageEditor) {
+    private void createButtons() {
         if(this.optional) {
             if(!this.created) {
                 Button createButton = new Button(getI18nMessage("buttons.create.js"));
                 createButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.createComponent(workspace, path, "mgnl:area");
+                        PageEditor.createComponent(workspace, path, "mgnl:area");
                     }
                 });
                 addButton(createButton, Float.RIGHT);
 
             } else {
-                createEditAndAddComponentButtons(pageEditor);
+                createEditAndAddComponentButtons();
 
                 Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        pageEditor.deleteComponent(path);
+                        PageEditor.deleteComponent(path);
                     }
                 });
                 removeButton.addStyleName("mgnlRemoveButton");
                 addButton(removeButton, Float.RIGHT);
             }
         } else {
-            createEditAndAddComponentButtons(pageEditor);
+            createEditAndAddComponentButtons();
         }
     }
 
-    private void createEditAndAddComponentButtons(final PageEditor pageEditor) {
+    private void createEditAndAddComponentButtons() {
         if (this.dialog != null) {
             Button editButton = new Button(getI18nMessage("buttons.edit.js"));
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    pageEditor.openDialog(dialog, workspace, path, null, null);
+                    PageEditor.openDialog(dialog, workspace, path, null, null);
                 }
             });
             addButton(editButton, Float.RIGHT);
@@ -166,7 +166,7 @@ public class AreaBarWidget extends AbstractBarWidget {
                 @Override
                 public void onClick(ClickEvent event) {
                     if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
-                        pageEditor.addComponent(workspace, path, null, availableComponents);
+                        PageEditor.addComponent(workspace, path, null, availableComponents);
                     }
                 }
             });

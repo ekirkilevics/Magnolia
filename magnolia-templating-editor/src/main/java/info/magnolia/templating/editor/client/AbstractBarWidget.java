@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class AbstractBarWidget extends FlowPanel {
 
-    protected boolean hasControls = false;
+    public boolean hasControls = false;
     private String label = "";
     private FlowPanel buttonWrapper;
     private MgnlElement mgnlElement;

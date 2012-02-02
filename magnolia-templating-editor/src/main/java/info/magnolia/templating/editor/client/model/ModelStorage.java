@@ -166,10 +166,18 @@ public class ModelStorage {
     }
 
     public void removeMgnlElement(MgnlElement mgnlElement) {
+
+        // remove all occurrences of the element
         if (mgnlElements.containsValue(mgnlElement)) {
             while(mgnlElements.values().remove(mgnlElement));
         }
         elements.remove(mgnlElement);
+
+        // if the element is a root node, add all children to root list
+        if (rootElements.contains(mgnlElement)) {
+            rootElements.remove(mgnlElement);
+            rootElements.addAll(mgnlElement.getChildren());
+        }
     }
 
 }

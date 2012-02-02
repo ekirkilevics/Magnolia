@@ -35,13 +35,16 @@ package info.magnolia.templating.editor.client;
 
 
 import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
-import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.dom.processor.CommentProcessor;
+import info.magnolia.templating.editor.client.dom.processor.ElementProcessor;
+import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessor;
+import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessorFactory;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
-import java.util.Iterator;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -94,14 +97,13 @@ public class PageEditor extends HTML implements EntryPoint {
     private static final String MGNL_INTERCEPT_ATTRIBUTE = "mgnlIntercept";
     private static final String MGNL_CHANNEL_ATTRIBUTE = "mgnlChannel";
 
-    private boolean pageEditBarAlreadyProcessed = false;
-    private String locale;
-    static ModelStorage model = ModelStorage.getInstance();
+    private static String locale;
+    public final static ModelStorage model = ModelStorage.getInstance();
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
     // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
-    private boolean process = true;
-    private boolean preview = false;
+    public static boolean process = true;
+    private static boolean isPreview= false;
 
     @Override
     public void onModuleLoad() {
@@ -152,7 +154,7 @@ public class PageEditor extends HTML implements EntryPoint {
     /**
      * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
      */
-    public void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
+    public static void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
         if (collectionName == null) {
             collectionName = "";
         }
@@ -163,27 +165,27 @@ public class PageEditor extends HTML implements EntryPoint {
         LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
     }
 
-    public void moveComponentStart(String id) {
+    public static void moveComponentStart(String id) {
         LegacyJavascript.mgnlMoveNodeStart(id);
     }
 
-    public void moveComponentEnd(AbstractBarWidget source, String path) {
+    public static void moveComponentEnd(AbstractBarWidget source, String path) {
         LegacyJavascript.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
-    public void moveComponentOver(AbstractBarWidget source) {
+    public static void moveComponentOver(AbstractBarWidget source) {
         LegacyJavascript.mgnlMoveNodeHigh(source.getElement());
     }
 
-    public void moveComponentOut(AbstractBarWidget source) {
+    public static void moveComponentOut(AbstractBarWidget source) {
         LegacyJavascript.mgnlMoveNodeReset(source.getElement());
     }
 
-    public void deleteComponent(String path) {
+    public static void deleteComponent(String path) {
         LegacyJavascript.mgnlDeleteNode(path);
     }
 
-    public void addComponent(String workspace, String path, String nodeName, String availableComponents) {
+    public static void addComponent(String workspace, String path, String nodeName, String availableComponents) {
 
         // Not used anymore. The node is passed together with the path
         String collectionName = null;
@@ -197,29 +199,12 @@ public class PageEditor extends HTML implements EntryPoint {
         LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
-    public void setPreview(boolean isPreview) {
-        final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-        GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview);
-        //always cleanup the url
-        urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
-        urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
-        if(isPreview) {
-            urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
-        }
-        urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview));
-
-        final String newUrl = urlBuilder.buildString();
-        GWT.log("New url is [" + newUrl + "]");
-
-        Window.Location.replace(newUrl);
-    }
-
-    public void showTree(String workspace, String path) {
+    public static void showTree(String workspace, String path) {
         LegacyJavascript.showTree(workspace, path);
 
     }
 
-    public void createComponent(String workspace, String path, String itemType) {
+    public static void createComponent(String workspace, String path, String itemType) {
         GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + path + "]");
 
         final StringBuilder url = new StringBuilder();
@@ -274,7 +259,7 @@ public class PageEditor extends HTML implements EntryPoint {
 
     }
 
-    public void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
+    public static void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.setParameter(MGNL_CHANNEL_ATTRIBUTE, channelType);
@@ -283,22 +268,14 @@ public class PageEditor extends HTML implements EntryPoint {
         previewChannelWidget.center();
     }
 
-    /**
-     * @return <code>true</code> if the current page is in preview mode, <code>false</code> otherwise.
-     */
-    public boolean isPreview() {
-        return preview;
-    }
-
     private void processDocument(Node node, MgnlElement mgnlElement) {
-        if(this.process) {
+        if(process) {
             for (int i = 0; i < node.getChildCount(); i++) {
                 Node childNode = node.getChild(i);
                 if (childNode.getNodeType() == Comment.COMMENT_NODE) {
 
                     try {
-                        mgnlElement = processCmsComment(childNode, mgnlElement);
-
+                        mgnlElement = CommentProcessor.process(childNode, mgnlElement);
                     }
                     catch (IllegalArgumentException e) {
                         GWT.log("Not CMSComment element, skipping: " + e.toString());
@@ -309,7 +286,7 @@ public class PageEditor extends HTML implements EntryPoint {
                     }
                 }
                 else if (childNode.getNodeType() == Node.ELEMENT_NODE && mgnlElement != null) {
-                    processElement(childNode, mgnlElement);
+                    ElementProcessor.process(childNode, mgnlElement);
                 }
 
                 processDocument(childNode, mgnlElement);
@@ -317,168 +294,25 @@ public class PageEditor extends HTML implements EntryPoint {
         }
     }
 
-    private MgnlElement processCmsComment(Node node, MgnlElement mgnlElement) throws Exception {
 
-        CMSComment comment = new CMSComment((Comment)node.cast());
-
-        GWT.log("processing comment " + comment);
-
-        if (!comment.isClosing()) {
-
-            if ("cms:page".equals(comment.getTagName())) {
-                preview = Boolean.parseBoolean(comment.getAttribute("preview"));
-
-                GWT.log("element was detected as page edit bar. Injecting it...");
-                PageBarWidget pageBarWidget = new PageBarWidget(this, comment, preview);
-                pageBarWidget.attach();
-                pageEditBarAlreadyProcessed = true;
-                if (isPreview()) {
-                    //we just need the preview bar here
-                    GWT.log("We're in preview mode, stop processing DOM.");
-                    this.process  = false;
-                }
-            }
-
-            else {
-                try {
-                    mgnlElement = new MgnlElement(comment, mgnlElement);
-
-                    if (mgnlElement.getParent() == null) {
-                        model.addRoot(mgnlElement);
-                    }
-                    else {
-                        mgnlElement.getParent().getChildren().add(mgnlElement);
-                    }
-
-                }
-                catch (IllegalArgumentException e) {
-                    GWT.log("Not MgnlElement, skipping: " + e.toString());
-                }
-            }
-        }
-
-        else if (mgnlElement != null) {
-            mgnlElement = mgnlElement.getParent();
-        }
-
-        return mgnlElement;
-
-    }
-
-    private void processElement(Node node, MgnlElement mgnlElement) {
-        Element element = node.cast();
-        if (element.hasTagName("A")) {
-            disableLink(element);
-        }
-        model.addElement(mgnlElement, element);
-
-            if (mgnlElement.getFirstElement() == null) {
-                mgnlElement.setFirstElement(element);
-            }
-
-            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
-                mgnlElement.setLastElement(element);
-            }
-
-            if (mgnlElement.isComponent()) {
-                MgnlElement area = mgnlElement.getParentArea();
-
-                if (area != null) {
-                    if (area.getFirstElement() == null) {
-                        area.setFirstElement(element);
-                    }
-                    if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
-                        area.setLastElement(element);
-                    }
-                }
-            }
-
-/*        if (element.hasAttribute("cms:add")) {
-
-            GWT.log("element is component invitation placeholder. Injecting it...");
-
-            MgnlElement area = mgnlElement;
-            if (!mgnlElement.isArea()) {
-                area = mgnlElement.getParentArea();
-            }
-            ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(this, area);
-
-            model.addComponentPlaceHolder(mgnlElement, placeHolder);
-            placeHolder.attach(node);
-        }
-
-        else if (element.hasAttribute("cms:placeholder")) {
-
-            // this will probably not work, as it shoiuldn't be shown when there are components.. or should it?
-            GWT.log("element is area placeholder. Injecting it...");
-
-            AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(this, mgnlElement);
-
-            model.addAreaPlaceHolder(mgnlElement, placeHolder);
-            placeHolder.attach(node);
-        }
-
-        else if (element.hasAttribute("cms:edit")) {
-
-            GWT.log("element is edit bar placeholder. Injecting it...");
-            EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
-
-            editBarWidget.attach(node);
-            model.addEditBar(mgnlElement, editBarWidget);
-
-        }*/
-
-    }
 
     private void processMgnlElements() {
-        List<MgnlElement> deleteElements = new LinkedList<MgnlElement>();
-        List<MgnlElement> addElements = new LinkedList<MgnlElement>();
+        List<MgnlElement> rootElements = new LinkedList<MgnlElement>(model.getRootElements());
+        for (MgnlElement root : rootElements) {
+            LinkedList<MgnlElement> elements = new LinkedList<MgnlElement>();
+            elements.add(root);
+            elements.addAll(root.getDescendants());
 
-        for (MgnlElement root :model.getRootElements()) {
-            LinkedList<MgnlElement> els = new LinkedList<MgnlElement>();
-            els.add(root);
-            els.addAll(root.getDescendants());
-            for (MgnlElement mgnlElement : els) {
-                if (model.getEditBar(mgnlElement) == null) {
-                    if (mgnlElement.isArea()) {
-
-                        boolean injected = AreaInjector.inject(this, mgnlElement);
-
-
-                        if (!injected) {
-                            // if the area has no controls we, don't want it in the structure.
-                            MgnlElement parent = mgnlElement.getParent();
-
-                            // if area is root remove it from the roots
-                            if (parent == null) {
-                                deleteElements.add(mgnlElement);
-                            }
-                            // set all child parents to parent
-                            for (MgnlElement child : mgnlElement.getChildren()) {
-                                if (parent == null) {
-                                    addElements.add(child);
-                                }
-                                else {
-                                    parent.getChildren().add(child);
-                                }
-                                child.setParent(parent);
-
-                            }
-                            model.removeMgnlElement(mgnlElement);
-                        }
-                    }
-                    else if (mgnlElement.isComponent()) {
-                        GWT.log("element is edit bar placeholder. Injecting it...");
-                        EditBarWidget editBarWidget = new EditBarWidget(mgnlElement, this);
-
-                        model.addEditBar(mgnlElement, editBarWidget);
-                    }
+            for (MgnlElement mgnlElement : elements) {
+                try {
+                    MgnlElementProcessor processor = MgnlElementProcessorFactory.getProcessor(mgnlElement);
+                    processor.process();
+                }
+                catch (IllegalArgumentException e) {
+                    GWT.log("MgnlFactory could not instantiate class. The element is neither an area nor component.");
                 }
             }
         }
-        model.rootElements.removeAll(deleteElements);
-        model.rootElements.addAll(addElements);
-
 
     }
 
@@ -529,36 +363,6 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
 
-    public native void disableLink(Element element) /*-{
-        if (element.onclick == null) {
-            element.onclick = function() {
-              return false;
-            };
-        }
-      }-*/;
-
-    private void cleanRootElements() {
-
-        List<MgnlElement> newRoots = new LinkedList<MgnlElement>();
-        GWT.log(String.valueOf(model.rootElements.size()));
-        Iterator<MgnlElement> it = model.rootElements.iterator();
-        while (it.hasNext()) {
-            MgnlElement root = it.next();
-            if (model.getEditBar(root) == null) {
-                for (MgnlElement child : root.getChildren()) {
-                        child.setParent(null);
-                        newRoots.add(child);
-                }
-                it.remove();
-            }
-        }
-        GWT.log(String.valueOf(model.rootElements.size()));
-
-        model.rootElements.addAll(newRoots);
-        GWT.log(String.valueOf(model.rootElements.size()));
-
-    }
-
     private native void onPageEditorReady() /*-{
         var callbacks = $wnd.mgnl.PageEditor.onPageEditorReadyCallbacks
         if(typeof callbacks != 'undefined') {
@@ -568,4 +372,30 @@ public class PageEditor extends HTML implements EntryPoint {
          }
     }-*/;
 
+    public static void reload() {
+        final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+        GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview);
+        //always cleanup the url
+        urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
+        urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
+        urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
+
+        urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview()));
+
+        final String newUrl = urlBuilder.buildString();
+        GWT.log("New url is [" + newUrl + "]");
+
+        Window.Location.replace(newUrl);
+    }
+
+    /**
+     * @return <code>true</code> if the current page is in preview mode, <code>false</code> otherwise.
+     */
+    public static boolean isPreview() {
+        return isPreview;
+    }
+
+    public static void setPreview(boolean preview) {
+        isPreview = preview;
+    }
 }

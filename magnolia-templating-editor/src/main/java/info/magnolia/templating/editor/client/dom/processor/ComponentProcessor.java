@@ -31,21 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client.dom;
+package info.magnolia.templating.editor.client.dom.processor;
 
-import com.google.gwt.dom.client.Node;
+import com.google.gwt.core.client.GWT;
+
+import info.magnolia.templating.editor.client.EditBarWidget;
+import info.magnolia.templating.editor.client.PageEditor;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 /**
- * This class implements the DOM Comment in gwt, as there is no type specified for it.
+ * Factory Class for MgnlElement processors.
  */
-public class Comment extends Node {
-    public static final short COMMENT_NODE = 8;
+public class ComponentProcessor extends MgnlElementProcessor {
 
-    /**
-     * Constructor must be protected.
-     */
-    protected Comment() {}
+    public ComponentProcessor(MgnlElement mgnlElement) {
+        super(mgnlElement);
+    }
 
-    public final native String getData() /*-{ return this.data; }-*/;
+    @Override
+    public void process() {
+        GWT.log("element is edit bar placeholder. Injecting it...");
+        EditBarWidget editBarWidget = new EditBarWidget(getMgnlElement());
+
+        PageEditor.model.addEditBar(getMgnlElement(), editBarWidget);
+    }
 
 }

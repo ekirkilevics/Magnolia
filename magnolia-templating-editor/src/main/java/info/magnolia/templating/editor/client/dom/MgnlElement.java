@@ -41,7 +41,6 @@ import com.google.gwt.dom.client.Element;
 /**
 * MgnlElement Constructor.
 *
-* @throws IllegalArgumentException if comments tagname is not a defined marker.
 */
 public class MgnlElement {
 
@@ -54,10 +53,16 @@ public class MgnlElement {
     private Element lastElement;
 
     private LinkedList<MgnlElement> children = new LinkedList<MgnlElement>();
+    private Element componentElement;
+    private Element areaElement;
+    private Element editElement;
 
     private static final String MARKER_AREA = "cms:area";
     private static final String MARKER_COMPONENT = "cms:component";
 
+/**
+ * @throws IllegalArgumentException if comments tagname is not a defined marker.
+ */
     public MgnlElement(CMSComment comment, MgnlElement parent) throws IllegalArgumentException {
 
         if (!isMgnlElement(comment.getTagName())) {
@@ -112,7 +117,6 @@ public class MgnlElement {
 
     public List<MgnlElement> getAscendants() {
         List<MgnlElement> ascendants = new LinkedList<MgnlElement>();
-        MgnlElement parent = this.parent;
         while (parent != null) {
             ascendants.add(parent);
             parent = parent.getParent();
@@ -180,6 +184,15 @@ public class MgnlElement {
         return false;
     }
 
+    public void delete() {
+        for (MgnlElement child : getChildren()) {
+            if (getParent() != null) {
+                getParent().getChildren().add(child);
+            }
+            child.setParent(getParent());
+        }
+    }
+
     public Element getFirstElement() {
         return firstElement;
     }
@@ -195,4 +208,29 @@ public class MgnlElement {
     public void setLastElement(Element lastElement) {
         this.lastElement = lastElement;
     }
+
+    public void setComponentElement(Element componentElement) {
+        this.componentElement = componentElement;
+    }
+
+    public void setAreaElement(Element areaElement) {
+        this.areaElement = areaElement;
+    }
+
+    public void setEditElement(Element editElement) {
+        this.editElement = editElement;
+    }
+
+    public Element getComponentElement() {
+        return componentElement;
+    }
+
+    public Element getAreaElement() {
+        return areaElement;
+    }
+
+    public Element getEditElement() {
+        return editElement;
+    }
+
 }
