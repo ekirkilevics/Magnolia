@@ -51,6 +51,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -89,7 +90,9 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class PageEditor extends HTML implements EntryPoint {
 
-    public static final String SKIP_PAGE_EDITOR_DOM_PROCESSING = "skipPageEditorDOMProcessing";
+    private static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
+    private static final String MGNL_INTERCEPT_ATTRIBUTE = "mgnlIntercept";
+    private static final String MGNL_CHANNEL_ATTRIBUTE = "mgnlChannel";
 
     private boolean pageEditBarAlreadyProcessed = false;
     private String locale;
@@ -98,12 +101,13 @@ public class PageEditor extends HTML implements EntryPoint {
 
     // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
     private boolean process = true;
+    private boolean preview = false;
 
     @Override
     public void onModuleLoad() {
 
-        if(Window.Location.getParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING) != null) {
-            GWT.log("Found " + SKIP_PAGE_EDITOR_DOM_PROCESSING + " in request, skipping DOM processing...");
+        if(Window.Location.getParameter(MGNL_CHANNEL_ATTRIBUTE) != null ) {
+            GWT.log("Found " + MGNL_CHANNEL_ATTRIBUTE + " in request, post processing links...");
             postProcessLinksOnMobilePreview(Document.get().getDocumentElement());
             return;
         }
@@ -193,8 +197,21 @@ public class PageEditor extends HTML implements EntryPoint {
         LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
-    public void preview(boolean isPreview) {
-        LegacyJavascript.mgnlPreview(isPreview);
+    public void setPreview(boolean isPreview) {
+        final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+        GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview);
+        //always cleanup the url
+        urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
+        urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
+        if(isPreview) {
+            urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, "true");
+            urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
+        }
+
+        final String newUrl = urlBuilder.buildString();
+        GWT.log("New url is [" + newUrl + "]");
+
+        Window.Location.replace(newUrl);
     }
 
     public void showTree(String workspace, String path) {
@@ -260,11 +277,17 @@ public class PageEditor extends HTML implements EntryPoint {
     public void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-        urlBuilder.setParameter("mgnlChannel", channelType);
-        urlBuilder.setParameter(SKIP_PAGE_EDITOR_DOM_PROCESSING, "true");
+        urlBuilder.setParameter(MGNL_CHANNEL_ATTRIBUTE, channelType);
         final PreviewChannelWidget previewChannelWidget = new PreviewChannelWidget(urlBuilder.buildString(), orientation, deviceType);
         //this causes the pop up to show
         previewChannelWidget.center();
+    }
+
+    /**
+     * @return <code>true</code> if the current page is in preview mode, <code>false</code> otherwise.
+     */
+    public boolean isPreview() {
+        return preview;
     }
 
     private void processDocument(Node node, MgnlElement mgnlElement) {
@@ -302,13 +325,14 @@ public class PageEditor extends HTML implements EntryPoint {
 
         if (!comment.isClosing()) {
 
-            if (comment.getTagName().equals("cms:page")) {
+            if ("cms:page".equals(comment.getTagName())) {
+                preview = Boolean.parseBoolean(comment.getAttribute("preview"));
+
                 GWT.log("element was detected as page edit bar. Injecting it...");
-                PageBarWidget pageBarWidget = new PageBarWidget(this, comment);
+                PageBarWidget pageBarWidget = new PageBarWidget(this, comment, preview);
                 pageBarWidget.attach();
                 pageEditBarAlreadyProcessed = true;
-
-                if (pageBarWidget.isPreviewState()) {
+                if (isPreview()) {
                     //we just need the preview bar here
                     GWT.log("We're in preview mode, stop processing DOM.");
                     this.process  = false;
@@ -461,7 +485,9 @@ public class PageEditor extends HTML implements EntryPoint {
     //FIXME submitting forms still renders website channel and edit bars
     private void postProcessLinksOnMobilePreview(Element root) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
-        String mobilePreviewParams = "mgnlChannel=mobile&skipPageEditorDOMProcessing=true";
+
+        final String mobilePreviewParams = MGNL_CHANNEL_ATTRIBUTE+"=mobile";
+
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
 
@@ -482,22 +508,24 @@ public class PageEditor extends HTML implements EntryPoint {
             if(indexOfHash != -1) {
                 manipulatedHref = manipulatedHref.substring(indexOfHash);
             } else {
-                if(queryString.startsWith("?")) {
-                    queryString += "&" + mobilePreviewParams;
-                } else {
-                    queryString = "?" + mobilePreviewParams;
+                if(!queryString.contains(mobilePreviewParams)) {
+                    if(queryString.startsWith("?")) {
+                        queryString += "&" + mobilePreviewParams;
+                    } else {
+                        queryString = "?" + mobilePreviewParams;
+                    }
                 }
                 manipulatedHref += queryString;
             }
             GWT.log("Resulting link is " + manipulatedHref);
             anchor.setHref(manipulatedHref);
         }
-        /*NodeList<Element> forms = root.getElementsByTagName("form");
+        NodeList<Element> forms = root.getElementsByTagName("form");
 
         for (int i = 0; i < forms.getLength(); i++) {
             FormElement form = FormElement.as(forms.getItem(i));
-            form.setAction(form.getAction().concat("?"+SKIP_PAGE_EDITOR_DOM_PROCESSING+"=true&mgnlChannel=mobile"));
-        }*/
+            form.setAction(form.getAction().concat("?"+ mobilePreviewParams));
+        }
     }
 
 

@@ -35,7 +35,6 @@ package info.magnolia.templating.editor.client;
 
 
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.isPreviewMode;
 import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
 import info.magnolia.templating.editor.client.button.PreviewButtonWidget;
 import info.magnolia.templating.editor.client.dom.CMSComment;
@@ -74,9 +73,8 @@ public class PageBarWidget extends AbstractBarWidget {
     private String workspace;
     private String path;
     private String dialog;
-    private boolean previewState = false;
 
-    public PageBarWidget(final PageEditor pageEditor, final CMSComment comment) {
+    public PageBarWidget(final PageEditor pageEditor, final CMSComment comment, final boolean isPreview) {
         super(null);
         this.pageEditor = pageEditor;
 
@@ -86,7 +84,7 @@ public class PageBarWidget extends AbstractBarWidget {
         this.path = content.substring(i + 1);
         this.dialog = comment.getAttribute("dialog");
 
-        if(isPreviewMode()){
+        if(isPreview){
             createPreviewModeBar();
         } else {
             createAuthoringModeBar();
@@ -139,8 +137,6 @@ public class PageBarWidget extends AbstractBarWidget {
         addButton(adminCentral, Float.LEFT);
 
         setClassName("mgnlEditorMainbar mgnlEditorBar");
-
-        previewState = false;
     }
 
     private void createPreviewModeBar() {
@@ -148,17 +144,11 @@ public class PageBarWidget extends AbstractBarWidget {
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                pageEditor.preview(false);
+                pageEditor.setPreview(false);
             }
         });
         addButton(preview, Float.LEFT);
         setClassName("mgnlEditorMainbarPreview");
-
-        previewState = true;
-    }
-
-    public final boolean isPreviewState() {
-        return previewState;
     }
 
     private class MobilePreviewCommand implements Command {
@@ -181,7 +171,7 @@ public class PageBarWidget extends AbstractBarWidget {
 
         @Override
         public void execute() {
-            pageEditor.preview(true);
+            pageEditor.setPreview(true);
         }
     }
 

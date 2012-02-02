@@ -58,7 +58,7 @@ public class InitElement extends AbstractContentTemplatingElement {
 
     public static final String PAGE_EDITOR_JS_SOURCE =  MgnlContext.getContextPath() + "/.resources/editor/info.magnolia.templating.editor.PageEditor/info.magnolia.templating.editor.PageEditor.nocache.js";
     public static final String PAGE_EDITOR_CSS =  MgnlContext.getContextPath() + "/.resources/magnolia-templating-editor/css/editor.css";
-    private static final String CMS_TAG = "cms:page";
+    private static final String CMS_PAGE_TAG = "cms:page";
 
     private I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
     private String dialog;
@@ -93,13 +93,14 @@ public class InitElement extends AbstractContentTemplatingElement {
 
 
 
-        helper.openComment(CMS_TAG);
+        helper.openComment(CMS_PAGE_TAG);
         if(content != null) {
             helper.attribute("content", getNodePath(content));
         }
         helper.attribute("dialog", dialog);
+        helper.attribute("preview", String.valueOf(MgnlContext.getAggregationState().isPreviewMode()));
         helper.append(" -->\n");
-        helper.closeComment(CMS_TAG);
+        helper.closeComment(CMS_PAGE_TAG);
 
     }
 

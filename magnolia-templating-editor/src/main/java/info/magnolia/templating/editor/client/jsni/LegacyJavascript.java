@@ -95,17 +95,6 @@ public final class LegacyJavascript {
         $wnd.MgnlAdminCentral.showTree(workspace, path)
     }-*/;
 
-    public static native void mgnlPreview(boolean setPreview) /*-{
-        $wnd.mgnlPreview(setPreview)
-    }-*/;
-
-    /**
-     * @return <code>true</code> if the current page is in preview mode, <code>false</code> otherwise.
-     */
-    public static native boolean isPreviewMode() /*-{
-        return $wnd.location.href.indexOf('mgnlPreview=true') != -1;
-    }-*/;
-
     public static native String getContextPath() /*-{
         return $wnd.location.protocol + "//"+ $wnd.location.host + $wnd.contextPath + "/"
     }-*/;
