@@ -204,9 +204,9 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
         urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
         if(isPreview) {
-            urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview));
             urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
         }
+        urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview));
 
         final String newUrl = urlBuilder.buildString();
         GWT.log("New url is [" + newUrl + "]");
