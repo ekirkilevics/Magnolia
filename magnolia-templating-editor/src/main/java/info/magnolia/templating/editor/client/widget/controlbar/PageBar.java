@@ -36,10 +36,10 @@ package info.magnolia.templating.editor.client.widget.controlbar;
 
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
 import info.magnolia.templating.editor.client.PageEditor;
-import info.magnolia.templating.editor.client.button.PreviewButtonWidget;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
+import info.magnolia.templating.editor.client.widget.button.PreviewButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +126,7 @@ public class PageBar extends AbstractBar {
         options.add(smartphone);
         options.add(tablet);
 
-        PreviewButtonWidget preview = new PreviewButtonWidget(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), options);
+        PreviewButton preview = new PreviewButton(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), options);
         addButton(preview, Float.LEFT, "mgnlEditorPreviewButton");
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));

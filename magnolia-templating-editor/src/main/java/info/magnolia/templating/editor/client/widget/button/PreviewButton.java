@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client.button;
+package info.magnolia.templating.editor.client.widget.button;
 
 import java.util.List;
 
@@ -48,12 +48,12 @@ import com.google.gwt.user.client.ui.MenuItem;
  * @version $Id$
  *
  */
-public final class PreviewButtonWidget extends Composite {
+public final class PreviewButton extends Composite {
 
     private static FlowPanel panel = new FlowPanel();
     private Button defaultActionButton = new Button();
 
-    public PreviewButtonWidget(final String caption, final Command defaultAction, final List<MenuItem> menuItems) {
+    public PreviewButton(final String caption, final Command defaultAction, final List<MenuItem> menuItems) {
         initWidget(panel);
         defaultActionButton.setHTML(caption);
         defaultActionButton.setStylePrimaryName("mgnlEditorButton");
@@ -74,10 +74,10 @@ public final class PreviewButtonWidget extends Composite {
     }
 
     /**
-     * Extends {@link DropdownButtonWidget} in order to left align itself with the default (lhs) button.
+     * Extends {@link DropdownButton} in order to left align itself with the default (lhs) button.
      * @version $Id$
      */
-    private static final class PreviewDropdownButtonWidget extends DropdownButtonWidget {
+    private static final class PreviewDropdownButtonWidget extends DropdownButton {
 
         public PreviewDropdownButtonWidget(final List<MenuItem> menuItems) {
             super("-", menuItems); // We have to put at least a label here to ensure it gets properly aligned with other text buttons around.

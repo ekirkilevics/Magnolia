@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client.button;
+package info.magnolia.templating.editor.client.widget.button;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,18 +60,18 @@ import com.google.gwt.user.client.ui.PopupPanel;
  *  options.add(two);
  *  options.add(three);
  *
- *  DropdownButtonWidget dropdown = new DropdownButtonWidget("My cool caption", options);
+ *  DropdownButton dropdown = new DropdownButton("My cool caption", options);
  *  ...
  * </pre>
  *
  * @version $Id$
  */
-public class DropdownButtonWidget extends Button {
+public class DropdownButton extends Button {
 
     private final PopupPanel dropdownPanel = new PopupPanel(true);
     private final MenuBar dropdownMenuBar = new MenuBar(true);
 
-    public DropdownButtonWidget(String caption, List<MenuItem> menuItems) {
+    public DropdownButton(String caption, List<MenuItem> menuItems) {
         super(caption);
         if(menuItems == null) {
             throw new IllegalArgumentException("menuItems cannot be null");
@@ -95,7 +95,7 @@ public class DropdownButtonWidget extends Button {
         });
     }
 
-    public DropdownButtonWidget(String caption, MenuItem... menuItems) {
+    public DropdownButton(String caption, MenuItem... menuItems) {
         this(caption, Arrays.asList(menuItems));
     }
 
