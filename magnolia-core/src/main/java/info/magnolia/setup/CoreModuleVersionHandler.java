@@ -59,6 +59,7 @@ import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
+import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -278,6 +279,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(bootstrapChannelManagement)
                 .addTask(bootstrapChannelFilter)
                 .addTask(placeChannelBeforeLogout)
+                .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace Expression for role superuser", "superuser", "acl_Expressions"))
+                .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace Store for role superuser", "superuser", "acl_Store"))
+                .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace forum for role superuser", "superuser", "acl_forum"))
         );
     }
 
