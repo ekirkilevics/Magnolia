@@ -31,9 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.controlbar;
 
 
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 
@@ -50,14 +51,14 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Base class for horizontal bars with buttons.
  */
-public abstract class AbstractBarWidget extends FlowPanel {
+public abstract class AbstractBar extends FlowPanel {
 
     public boolean hasControls = false;
     private String label = "";
     private FlowPanel buttonWrapper;
     private MgnlElement mgnlElement;
 
-    public AbstractBarWidget(MgnlElement mgnlElement) {
+    public AbstractBar(MgnlElement mgnlElement) {
 
         this.setMgnlElement(mgnlElement);
         if (mgnlElement != null) {

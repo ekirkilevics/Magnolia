@@ -31,22 +31,47 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.placeholder;
 
-
-
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.model.ModelStorage;
 
+
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Label;
 
 /**
- * Class for Area Overlay Widget.
+ * Widget for area placeholders.
  */
-public class AreaOverlayWidget extends AbstractOverlayWidget {
+public class AreaPlaceHolder extends AbstractPlaceHolder {
 
-    public AreaOverlayWidget(final MgnlElement element) {
-        super(element);
+
+    public AreaPlaceHolder(MgnlElement mgnlElement) {
+
+        super(mgnlElement);
+
         this.addStyleName("area");
-        getElement().getStyle().setProperty("pointerEvents", "none");
+        String label = mgnlElement.getComment().getAttribute("label");
+        Label areaName = new Label(label + " Placeholder");
 
+        if (mgnlElement.getRootArea() != mgnlElement) {
+            setVisible(false);
+        }
+        add(areaName);
+
+        ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(mgnlElement);
+        ModelStorage.getInstance().addComponentPlaceHolder(mgnlElement, placeHolder);
+
+        add(placeHolder);
+        attach();
     }
+
+    public void attach() {
+        Element parent = PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement();
+        parent.insertAfter(getElement(), PageEditor.model.getEditBar(getMgnlElement()).getElement());
+
+        onAttach();
+    }
+
 }

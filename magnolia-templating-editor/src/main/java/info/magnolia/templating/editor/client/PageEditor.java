@@ -34,7 +34,6 @@
 package info.magnolia.templating.editor.client;
 
 
-import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.dom.processor.CommentProcessor;
@@ -43,6 +42,9 @@ import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessor
 import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessorFactory;
 import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
+import info.magnolia.templating.editor.client.widget.PreviewChannel;
+import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
+import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
 
 
 import java.util.LinkedList;
@@ -169,15 +171,15 @@ public class PageEditor extends HTML implements EntryPoint {
         LegacyJavascript.mgnlMoveNodeStart(id);
     }
 
-    public static void moveComponentEnd(AbstractBarWidget source, String path) {
+    public static void moveComponentEnd(AbstractBar source, String path) {
         LegacyJavascript.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
-    public static void moveComponentOver(AbstractBarWidget source) {
+    public static void moveComponentOver(AbstractBar source) {
         LegacyJavascript.mgnlMoveNodeHigh(source.getElement());
     }
 
-    public static void moveComponentOut(AbstractBarWidget source) {
+    public static void moveComponentOut(AbstractBar source) {
         LegacyJavascript.mgnlMoveNodeReset(source.getElement());
     }
 
@@ -263,7 +265,7 @@ public class PageEditor extends HTML implements EntryPoint {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.setParameter(MGNL_CHANNEL_ATTRIBUTE, channelType);
-        final PreviewChannelWidget previewChannelWidget = new PreviewChannelWidget(urlBuilder.buildString(), orientation, deviceType);
+        final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, deviceType);
         //this causes the pop up to show
         previewChannelWidget.center();
     }

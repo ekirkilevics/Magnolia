@@ -34,11 +34,11 @@
 package info.magnolia.templating.editor.client.dom.processor;
 
 import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.templating.editor.client.AreaBarWidget;
-import info.magnolia.templating.editor.client.AreaPlaceHolderWidget;
-import info.magnolia.templating.editor.client.ComponentPlaceHolderWidget;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.widget.controlbar.AreaBar;
+import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
+import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
 /**
  * Factory Class for MgnlElement processors.
@@ -51,7 +51,7 @@ public class AreaProcessor extends MgnlElementProcessor {
 
     @Override
     public void process() {
-        AreaBarWidget areaBarWidget = new AreaBarWidget(getMgnlElement());
+        AreaBar areaBarWidget = new AreaBar(getMgnlElement());
         if (areaBarWidget.hasControls) {
 
             if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
@@ -66,13 +66,13 @@ public class AreaProcessor extends MgnlElementProcessor {
             boolean noComponent = getMgnlElement().getComment().getAttribute("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
             if (getMgnlElement().getComponents().isEmpty() && !noComponent) {
 
-                AreaPlaceHolderWidget placeHolder = new AreaPlaceHolderWidget(getMgnlElement());
+                AreaPlaceHolder placeHolder = new AreaPlaceHolder(getMgnlElement());
 
                 PageEditor.model.addAreaPlaceHolder(getMgnlElement(), placeHolder);
             }
 
             else if (!noComponent) {
-                ComponentPlaceHolderWidget placeHolder = new ComponentPlaceHolderWidget(getMgnlElement());
+                ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(getMgnlElement());
 
                 PageEditor.model.addComponentPlaceHolder(getMgnlElement(), placeHolder);
                 placeHolder.attach();

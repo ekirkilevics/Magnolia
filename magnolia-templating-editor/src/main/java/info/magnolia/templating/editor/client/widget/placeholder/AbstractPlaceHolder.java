@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2010-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,69 +31,48 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.placeholder;
 
-
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-
 /**
- * Base class for overlay widgets.
+ * Abstract Widget for area and component placeholder.
+ *
+ * @version $Id$
  */
-public class AbstractOverlayWidget extends FlowPanel {
+public class AbstractPlaceHolder extends FlowPanel {
 
-    protected String label;
-    protected int level = 1;
-    private double top;
-    public AbstractOverlayWidget(MgnlElement element) {
+    private MgnlElement mgnlElement;
 
-        this.label = element.getComment().getAttribute("label");
+    public AbstractPlaceHolder(MgnlElement mgnlElement) {
+        super();
+        this.setMgnlElement(mgnlElement);
 
-        for (MgnlElement parent = element.getParent(); parent != null; parent = parent.getParent()) {
-            this.level++;
-        }
-
-
-        this.setStyleName("mgnlEditorOverlay");
-
-        this.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-        this.getElement().getStyle().setZIndex(level);
-
-    }
-
-    public void attach() {
-        Element body = Document.get().getBody();
-        body.appendChild(this.getElement());
-        onAttach();
+        setStylePrimaryName("mgnlPlaceHolder");
     }
 
     public void toggleVisible() {
+        isVisible();
         setVisible(!isVisible());
     }
 
-    public void setTop(double top) {
-        this.top = top;
-        this.getElement().getStyle().setTop(top, Style.Unit.PX);
-    }
-    public double getTop() {
-        return top;
-    }
-    public void setLeft(double left) {
-        this.getElement().getStyle().setLeft(left, Style.Unit.PX);
+    @Override
+    protected void onAttach() {
+        PageEditor.model.addElements(this.getMgnlElement(), getElement());
+        super.onAttach();
     }
 
-    public void setWidth(double width) {
-        this.getElement().getStyle().setWidth(width, Style.Unit.PX);
+    public void setMgnlElement(MgnlElement mgnlElement) {
+        this.mgnlElement = mgnlElement;
     }
 
-    public void setHeight(double height) {
-        this.getElement().getStyle().setHeight(height, Style.Unit.PX);
+    public MgnlElement getMgnlElement() {
+        return mgnlElement;
     }
+
 
 
 }

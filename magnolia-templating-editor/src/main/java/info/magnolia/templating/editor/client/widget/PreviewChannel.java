@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget;
 
 
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
@@ -54,7 +54,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * TODO javadoc bien sure!
  * TODO extract base class with common functionality. Make this a MobilePreviewChannelWidget extending an AbstractPreviewChannelWidget.
  */
-public class PreviewChannelWidget extends PopupPanel implements ClickHandler, HasClickHandlers {
+public class PreviewChannel extends PopupPanel implements ClickHandler, HasClickHandlers {
 
     private String landscapeCssStyleSuffix = "Landscape";
     private String portraitCssStyleSuffix = "Portrait";
@@ -69,7 +69,7 @@ public class PreviewChannelWidget extends PopupPanel implements ClickHandler, Ha
 
     private Orientation currentOrientation = Orientation.LANDSCAPE;
 
-    public PreviewChannelWidget(final String url, final Orientation orientation, final String deviceType) {
+    public PreviewChannel(final String url, final Orientation orientation, final String deviceType) {
         this.deviceType = deviceType;
         this.currentOrientation = orientation;
 

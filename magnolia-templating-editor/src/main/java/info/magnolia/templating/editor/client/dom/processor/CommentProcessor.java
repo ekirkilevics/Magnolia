@@ -33,11 +33,11 @@
  */
 package info.magnolia.templating.editor.client.dom.processor;
 
-import info.magnolia.templating.editor.client.PageBarWidget;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.widget.controlbar.PageBar;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Node;
@@ -59,7 +59,7 @@ public class CommentProcessor {
 
             if (comment.getTagName().equals("cms:page")) {
                 GWT.log("element was detected as page edit bar. Injecting it...");
-                PageBarWidget pageBarWidget = new PageBarWidget(comment);
+                PageBar pageBarWidget = new PageBar(comment);
                 pageBarWidget.attach();
 
                 if (PageEditor.isPreview()) {

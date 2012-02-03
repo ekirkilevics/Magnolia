@@ -31,9 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.placeholder;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -45,7 +46,7 @@ import com.google.gwt.user.client.ui.Label;
  *
  * @version $Id$
  */
-public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
+public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
     private boolean optional = false;
     private boolean created = false;
@@ -56,7 +57,7 @@ public class ComponentPlaceHolderWidget extends AbstractPlaceHolder {
     private String areaPath = "";
     private String name = "";
 
-    public ComponentPlaceHolderWidget(MgnlElement mgnlElement) {
+    public ComponentPlaceHolder(MgnlElement mgnlElement) {
 
         super(mgnlElement);
         this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));

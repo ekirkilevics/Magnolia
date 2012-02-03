@@ -31,9 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.controlbar;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
@@ -54,7 +55,7 @@ import com.google.gwt.user.client.ui.Button;
 /**
  * Edit bar.
  */
-public class EditBarWidget extends AbstractBarWidget {
+public class ComponentBar extends AbstractBar {
 
     private String workspace;
     private String path;
@@ -63,7 +64,7 @@ public class EditBarWidget extends AbstractBarWidget {
     private String parentAreaType;
     private boolean isInherited;
 
-    public EditBarWidget(MgnlElement mgnlElement) {
+    public ComponentBar(MgnlElement mgnlElement) {
 
         super(mgnlElement);
 
@@ -105,7 +106,7 @@ public class EditBarWidget extends AbstractBarWidget {
             @Override
             public void onMouseDown(MouseDownEvent event) {
                 String parentPath = path.substring(0, path.lastIndexOf("/"));
-                PageEditor.moveComponentEnd((EditBarWidget)event.getSource(), parentPath);
+                PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
 
             }
         }, MouseDownEvent.getType());
@@ -114,7 +115,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
             @Override
             public void onMouseOver(MouseOverEvent event) {
-                PageEditor.moveComponentOver((EditBarWidget)event.getSource());
+                PageEditor.moveComponentOver((ComponentBar)event.getSource());
             }
         }, MouseOverEvent.getType());
 
@@ -122,7 +123,7 @@ public class EditBarWidget extends AbstractBarWidget {
 
             @Override
             public void onMouseOut(MouseOutEvent event) {
-                PageEditor.moveComponentOut((EditBarWidget)event.getSource());
+                PageEditor.moveComponentOut((ComponentBar)event.getSource());
             }
         }, MouseOutEvent.getType());
     }

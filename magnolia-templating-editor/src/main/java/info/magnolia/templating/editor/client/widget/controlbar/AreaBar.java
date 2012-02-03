@@ -31,10 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.controlbar;
 
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
@@ -50,7 +51,7 @@ import com.google.gwt.dom.client.Element;
 /**
  * Area bar.
  */
-public class AreaBarWidget extends AbstractBarWidget {
+public class AreaBar extends AbstractBar {
 
     private String workspace;
     private String path;
@@ -63,7 +64,7 @@ public class AreaBarWidget extends AbstractBarWidget {
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBarWidget(MgnlElement mgnlElement) {
+    public AreaBar(MgnlElement mgnlElement) {
         super(mgnlElement);
 
         String content = mgnlElement.getComment().getAttribute("content");

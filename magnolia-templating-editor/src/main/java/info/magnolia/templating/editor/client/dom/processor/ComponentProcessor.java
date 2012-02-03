@@ -35,9 +35,9 @@ package info.magnolia.templating.editor.client.dom.processor;
 
 import com.google.gwt.core.client.GWT;
 
-import info.magnolia.templating.editor.client.EditBarWidget;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 
 /**
  * Factory Class for MgnlElement processors.
@@ -51,7 +51,7 @@ public class ComponentProcessor extends MgnlElementProcessor {
     @Override
     public void process() {
         GWT.log("element is edit bar placeholder. Injecting it...");
-        EditBarWidget editBarWidget = new EditBarWidget(getMgnlElement());
+        ComponentBar editBarWidget = new ComponentBar(getMgnlElement());
 
         PageEditor.model.addEditBar(getMgnlElement(), editBarWidget);
     }

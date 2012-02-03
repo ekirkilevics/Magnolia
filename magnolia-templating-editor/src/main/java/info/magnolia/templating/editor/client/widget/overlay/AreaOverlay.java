@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,47 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.overlay;
+
+
 
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
-import com.google.gwt.user.client.ui.FlowPanel;
 
 /**
- * Abstract Widget for area and component placeholder.
- *
- * @version $Id$
+ * Class for Area Overlay Widget.
  */
-public class AbstractPlaceHolder extends FlowPanel {
+public class AreaOverlay extends AbstractOverlay {
 
-    private MgnlElement mgnlElement;
+    public AreaOverlay(final MgnlElement element) {
+        super(element);
+        this.addStyleName("area");
+        getElement().getStyle().setProperty("pointerEvents", "none");
 
-    public AbstractPlaceHolder(MgnlElement mgnlElement) {
-        super();
-        this.setMgnlElement(mgnlElement);
-
-        setStylePrimaryName("mgnlPlaceHolder");
     }
-
-    public void toggleVisible() {
-        isVisible();
-        setVisible(!isVisible());
-    }
-
-    @Override
-    protected void onAttach() {
-        PageEditor.model.addElements(this.getMgnlElement(), getElement());
-        super.onAttach();
-    }
-
-    public void setMgnlElement(MgnlElement mgnlElement) {
-        this.mgnlElement = mgnlElement;
-    }
-
-    public MgnlElement getMgnlElement() {
-        return mgnlElement;
-    }
-
-
-
 }

@@ -33,14 +33,14 @@
  */
 package info.magnolia.templating.editor.client.model;
 
-import info.magnolia.templating.editor.client.AbstractBarWidget;
-import info.magnolia.templating.editor.client.AbstractOverlayWidget;
-import info.magnolia.templating.editor.client.AbstractPlaceHolder;
-import info.magnolia.templating.editor.client.AreaPlaceHolderWidget;
-import info.magnolia.templating.editor.client.ComponentPlaceHolderWidget;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.model.focus.FocusModel;
 import info.magnolia.templating.editor.client.model.focus.FocusModelImpl3;
+import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
+import info.magnolia.templating.editor.client.widget.overlay.AbstractOverlay;
+import info.magnolia.templating.editor.client.widget.placeholder.AbstractPlaceHolder;
+import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
+import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,12 +59,12 @@ public class ModelStorage {
 
     private FocusModel focusModel = new FocusModelImpl3(this);
 
-    private Map<MgnlElement, AbstractBarWidget> editBars = new HashMap<MgnlElement, AbstractBarWidget>();
-    private Map<MgnlElement, AbstractOverlayWidget> overlays = new HashMap<MgnlElement, AbstractOverlayWidget>();
+    private Map<MgnlElement, AbstractBar> editBars = new HashMap<MgnlElement, AbstractBar>();
+    private Map<MgnlElement, AbstractOverlay> overlays = new HashMap<MgnlElement, AbstractOverlay>();
     private Map<MgnlElement, List<Element>> elements = new HashMap<MgnlElement, List<Element>>();
     private Map<Element, MgnlElement> mgnlElements = new HashMap<Element, MgnlElement>();
-    private Map<MgnlElement, AreaPlaceHolderWidget> areaPlaceHolders = new HashMap<MgnlElement, AreaPlaceHolderWidget>();
-    private Map<MgnlElement, ComponentPlaceHolderWidget> componentPlaceHolders = new HashMap<MgnlElement, ComponentPlaceHolderWidget>();
+    private Map<MgnlElement, AreaPlaceHolder> areaPlaceHolders = new HashMap<MgnlElement, AreaPlaceHolder>();
+    private Map<MgnlElement, ComponentPlaceHolder> componentPlaceHolders = new HashMap<MgnlElement, ComponentPlaceHolder>();
 
 
     public List<MgnlElement> rootElements = new LinkedList<MgnlElement>();
@@ -79,19 +79,19 @@ public class ModelStorage {
         return storage;
     }
 
-    public void addOverlay(MgnlElement mgnlElement, AbstractOverlayWidget overlayWidget) {
+    public void addOverlay(MgnlElement mgnlElement, AbstractOverlay overlayWidget) {
         overlays.put(mgnlElement, overlayWidget);
     }
 
-    public AbstractOverlayWidget getOverlay(MgnlElement mgnlElement) {
+    public AbstractOverlay getOverlay(MgnlElement mgnlElement) {
         return overlays.get(mgnlElement);
     }
 
-    public void addEditBar(MgnlElement mgnlElement, AbstractBarWidget editBar) {
+    public void addEditBar(MgnlElement mgnlElement, AbstractBar editBar) {
         editBars.put(mgnlElement, editBar);
     }
 
-    public AbstractBarWidget getEditBar(MgnlElement mgnlElement) {
+    public AbstractBar getEditBar(MgnlElement mgnlElement) {
         return editBars.get(mgnlElement);
     }
 
@@ -149,7 +149,7 @@ public class ModelStorage {
         return focusModel;
     }
 
-    public void addAreaPlaceHolder(MgnlElement mgnlElement, AreaPlaceHolderWidget placeHolder) {
+    public void addAreaPlaceHolder(MgnlElement mgnlElement, AreaPlaceHolder placeHolder) {
         areaPlaceHolders.put(mgnlElement, placeHolder);
     }
 
@@ -157,11 +157,11 @@ public class ModelStorage {
         return areaPlaceHolders.get(mgnlElement);
     }
 
-    public void addComponentPlaceHolder(MgnlElement mgnlElement, ComponentPlaceHolderWidget placeHolder) {
+    public void addComponentPlaceHolder(MgnlElement mgnlElement, ComponentPlaceHolder placeHolder) {
         componentPlaceHolders.put(mgnlElement, placeHolder);
     }
 
-    public ComponentPlaceHolderWidget getComponentPlaceHolder(MgnlElement mgnlElement) {
+    public ComponentPlaceHolder getComponentPlaceHolder(MgnlElement mgnlElement) {
         return componentPlaceHolders.get(mgnlElement);
     }
 

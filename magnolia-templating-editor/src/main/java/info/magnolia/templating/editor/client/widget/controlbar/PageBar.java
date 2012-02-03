@@ -31,14 +31,15 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client;
+package info.magnolia.templating.editor.client.widget.controlbar;
 
 
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
-import info.magnolia.templating.editor.client.PreviewChannelWidget.Orientation;
+import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.button.PreviewButtonWidget;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
+import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ import com.google.gwt.user.client.ui.MenuItem;
  *
  * TODO: review and clean up, especially the private Command classes.
  */
-public class PageBarWidget extends AbstractBarWidget {
+public class PageBar extends AbstractBar {
 
 
     private String workspace;
@@ -74,7 +75,7 @@ public class PageBarWidget extends AbstractBarWidget {
     private String dialog;
     private boolean previewState = false;
 
-    public PageBarWidget(final CMSComment comment) {
+    public PageBar(final CMSComment comment) {
         super(null);
 
         String content = comment.getAttribute("content");
