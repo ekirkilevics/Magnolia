@@ -42,8 +42,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
 
@@ -74,7 +72,6 @@ public class InterceptFilterTest {
         ctx.addSession("website", session);
         ctx.setUser(mock(User.class));
 
-        ComponentsTestUtil.setInstance(WebContext.class, ctx);
         MgnlContext.setInstance(ctx);
 
         request = mock(HttpServletRequest.class);
@@ -88,7 +85,6 @@ public class InterceptFilterTest {
 
     @After
     public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
 
