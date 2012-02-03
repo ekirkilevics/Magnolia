@@ -67,7 +67,7 @@ public final class PreviewButton extends Composite {
 
         panel.add(defaultActionButton);
 
-        final PreviewDropdownButtonWidget dropdown = new PreviewDropdownButtonWidget(menuItems);
+        final PreviewDropdownButton dropdown = new PreviewDropdownButton(menuItems);
         dropdown.setStylePrimaryName("mgnlEditorButton");
         dropdown.addStyleDependentName("previewMenuButton");
         panel.add(dropdown);
@@ -77,9 +77,9 @@ public final class PreviewButton extends Composite {
      * Extends {@link DropdownButton} in order to left align itself with the default (lhs) button.
      * @version $Id$
      */
-    private static final class PreviewDropdownButtonWidget extends DropdownButton {
+    private static final class PreviewDropdownButton extends DropdownButton {
 
-        public PreviewDropdownButtonWidget(final List<MenuItem> menuItems) {
+        public PreviewDropdownButton(final List<MenuItem> menuItems) {
             super("-", menuItems); // We have to put at least a label here to ensure it gets properly aligned with other text buttons around.
         }
         @Override
