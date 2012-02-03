@@ -374,14 +374,16 @@ public class PageEditor extends HTML implements EntryPoint {
          }
     }-*/;
 
-    public static void reload() {
+    public static void enablePreview(boolean preview) {
+        isPreview = preview;
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview);
+
         //always cleanup the url
         urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
         urlBuilder.removeParameter(MGNL_INTERCEPT_ATTRIBUTE);
-        urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
 
+        urlBuilder.setParameter(MGNL_INTERCEPT_ATTRIBUTE, "PREVIEW");
         urlBuilder.setParameter(MGNL_PREVIEW_ATTRIBUTE, String.valueOf(isPreview()));
 
         final String newUrl = urlBuilder.buildString();
@@ -400,4 +402,5 @@ public class PageEditor extends HTML implements EntryPoint {
     public static void setPreview(boolean preview) {
         isPreview = preview;
     }
+
 }

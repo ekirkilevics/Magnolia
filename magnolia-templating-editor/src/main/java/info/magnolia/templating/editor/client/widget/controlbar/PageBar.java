@@ -73,7 +73,6 @@ public class PageBar extends AbstractBar {
     private String workspace;
     private String path;
     private String dialog;
-    private boolean previewState = false;
 
     public PageBar(final CMSComment comment) {
         super(null);
@@ -141,7 +140,6 @@ public class PageBar extends AbstractBar {
 
         setClassName("mgnlEditorMainbar mgnlEditorBar");
 
-        previewState = false;
     }
 
     private void createPreviewModeBar() {
@@ -149,8 +147,7 @@ public class PageBar extends AbstractBar {
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                PageEditor.setPreview(false);
-                PageEditor.reload();
+                PageEditor.enablePreview(false);
             }
         });
         addButton(preview, Float.LEFT);
@@ -177,8 +174,7 @@ public class PageBar extends AbstractBar {
 
         @Override
         public void execute() {
-            PageEditor.setPreview(true);
-            PageEditor.reload();
+            PageEditor.enablePreview(true);
         }
     }
 
