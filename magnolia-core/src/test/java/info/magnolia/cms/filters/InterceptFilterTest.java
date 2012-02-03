@@ -40,6 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.User;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
@@ -102,7 +103,7 @@ public class InterceptFilterTest {
         filter.intercept(request, response);
 
         //THEN
-        assertNotNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE));
+        assertNotNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class InterceptFilterTest {
         filter.intercept(request, response);
 
         //THEN
-        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE));
+        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
 
         //GIVEN
         when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn(null);
@@ -125,7 +126,7 @@ public class InterceptFilterTest {
         filter.intercept(request, response);
 
         //THEN
-        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE));
+        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
     }
 
     @Test(expected=PathNotFoundException.class)
