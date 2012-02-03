@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.jcr.util.NodeUtil;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -40,6 +42,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -122,6 +127,24 @@ public class Rule implements Serializable {
 
         return allowed;
 
+    }
+
+    /**
+     * True if given nodeType is allowed.
+     * @throws RepositoryException
+     */
+    public boolean isAllowed(Node node) throws RepositoryException {
+        boolean allowed = false;
+
+        for(String allowedType:this.allowedTypes){
+            allowed |= NodeUtil.isNodeType(node, allowedType);
+        }
+
+        if (this.reverse) {
+            return !allowed;
+        }
+
+        return allowed;
     }
 
     /**

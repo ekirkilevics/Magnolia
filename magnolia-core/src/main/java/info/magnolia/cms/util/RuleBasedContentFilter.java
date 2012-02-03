@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@link ContentFilter} using a {@link Rule}.
- * 
+ *
  * @version $Revision$ ($Author$)
  * @deprecated since 4.5 use {@link info.magnolia.jcr.predicate.RuleBasedNodePredicate} instead
  */
@@ -66,16 +66,16 @@ public class RuleBasedContentFilter implements Content.ContentFilter {
      */
     @Override
     public boolean accept(Content content) {
-        String nodeType = "";
+        boolean accept = false;
         try {
-            nodeType = content.getNodeTypeName();
+            accept = this.rule.isAllowed(content.getJCRNode());
         }
         catch (RepositoryException re) {
             if (log.isDebugEnabled()) {
                 log.debug("failed to retrieve node type : " + re.getMessage(), re);
             }
         }
-        return this.rule.isAllowed(nodeType);
+        return accept;
     }
 
 }
