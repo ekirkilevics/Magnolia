@@ -87,9 +87,9 @@ public class RemoveDuplicatePermissionTask extends AbstractRepositoryTask {
                     }
                 }
             }
-            Iterator<Node> deleteNoteIter = deleteNode.iterator();
-            while(deleteNoteIter.hasNext()){
-                deleteNoteIter.next().remove();
+            Iterator<Node> deleteNodeIter = deleteNode.iterator();
+            while(deleteNodeIter.hasNext()){
+                deleteNodeIter.next().remove();
             }
             session.save();
         }
