@@ -39,6 +39,8 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -79,11 +81,16 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         }
 
         this.addStyleName("component");
-        Label areaName = new Label("Add Component");
+
+        FlowPanel elementWrapper = new FlowPanel();
+        elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
+
+        elementWrapper.add(new Label("New Component"));
+        elementWrapper.add(new Button("Add here"));
 
         setVisible(false);
 
-        add(areaName);
+        add(elementWrapper);
 
         createMouseEventsHandlers();
     }

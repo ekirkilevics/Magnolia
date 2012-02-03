@@ -199,7 +199,6 @@ button.mgnlEditorButton:active {
 }
 
 /* --- End of edit bars definitions --- */
-
 /* ----------------------------------
  * Definitions for edit place holders
  * ----------------------------------
@@ -207,33 +206,113 @@ button.mgnlEditorButton:active {
  * TODO: add "Editor" prefix for these defs as well (e.g. mgnlEditorPlaceHolder)
  */
 
-/* General place holder definitions */
+ /* General place holder definitions */
 .mgnlPlaceHolder {
   clear: both;
   cursor: pointer;
+
+  /* Change the box model to include borders and paddings in the width and height set. */
+  /* Allows here for a more intuitive handling of place holder heights and widhts. */
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* IE 8+ */
+}
+
+/* Area place holder, in focus. */
+.mgnlPlaceHolder.area {
+  margin: 0;
+  padding: 0;
+
+  border-radius: 0 0 7px 7px;
+  background-color: #eeeeee;
+  color: #aaaaaa;
+  font-size: 13px;
+}
+/* FIXME: remove this def when we don't show area ph labels any more. */
+.mgnlPlaceHolder.area .gwt-Label {
+  display: none;
+}
+
+/* Area place holder, not in focus. */
+.mgnlPlaceHolder.area.inactive {
+  margin: 10px 0;
+  padding: 25px 15px;
+
+  border-radius: 7px;
+}
+.mgnlPlaceHolder.area.inactive .gwt-Label {
+  display: inline;
 }
 
 /* Component place holder */
 .mgnlPlaceHolder.component {
-  padding: 10px;
+  width: 100%;
 
-  border-radius: 7px;
-  border: 2px solid #487000;
-  background-color: #95E88E;
+  margin: 5px 0;  /* Ensure the ph is not too close to the surrounding elements. */
+
+  border: 1px solid #a1c332;
+  background-color: transparent;
+
+  display:table;  /* For vertically aligning inner elements. */
 }
 
-/* Area place holder (in focus) */
-.mgnlPlaceHolder.area {
-  padding: 25px 15px;
+.mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
 
-  border: 2px solid #487000;
-  border-radius: 0 0 15px 15px;
-  background-color: #DEFCDC;
+  display:table-cell;  /* For vertically aligning inner elements. */
+  vertical-align: middle;
+
+  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
+  padding: 7px 7px;
 }
 
-/* Area place holder (NOT in focus) */
-.mgnlPlaceHolder.area.inactive {
-  border-radius: 15px;
+.mgnlPlaceHolder.component .gwt-Label {
+  float: left;
+  display: inline-block;
+
+  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
+
+  line-height: 20px;
+  font-size: 13px; /* Make it a bit bigger than usual */
+}
+.mgnlPlaceHolder.component .gwt-Button {
+  float: right;
+
+  height: 20px; /* have to give the height for all browsers to properly calculate it. */
+
+  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
+  padding: 0 3px 0 3px;
+
+  border-top: 1px solid #c1ea56;
+  border-left: 1px solid #c1ea56;
+  border-bottom: 1px solid #719302;
+  border-right: 1px solid #719302;
+
+  color: #004000;
+  background-color: #91ba26;
+
+  font-family: Verdana, sans-serif;
+  font-size: 11px;
+}
+
+/* Component ph inside area ph look right and are readable. */
+.mgnlPlaceHolder.area .mgnlPlaceHolder.component {
+  background-color: transparent;
+  color: #487000;
+}
+
+/* Component ph following are ph should have not top margin. */
+.mgnlPlaceHolder.area > .mgnlPlaceHolder.component {
+  margin-top: 0;
+}
+
+/* Special definitions to make sure ph work in the STK footer. */
+div#site-info .mgnlEditorPlaceholderElements {
+  width: 100%;
+}
+
+div#site-info .mgnlPlaceHolder.component .gwt-Label {
+  display: inline-block !important;
+  width: auto;
 }
 
 /* --- End of edit place holder definitions --- */
