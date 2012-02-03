@@ -34,20 +34,22 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.io.IOException;
 
+import javax.jcr.LoginException;
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -57,7 +59,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handle intercepted administrative requests.
- * @author Fabrizio Giustina
  * @version $Id$
  */
 public class InterceptFilter extends AbstractMgnlFilter {
@@ -113,7 +114,13 @@ public class InterceptFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
         if (request.getParameter(INTERCEPT) != null) {
-            this.intercept(request, response);
+            try {
+                this.intercept(request, response);
+            } catch (LoginException e) {
+               throw new ServletException(e);
+            } catch (RepositoryException e) {
+                throw new ServletException(e);
+            }
         }
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
@@ -125,11 +132,11 @@ public class InterceptFilter extends AbstractMgnlFilter {
     protected boolean previewMode() {
         // first check if its passed as a request parameter
         if (MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
-            return BooleanUtils.toBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
+            return Boolean.parseBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
         }
 
         // then in attributes, i.e the session
-        final Boolean value = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE);
+        final Boolean value = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
         return BooleanUtils.toBoolean(value);
     }
 
@@ -137,8 +144,10 @@ public class InterceptFilter extends AbstractMgnlFilter {
     /**
      * Request and Response here is same as received by the original page so it includes all post/get data. Sub action
      * could be called from here once this action finishes, it will continue loading the requested page.
+     * @throws RepositoryException
+     * @throws LoginException
      */
-    public void intercept(HttpServletRequest request, HttpServletResponse response) {
+    public void intercept(HttpServletRequest request, HttpServletResponse response) throws LoginException, RepositoryException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         String action = request.getParameter(INTERCEPT);
         String repository = request.getParameter(PARAM_REPOSITORY);
@@ -153,59 +162,57 @@ public class InterceptFilter extends AbstractMgnlFilter {
             repository = RepositoryConstants.WEBSITE;
         }
 
-        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-        synchronized (ExclusiveWrite.getInstance()) {
-            if (ACTION_PREVIEW.equals(action)) {
-                // preview mode (button in main bar)
-                String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
-                if (preview != null) {
+        Session session = MgnlContext.getJCRSession(repository);
 
-                    // @todo IMPORTANT remove use of http session
-                    HttpSession httpsession = request.getSession(true);
-                    // TODO this can be replaced by Boolean.parse with java 1.5
-                    if (BooleanUtils.toBoolean(preview)) {
-                        httpsession.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
-                    }
-                    else {
-                        httpsession.removeAttribute(MGNL_PREVIEW_ATTRIBUTE);
-                    }
+        if (ACTION_PREVIEW.equals(action)) {
+            // preview mode (button in main bar)
+            String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
+            log.debug("preview request parameter value is {} ", preview);
+            if (preview != null) {
+                if (Boolean.parseBoolean(preview)) {
+                    log.debug("setting {} attribute", MGNL_PREVIEW_ATTRIBUTE);
+                    MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
                 }
-            }
-            else if (ACTION_NODE_DELETE.equals(action)) {
-                // delete paragraph
-                try {
-                    Content page = hm.getContent(handle);
-                    page.updateMetaData();
-                    hm.delete(nodePath);
-                    hm.save();
+                else {
+                    log.debug("removing {} attribute", MGNL_PREVIEW_ATTRIBUTE);
+                    MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                 }
-                catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e);
-                }
-            }
-            else if (ACTION_NODE_SORT.equals(action)) {
-                // sort paragraphs
-                try {
-                    String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
-                    String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
-                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
-                    String srcName = StringUtils.substringAfterLast(pathSelected, "/");
-                    String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
-                    if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
-                        destName = null;
-                    }
-                    hm.getContent(pathParent).orderBefore(srcName, destName);
-                    Content page = hm.getContent(handle);
-                    page.updateMetaData();
-                    hm.save();
-                }
-                catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e);
-                }
-            } else {
-                log.warn("Unknown action {}", action);
             }
         }
+        else if (ACTION_NODE_DELETE.equals(action)) {
+            // delete paragraph
+            try {
+                Node page = session.getNode(handle);
+                session.removeItem(nodePath);
+                MetaDataUtil.updateMetaData(page);
+                session.save();
+            }
+            catch (RepositoryException e) {
+                log.error("Exception caught: {}", e.getMessage(), e);
+            }
+        }
+        else if (ACTION_NODE_SORT.equals(action)) {
+            // sort paragraphs
+            try {
+                String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
+                String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
+                String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
+                String srcName = StringUtils.substringAfterLast(pathSelected, "/");
+                String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
+                if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
+                    destName = null;
+                }
+                Node parent = session.getNode(pathParent+srcName);
+                NodeUtil.orderBefore(parent, destName);
+                Node page = session.getNode(handle);
+                MetaDataUtil.updateMetaData(page);
+                session.save();
+            }
+            catch (RepositoryException e) {
+                log.error("Exception caught: {}", e.getMessage(), e);
+            }
+        } else {
+            log.warn("Unknown action {}", action);
+        }
     }
-
 }

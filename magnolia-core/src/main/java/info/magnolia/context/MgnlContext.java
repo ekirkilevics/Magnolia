@@ -63,7 +63,6 @@ import org.slf4j.LoggerFactory;
  * In a later version this class should not depend on servlets. The core should use the context to get and set
  * attributes instead of using the request or session object directly. Magnolia could run then in a neutral and
  * configurable context.
- * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 
@@ -261,10 +260,24 @@ public class MgnlContext {
     }
 
     /**
+     * Check if this attribute exists in the specified scope.
+     */
+    public static boolean hasAttribute(String name, int scope){
+        return getInstance().getAttribute(name, scope) != null;
+    }
+
+    /**
      * Remove an attribute in the local scope.
      */
     public static void removeAttribute(String name){
         getInstance().removeAttribute(name, Context.LOCAL_SCOPE);
+    }
+
+    /**
+     * Remove an attribute in the specified scope.
+     */
+    public static void removeAttribute(String name, int scope){
+        getInstance().removeAttribute(name, scope);
     }
 
     /**
