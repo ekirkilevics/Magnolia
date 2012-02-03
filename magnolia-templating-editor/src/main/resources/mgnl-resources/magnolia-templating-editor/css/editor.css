@@ -199,38 +199,45 @@ button.mgnlEditorButton:active {
 }
 
 /* --- End of edit bars definitions --- */
+
 /* ----------------------------------
  * Definitions for edit place holders
  * ----------------------------------
  *
  * TODO: add "Editor" prefix for these defs as well (e.g. mgnlEditorPlaceHolder)
  */
+
+/* General place holder definitions */
+.mgnlPlaceHolder {
+  clear: both;
+  cursor: pointer;
+}
+
+/* Component place holder */
 .mgnlPlaceHolder.component {
   padding: 10px;
+
   border-radius: 7px;
   border: 2px solid #487000;
   background-color: #95E88E;
-  cursor: pointer;
-  clear: both;
 }
 
+/* Area place holder (in focus) */
 .mgnlPlaceHolder.area {
   padding: 25px 15px;
+
   border: 2px solid #487000;
   border-radius: 0 0 15px 15px;
   background-color: #DEFCDC;
-  cursor: pointer;
-  clear: both;
 }
+
+/* Area place holder (NOT in focus) */
 .mgnlPlaceHolder.area.inactive {
   border-radius: 15px;
-
-}
-.mgnlPlaceHolder p {
-
 }
 
 /* --- End of edit place holder definitions --- */
+
 /* -------------------------------
  *  Definitions for Mobile Preview
  * ------------------------------- */
