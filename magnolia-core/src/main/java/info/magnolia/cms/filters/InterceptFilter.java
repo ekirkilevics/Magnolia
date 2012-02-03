@@ -162,7 +162,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
             repository = RepositoryConstants.WEBSITE;
         }
 
-        Session session = MgnlContext.getJCRSession(repository);
+        final Session session = MgnlContext.getJCRSession(repository);
 
         if (ACTION_PREVIEW.equals(action)) {
             // preview mode (button in main bar)
@@ -172,26 +172,22 @@ public class InterceptFilter extends AbstractMgnlFilter {
                 if (Boolean.parseBoolean(preview)) {
                     log.debug("setting {} attribute", MGNL_PREVIEW_ATTRIBUTE);
                     MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
-                }
-                else {
+                } else {
                     log.debug("removing {} attribute", MGNL_PREVIEW_ATTRIBUTE);
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                 }
             }
-        }
-        else if (ACTION_NODE_DELETE.equals(action)) {
+        } else if (ACTION_NODE_DELETE.equals(action)) {
             // delete paragraph
             try {
                 Node page = session.getNode(handle);
                 session.removeItem(nodePath);
                 MetaDataUtil.updateMetaData(page);
                 session.save();
-            }
-            catch (RepositoryException e) {
+            } catch (RepositoryException e) {
                 log.error("Exception caught: {}", e.getMessage(), e);
             }
-        }
-        else if (ACTION_NODE_SORT.equals(action)) {
+        } else if (ACTION_NODE_SORT.equals(action)) {
             // sort paragraphs
             try {
                 String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
@@ -207,8 +203,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
                 Node page = session.getNode(handle);
                 MetaDataUtil.updateMetaData(page);
                 session.save();
-            }
-            catch (RepositoryException e) {
+            } catch (RepositoryException e) {
                 log.error("Exception caught: {}", e.getMessage(), e);
             }
         } else {
