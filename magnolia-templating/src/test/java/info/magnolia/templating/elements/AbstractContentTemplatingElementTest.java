@@ -56,10 +56,10 @@ public class AbstractContentTemplatingElementTest extends AbstractElementTestCas
     @Test
     public void testGetTargetContent() throws Exception {
         final RenderingContext aggregationState = mock(RenderingContext.class);
-        when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
+        when(aggregationState.getMainContent()).thenReturn(getSession().getNode("/foo/bar"));
 
         final AbstractContentTemplatingElement compo = new DummyComponent(null, aggregationState);
-        final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
+        final Node expectedNode = getSession().getNode("/foo/bar/paragraphs/1");
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
 

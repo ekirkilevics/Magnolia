@@ -35,30 +35,53 @@ package info.magnolia.templating.elements;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
+import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.Context;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.engine.DefaultRenderingEngine;
+import info.magnolia.rendering.engine.OutputProvider;
+import info.magnolia.rendering.engine.RenderException;
+import info.magnolia.rendering.engine.RenderingEngine;
+import info.magnolia.rendering.renderer.Renderer;
+import info.magnolia.rendering.renderer.registry.RendererRegistry;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.variation.NoopVariationResolver;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockContext;
+import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Locale;
+
+import javax.inject.Provider;
+import javax.jcr.Node;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 
+
 /**
  * @version $Id$
  */
 public abstract class AbstractElementTestCase {
+
     private static final String CONTENT = StringUtils.join(Arrays.asList(
             "/foo/bar.@type=mgnl:content",
             "/foo/bar/MetaData.@type=mgnl:metadata",
@@ -76,68 +99,156 @@ public abstract class AbstractElementTestCase {
             "/foo/bar/paragraphs/2.text=hello 2",
             "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
             "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
+            "/foo/bar/paragraphs/stage.text=stage",
             "/pouet/lol.@type=mgnl:content",
             "/pouet/lol/MetaData.@type=mgnl:metadata",
             "/pouet/lol/MetaData.mgnl\\:template=testPageTemplate1",
             "/no/metadata/here.@type=mgnl:content", ""), "\n");
+
     private MockSession session;
+
+    private Node mainNode;
+
+    private Node currentNode;
+
+    private Node componentNode;
+
+    private AggregationState aggregationState;
+
+    private ConfiguredTemplateDefinition templateDefinition;
+
+    public StringWriter out;
+
+    private ServerConfiguration serverCfg;
+
+    private AggregationStateBasedRenderingContext context;
+
+    private DefaultRenderingEngine engine;
+
+    private TemplateDefinitionAssignment templateDefinitionAssignment;
 
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        SystemProperty.clear();
         ComponentsTestUtil.clear();
     }
 
     @Before
     public void setUp() throws Exception {
+        // Create Session
+        session = SessionTestUtil.createSession("website", CONTENT);
+
+        // Init Aggregation State
+        aggregationState = new AggregationState();
+        mainNode = session.getNode("/foo/bar");
+        currentNode = session.getNode("/foo/bar/paragraphs");
+        componentNode = session.getNode("/foo/bar/paragraphs/0");
+        aggregationState.setMainContent(ContentUtil.asContent(mainNode));
+        aggregationState.setCurrentContent(ContentUtil.asContent(currentNode));
+
+        // Init WebContext
+        MockWebContext webContext = new MockWebContext();
+        webContext.addSession("website", session);
+        User user = mock(User.class);
+        webContext.setUser(user);
+        Locale localeEn = new Locale("en");
+        webContext.setLocale(localeEn);
+        MgnlContext.setInstance(webContext);
+
+        ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
+        MockContext sysCtx = (MockContext)MgnlContext.getSystemContext();
+        sysCtx.addSession("website", session);
+        ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
+
+        // Init ServerConfiguration
+        serverCfg = new ServerConfiguration();
+        serverCfg.setAdmin(true);
+        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
+
+        // Init I18nSupport
+        I18nContentSupport defSupport = mock(I18nContentSupport.class);
+        when(defSupport.getLocale()).thenReturn(localeEn);
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, defSupport);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
+        RenderingEngine renderingEngine = mock(RenderingEngine.class);
+        ComponentsTestUtil.setInstance(RenderingEngine.class, renderingEngine);
 
-        final Context ctx = mock(WebContext.class);
-        when(ctx.getLocale()).thenReturn(Locale.US);
+        // Set TemplateDefinition
+        final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
+        templateDefinition = new ConfiguredTemplateDefinition();
+        templateDefinition.setName("testParagraph0");
+        templateDefinition.setI18nBasename("info.magnolia.templating.test_messages");
+        templateDefinition.setDialog("dialog");
+        templateDefinition.setRenderType("renderType");
+        templateDefinition.setDescription("Description");
+        when(templateDefinitionAssignment.getAssignedTemplateDefinition(componentNode)).thenReturn(templateDefinition);
 
-        MgnlContext.setInstance(ctx);
-        final ConfiguredTemplateDefinition p0 = new ConfiguredTemplateDefinition();
-        p0.setName("testParagraph0");
-        final ConfiguredTemplateDefinition p1 = new ConfiguredTemplateDefinition();
-        p1.setName("testParagraph1");
-        p1.setI18nBasename("info.magnolia.templating.test_messages");
+        RendererRegistry registry = mock(RendererRegistry.class);
+        Renderer renderer = mock(Renderer.class);
+        when(registry.getRenderer("renderType")).thenReturn(renderer);
 
-        final TemplateDefinitionProvider p0provider = mock(TemplateDefinitionProvider.class);
-        final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
+        final AggregationStateBasedRenderingContext context = new AggregationStateBasedRenderingContext(aggregationState, null);
+        out = new StringWriter();
+        context.push(currentNode, templateDefinition, new OutputProvider() {
 
-        when(p0provider.getTemplateDefinition()).thenReturn(p0);
-        when(p0provider.getId()).thenReturn(p0.getName());
-        when(p1provider.getTemplateDefinition()).thenReturn(p1);
-        when(p1provider.getId()).thenReturn(p1.getName());
+            @Override
+            public OutputStream getOutputStream() throws RenderException, IOException {
+                return null;
+            }
 
-        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry(null);
-        pman.register(p0provider);
-        pman.register(p1provider);
+            @Override
+            public Appendable getAppendable() throws RenderException, IOException {
+                return out;
+            }
+        });
 
-        ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, pman);
+        engine = new DefaultRenderingEngine(registry, templateDefinitionAssignment, new NoopVariationResolver(), new Provider<RenderingContext>() {
 
-        final ConfiguredTemplateDefinition t0 = new ConfiguredTemplateDefinition();
-        t0.setName("testPageTemplate0");
-        final ConfiguredTemplateDefinition t1 = new ConfiguredTemplateDefinition();
-        t1.setName("testPageTemplate1");
-        t1.setI18nBasename("info.magnolia.templating.test_messages");
+            @Override
+            public RenderingContext get() {
+                return context;
+            }
+        });
+        this.context = context;
+        this.templateDefinitionAssignment = templateDefinitionAssignment;
 
-        final TemplateDefinitionProvider t0provider = mock(TemplateDefinitionProvider.class);
-        final TemplateDefinitionProvider t1provider = mock(TemplateDefinitionProvider.class);
-
-        when(t0provider.getTemplateDefinition()).thenReturn(t0);
-        when(t0provider.getId()).thenReturn(t0.getName());
-        when(t1provider.getTemplateDefinition()).thenReturn(t1);
-        when(t1provider.getId()).thenReturn(t1.getName());
-
-        pman.register(t0provider);
-        pman.register(t1provider);
-
-        session = SessionTestUtil.createSession("testWorkspace", CONTENT);
     }
 
-    protected MockSession getHM() {
+    protected MockSession getSession() {
         return session;
     }
+
+    public Node getComponentNode() {
+        return componentNode;
+    }
+
+    public ConfiguredTemplateDefinition getTemplateDefinition() {
+        return templateDefinition;
+    }
+
+    public StringWriter getOut() {
+        return out;
+    }
+
+    public ServerConfiguration getServerCfg() {
+        return serverCfg;
+    }
+
+    public AggregationStateBasedRenderingContext getContext() {
+        return context;
+    }
+
+    public DefaultRenderingEngine getEngine() {
+        return engine;
+    }
+
+    public TemplateDefinitionAssignment getTemplateDefinitionAssignment() {
+        return templateDefinitionAssignment;
+    }
+
+    public AggregationState getAggregationState() {
+        return aggregationState;
+    }
+
 }

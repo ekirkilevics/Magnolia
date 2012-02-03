@@ -42,13 +42,17 @@ import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
+import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.IOException;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -58,6 +62,49 @@ import org.junit.Test;
  * @version $Id$
  */
 public class AbstractTemplateElementTest extends AbstractElementTestCase {
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+
+        final ConfiguredTemplateDefinition p0 = new ConfiguredTemplateDefinition();
+        p0.setName("testParagraph0");
+        final ConfiguredTemplateDefinition p1 = new ConfiguredTemplateDefinition();
+        p1.setName("testParagraph1");
+        p1.setI18nBasename("info.magnolia.templating.test_messages");
+
+        final TemplateDefinitionProvider p0provider = mock(TemplateDefinitionProvider.class);
+        final TemplateDefinitionProvider p1provider = mock(TemplateDefinitionProvider.class);
+
+        when(p0provider.getTemplateDefinition()).thenReturn(p0);
+        when(p0provider.getId()).thenReturn(p0.getName());
+        when(p1provider.getTemplateDefinition()).thenReturn(p1);
+        when(p1provider.getId()).thenReturn(p1.getName());
+
+        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry(null);
+        pman.register(p0provider);
+        pman.register(p1provider);
+
+        ComponentsTestUtil.setInstance(TemplateDefinitionRegistry.class, pman);
+
+        final ConfiguredTemplateDefinition t0 = new ConfiguredTemplateDefinition();
+        t0.setName("testPageTemplate0");
+        final ConfiguredTemplateDefinition t1 = new ConfiguredTemplateDefinition();
+        t1.setName("testPageTemplate1");
+        t1.setI18nBasename("info.magnolia.templating.test_messages");
+
+        final TemplateDefinitionProvider t0provider = mock(TemplateDefinitionProvider.class);
+        final TemplateDefinitionProvider t1provider = mock(TemplateDefinitionProvider.class);
+
+        when(t0provider.getTemplateDefinition()).thenReturn(t0);
+        when(t0provider.getId()).thenReturn(t0.getName());
+        when(t1provider.getTemplateDefinition()).thenReturn(t1);
+        when(t1provider.getId()).thenReturn(t1.getName());
+
+        pman.register(t0provider);
+        pman.register(t1provider);
+    }
 
     @Test
     public void testGetsCustomMessageCustomBundleWithPageTemplate() throws Exception {
@@ -102,13 +149,13 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
     public void testCurrentContent() throws Exception {
 
         final RenderingContext aggregationState = mock(RenderingContext.class);
-        when(aggregationState.getMainContent()).thenReturn(getHM().getNode("/foo/bar"));
+        when(aggregationState.getMainContent()).thenReturn(getSession().getNode("/foo/bar"));
 
         final AbstractTemplatingElement compo = new DummyComponent(null, aggregationState);
 
         assertNull(compo.currentContent());
 
-        final Node expectedNode = getHM().getNode("/foo/bar/paragraphs/1");
+        final Node expectedNode = getSession().getNode("/foo/bar/paragraphs/1");
 
         when(aggregationState.getCurrentContent()).thenReturn(expectedNode);
 
@@ -119,7 +166,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
     private void doTestMessage(String expected, String contentPath, String key) throws RepositoryException, RegistrationException {
         final AbstractTemplatingElement compo = new DummyComponent();
 
-        Node content = getHM().getNode(contentPath);
+        Node content = getSession().getNode(contentPath);
 
         TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
         String template = info.magnolia.jcr.util.MetaDataUtil.getMetaData(content).getTemplate();

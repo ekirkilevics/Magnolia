@@ -33,24 +33,19 @@
  */
 package info.magnolia.templating.elements;
 
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.rendering.template.AreaDefinition;
-import info.magnolia.rendering.template.TemplateDefinition;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.matchers.JUnitMatchers.containsString;
+import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
-import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.SessionTestUtil;
+import info.magnolia.rendering.template.configured.ConfiguredComponentAvailability;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -58,411 +53,128 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-public class AreaElementTest {
+public class AreaElementTest extends AbstractElementTestCase {
 
-    //    private TemplateDefinitionAssignment templateDefinitionAssignment;
-    //    private ConfiguredTemplateDefinition templateDefinition;
-    //    private Node pageNode;
-    //    private Node areaNode;
-    //    private Node componentNode;
-    //    private AggregationState aggregationState;
-    //    private ServerConfiguration serverCfg;
-    //    private AreaElement areaElement;
-    //    private AggregationStateBasedRenderingContext context;
-    //    private AreaDefinition areaDefinition;
 
-    private static final String TEST_WORKSPACE = "test";
-    private static final String PAGE_PATH = "/foo/bar/baz";
-    private static final String AREA_NAME = "area";
+    private AreaElement element;
+    private ConfiguredAreaDefinition areaDefinition;
 
+    @Override
     @Before
     public void setUp() throws Exception {
-        final MockSession session = SessionTestUtil.createSession(TEST_WORKSPACE,
-                PAGE_PATH + "/" + AREA_NAME,
-        "/foo/bar/baz/area/component");
+        super.setUp();
+        element = new AreaElement(getServerCfg(), getContext(), getEngine());
 
-        //        aggregationState = new AggregationState();
-        //        pageNode = session.getNode(PAGE_PATH);
-        //        singleAreaNode = session.getNode("/foo/bar/baz/area");
-        //        listAreaNode = session.getNode("/foo/bar/baz/listArea");
-        //        component01Node = session.getNode("/foo/bar/baz/listArea/01");
-        //
-        //        final WebContext ctx = mock(WebContext.class);
-        //        when(ctx.getJCRSession(TEST_WORKSPACE, TEST_WORKSPACE)).thenReturn(session);
-        //        MgnlContext.setInstance(ctx);
-        //
-        //        serverCfg = new ServerConfiguration();
-        //        serverCfg.setAdmin(true);
-        //        ComponentsTestUtil.setInstance(ServerConfiguration.class, serverCfg);
-        //        // register some default components used internally
-        //        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
-        //        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        //        ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
-        //
-        //        templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
-        //        templateDefinition = new ConfiguredTemplateDefinition();
-        //
-        //        ComponentsTestUtil.setInstance(TemplateDefinitionAssignment.class, templateDefinitionAssignment);
-        //        DefaultRenderingEngine engine = new DefaultRenderingEngine(new RendererRegistry(), templateDefinitionAssignment);
-        //        context = new AggregationStateBasedRenderingContext(aggregationState);
-        //        areaElement = new AreaElement(serverCfg, context, engine);
-        //        areaDefinition = new ConfiguredAreaDefinition();
-        //        ((ConfiguredAreaDefinition) areaDefinition).setEnabled(true);
-        //
-        //        when(templateDefinitionAssignment.getAssignedTemplateDefinition(component01Node)).thenReturn(templateDefinition);
 
+        areaDefinition = new ConfiguredAreaDefinition();
+        getTemplateDefinition().addArea("stage", areaDefinition);
+        areaDefinition.setDialog("dialog_testCnfTemplate");
+        areaDefinition.setType("type_testCnfTemplate");
+        areaDefinition.setTitle("title_testCnfTemplate");
+        Map<String, ComponentAvailability> availableComponents = new HashMap<String, ComponentAvailability>();
+        ConfiguredComponentAvailability componentAvailability = new ConfiguredComponentAvailability();
+        componentAvailability.setEnabled(true);
+        componentAvailability.setId("componentAvailability_Id");
+        availableComponents.put("componentAvailability", componentAvailability);
+        areaDefinition.setAvailableComponents(availableComponents);
     }
 
-    @Test @Ignore
-    public void testThatTheRenderingEngineIsCalledWithTheCorrectContentAndDefinition() throws Exception {
-        //        // GIVEN
-        //        Node page = createPageContent(AreaDefinition.TYPE_SINGLE);
-        //        TemplateDefinition templateDefinition = createTemplateDefinition(AreaDefinition.TYPE_SINGLE);
-        //
-        //        // WHEN
-        //        render(page, templateDefinition);
-        //
-        //        // THEN
-        //        assertTheRenderingEngineWasCalled(areaNode, templateDefinition.getAreas().get(AREA_NAME));
-        //        assertRenderWithContextObject(AreaElement.ATTRIBUTE_COMPONENT, areaNode);
-        //        assertRenderedOutputContains();
-        //
-        //
-        //        context.push(pageNode, templateDefinition);
-        //
-        //        DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        //        areaElement = new AreaElement(serverCfg, context, engine);
-        //        areaElement.setArea(areaDefinition);
-        //        areaElement.setName("singleArea");
-        //
-        //        areaElement.setType(AreaDefinition.TYPE_SINGLE);
-        //
-        //        final StringWriter out = new StringWriter();
-        //        areaElement.begin(out);
-        //        areaElement.end(out);
-        //
-        //        verify(engine).render(eq(singleAreaNode), eq(areaDefinition), argThat(new ArgumentMatcher<Map<String, Object>>() {
-        //            @Override
-        //            public boolean matches(Object componentsMap) {
-        //                Object component = ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENT);
-        //                boolean result = false;
-        //                try {
-        //                    // single: the passed area is the component
-        //                    result = component != null && ((ContentMap) component).getJCRNode().getName().equals(singleAreaNode.getName());
-        //                } catch (RepositoryException e) {
-        //                    e.printStackTrace();
-        //                }
-        //                return result;
-        //            }
-        //        }), eq(out));
-        //
-        //        String outString = out.toString();
-        //
-        //        assertEquals(outString,
-        //                "<!-- cms:begin cms:content=\"test:/foo/bar/baz/singleArea\" -->" +
-        //                "\n" +
-        //                "<cms:area content=\"test:/foo/bar/baz\" name=\"singleArea\" availableComponents=\"\" type=\"single\" showAddButton=\"false\"></cms:area>" +
-        //                "\n" +
-        //                "<!-- cms:end cms:content=\"test:/foo/bar/baz/singleArea\" -->"
-        //                + "\n", outString);
-    }
 
-    private TemplateDefinition createTemplateDefinition(String areaType) {
-        ConfiguredTemplateDefinition templateDefinition = new ConfiguredTemplateDefinition();
+
+    @Test
+    public void testBeginSimple() throws Exception {
+        // GIVEN
         ConfiguredAreaDefinition areaDefinition = new ConfiguredAreaDefinition();
-        areaDefinition.setEnabled(true);
-        areaDefinition.setType(areaType);
-        templateDefinition.addArea(AREA_NAME, areaDefinition);
-        return templateDefinition;
+        element.setName("name_testSimple");
+        element.setArea(areaDefinition);
+        element.setDialog("dialog_testSimple");
+        element.setType("type_testSimple");
+        element.setLabel("label_testSimple");
+        element.setAvailableComponents("availableComponent_testSimple");
+        element.setContent(getComponentNode());
+
+        // WHEN
+        element.begin(out);
+        // THEN
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/0\" name=\"name_testSimple\" availableComponents=\"availableComponent_testSimple\" type=\"type_testSimple\" dialog=\"dialog_testSimple\" label=\"label_testSimple\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
     }
 
-    private Node createPageContent(String areaType) throws IOException, RepositoryException {
-        final MockSession session;
-        if (areaType.equals(AreaDefinition.TYPE_LIST)) {
-            session = SessionTestUtil.createSession(TEST_WORKSPACE,
-                    PAGE_PATH + "/" + AREA_NAME,
-                    PAGE_PATH + "/" + AREA_NAME + "/" + "component1",
-                    PAGE_PATH + "/" + AREA_NAME + "/" + "component2");
-        } else {
-            session = SessionTestUtil.createSession(TEST_WORKSPACE,
-                    PAGE_PATH + "/" + AREA_NAME);
-        }
-        return session.getNode(PAGE_PATH);
-    }
 
-    /*
     @Test
-    public void testComponentsResolvedFromPathAndWorkspace() throws Exception {
-        // input TYPE_LIST, output componentMap with all paragraphs
+    public void testBeginWithConfFromTemplateDefinition() throws Exception {
+        // GIVEN
+        element.setName("stage");
+        element.setContent(getComponentNode());
 
-        DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        areaElement = new AreaElement(serverCfg, context, engine);
-        areaElement.setArea(areaDefinition);
-        // areaComponent.setName("area");
-        areaElement.setWorkspace("test");
-        areaElement.setPath("/foo/bar/baz");
+        // WHEN
+        element.begin(out);
 
-        areaElement.setType(AreaDefinition.TYPE_LIST);
-
-        final StringWriter out = new StringWriter();
-        areaElement.begin(out);
-        areaElement.end(out);
-
-        verify(engine).render(eq(component01Node.getParent()), eq(areaDefinition), argThat(new ArgumentMatcher<Map<String, Object>>() {
-            @Override
-            public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENTS);
-                boolean result = false;
-                try {
-                    result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(component01Node.getName());
-                } catch (RepositoryException e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-        }), eq(out));
-
-        String outString = out.toString();
-
-        assertEquals(outString,
-            "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->" +
-            "\n" +
-            "<cms:area content=\"test:/foo/bar/baz/listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
-            "\n" +
-            "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-            + "\n", outString);
+        // THEN
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/0\" name=\"stage\" availableComponents=\"componentAvailability_Id\" type=\"type_testCnfTemplate\" dialog=\"dialog_testCnfTemplate\" label=\"title_testCnfTemplate\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
     }
 
     @Test
-    public void testComponentsResolvedFromAggregationState() throws Exception {
-        // input TYPE_LIST, output componentMap with all paragraphs
-        context.push(component01Node.getParent(), templateDefinition);
+    public void testBeginWithInheritence() throws Exception {
+        // GIVEN
+        ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
+        inheritanceConfiguration.setEnabled(true);
+        areaDefinition.setInheritance(inheritanceConfiguration);
+        element.setName("stage");
+        element.setContent(getComponentNode());
 
-        DefaultRenderingEngine engine = mock(DefaultRenderingEngine.class);
-        areaElement = new AreaElement(serverCfg, context, engine);
-        areaElement.setArea(areaDefinition);
+        // WHEN
+        element.begin(out);
 
-        areaElement.setType(AreaDefinition.TYPE_LIST);
-
-        final StringWriter out = new StringWriter();
-        areaElement.begin(out);
-        areaElement.end(out);
-
-        verify(engine).render(eq(component01Node.getParent()), eq(areaDefinition), argThat(new ArgumentMatcher<Map<String, Object>>() {
-            @Override
-            public boolean matches(Object componentsMap) {
-                List<ContentMap> componentList = (List<ContentMap>) ((Map<String, Object>) componentsMap).get(AreaElement.ATTRIBUTE_COMPONENTS);
-                boolean result = false;
-                try {
-                    result = componentList != null && componentList.size() == 1 && (componentList.get(0)).getJCRNode().getName().equals(component01Node.getName());
-                } catch (RepositoryException e) {
-                    e.printStackTrace();
-                }
-                return result;
-            }
-        }), eq(out));
-
-        String outString = out.toString();
-
-        assertEquals(outString,
-            "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->" +
-            "\n" +
-            "<cms:area content=\"test:/foo/bar/baz/listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>" +
-            "\n"+
-            "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-            + "\n", outString);
+        // THEN
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/0\" name=\"stage\" availableComponents=\"componentAvailability_Id\" type=\"type_testCnfTemplate\" dialog=\"dialog_testCnfTemplate\" label=\"title_testCnfTemplate\" inherit=\"true\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
     }
 
     @Test
-    public void testDefault() throws Exception {
-        // default input type is TYPE_LIST, output componentMap with all paragraphs
+    public void testBeginGetContentFromParent() throws Exception {
+        // GIVEN
+        element.setName("stage");
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/stage\" name=\"stage\" availableComponents=\"componentAvailability_Id\" type=\"type_testCnfTemplate\" dialog=\"dialog_testCnfTemplate\" label=\"title_testCnfTemplate\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
     }
+
 
     @Test
-    public void testDoRender() throws Exception {
-        context.push(component01Node.getParent(), templateDefinition);
+    public void testBeginCreateNode() throws Exception {
+        // GIVEN
+        element.setName("stage");
+        getComponentNode().getParent().getNode("/stage").remove();
+        assertTrue("Should no more exist", !getComponentNode().getParent().hasNode("/stage"));
 
-        StringWriter out = new StringWriter();
-        areaElement.setName("listArea");
-        areaElement.begin(out);
+        // WHEN
+        element.begin(out);
 
-        assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n"
-                + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\n", out.toString());
-
-        // with paragraph set
-        out = new StringWriter();
-        areaElement.setAvailableComponents("paragraphs/myParagraph");
-        areaElement.begin(out);
-
-        assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n"
-                + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"paragraphs/myParagraph\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\n", out.toString());
-
-        // as collection == false (= singleton)
-        out = new StringWriter();
-        areaElement.setType(AreaDefinition.TYPE_SINGLE);
-        areaElement.begin(out);
-
-        assertEquals(
-                "<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n"
-                + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"listArea\" availableComponents=\"paragraphs/myParagraph\" type=\"single\" showAddButton=\"true\"></cms:area>"
-                + "\n", out.toString());
+        // THEN
+        assertTrue("Should be created", getComponentNode().getParent().hasNode("/stage"));
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/stage\" name=\"stage\" availableComponents=\"componentAvailability_Id\" type=\"type_testCnfTemplate\" dialog=\"dialog_testCnfTemplate\" label=\"title_testCnfTemplate\" inherit=\"false\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
     }
+
 
     @Test
-    public void testPostRender() throws Exception {
-        context.push(component01Node.getParent(), templateDefinition);
+    public void testEndWithConfFromTemplateDefinition() throws Exception {
+        // GIVEN
+        element.setName("stage");
+        element.setContent(getComponentNode());
+        assertEquals("Should be null ", null, areaDefinition.getRenderType());
+        assertEquals("Should be null ", null, areaDefinition.getI18nBasename());
 
-        ((ConfiguredAreaDefinition) areaDefinition).setEnabled(false);
+        element.begin(out);
 
-        final StringWriter out = new StringWriter();
-        areaElement.end(out);
+        // WHEN
+        element.end(out);
 
-        String outString = out.toString();
-
-        assertEquals(outString, "<!-- cms:end cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n", outString);
+        // THEN
+        assertThat(out.toString(),containsString("<!-- /cms:area -->"));
+        assertEquals("Should get the RenderType value from RemplateDefinition ", getTemplateDefinition().getRenderType(), areaDefinition.getRenderType());
+        assertEquals("Should get the I18N value from RemplateDefinition ", getTemplateDefinition().getI18nBasename(), areaDefinition.getI18nBasename());
     }
 
-    @Test
-    public void testResolveMethods() throws Exception {
-        context.push(component01Node.getParent(), templateDefinition);
-        AreaDefinition areaDef = new AreaDefinition() {
-
-            @Override
-            public String getDialog() {
-                return null;
-            }
-
-            @Override
-            public Map<String, AreaDefinition> getAreas() {
-                return null;
-            }
-
-            @Override
-            public String getId() {
-                return null;
-            }
-
-            @Override
-            public void setId(String id) {
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public String getRenderType() {
-                return null;
-            }
-
-            @Override
-            public String getTitle() {
-                return null;
-            }
-
-            @Override
-            public String getDescription() {
-                return null;
-            }
-
-            @Override
-            public String getI18nBasename() {
-                return null;
-            }
-
-            @Override
-            public String getTemplateScript() {
-                return null;
-            }
-
-            @Override
-            public Map<String, Object> getParameters() {
-                return null;
-            }
-
-            @Override
-            public RenderingModel<?> newModel(Node content, RenderableDefinition definition, RenderingModel<?> parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-                return null;
-            }
-
-            @Override
-            public boolean isAvailable(Node content) {
-                return false;
-            }
-
-            @Override
-            public Map<String, ComponentAvailability> getAvailableComponents() {
-                return Collections.emptyMap();
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return true;
-            }
-
-            @Override
-            public String getType() {
-                return null;
-            }
-
-        };
-        areaElement.setArea(areaDef);
-        assertFalse(areaElement.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
-        areaElement.setArea(null);
-        assertTrue(areaElement.resolveAreaDefinition() instanceof ConfiguredAreaDefinition);
-    }
-
-    @Test
-    public void testNotCloningOfExplicitlySetAreaDefinition() throws Exception {
-        context.push(component01Node.getParent(), templateDefinition);
-        ConfiguredAreaDefinition defaultArea = new ConfiguredAreaDefinition();
-        defaultArea.setDescription("unmodified_description");
-        defaultArea.setDialog("unmodified_dialog");
-        defaultArea.setName("unmodified_name");
-
-        areaElement.setArea(defaultArea);
-        areaElement.setDialog("boo");
-        areaElement.setName("baz");
-
-        final StringWriter out = new StringWriter();
-        areaElement.begin(out);
-
-        assertEquals("boo", defaultArea.getDialog());
-        assertEquals("baz", defaultArea.getName());
-        assertEquals("list", defaultArea.getType());
-        assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n"
-                + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"baz\" availableComponents=\"\" type=\"list\" dialog=\"boo\" showAddButton=\"true\"></cms:area>"
-                + "\n", out.toString());
-    }
-
-    @Test
-    public void testCloningOfDynamicallyResolvedAreaDefinition() throws Exception {
-        context.push(component01Node.getParent(), templateDefinition);
-
-        areaElement.setName("boo");
-
-        final StringWriter out = new StringWriter();
-        areaElement.begin(out);
-
-        assertEquals("<!-- cms:begin cms:content=\"test:/foo/bar/baz/listArea\" -->"
-                + "\n"
-                + "<cms:area content=\"test:/foo/bar/baz/listArea\" name=\"boo\" availableComponents=\"\" type=\"list\" showAddButton=\"true\"></cms:area>"
-                + "\n", out.toString());
-    }
-     */
-
-    @After
-    public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
-        SystemProperty.clear();
-    }
 }
