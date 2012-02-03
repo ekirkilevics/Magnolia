@@ -60,6 +60,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
         this.controlsManager = controlsManager;
         this.pageHandlerManager = pageHandlerManager;
         this.treeHandlerManager = treeHandlerManager;
+        this.instance = this;
     }
 
     /**
@@ -68,7 +69,7 @@ public class AdminInterfaceModule implements ModuleLifecycle {
     private static AdminInterfaceModule instance;
 
     public AdminInterfaceModule() {
-        instance = this;
+        this.instance = this;
     }
 
     @Override
