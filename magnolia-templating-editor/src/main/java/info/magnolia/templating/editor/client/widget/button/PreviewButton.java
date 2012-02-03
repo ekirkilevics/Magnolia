@@ -50,7 +50,7 @@ import com.google.gwt.user.client.ui.MenuItem;
  */
 public final class PreviewButton extends Composite {
 
-    private static FlowPanel panel = new FlowPanel();
+    private FlowPanel panel = new FlowPanel();
     private Button defaultActionButton = new Button();
 
     public PreviewButton(final String caption, final Command defaultAction, final List<MenuItem> menuItems) {
@@ -73,11 +73,10 @@ public final class PreviewButton extends Composite {
         panel.add(dropdown);
     }
 
-    /**
+    /*
      * Extends {@link DropdownButton} in order to left align itself with the default (lhs) button.
-     * @version $Id$
      */
-    private static final class PreviewDropdownButton extends DropdownButton {
+    private final class PreviewDropdownButton extends DropdownButton {
 
         public PreviewDropdownButton(final List<MenuItem> menuItems) {
             super("-", menuItems); // We have to put at least a label here to ensure it gets properly aligned with other text buttons around.
