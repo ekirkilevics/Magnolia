@@ -224,7 +224,7 @@ public class MgnlContext {
     }
 
     /**
-     * Set attribute value, scope of the attribute is defined.
+     * Set attribute value, scope of the attribute is {@link Context#LOCAL_SCOPE}.
      */
     public static void setAttribute(String name, Object value) {
         getInstance().setAttribute(name, value, Context.LOCAL_SCOPE);
