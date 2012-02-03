@@ -166,19 +166,22 @@ public class ImportPage extends ExportPage {
                     + mgnlPath
                     + "]"));
         }
-
-        DataTransporter.importDocument(
-            mgnlFileImport,
-            mgnlRepository,
-            mgnlPath,
-            mgnlKeepVersions,
-            mgnlUuidBehavior,
-            true,
-            true);
+        try{
+            DataTransporter.importDocument(
+                    mgnlFileImport,
+                    mgnlRepository,
+                    mgnlPath,
+                    mgnlKeepVersions,
+                    mgnlUuidBehavior,
+                    true,
+                    true);
+        }catch (Exception e) {
+            throw e;
+        } finally {
+            mgnlFileImport.getFile().delete();
+        }
 
         log.info("Import done");
-
-        mgnlFileImport.getFile().delete();
 
         if (StringUtils.isNotBlank(mgnlRedirect)) {
             if (log.isInfoEnabled()) {
