@@ -247,10 +247,11 @@ button.mgnlEditorButton:active {
 /* Component place holder */
 .mgnlPlaceHolder.component {
   width: 100%;
+  height: 50px;
 
   margin: 5px 0;  /* Ensure the ph is not too close to the surrounding elements. */
 
-  border: 1px solid #a1c332;
+  border: 2px dotted #a1c332;
   background-color: transparent;
 
   display:table;  /* For vertically aligning inner elements. */
