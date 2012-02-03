@@ -34,6 +34,7 @@
 package info.magnolia.templating.editor.client.dom;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -102,6 +103,10 @@ public class CMSComment {
 
     public String getAttribute(String name) {
         return this.attributes.get(name);
+    }
+
+    public Map<String, String> getAttributes() {
+        return this.attributes;
     }
 
     public boolean hasAttribute(String name) {

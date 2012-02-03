@@ -34,6 +34,8 @@
 package info.magnolia.templating.editor.client.widget.controlbar;
 
 
+import java.util.Map;
+
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
@@ -57,50 +59,35 @@ public class AreaBar extends AbstractBar {
     private String path;
 
     private String name;
-    private String availableComponents;
     private String type;
     private String dialog;
-    private boolean showAddButton = true;
     private boolean optional = false;
     private boolean created = true;
 
-    public AreaBar(MgnlElement mgnlElement) {
+    public AreaBar(MgnlElement mgnlElement) throws IllegalArgumentException {
         super(mgnlElement);
 
-        String content = mgnlElement.getComment().getAttribute("content");
-        if (content != null) {
-            int i = content.indexOf(':');
-
-            this.workspace = content.substring(0, i);
-            this.path = content.substring(i + 1);
-           }
-
-        setVisible(false);
-
-        this.name = mgnlElement.getComment().getAttribute("name");
-        this.type = mgnlElement.getComment().getAttribute("type");
+        checkMandatories(mgnlElement.getComment().getAttributes());
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
-        if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
-            this.availableComponents = "";
-        } else {
-            this.availableComponents = mgnlElement.getComment().getAttribute("availableComponents");
-        }
+        this.addStyleName("area");
 
-        this.dialog = mgnlElement.getComment().getAttribute("dialog");
-        if (mgnlElement.getComment().hasAttribute("showAddButton")) {
-            this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
-        }
-        if (mgnlElement.getComment().hasAttribute("optional")) {
-            this.optional = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("optional"));
-            this.created = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("created"));
-        }
-
-
+        setVisible(false);
         createButtons();
 
-        this.addStyleName("area");
+        attach();
+        PageEditor.model.addEditBar(getMgnlElement(), this);
+
+    }
+
+    public void attach() {
+        if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
+            attach(getMgnlElement());
+        }
+        else {
+            attach(getMgnlElement().getComment().getElement());
+        }
     }
 
     public void attach(MgnlElement mgnlElement) {
@@ -111,29 +98,8 @@ public class AreaBar extends AbstractBar {
         onAttach();
     }
 
-    public String getAvailableComponents() {
-        return availableComponents;
-    }
-
-    public String getType() {
-        return type;
-    }
-
     private void createButtons() {
-        if(this.optional) {
-            if(!this.created) {
-                Button createButton = new Button(getI18nMessage("buttons.create.js"));
-                createButton.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        PageEditor.createComponent(workspace, path, "mgnl:area");
-                    }
-                });
-                addButton(createButton, Float.RIGHT);
-
-            } else {
-                createEditAndAddComponentButtons();
-
+        if(this.optional && this.created) {
                 Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
@@ -143,13 +109,7 @@ public class AreaBar extends AbstractBar {
                 });
                 removeButton.addStyleName("mgnlRemoveButton");
                 addButton(removeButton, Float.RIGHT);
-            }
-        } else {
-            createEditAndAddComponentButtons();
         }
-    }
-
-    private void createEditAndAddComponentButtons() {
         if (this.dialog != null) {
             Button editButton = new Button(getI18nMessage("buttons.edit.js"));
             editButton.addClickHandler(new ClickHandler() {
@@ -160,20 +120,49 @@ public class AreaBar extends AbstractBar {
             });
             addButton(editButton, Float.RIGHT);
         }
-
-        if (this.showAddButton) {
-            Button addButton = new Button(getI18nMessage("buttons.add.js"));
-            addButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    if (!AreaDefinition.TYPE_NO_COMPONENT.equals(type)) {
-                        PageEditor.addComponent(workspace, path, null, availableComponents);
-                    }
-                }
-            });
-            addButton(addButton, Float.RIGHT);
-        }
     }
 
+    private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
+
+        String content = attributes.get("content");
+        if (content != null) {
+            int i = content.indexOf(':');
+
+            this.workspace = content.substring(0, i);
+            this.path = content.substring(i + 1);
+        }
+
+        this.name = attributes.get("name");
+        this.type = attributes.get("type");
+
+        this.dialog = attributes.get("dialog");
+
+        String availableComponents = "";
+        if(!AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
+            availableComponents = attributes.get("availableComponents");
+        }
+
+        boolean showAddButton = Boolean.parseBoolean(attributes.get("showAddButton"));
+        this.optional = Boolean.parseBoolean(attributes.get("optional"));
+        this.created = Boolean.parseBoolean(attributes.get("created"));
+
+        // area can be deleted or created
+        if (this.optional) {
+            return;
+        }
+
+        // can add components to area
+        else if (showAddButton && !availableComponents.isEmpty()) {
+            return;
+        }
+
+        // area can be edited
+        else if (dialog != null && !dialog.isEmpty()) {
+            return;
+        }
+        else {
+            throw new IllegalArgumentException("Not injecting any Areabar");
+        }
+    }
 
 }

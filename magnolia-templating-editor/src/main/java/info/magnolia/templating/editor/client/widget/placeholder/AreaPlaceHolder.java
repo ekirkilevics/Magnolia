@@ -35,7 +35,6 @@ package info.magnolia.templating.editor.client.widget.placeholder;
 
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.model.ModelStorage;
 
 
 import com.google.gwt.dom.client.Element;
@@ -61,10 +60,11 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         add(areaName);
 
         ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(mgnlElement);
-        ModelStorage.getInstance().addComponentPlaceHolder(mgnlElement, placeHolder);
 
         add(placeHolder);
         attach();
+        PageEditor.model.addAreaPlaceHolder(getMgnlElement(), this);
+
     }
 
     public void attach() {

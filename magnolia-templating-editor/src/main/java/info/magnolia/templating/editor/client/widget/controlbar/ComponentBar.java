@@ -86,17 +86,19 @@ public class ComponentBar extends AbstractBar {
         }
         this.isInherited = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("inherited"));
 
-        createButtons();
-
-        createMouseEventsHandlers();
-
         addStyleName("component");
         if (isInherited) {
             addStyleName("mgnlInherited");
         }
-//        getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        else {
+            createButtons();
+            createMouseEventsHandlers();
+        }
+
         setVisible(false);
         attach();
+        PageEditor.model.addEditBar(getMgnlElement(), this);
+
     }
 
     private void createMouseEventsHandlers() {

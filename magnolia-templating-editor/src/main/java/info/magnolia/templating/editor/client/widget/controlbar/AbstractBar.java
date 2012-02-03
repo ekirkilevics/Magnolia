@@ -53,7 +53,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class AbstractBar extends FlowPanel {
 
-    public boolean hasControls = false;
     private String label = "";
     private FlowPanel buttonWrapper;
     private MgnlElement mgnlElement;
@@ -95,7 +94,6 @@ public abstract class AbstractBar extends FlowPanel {
         button.getElement().getStyle().setFloat(cssFloat);
 
         buttonWrapper.add(button);
-        hasControls = true;
     }
 
     /**
@@ -110,7 +108,6 @@ public abstract class AbstractBar extends FlowPanel {
         button.getElement().getStyle().setFloat(cssFloat);
 
         buttonWrapper.add(button);
-        hasControls = true;
     }
 
     protected void setClassName(String className) {

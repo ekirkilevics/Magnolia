@@ -90,13 +90,15 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         setVisible(false);
 
+
         add(elementWrapper);
 
         createMouseEventsHandlers();
+        PageEditor.model.addComponentPlaceHolder(mgnlElement, this);
     }
     private void createMouseEventsHandlers() {
 
-        if (this.optional) {
+        if (this.optional && !this.created) {
             if(!this.created) {
                 addDomHandler(new MouseDownHandler() {
 
@@ -107,12 +109,8 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
                     }
                 }, MouseDownEvent.getType());
             }
-            else {
-                // move content away from edit
-                //pageEditor.deleteComponent(path);
-            }
-        }
 
+        }
         else if (this.showAddButton){
             addDomHandler(new MouseDownHandler() {
 

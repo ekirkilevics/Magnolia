@@ -33,6 +33,8 @@
  */
 package info.magnolia.templating.editor.client.dom.processor;
 
+import com.google.gwt.core.client.GWT;
+
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
@@ -51,34 +53,25 @@ public class AreaProcessor extends MgnlElementProcessor {
 
     @Override
     public void process() {
-        AreaBar areaBarWidget = new AreaBar(getMgnlElement());
-        if (areaBarWidget.hasControls) {
-
-            if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
-                    areaBarWidget.attach(getMgnlElement());
-            }
-            else {
-                areaBarWidget.attach(getMgnlElement().getComment().getElement());
-            }
-
-            PageEditor.model.addEditBar(getMgnlElement(), areaBarWidget);
+        AreaBar areaBar = null;
+        try {
+            areaBar = new AreaBar(getMgnlElement());
 
             boolean noComponent = getMgnlElement().getComment().getAttribute("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
             if (getMgnlElement().getComponents().isEmpty() && !noComponent) {
-
                 AreaPlaceHolder placeHolder = new AreaPlaceHolder(getMgnlElement());
-
-                PageEditor.model.addAreaPlaceHolder(getMgnlElement(), placeHolder);
             }
 
             else if (!noComponent) {
                 ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(getMgnlElement());
-
-                PageEditor.model.addComponentPlaceHolder(getMgnlElement(), placeHolder);
                 placeHolder.attach();
             }
         }
-        else {
+        catch (IllegalArgumentException e) {
+            GWT.log("Not creating areabar for this element. Missing parameters. Will be deleted.");
+        }
+
+        if (areaBar == null) {
             // if the area has no controls we, don't want it in the structure.
 
             // delete the element from the tree
