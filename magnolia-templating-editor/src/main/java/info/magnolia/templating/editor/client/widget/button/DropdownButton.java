@@ -46,7 +46,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 /**
  * A button which, when clicking on it, will display a dropdown menu just beneath. The menu can have different mutually exclusive choices.
  * Each choice corresponds to a {@link MenuItem}. The order in which these options are added in the menu bar is the same in which
- * they are in the list or array passed in to the object's constructor. A menu item can also accept a further {@link MenuBar} as a parameter. This will enable sub menus.
+ * they are in the list or array passed in to the object's constructor. A menu item can also accept a further {@link MenuBar} as a parameter, thus enabling sub menus.
  * <p>Usage sample:
  * <pre>
  *  ...
