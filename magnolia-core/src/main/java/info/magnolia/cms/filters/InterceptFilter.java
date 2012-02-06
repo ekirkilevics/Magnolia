@@ -171,12 +171,12 @@ public class InterceptFilter extends AbstractMgnlFilter {
             log.debug("preview request parameter value is {} ", preview);
             if (preview != null) {
                 if (Boolean.parseBoolean(preview)) {
-                    log.debug("setting {} attribute", MGNL_PREVIEW_ATTRIBUTE);
                     MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
                 } else {
-                    log.debug("removing {} attribute", MGNL_PREVIEW_ATTRIBUTE);
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                 }
+            } else {
+                MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
             }
         } else if (ACTION_NODE_DELETE.equals(action)) {
             // delete paragraph

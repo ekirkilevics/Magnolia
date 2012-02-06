@@ -107,6 +107,7 @@ public class InterceptFilterTest {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("PREVIEW");
         when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn("false");
+        ctx.setAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, "true", Context.SESSION_SCOPE);
         InterceptFilter filter = new InterceptFilter();
 
         //WHEN
@@ -116,6 +117,7 @@ public class InterceptFilterTest {
         assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
 
         //GIVEN
+        ctx.setAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, "true", Context.SESSION_SCOPE);
         when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn(null);
 
         //WHEN
