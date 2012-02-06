@@ -39,10 +39,13 @@ import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
 import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
+import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.freemarker.FreemarkerUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -91,8 +94,15 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
      */
     @Override
     public void initList(ListControl list) {
-        super.initList(list);
-        ((SearchableListModel) list.getModel()).setQuery(this.getQuery());
+        if(StringUtils.isNotBlank(this.searchStr)){
+            super.initList(list);
+            ((SearchableListModel) list.getModel()).setQuery(this.getQuery());
+        }else{
+            super.initList(list);
+            SearchQuery query = new SearchQuery();
+            query.setRootExpression(new StringSearchQueryParameter("*", "*$", StringSearchQueryParameter.CONTAINS));
+            ((SearchableListModel) list.getModel()).setQuery(query);            
+        }
     }
 
     /**
