@@ -38,7 +38,6 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
@@ -46,11 +45,11 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.FalseCondition;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
@@ -90,15 +89,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public CoreModuleVersionHandler() {
         super();
 
-        register(DeltaBuilder.update("4.4.6", "").addTask(
-                new AbstractTask("checkPrerequisite",
-                        "4.5 can only be installed from 4.4.6 - stop execution if current version is older.") {
-                    @Override
-                    public void execute(InstallContext installContext) throws TaskExecutionException {
-                        throw new TaskExecutionException(
-                                "You have to have a version 4.4.6 installed in order to upgrade to 4.5!");
-                    }
-                }));
+        register(DeltaBuilder.update("4.4.6", "")
+                .addCondition(new FalseCondition("checkPrerequisite", "Updating to 4.5 is only supported from 4.4.6. Please udate to 4.4.6 first.")));
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())
