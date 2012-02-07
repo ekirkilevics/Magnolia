@@ -175,8 +175,6 @@ public class ImportPage extends ExportPage {
                     mgnlUuidBehavior,
                     true,
                     true);
-        }catch (Exception e) {
-            throw e;
         } finally {
             mgnlFileImport.getFile().delete();
         }
