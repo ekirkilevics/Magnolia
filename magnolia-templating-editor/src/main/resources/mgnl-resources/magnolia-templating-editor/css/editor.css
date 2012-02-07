@@ -250,6 +250,9 @@ button.mgnlEditorButton:active {
 /* Component place holder */
 .mgnlPlaceHolder.component {
   width: 100%;
+  border-bottom: 5px solid #487000;
+  border-radius: 0 0 7px 7px;
+  margin-bottom: 20px;
 }
 
 .mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {

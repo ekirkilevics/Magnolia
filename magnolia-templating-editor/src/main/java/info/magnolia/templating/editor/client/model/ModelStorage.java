@@ -97,6 +97,9 @@ public class ModelStorage {
 
     public void addElement(MgnlElement mgnlElement, Element element) {
 
+        if (mgnlElement == null || element == null) {
+            return;
+        }
         mgnlElements.put(element, mgnlElement);
 
         if (elements.get(mgnlElement) != null) {
@@ -111,12 +114,16 @@ public class ModelStorage {
 
     public void addElements(MgnlElement mgnlElement, Element element) {
 
+        if (mgnlElement == null || element == null) {
+            return;
+        }
         addElement(mgnlElement, element);
+
         for (int i = 0; i < element.getChildCount(); i++) {
             Node childNode = element.getChild(i);
             if (childNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element child = childNode.cast();
-                addElement(mgnlElement, child);
+                addElements(mgnlElement, child);
             }
         }
 
