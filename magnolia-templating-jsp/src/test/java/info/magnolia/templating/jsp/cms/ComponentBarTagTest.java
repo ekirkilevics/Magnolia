@@ -63,9 +63,9 @@ public class ComponentBarTagTest extends AbstractTagTestCase {
 
         // THEN
         //Check first div (default dialog)
-        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"testDialog\" -->"));
+        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"testDialog\" label=\"Test Paragraph 1\" -->"));
         //Check second div (nyCustomDialog) defining a dialog
-        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"myCustomDialog\" -->\n<!-- /cms:component -->\n"));
+        assertThat(responseStr, containsString("<!-- cms:component content=\"website:/foo/bar/paragraphs/1\" dialog=\"myCustomDialog\" label=\"Test Paragraph 1\" -->\n<!-- /cms:component -->\n"));
 
   }
 
