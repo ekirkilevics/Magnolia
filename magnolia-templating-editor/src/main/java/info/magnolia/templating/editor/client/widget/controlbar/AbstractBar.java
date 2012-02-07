@@ -60,6 +60,12 @@ public abstract class AbstractBar extends FlowPanel {
     public AbstractBar(MgnlElement mgnlElement) {
 
         this.setMgnlElement(mgnlElement);
+
+        buttonWrapper = new FlowPanel();
+        buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
+
+        add(buttonWrapper);
+
         if (mgnlElement != null) {
             this.label = mgnlElement.getComment().getAttribute("label");
             if (label != null && !label.isEmpty()) {
@@ -72,10 +78,7 @@ public abstract class AbstractBar extends FlowPanel {
                 add(areaName);
             }
         }
-        buttonWrapper = new FlowPanel();
-        buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
 
-        add(buttonWrapper);
 
 
         setClassName("mgnlEditorBar");

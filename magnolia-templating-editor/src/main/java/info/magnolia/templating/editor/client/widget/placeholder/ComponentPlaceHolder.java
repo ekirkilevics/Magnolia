@@ -33,11 +33,14 @@
  */
 package info.magnolia.templating.editor.client.widget.placeholder;
 
+import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -59,6 +62,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private String areaWorkspace = "";
     private String areaPath = "";
     private String name = "";
+    private FlowPanel buttonWrapper;
 
     public ComponentPlaceHolder(MgnlElement mgnlElement) {
 
@@ -83,20 +87,35 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         this.addStyleName("component");
 
+        FlowPanel controlBar = new FlowPanel();
+        controlBar.setStyleName("mgnlEditorBar");
+        controlBar.addStyleName("placeholder");
+
+        buttonWrapper = new FlowPanel();
+        buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
+
+        controlBar.add(buttonWrapper);
+
+        Label label = new Label("New Label goes here");
+        label.setStyleName("mgnlEditorBarLabel");
+        controlBar.add(label);
+
+        add(controlBar);
+
         FlowPanel elementWrapper = new FlowPanel();
         elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
 
         elementWrapper.add(new Label("New Component"));
-        elementWrapper.add(new Button("Add here"));
 
         setVisible(false);
 
 
         add(elementWrapper);
 
-        createMouseEventsHandlers();
+        createButtons();
         PageEditor.model.addComponentPlaceHolder(mgnlElement, this);
     }
+
     private void createMouseEventsHandlers() {
 
         if (this.optional && !this.created) {
@@ -121,6 +140,36 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
                 }
             }, MouseDownEvent.getType());
+        }
+    }
+
+    private void createButtons() {
+
+        if (this.optional && !this.created) {
+            if(!this.created) {
+                Button button = new Button(getI18nMessage("buttons.create.js"));
+                button.setStylePrimaryName("mgnlEditorButton");
+
+                button.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        PageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
+                    }
+                });
+                buttonWrapper.add(button);
+            }
+        }
+        else if (this.showAddButton){
+            Button button = new Button(getI18nMessage("buttons.add.js"));
+            button.setStylePrimaryName("mgnlEditorButton");
+
+            button.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    PageEditor.addComponent(areaWorkspace, areaPath, null, availableComponents);
+                }
+            });
+            buttonWrapper.add(button);
         }
     }
 

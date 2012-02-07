@@ -58,7 +58,7 @@ div.mgnlEditorBar {
  * 	 base color: #91ba26
  *   with overlaid gradient: #81a312, transparency shifting from 100% to 0%
  */
-.mgnlEditorBar.component {
+.mgnlEditorBar.component, .mgnlEditorBar.placeholder {
   border-top: 1px solid #91ba26;
   border-left: 1px solid #91ba26;
   border-bottom: 1px solid #719302;
@@ -136,7 +136,7 @@ div.mgnlEditorBar {
 }
 
 /* Buttons on component edit bar. */
-.mgnlEditorBar.component button.mgnlEditorButton {
+.mgnlEditorBar.component button.mgnlEditorButton, .mgnlEditorBar.placeholder button.mgnlEditorButton {
   border-top: 1px solid #c1ea56;
   border-left: 1px solid #c1ea56;
   border-bottom: 1px solid #719302;
@@ -191,7 +191,6 @@ button.mgnlEditorButton:active {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  float: left !important; /* Ensure the label does not let buttons drop off the bar. */
 }
 
 .mgnlEditorOverlay {
@@ -209,7 +208,6 @@ button.mgnlEditorButton:active {
  /* General place holder definitions */
 .mgnlPlaceHolder {
   clear: both;
-  cursor: pointer;
 
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widhts. */
@@ -217,7 +215,6 @@ button.mgnlEditorButton:active {
   -moz-box-sizing: border-box;    /* Firefox, other Gecko */
   box-sizing: border-box;         /* IE 8+ */
 
-  background-color: #eeeeee;
   color: #487000;
 
   font-family: Verdana, sans-serif;
@@ -230,6 +227,8 @@ button.mgnlEditorButton:active {
   padding: 0;
 
   border-radius: 0 0 7px 7px;
+    background-color: #eeeeee;
+
   color: #aaaaaa;
 }
 /* FIXME: remove this def when we don't show area ph labels any more. */
@@ -251,51 +250,10 @@ button.mgnlEditorButton:active {
 /* Component place holder */
 .mgnlPlaceHolder.component {
   width: 100%;
-  height: 50px;
-
-  margin: 5px 0;  /* Ensure the ph is not too close to the surrounding elements. */
-
-  border: 2px dotted #a1c332;
-
-  display:table;  /* For vertically aligning inner elements. */
 }
 
 .mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
-
-  display:table-cell;  /* For vertically aligning inner elements. */
-  vertical-align: middle;
-
-  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
   padding: 7px 7px;
-}
-
-.mgnlPlaceHolder.component .gwt-Label {
-  float: left;
-  display: inline-block;
-
-  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
-
-  line-height: 20px;
-  font-size: 12px; /* Make it a bit bigger than usual */
-}
-.mgnlPlaceHolder.component .gwt-Button {
-  float: right;
-
-  height: 20px; /* have to give the height for all browsers to properly calculate it. */
-
-  margin: 0 !important; /* Vertical alignment break, if more specific selectors override this. */
-  padding: 0 3px 0 3px;
-
-  border-top: 1px solid #c1ea56;
-  border-left: 1px solid #c1ea56;
-  border-bottom: 1px solid #719302;
-  border-right: 1px solid #719302;
-
-  color: #004000;
-  background-color: #91ba26;
-
-  font-family: Verdana, sans-serif;
-  font-size: 11px;
 }
 
 /* Component ph following are ph should have not top margin. */
