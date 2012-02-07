@@ -124,6 +124,28 @@ public abstract class AbstractBar extends FlowPanel {
     /**
      *  TODO: we should not have to call onAttach ourself?
      */
+
+    public void attach() {
+        if (getMgnlElement().getEditElement() != null) {
+            Element parent = getMgnlElement().getEditElement();
+            parent.insertFirst(getElement());
+        }
+        else if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
+            attach(getMgnlElement());
+        }
+        else {
+            attach(getMgnlElement().getComment().getElement());
+        }
+    }
+
+    public void attach(MgnlElement mgnlElement) {
+        Element element = mgnlElement.getFirstElement();
+        if (element != null) {
+            element.insertFirst(getElement());
+        }
+        onAttach();
+    }
+
     public void attach(Element element) {
         final Node parentNode = element.getParentNode();
         parentNode.insertAfter(getElement(), element);

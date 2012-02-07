@@ -38,8 +38,6 @@ import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -168,23 +166,4 @@ public class ComponentBar extends AbstractBar {
             addButton(removeButton, Float.RIGHT);
         }
     }
-
-    private void attach() {
-        Element element = getMgnlElement().getFirstElement();
-        if (element != null) {
-            if (element.getFirstChild() != null && element.getFirstChild().getNodeType() == Node.ELEMENT_NODE) {
-                Element child = element.getFirstChild().cast();
-                String classname = child.getClassName();
-                if (classname.contains("mgnlEditorBar")) {
-                    element.insertAfter(getElement(), child);
-                    onAttach();
-                    return;
-                }
-            }
-
-            element.insertFirst(getElement());
-            onAttach();
-        }
-    }
-
 }

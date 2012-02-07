@@ -47,7 +47,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.dom.client.Element;
 
 
 /**
@@ -79,23 +78,6 @@ public class AreaBar extends AbstractBar {
         attach();
         PageEditor.model.addEditBar(getMgnlElement(), this);
 
-    }
-
-    public void attach() {
-        if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
-            attach(getMgnlElement());
-        }
-        else {
-            attach(getMgnlElement().getComment().getElement());
-        }
-    }
-
-    public void attach(MgnlElement mgnlElement) {
-        Element element = mgnlElement.getFirstElement();
-        if (element != null) {
-            element.insertFirst(getElement());
-        }
-        onAttach();
     }
 
     private void createButtons() {

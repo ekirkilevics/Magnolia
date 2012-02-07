@@ -68,8 +68,14 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
     }
 
     public void attach() {
-        Element parent = PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement();
-        parent.insertAfter(getElement(), PageEditor.model.getEditBar(getMgnlElement()).getElement());
+        Element parent = getMgnlElement().getAreaElement();
+        if (parent == null) {
+            parent = PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement();
+            parent.insertAfter(getElement(), PageEditor.model.getEditBar(getMgnlElement()).getElement());
+        }
+        else {
+            parent.insertFirst(getElement());
+        }
 
         onAttach();
     }

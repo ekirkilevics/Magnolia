@@ -64,18 +64,7 @@ public class ElementProcessor {
                 mgnlElement.setLastElement(element);
             }
 
-            if (mgnlElement.isComponent()) {
-                MgnlElement area = mgnlElement.getParentArea();
 
-                if (area != null) {
-                    if (area.getFirstElement() == null) {
-                        area.setFirstElement(element);
-                    }
-                    if (area.getLastElement() == null || !area.getLastElement().isOrHasChild(element)) {
-                        area.setLastElement(element);
-                    }
-                }
-            }
 
         if (element.hasAttribute(CMS_ADD)) {
             mgnlElement.setComponentElement(element);
