@@ -144,7 +144,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
             executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.5"));
         } catch (Throwable t) {
             assertTrue(t instanceof AssertionError);
-            assertTrue(t.getMessage().contains("checkPrerequisite"));
+            assertTrue(t.getMessage().contains("<stoppedConditionsNotMet>"));
         }
     }
 }
