@@ -64,7 +64,7 @@ public class ComponentElementTest extends AbstractElementTestCase {
         element.begin(out);
 
         // THEN
-        assertEquals("<!-- cms:component content=\"website:/foo/bar/paragraphs/0\" dialog=\"dialog\" -->\n", out.toString());
+        assertEquals("<!-- cms:component content=\"website:/foo/bar/paragraphs/0\" dialog=\"dialog\" label=\"Title\" description=\"Description\" -->\n", out.toString());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ComponentElementTest extends AbstractElementTestCase {
         element.begin(out);
 
         // THEN
-        assertEquals("<!-- cms:component content=\"website:/foo/bar/paragraphs/0\" dialog=\"dialogNew\" -->\n", out.toString());
+        assertEquals("<!-- cms:component content=\"website:/foo/bar/paragraphs/0\" dialog=\"dialogNew\" label=\"Title\" description=\"Description\" -->\n", out.toString());
     }
 
     @Test

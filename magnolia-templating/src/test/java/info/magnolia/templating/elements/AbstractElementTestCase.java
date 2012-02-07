@@ -177,7 +177,8 @@ public abstract class AbstractElementTestCase {
         // Set TemplateDefinition
         final TemplateDefinitionAssignment templateDefinitionAssignment = mock(TemplateDefinitionAssignment.class);
         templateDefinition = new ConfiguredTemplateDefinition();
-        templateDefinition.setName("testParagraph0");
+        templateDefinition.setName("testComponent");
+        templateDefinition.setTitle("Title");
         templateDefinition.setI18nBasename("info.magnolia.templating.test_messages");
         templateDefinition.setDialog("dialog");
         templateDefinition.setRenderType("renderType");

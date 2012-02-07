@@ -34,6 +34,8 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
@@ -104,10 +106,20 @@ public class ComponentElement extends AbstractContentTemplatingElement {
             } catch (RegistrationException e) {
                 throw new RenderException("No template definition found for the current content", e);
             }
+
+            final Messages messages = MessagesManager.getMessages(componentDefinition.getI18nBasename());
+
             if(StringUtils.isEmpty(dialog)) {
                 dialog = resolveDialog(componentDefinition);
             }
             helper.attribute("dialog", dialog);
+
+            String label = StringUtils.defaultIfEmpty(componentDefinition.getTitle(),componentDefinition.getName());
+            helper.attribute("label", messages.getWithDefault(label, label));
+
+            if(StringUtils.isNotEmpty(componentDefinition.getDescription())){
+                helper.attribute("description", componentDefinition.getDescription());
+            }
             helper.append(" -->\n");
         }
 
