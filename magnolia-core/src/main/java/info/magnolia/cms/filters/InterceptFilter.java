@@ -61,7 +61,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Handle intercepted administrative requests.
  * @version $Id$
- * TODO: review removal of synchronized block for all actions. See also http://jira.magnolia-cms.com/browse/MAGNOLIA-3905.
  */
 public class InterceptFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(InterceptFilter.class);
