@@ -35,9 +35,12 @@ package info.magnolia.cms.security;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import javax.security.auth.Subject;
 
+import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollectionImpl;
 
 /**
@@ -98,7 +101,7 @@ public class Security {
         }
 
         PrincipalCollectionImpl principalCollection = new PrincipalCollectionImpl();
-        principalCollection.addAll(acls);
+        mergePrincipals(principalCollection, acls);
 
         Subject subject = new Subject();
         subject.getPrincipals().add(user);
@@ -106,4 +109,17 @@ public class Security {
         return subject;
     }
 
+    private static void mergePrincipals(PrincipalCollectionImpl principalCollection, List<Principal> acls) {
+        for (Principal principal : acls) {
+            ACL princ = (ACL) principal;
+            if (principalCollection.contains(princ.getName())) {
+                ACL oldACL = (ACL) principalCollection.get(princ.getName());
+                Collection<Permission> permissions = new HashSet<Permission>(oldACL.getList());
+                permissions.addAll(princ.getList());
+                principalCollection.remove(oldACL);
+                princ = new ACLImpl(princ.getName(), new ArrayList<Permission>(permissions));
+            }
+            principalCollection.add(princ);
+        }
+    }
 }
