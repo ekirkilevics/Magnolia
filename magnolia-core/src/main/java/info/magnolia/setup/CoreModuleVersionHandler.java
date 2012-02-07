@@ -33,35 +33,24 @@
  */
 package info.magnolia.setup;
 
-import static info.magnolia.nodebuilder.Ops.addNode;
-import static info.magnolia.nodebuilder.Ops.addProperty;
-import static info.magnolia.nodebuilder.Ops.getNode;
-import static info.magnolia.nodebuilder.Ops.remove;
+import static info.magnolia.nodebuilder.Ops.*;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AddMimeMappingTask;
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
-import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
-import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.FilterOrderingTask;
-import info.magnolia.module.delta.MoveNodeTask;
-import info.magnolia.module.delta.NewPropertyTask;
-import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
-import info.magnolia.module.delta.PropertyExistsDelegateTask;
-import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.delta.WarnTask;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
@@ -71,10 +60,6 @@ import info.magnolia.setup.for3_5.GenericTasks;
 import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
 import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
-import info.magnolia.setup.for3_6_2.UpdateGroups;
-import info.magnolia.setup.for3_6_2.UpdateRoles;
-import info.magnolia.setup.for3_6_2.UpdateUsers;
-import info.magnolia.setup.for4_3.UpdateUserPermissions;
 import info.magnolia.setup.for4_5.RenameACLNodesTask;
 import info.magnolia.setup.for4_5.UpdateSecurityFilterClientCallbacksConfiguration;
 import info.magnolia.setup.for4_5.UpdateUserManagers;
@@ -86,14 +71,7 @@ import java.util.List;
  * Special VersionHandler for the core module. As it does not extend {@link info.magnolia.module.DefaultModuleVersionHandler} it has a special getBasicInstallTasks(InstallContext) that
  * e.g. will not automatically bootstrap xml-files placed in mgnl-bootstrap/core.
  *
- * TODO dlipp: cleanup outdated javadoc below:
- * 3.5 being the first version of core as a module, it is always "installed",
- * but we need it to behave differently if magnolia was installed previously
- * (ie. updating from 3.0), which is why there are so many "conditional
- * tasks". Once 3.5 is out the door, this will need to be revised
- * completely.
- *
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
@@ -112,151 +90,15 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public CoreModuleVersionHandler() {
         super();
 
-        register(DeltaBuilder.update("3.5", "")
-                .addTasks(GenericTasks.genericTasksFor35())
-        );
-
-        register(DeltaBuilder.update("3.6", "")
-                .addCondition(new CheckNodeTypesDefinition())
-                .addTask(new CheckMagnoliaDevelopProperty())
-                .addTask(new CheckNodesForMixVersionable())
-        );
-
-        final CheckAndModifyPropertyValueTask log4jServletMapping = new CheckAndModifyPropertyValueTask("Mapping for log4j configuration servlet", "Fixes the mapping for the log4j configuration servlet, making it specification compliant.",
-                RepositoryConstants.CONFIG,
-                "/server/filters/servlets/log4j/mappings/--magnolia-log4j-",
-                "pattern", "/.magnolia/log4j*", "/.magnolia/log4j"
-        );
-
-        register(DeltaBuilder.update("3.6.2", "")
-                .addTask(new UpdateUsers())
-                .addTask(new UpdateRoles())
-                .addTask(new UpdateGroups())
-                .addTask(log4jServletMapping)
-        );
-
-        register(DeltaBuilder.update("3.6.4", "")
-                .addTask(new AddMimeMappingTask("flv", "video/x-flv", "/.resources/file-icons/flv.png"))
-                .addTask(new AddMimeMappingTask("svg", "image/svg+xml", "/.resources/file-icons/svg.png"))
-                .addTask(new CheckAndModifyPropertyValueTask("PNG MIME mapping", "Checks and updates PNG MIME mapping if not correct.", RepositoryConstants.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream", "image/png"))
-                .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", RepositoryConstants.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash"))
-        );
-
-        register(DeltaBuilder.update("3.6.7", "")
-                // since these mimetypes were correct with the 3.6.4 release, but with wrong values, and this
-                // has only been recognized after 4.0.1 and 4.1 were released, we need to apply the same
-                // fix tasks for 3.6.7, 4.0.2 and 4.1.1
-                .addTask(fixMimetype("png", "image/png;", "image/png"))
-                .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
-        );
-
-        final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Updates the link rendering implementation class.", RepositoryConstants.CONFIG, "/server/rendering/linkResolver", "class", "info.magnolia.cms.link.LinkResolverImpl", "info.magnolia.link.LinkTransformerManager");
-        final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates the link management configuration.", RepositoryConstants.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
-        register(DeltaBuilder.update("4.0", "")
-                .addTask(auditTrailManagerTask)
-                .addTask(bootstrapFreemarker)
-                .addTask(updateLinkResolverClass)
-                .addTask(renameLinkResolver)
-                .addTask(new ChangeNodeTypesInUserWorkspace())
-        );
-
-        register(DeltaBuilder.update("4.0.2", "")
-                // the two tasks below - updateUsers and CAMPVT(Fix anonymous permissions) are also executed for 3.6.6 set on 3.6 branch. This is due to fact that tasks needed to be applied on 3.6 branch after 4.0 release already. Tasks are safe to be executed multiple times.
-                .addTask(new UpdateUsers())
-                .addTask(new CheckAndModifyPropertyValueTask("Fix for anonymous user permissions", "Fix previously incorrect path for anonymous user permissions.", RepositoryConstants.USERS, "/system/anonymous/acl_users/0", "path", "/anonymous/*", "/system/anonymous/*"))
-
-                // warning - if adding update tasks for the 4.0.2 release below this point,
-                // make sure they'd also be applied correctly for the 4.1 branch in the various possible update scenarios
-                // since 4.1 will be released before 4.0.2 (4.0.2 -> 4.1 -> 4.1.1; 4.0.1 -> 4.1 -> 4.1.1)
-        );
-
-        register(DeltaBuilder.update("4.0.3", "")
-
-                // since these mimetypes were correct with the 3.6.4 release, but with wrong values, and this
-                // has only been recognized after 4.0.1 and 4.1 were released, we need to apply the same
-                // fix tasks for 3.6.7, 4.0.3 and 4.1.1
-                .addTask(fixMimetype("png", "image/png;", "image/png"))
-                .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
-        );
-
-        register(DeltaBuilder.update("4.1.1", "")
-                // since these mimetypes were correct with the 3.6.4 release, but with wrong values, and this
-                // has only been recognized after 4.0.1 and 4.1 were released, we need to apply the same
-                // fix tasks for 3.6.7, 4.0.2 and 4.1.1
-                .addTask(fixMimetype("png", "image/png;", "image/png"))
-                .addTask(fixMimetype("swf", "application/x-shockwave-flash;", "application/x-shockwave-flash"))
-        );
-
-        register(DeltaBuilder.update("4.3", "")
-                .addTask(addFreemarkerSharedVariables)
-                .addTask(
-                        new ArrayDelegateTask("New unicode normalization filter", "Add the new unicode normalization filter.",
-                                new BootstrapSingleResource("Unicode Normalization filter ", "Add new Unicode Normalization filter.", "/mgnl-bootstrap/core/config.server.filters.unicodeNormalization.xml"),
-                                new FilterOrderingTask("multipartRequest", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"contentType"}),
-                                new FilterOrderingTask("unicodeNormalization", "New filter ordering : context, contentType, multipart, unicodeNormalization, login.", new String[]{"multipartRequest"})
-                        ))
-                        .addTask(new UpdateUserPermissions())
-        );
-
-        register(DeltaBuilder.update("4.3.6", "")
-                .addTask(new NodeExistsDelegateTask("TemplateExceptionHandler", "Checks if templateExceptionHandler node exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", new WarnTask("TemplateExceptionHandler", "Unable to set node templateExceptionHandler because it already exists"), new CreateNodeTask("TemplateExceptionHandler", "Creates node templateExceptionHandler", RepositoryConstants.CONFIG, "/server/rendering/freemarker", "templateExceptionHandler", MgnlNodeType.NT_CONTENTNODE)))
-                .addTask(new PropertyExistsDelegateTask("Class", "Checks if class property exists", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", new WarnTask("class", "Unable to set property class because it already exists"), new NewPropertyTask("Class", "Creates property class and sets it to class path", RepositoryConstants.CONFIG, "/server/rendering/freemarker/templateExceptionHandler", "class", "info.magnolia.freemarker.ModeDependentTemplateExceptionHandler"))));
-
-        register(DeltaBuilder.update("4.4", "")
-                .addTask(bootstrapWebContainerResources)
-                .addTask(
-                        new NodeBuilderTask("Update filter configuration", "Removes the dontDispatchOnForward bypass and adds the dispatching configuration instead", ErrorHandling.strict, RepositoryConstants.CONFIG,
-                                getNode("server/filters").then(
-                                        getNode("bypasses").then(
-                                                remove("dontDispatchOnForwardAttribute")),
-                                                addNode("dispatching", MgnlNodeType.NT_CONTENTNODE).then(
-                                                        addNode("request").then(
-                                                                addProperty("toMagnoliaResources", Boolean.TRUE),
-                                                                addProperty("toWebContainerResources", Boolean.TRUE)),
-                                                                addNode("error").then(
-                                                                        addProperty("toMagnoliaResources", Boolean.TRUE),
-                                                                        addProperty("toWebContainerResources", Boolean.FALSE)),
-                                                                        addNode("forward").then(
-                                                                                addProperty("toMagnoliaResources", Boolean.TRUE),
-                                                                                addProperty("toWebContainerResources", Boolean.FALSE)),
-                                                                                addNode("include").then(
-                                                                                        addProperty("toMagnoliaResources", Boolean.FALSE),
-                                                                                        addProperty("toWebContainerResources", Boolean.FALSE))
-                                                )))));
-
-        final ArrayList<Condition> conditions = new ArrayList<Condition>();
-        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
-        u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
-
-        register(DeltaBuilder.update("4.4.5", "")
-                .addTask(new BootstrapConditionally("Bootstrap m4a MIME mapping", "Bootstraps MIME mapping for m4a in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4a.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap m4b MIME mapping", "Bootstraps MIME mapping for m4b in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4b.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap m4r MIME mapping", "Bootstraps MIME mapping for m4r in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4r.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap m4v MIME mapping", "Bootstraps MIME mapping for m4v in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.m4v.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap mp4a MIME mapping", "Bootstraps MIME mapping for mp4a in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4a.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap mp4s MIME mapping", "Bootstraps MIME mapping for mp4s in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4s.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap mp4v MIME mapping", "Bootstraps MIME mapping for mp4v in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mp4v.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap mpg4 MIME mapping", "Bootstraps MIME mapping for mpg4 in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.mpg4.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap srt MIME mapping", "Bootstraps MIME mapping for srt in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.srt.xml"))
-                .addTask(fixMimetype("mp4", "application/octet-stream", "video/mp4"))
-                .addTask(addButDoNotReplaceMimeProperty("mov", "icon", "/.resources/file-icons/moov.png"))
-                .addTask(addButDoNotReplaceMimeProperty("mov", "extension", "mov"))
-                .addConditions(conditions)
-        );
-
-        register(DeltaBuilder.update("4.4.6", "")
-                .addTask(new BootstrapConditionally("Security", "Bootstraps security-base role.", "/mgnl-bootstrap/core/userroles.security-base.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap range support filter", "Bootstrap filter that adds Magnolia capability to serve ranged (partial) requests", "/info/magnolia/setup/update/range/config.server.filters.range.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap eot MIME mapping", "Bootstraps MIME mapping for eot in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.eot.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap oga MIME mapping", "Bootstraps MIME mapping for oga in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.oga.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap ogg MIME mapping", "Bootstraps MIME mapping for ogg in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ogg.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap ogv MIME mapping", "Bootstraps MIME mapping for ogv in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ogv.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap otf MIME mapping", "Bootstraps MIME mapping for otf in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.otf.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap ttf MIME mapping", "Bootstraps MIME mapping for ttf in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.ttf.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap weba MIME mapping", "Bootstraps MIME mapping for weba in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.weba.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap webm MIME mapping", "Bootstraps MIME mapping for webm in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.webm.xml"))
-                .addTask(new BootstrapConditionally("Bootstrap woff MIME mapping", "Bootstraps MIME mapping for woff in case it doesn't exist already.", "/info/magnolia/setup/mime-mapping/config.server.MIMEMapping.woff.xml"))
-                .addTask(new FilterOrderingTask("range", new String[] { "gzip", "activation", "uriSecurity" })));
+        register(DeltaBuilder.update("4.4.6", "").addTask(
+                new AbstractTask("checkPrerequisite",
+                        "4.5 can only be installed from 4.4.6 - stop execution if current version is older.") {
+                    @Override
+                    public void execute(InstallContext installContext) throws TaskExecutionException {
+                        throw new TaskExecutionException(
+                                "You have to have a version 4.4.6 installed in order to upgrade to 4.5!");
+                    }
+                }));
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())
@@ -283,26 +125,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace Store for role superuser", "superuser", "acl_Store"))
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace forum for role superuser", "superuser", "acl_forum"))
         );
-    }
-
-    private PropertyValueDelegateTask fixMimetype(String mimeType, final String previouslyWrongValue, final String fixedValue) {
-        final String workspaceName = RepositoryConstants.CONFIG;
-        final String nodePath = "/server/MIMEMapping/" + mimeType;
-        final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, nodePath,
-                "mime-type", previouslyWrongValue, fixedValue);
-
-        return new PropertyValueDelegateTask(mimeType.toUpperCase() + " MIME mapping",
-                "Checks and updates " + mimeType.toUpperCase() + "MIME mapping if not correct.",
-                workspaceName, nodePath, "mime-type", previouslyWrongValue, false, fixTask);
-    }
-
-    private PropertyExistsDelegateTask addButDoNotReplaceMimeProperty(String mimeType, final String propertyName, final String propertyValue) {
-        final String workspaceName = RepositoryConstants.CONFIG;
-        final String nodePath = "/server/MIMEMapping/" + mimeType;
-        final CheckOrCreatePropertyTask createTask = new CheckOrCreatePropertyTask(null, null, workspaceName, nodePath, propertyName, propertyValue);
-        return new PropertyExistsDelegateTask("Add "+mimeType.toUpperCase()+" property",
-                "Adds property '"+propertyName+"' to "+mimeType.toUpperCase()+" MIME type in case it doesn't exist yet.",
-                workspaceName, nodePath, propertyName, null, createTask);
     }
 
     @Override
