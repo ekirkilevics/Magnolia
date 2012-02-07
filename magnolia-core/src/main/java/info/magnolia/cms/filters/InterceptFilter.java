@@ -34,6 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.MetaDataUtil;
@@ -165,50 +166,53 @@ public class InterceptFilter extends AbstractMgnlFilter {
 
         final Session session = MgnlContext.getJCRSession(repository);
 
-        if (ACTION_PREVIEW.equals(action)) {
-            // preview mode (button in main bar)
-            String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
-            log.debug("preview request parameter value is {} ", preview);
-            if (preview != null) {
-                if (Boolean.parseBoolean(preview)) {
-                    MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
+        synchronized (ExclusiveWrite.getInstance()) {
+
+            if (ACTION_PREVIEW.equals(action)) {
+                // preview mode (button in main bar)
+                String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
+                log.debug("preview request parameter value is {} ", preview);
+                if (preview != null) {
+                    if (Boolean.parseBoolean(preview)) {
+                        MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
+                    } else {
+                        MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
+                    }
                 } else {
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                 }
-            } else {
-                MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
-            }
-        } else if (ACTION_NODE_DELETE.equals(action)) {
-            // delete paragraph
-            try {
-                Node page = session.getNode(handle);
-                session.removeItem(nodePath);
-                MetaDataUtil.updateMetaData(page);
-                session.save();
-            } catch (RepositoryException e) {
-                log.error("Exception caught: {}", e.getMessage(), e);
-            }
-        } else if (ACTION_NODE_SORT.equals(action)) {
-            // sort paragraphs
-            try {
-                String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
-                String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
-                String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
-                String srcName = StringUtils.substringAfterLast(pathSelected, "/");
-                String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
-                if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
-                    destName = null;
+            } else if (ACTION_NODE_DELETE.equals(action)) {
+                // delete paragraph
+                try {
+                    Node page = session.getNode(handle);
+                    session.removeItem(nodePath);
+                    MetaDataUtil.updateMetaData(page);
+                    session.save();
+                } catch (RepositoryException e) {
+                    log.error("Exception caught: {}", e.getMessage(), e);
                 }
-                Node parent = session.getNode(pathParent+srcName);
-                NodeUtil.orderBefore(parent, destName);
-                Node page = session.getNode(handle);
-                MetaDataUtil.updateMetaData(page);
-                session.save();
-            } catch (RepositoryException e) {
-                log.error("Exception caught: {}", e.getMessage(), e);
+            } else if (ACTION_NODE_SORT.equals(action)) {
+                // sort paragraphs
+                try {
+                    String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
+                    String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
+                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
+                    String srcName = StringUtils.substringAfterLast(pathSelected, "/");
+                    String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
+                    if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
+                        destName = null;
+                    }
+                    Node parent = session.getNode(pathParent+srcName);
+                    NodeUtil.orderBefore(parent, destName);
+                    Node page = session.getNode(handle);
+                    MetaDataUtil.updateMetaData(page);
+                    session.save();
+                } catch (RepositoryException e) {
+                    log.error("Exception caught: {}", e.getMessage(), e);
+                }
+            } else {
+                log.warn("Unknown action {}", action);
             }
-        } else {
-            log.warn("Unknown action {}", action);
         }
     }
 }
