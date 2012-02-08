@@ -255,6 +255,10 @@ button.mgnlEditorButton:active {
 
 .mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
   padding: 7px 7px;
+      background-color: #FFFFFF;
+    border: 2px dotted #91BA26;
+    border-top: none;
+    margin: 0 !important;
 }
 
 /* Component ph following are ph should have not top margin. */
