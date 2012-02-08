@@ -40,6 +40,8 @@ import info.magnolia.cms.util.UrlPattern;
 
 /**
  * A permission is a collection of rights and can match paths. Defines various permission constants which can be used to build right bitsets.
+ *
+ * @version $Id$
  */
 public interface Permission extends Serializable {
 
@@ -61,21 +63,21 @@ public interface Permission extends Serializable {
 
     // permission names are not localized, they are never displayed in the GUI but only used for exception messages
 
-    String PERMISSION_NAME_ADD = "Add"; //$NON-NLS-1$
+    String PERMISSION_NAME_ADD = "Add";
 
-    String PERMISSION_NAME_SET = "Set"; //$NON-NLS-1$
+    String PERMISSION_NAME_SET = "Set";
 
-    String PERMISSION_NAME_REMOVE = "Remove"; //$NON-NLS-1$
+    String PERMISSION_NAME_REMOVE = "Remove";
 
-    String PERMISSION_NAME_READ = "Read"; //$NON-NLS-1$
+    String PERMISSION_NAME_READ = "Read";
 
-    String PERMISSION_NAME_EXECUTE = "Execute"; //$NON-NLS-1$
+    String PERMISSION_NAME_EXECUTE = "Execute";
 
-    String PERMISSION_NAME_SYNDICATE = "Syndicate"; //$NON-NLS-1$
+    String PERMISSION_NAME_SYNDICATE = "Syndicate";
 
-    String PERMISSION_NAME_ALL = "(Add, Set, Read, Execute, Syndicate)"; //$NON-NLS-1$
+    String PERMISSION_NAME_ALL = "(Add, Set, Read, Execute, Syndicate)";
 
-    String PERMISSION_NAME_WRITE = "(Add, Set, Read)"; //$NON-NLS-1$
+    String PERMISSION_NAME_WRITE = "(Add, Set, Read)";
 
     /**
      * All permissions combined.
