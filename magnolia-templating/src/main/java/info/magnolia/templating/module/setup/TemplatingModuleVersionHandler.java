@@ -33,25 +33,17 @@
  */
 package info.magnolia.templating.module.setup;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
-import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
-import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.templating.module.setup.for4_0.DeprecateDialogPathAllModules;
-import info.magnolia.templating.module.setup.for4_0.FixTemplatePathTask;
-import info.magnolia.templating.module.setup.for4_0.NestPropertiesAllModulesNodeTask;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -63,48 +55,6 @@ import java.util.List;
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public TemplatingModuleVersionHandler() {
-
-        register(DeltaBuilder.update("4.0", "")
-                .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Adds Freemarker template renderer configuration.", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
-                .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", RepositoryConstants.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
-                .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
-                .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
-                .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
-                        Arrays.asList("name", "type", "templatePath", "title", "description", "i18nBasename", "visible", "class"), "parameters", MgnlNodeType.NT_CONTENTNODE))
-                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is now type.", "paragraphs", "templateType", "type"))
-                .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
-        );
-
-        // TODO 4.1
-        // .addTask( move from admin module: ("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/templating/config.modules.templating.dialogs.editParagraph.xml"))
-//                .addTask(new ArrayDelegateTask("Paragraph selection dialog", "The paragraph selection dialog is now part of the Templating module.",
-//                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/dialogs/selectParagraph"),
-//                        new CreateNodeTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs", "selectParagraph", ItemType.CONTENT.getSystemName()),
-//                        new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs/selectParagraph", "class", ParagraphSelectDialog.class.getName())))
-
-      //since 4.0 templatePath property was moved into parameters content node
-        //has to be fixed in 4.0.3 and 4.1.1
-        register(DeltaBuilder.update("4.0.3", "")
-                .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
-        );
-
-        //since 4.0 templatePath property was moved into parameters content node
-        //has to be fixed in 4.0.3 and 4.1.1
-        register(DeltaBuilder.update("4.1.1", "")
-                .addTask(new FixTemplatePathTask("Fix templatePath property", "Moves templatePath property if is not set correct."))
-        );
-
-        register(DeltaBuilder.update("4.3", "")
-            .addTask(new BootstrapSingleModuleResource("Rendering RenderingEngine", "Add configuration for the new rendering engine.", "config.server.rendering.engine.xml"))
-        );
-
-        register(DeltaBuilder.update("4.4", "")
-            .addTask(new BootstrapSingleResourceAndOrderBefore(
-                    "Model Execution Filter",
-                    "Add Model Execution Filter",
-                    "/mgnl-bootstrap/rendering/config.server.filters.cms.modelExecution.xml",
-                    "backwardCompatibility"))
-        );
 
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new RemoveNodeTask("Remove backwards compatibility filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/backwardCompatibility"))
