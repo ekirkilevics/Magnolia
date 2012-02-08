@@ -35,7 +35,6 @@ package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -60,6 +59,8 @@ import info.magnolia.setup.CoreModuleVersionHandler;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
@@ -71,9 +72,6 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class GenericTasks {
-    private static final String UNSECURE_URIS_BACKUP_PATH = "/server/install/backup/unsecureURIList";
-    private static final String SECURE_URIS_BACKUP_PATH = "/server/install/backup/secureURIList";
-
     /**
      * @return tasks which have to be executed upon new installation (not update)
      */
@@ -88,15 +86,11 @@ public class GenericTasks {
                 new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", RepositoryConstants.CONFIG, "/modules", null,
                         new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", MgnlNodeType.NT_CONTENT)),
 
-                new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
+                new BootstrapSingleResource("Bootstrap", "Bootstraps the new filter configuration", "/mgnl-bootstrap/core/config.server.filters.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
 
-                new BootstrapConditionally("IPConfig rules changed",
+                new BootstrapSingleResource("IPConfig rules changed",
                         "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
-                        "/mgnl-bootstrap/core/config.server.IPConfig.xml",
-                        new ArrayDelegateTask(null,
-                                new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository.", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
-                                new IPConfigRulesUpdate()
-                        )),
+                        "/mgnl-bootstrap/core/config.server.IPConfig.xml"),
 
                 new UpdateI18nConfiguration(),
 
@@ -154,29 +148,14 @@ public class GenericTasks {
                         RepositoryConstants.USERS, "/superuser", "/mgnl-bootstrap/core/users.system.superuser.xml",
                         new MoveNodeTask("", "", RepositoryConstants.USERS, "/superuser", "/system/superuser", false)),
 
-                // only relevant if updating, but does not hurt if installing since it checks for mgnl:user nodes
-                new MoveMagnoliaUsersToRealmFolder(),
-
                 // --- generic tasks
                 new ModuleFilesExtraction(),
                 new RegisterModuleServletsTask(),
 
-                // --- check and update old security configuration if necessary
-                new NodeExistsDelegateTask("Security configuration", "The unsecureURIList configuration was removed from /servers and will be handled by the uriSecurityFilter in 3.5.", RepositoryConstants.CONFIG, "/server/unsecureURIList", new ArrayDelegateTask("UnsecureURIList update", new Task[]{
-                        new MoveNodeTask("Unsecure URIs", "Moves the current configuration of unsecure URIs to a backup location", RepositoryConstants.CONFIG, "/server/unsecureURIList", UNSECURE_URIS_BACKUP_PATH, true),
-                        new CheckAndUpdateUnsecureURIs(UNSECURE_URIS_BACKUP_PATH)
-                })),
-                new NodeExistsDelegateTask("Security configuration", "The secureURIList configuration was removed from /servers and will be handled by the URI-based security mechanism in 3.5.", RepositoryConstants.CONFIG, "/server/secureURIList", new ArrayDelegateTask("SecureURIList update", new Task[]{
-                        new MoveNodeTask("Secure URIs", "Moves the current configuration of secure URIs to a backup location", RepositoryConstants.CONFIG, "/server/secureURIList", SECURE_URIS_BACKUP_PATH, true),
-                        new CheckAndUpdateSecureURIs(SECURE_URIS_BACKUP_PATH)
-                })),
-
                 // --- system-wide tasks (impact all modules)
                 new WarnIgnoredModuleFilters(),
                 new RenamedRenderersToTemplateRenderers(),
-                new ReconfigureCommands(),
-                new UpdateURIMappings(),
-                new RemoveModuleDescriptorDetailsFromRepo()
+                new UpdateURIMappings()
         );
     }
 

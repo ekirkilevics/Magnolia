@@ -58,9 +58,6 @@ import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.setup.for4_5.RenameACLNodesTask;
 import info.magnolia.setup.for4_5.UpdateSecurityFilterClientCallbacksConfiguration;
 import info.magnolia.setup.for4_5.UpdateUserManagers;
-import info.magnolia.setup.initial.CheckMagnoliaDevelopProperty;
-import info.magnolia.setup.initial.CheckNodeTypesDefinition;
-import info.magnolia.setup.initial.CheckNodesForMixVersionable;
 import info.magnolia.setup.initial.GenericTasks;
 
 import java.util.ArrayList;
@@ -123,8 +120,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     protected List<Task> getBasicInstallTasks(InstallContext ctx) {
         final List<Task> tasks = new ArrayList<Task>();
         tasks.addAll(GenericTasks.genericTasksForNewInstallation());
-        tasks.add(new CheckMagnoliaDevelopProperty());
-        tasks.add(new CheckNodesForMixVersionable());
         tasks.add(auditTrailManagerTask);
         tasks.add(bootstrapFreemarker);
         tasks.add(addFreemarkerSharedVariables);
@@ -158,7 +153,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.workspaceHasOldIndexer();
 
-        conditions.add(new CheckNodeTypesDefinition());
         conditions.add(new SystemTmpDirCondition());
         conditions.add(new CheckKeyProperty());
 
