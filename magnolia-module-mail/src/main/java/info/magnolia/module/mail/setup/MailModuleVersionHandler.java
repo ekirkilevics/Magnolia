@@ -33,104 +33,12 @@
  */
 package info.magnolia.module.mail.setup;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
-import info.magnolia.module.delta.Condition;
-import info.magnolia.module.mail.commands.MailCommand;
-import info.magnolia.module.delta.BootstrapConditionally;
-import info.magnolia.module.delta.BootstrapSingleResource;
-import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
-import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.PropertyValueDelegateTask;
-import info.magnolia.module.delta.RegisterModuleServletsTask;
-import info.magnolia.module.delta.RemoveNodeTask;
-import info.magnolia.module.delta.WebXmlConditionsUtil;
-import info.magnolia.repository.RepositoryConstants;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Module's version handler.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
-    static final String MAIL_COMMAND_CLASS_PRIOR_TO_4_0 = "info.magnolia.cms.mail.commands.MailCommand";
-    static final String COMMAND_IN_ADMININTERFACEMODULE_PATH = "/modules/adminInterface/commands/default/sendMail";
-
-    public MailModuleVersionHandler() {
-
-        register(DeltaBuilder.update("3.5", "")
-                .addTask(new RegisterModuleServletsTask())
-                .addConditions(mailServletIsWrappedSince_3_5())
-        );
-
-        final CheckAndModifyPropertyValueTask mailServletMapping = new CheckAndModifyPropertyValueTask("Mapping for mail servlet", "Fixes the mapping for the mail servlet, making it specification compliant.",
-                RepositoryConstants.CONFIG,
-                "/server/filters/servlets/Mail/mappings/--magnolia-mail-",
-                "pattern", "/.magnolia/mail*", "/.magnolia/mail"
-        );
-
-        register(DeltaBuilder.update("3.6.2", "")
-                .addTask(mailServletMapping)
-        );
-
-        final RemoveNodeTask removeMailServletMapping = new RemoveNodeTask("Remove mail servlet", "Removes the mail servlet.",
-                RepositoryConstants.CONFIG,
-                "/server/filters/servlets/Mail"
-        );
-
-        final RemoveNodeTask replaceConfigMenuMail = new RemoveNodeTask("Remove tools mail menu", "Removes the tools mail menu.",
-                RepositoryConstants.CONFIG,
-                "/modules/adminInterface/config/menu/tools/mails"
-        );
-
-        final ReconfigureMailTemplatesTask moveTemplates = new ReconfigureMailTemplatesTask("Rename templates", "Templates will be renamed to templatesConfiguration.",
-                RepositoryConstants.CONFIG,
-                "/modules/mail/config/templates",
-                "/modules/mail/config/templatesConfiguration",
-                ItemType.CONTENT,
-                false);
-
-        register(DeltaBuilder.update("4.0", "")
-                .addTask(removeMailServletMapping)
-                .addTask(replaceConfigMenuMail)
-                .addTask(moveTemplates)
-                .addTask(new BootstrapConditionally("Mail handlers", "Installs mail handlers.", "/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml"))
-                .addTask(new BootstrapConditionally("Mail page", "Installs mail page.", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
-                .addTask(new BootstrapConditionally("Mail factory", "Installs mail factories.", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
-                .addTask(new BootstrapSingleResource("Mail menu", "Installs mail tools menu.", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
-                .addTask(new CheckAndModifyPropertyValueTask("Mail command", "", RepositoryConstants.CONFIG, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
-        );
-
-        register(DeltaBuilder.update("4.0.3", "")
-                //since 4.0 mail command class was not updated to the new value
-                //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
-                .addTask(fixMailCommand(MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
-        );
-
-        register(DeltaBuilder.update("4.1.1", "")
-              //since 4.0 mail command class was not updated to the new value
-              //mail command class was changed on 4.0, needs to be fixed for 4.0.3 and 4.1.1
-              .addTask(fixMailCommand(MAIL_COMMAND_CLASS_PRIOR_TO_4_0, MailCommand.class.getName()))
-        );
-    }
-
-    protected List<Condition> mailServletIsWrappedSince_3_5() {
-        final ArrayList<Condition> conditions = new ArrayList<Condition>();
-        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
-        u.servletIsNowWrapped("Mail");
-        return conditions;
-    }
-
-    private PropertyValueDelegateTask fixMailCommand(final String previouslyWrongValue, final String fixedValue) {
-        final String workspaceName = RepositoryConstants.CONFIG;
-        final CheckAndModifyPropertyValueTask fixTask = new CheckAndModifyPropertyValueTask(null, null, workspaceName, COMMAND_IN_ADMININTERFACEMODULE_PATH,
-                "class", previouslyWrongValue, fixedValue);
-
-        return new PropertyValueDelegateTask("Mail Command",
-                "Checks and updates the mail command if not correct.",
-                workspaceName, COMMAND_IN_ADMININTERFACEMODULE_PATH, "class", previouslyWrongValue, false, fixTask);
-    }
 }
