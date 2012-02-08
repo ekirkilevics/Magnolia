@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -42,9 +42,9 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 
 /**
- * Rename renderers to mach name used since 3.5.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Rename renderers to match name used since 3.5.
+ *
+ * @version $Id$
  */
 public class RenamedRenderersToTemplateRenderers extends AllModulesNodeOperation {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RenamedRenderersToTemplateRenderers.class);

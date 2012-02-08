@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.Content2BeanException;
@@ -41,7 +41,6 @@ import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.voting.voters.URIStartsWithVoter;
 
 import java.util.HashMap;
@@ -61,10 +60,9 @@ import org.apache.commons.lang.StringUtils;
  * Bypass configurations are transformed to the new format if that's the only change.
  *
  * TODO deletion of filters is not detected.
+ * TODO dlipp - can most probably be removed.
  *
- * @author vsteller
  * @version $Id$
- *
  */
 public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperation {
     private static final String FILTER_INTERCEPT = "intercept";

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -52,7 +52,6 @@ import javax.jcr.RepositoryException;
 public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.AllChildrenNodesOperation {
 
     private static final String SERVER_URI2REPOSITORY_MAPPING = "/server/URI2RepositoryMapping";
-    private Content mappingsNode;
     private final ArrayDelegateTask subTasks;
 
     public UpdateURI2RepositoryMappings() {
@@ -69,7 +68,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
 
         super.doExecute(ctx);
 
-        mappingsNode = parentNode.createContent("mappings");
+        parentNode.createContent("mappings");
         NodeDataUtil.getOrCreate(parentNode, "class").setValue(info.magnolia.cms.beans.config.URI2RepositoryManager.class.getName());
 
         subTasks.execute(ctx);

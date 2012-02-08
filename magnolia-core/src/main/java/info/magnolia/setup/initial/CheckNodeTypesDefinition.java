@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_6;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -57,7 +57,6 @@ import org.slf4j.LoggerFactory;
  * Checks custom node type definition file for occurrence of mix:versionable.
  *
  * @version $Id$
- *
  */
 public class CheckNodeTypesDefinition extends AbstractCondition {
 

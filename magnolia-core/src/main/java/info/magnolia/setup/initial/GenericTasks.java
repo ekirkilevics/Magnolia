@@ -31,9 +31,8 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
@@ -65,22 +64,20 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * This class just groups all tasks which are need to update to Magnolia 3.5,
- * in order to cleanup CoreModuleVersionHandler.
+ * Groups tasks which are need to do a fresh install of magnolia 4.5 (or higher).
  *
  * @see info.magnolia.setup.CoreModuleVersionHandler
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class GenericTasks {
     private static final String UNSECURE_URIS_BACKUP_PATH = "/server/install/backup/unsecureURIList";
     private static final String SECURE_URIS_BACKUP_PATH = "/server/install/backup/secureURIList";
 
     /**
-     * @return tasks which have to be executed whether we're installing or upgrading from 3.0
+     * @return tasks which have to be executed upon new installation (not update)
      */
-    public static List<Task> genericTasksFor35() {
+    public static List<Task> genericTasksForNewInstallation() {
         final String areWeBootstrappingAuthorInstance = StringUtils.defaultIfEmpty(SystemProperty.getProperty(CoreModuleVersionHandler.BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY), "true");
         return Arrays.asList(
                 // - install server node
@@ -118,13 +115,6 @@ public class GenericTasks {
 
                 new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", areWeBootstrappingAuthorInstance),
 
-                // The realm property was never necessary when using a FormClientCallback
-                // The callback node from the uriSecurity filter is gone since 4.5 (now in the securityCallback filter)
-                // new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
-
-//                new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
-//                        "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
-
                 new ArrayDelegateTask("defaultBaseUrl property",
                         new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.", "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
                         new WarnTask("defaultBaseUrl property", "Please set the config:/server/defaultBaseUrl property to a full URL to be used when generating absolute URLs for external systems.")
@@ -140,8 +130,8 @@ public class GenericTasks {
                         )),
 
                 // --- user/roles repositories related tasks
-                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_SYSTEM.getName(), ItemType.NT_FOLDER),
-                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_ADMIN.getName(), ItemType.NT_FOLDER),
+                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_SYSTEM.getName(), MgnlNodeType.NT_FOLDER),
+                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_ADMIN.getName(), MgnlNodeType.NT_FOLDER),
 
                 new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
                         new AddURIPermissionsToAllRoles(true),

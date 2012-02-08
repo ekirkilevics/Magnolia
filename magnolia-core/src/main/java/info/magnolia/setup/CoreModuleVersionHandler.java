@@ -55,13 +55,13 @@ import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
 import info.magnolia.nodebuilder.task.NodeBuilderTask;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.setup.for3_5.GenericTasks;
-import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
-import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
-import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for4_5.RenameACLNodesTask;
 import info.magnolia.setup.for4_5.UpdateSecurityFilterClientCallbacksConfiguration;
 import info.magnolia.setup.for4_5.UpdateUserManagers;
+import info.magnolia.setup.initial.CheckMagnoliaDevelopProperty;
+import info.magnolia.setup.initial.CheckNodeTypesDefinition;
+import info.magnolia.setup.initial.CheckNodesForMixVersionable;
+import info.magnolia.setup.initial.GenericTasks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +122,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     @Override
     protected List<Task> getBasicInstallTasks(InstallContext ctx) {
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.addAll(GenericTasks.genericTasksFor35());
+        tasks.addAll(GenericTasks.genericTasksForNewInstallation());
         tasks.add(new CheckMagnoliaDevelopProperty());
         tasks.add(new CheckNodesForMixVersionable());
         tasks.add(auditTrailManagerTask);

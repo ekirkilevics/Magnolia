@@ -38,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
-import info.magnolia.setup.AddFilterBypassTask;
+import info.magnolia.setup.initial.AddFilterBypassTask;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;

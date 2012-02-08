@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_6;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
  * Checks nodes for occurrence of mix:versionable supertype.
  *
  * @version $Id$
- *
  */
 public class CheckNodesForMixVersionable extends AbstractTask {
 
@@ -91,7 +90,6 @@ public class CheckNodesForMixVersionable extends AbstractTask {
             }
         } catch (RepositoryException e) {
             log.error(e.getMessage(), e);
-            //installContext.error(e.getMessage(), e);
             throw new TaskExecutionException("Failed to execute content node super type check.", e);
         }
     }

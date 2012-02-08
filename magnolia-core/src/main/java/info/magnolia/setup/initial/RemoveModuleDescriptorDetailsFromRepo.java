@@ -31,31 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
-import info.magnolia.module.delta.MoveAndRenamePropertyTask;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AllModulesNodeOperation;
+
+import javax.jcr.RepositoryException;
 
 /**
- * Updates login form location.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Cleanup module description.
+ *
+ * @version $Id$
  */
-public class LoginFormPropertyMovedToFilter extends MoveAndRenamePropertyTask {
-    public LoginFormPropertyMovedToFilter() {
-        super("Login form", "/server/login", "LoginForm", "/server/filters/uriSecurity/clientCallback", "loginForm");
+public class RemoveModuleDescriptorDetailsFromRepo extends AllModulesNodeOperation {
+
+    public RemoveModuleDescriptorDetailsFromRepo() {
+        super("Cleanup modules node", "Removes the name, displayName and class properties from the modules nodes, as these are not used anymore.");
     }
 
     @Override
-    protected String modifyCurrentValue(String currentValue) {
-        // pre-3.0.2
-        if ("/.resources/loginForm/login.html".equals(currentValue)) {
-            return "/mgnl-resources/loginForm/login.html";
-            // 3.0.2
-        } else if ("/mgnl-resources/loginForm/login.html".equals(currentValue)) {
-            return "/mgnl-resources/loginForm/login.html";
-            // customized
-        } else {
-            return currentValue;
+    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) {
+        deleteNodeDataIfExists(node, "name", ctx);
+        deleteNodeDataIfExists(node, "displayName", ctx);
+        deleteNodeDataIfExists(node, "class", ctx);
+    }
+
+    private void deleteNodeDataIfExists(Content node, String name, InstallContext ctx) {
+        try {
+            if (node.hasNodeData(name)) {
+                node.deleteNodeData(name);
+            }
+        } catch (RepositoryException e) {
+            ctx.warn("Could not delete property " + name + " from node " + node.getHandle() + ".");
         }
     }
 }

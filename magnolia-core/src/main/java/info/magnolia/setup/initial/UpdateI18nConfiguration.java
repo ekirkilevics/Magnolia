@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -51,8 +51,8 @@ import java.util.Iterator;
 
 /**
  * Updates pre 3.5 internationalization configuration to the format used since 3.5.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
     private static final String I18N_NODEPATH = "/server/i18n";

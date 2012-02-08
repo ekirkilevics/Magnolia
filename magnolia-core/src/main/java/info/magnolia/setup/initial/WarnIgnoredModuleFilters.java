@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2007-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,59 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
-import info.magnolia.cms.beans.config.DefaultVirtualURIMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllModulesNodeOperation;
 import info.magnolia.module.delta.TaskExecutionException;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
 
 /**
- * Updates virtualURIMappings to the format suitable for c2b.
- * @author vsteller
+ * Checks if installed modules contain filter definitions and if so warns on installation with an appropriate message.
+ *
+ * @version $Id$
+ *
  */
-public class UpdateURIMappings extends AllModulesNodeOperation {
+public class WarnIgnoredModuleFilters extends AllModulesNodeOperation {
 
-    public UpdateURIMappings() {
-        super("Update virtualURIMapping nodes", "Adds the class property to each virtualURIMapping node as these are dynamic now.");
+
+    public WarnIgnoredModuleFilters() {
+        super("Filters", "Warns if filters are registered in module nodes since they're ignored in 3.5.");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.module.delta.AllModulesNodeOperation#operateOnModuleNode(info.magnolia.cms.core.Content,
-     * info.magnolia.cms.core.HierarchyManager, info.magnolia.module.InstallContext)
-     */
     @Override
     protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
         throws RepositoryException, TaskExecutionException {
 
-        try {
-            if (node.hasContent("virtualURIMapping")) {
-                ContentUtil.visit(node.getContent("virtualURIMapping"), new ContentUtil.Visitor() {
-                    @Override
-                    public void visit(Content node) throws Exception {
-                        if (node.hasNodeData("fromURI") && node.hasNodeData("toURI")) {
-                            NodeData classNodeData = NodeDataUtil.getOrCreate(node, "class");
-                            classNodeData.setValue(DefaultVirtualURIMapping.class.getName());
-                        }
-                    }
-                });
+        if (node.hasContent("filters")) {
+            final Collection moduleFilters = node.getContent("filters").getChildren();
+            final Iterator moduleFiltersIterator = moduleFilters.iterator();
+            while (moduleFiltersIterator.hasNext()) {
+                final Content currentFilter = (Content) moduleFiltersIterator.next();
+                ctx.warn("Filters registered in module nodes are ignored since 3.5. Please re-check and move the filter '" + currentFilter.getName() + "' registered in module '" + node.getName() + "' to the filter chain under /server/filters manually.");
             }
         }
-        catch (RepositoryException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new TaskExecutionException("can't reconfigure virtualURIMapping", e);
-        }
     }
-
 }

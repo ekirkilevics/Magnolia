@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -47,8 +47,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Adds URI permissions to all roles.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     private static final int ALLOW_ALL = 63;

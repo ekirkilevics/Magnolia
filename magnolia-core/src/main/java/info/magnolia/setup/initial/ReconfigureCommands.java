@@ -31,9 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
-
-import javax.jcr.RepositoryException;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -45,22 +43,16 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllModulesNodeOperation;
 import info.magnolia.module.delta.TaskExecutionException;
 
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Updates command configuration to make them suitable for loading by c2b.
- * @author philipp
- * @version $Id$
  *
+ * @version $Id$
  */
 public class ReconfigureCommands extends AllModulesNodeOperation {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ReconfigureCommands.class);
 
     public ReconfigureCommands() {
         super("reconfigure commands", "rename impl to class or commandName");

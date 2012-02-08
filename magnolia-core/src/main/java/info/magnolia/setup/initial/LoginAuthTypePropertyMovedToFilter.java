@@ -31,14 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 
 /**
  * Updates authentication type configuration.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public class LoginAuthTypePropertyMovedToFilter extends MoveAndRenamePropertyTask {
     public LoginAuthTypePropertyMovedToFilter() {

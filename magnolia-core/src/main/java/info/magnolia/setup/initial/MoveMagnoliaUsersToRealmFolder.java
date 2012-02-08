@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2007-2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,51 +31,52 @@
  * intact.
  *
  */
-package info.magnolia.setup;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.security.Realm;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
-import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
-
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
- * Adds bypass to an existing filter.
- * @author vsteller
- * @version $Id$
+ * A task which moves existing users to the /admin realm folder.
  *
+ * @version $Id$
  */
-public class AddFilterBypassTask extends AbstractRepositoryTask implements Task {
+public class MoveMagnoliaUsersToRealmFolder extends AbstractRepositoryTask {
+    private static final Logger log = LoggerFactory.getLogger(MoveMagnoliaUsersToRealmFolder.class);
 
-    private static final String BYPASSES_NODE = "bypasses";
-
-    private final String filterPath;
-    private final String bypassName;
-    private final Class bypassClass;
-    private final String bypassPattern;
-
-    public AddFilterBypassTask(String filterPath, String bypassName, Class bypassClass, String bypassPattern) {
-        super("Filters", "Adds a bypass with pattern '" + bypassPattern + "' to the filter " + filterPath + "");
-        this.filterPath = filterPath;
-        this.bypassName = bypassName;
-        this.bypassClass = bypassClass;
-        this.bypassPattern = bypassPattern;
+    public MoveMagnoliaUsersToRealmFolder() {
+        super("Update Magnolia users repository structure", "Moves Magnolia admin users into /" + Realm.REALM_ADMIN + " folder.");
     }
 
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final HierarchyManager hm = installContext.getConfigHierarchyManager();
-        final Content filter = hm.getContent(filterPath);
-        final Content bypasses = ContentUtil.getOrCreateContent(filter, BYPASSES_NODE, ItemType.CONTENTNODE);
+        // move existing users there
+        final HierarchyManager usersHm = installContext.getHierarchyManager(RepositoryConstants.USERS);
 
-        final Content newBypass = ContentUtil.getOrCreateContent(bypasses, bypassName, ItemType.CONTENTNODE);
-        newBypass.createNodeData("class", bypassClass.getName());
-        newBypass.createNodeData("pattern", bypassPattern);
+        Collection users = usersHm.getRoot().getChildren(ItemType.USER);
+
+        Iterator iter = users.iterator();
+        while (iter.hasNext()) {
+            Content node = (Content) iter.next();
+            usersHm.getWorkspace().getSession().move(node.getHandle(), getAdminRealmFolder() + "/" + node.getName());
+            log.info("Moved user " + node.getName() + " to " + getAdminRealmFolder() + "/" + node.getName());
+        }
+    }
+
+    protected String getAdminRealmFolder() {
+        return "/" + Realm.REALM_ADMIN;
     }
 }

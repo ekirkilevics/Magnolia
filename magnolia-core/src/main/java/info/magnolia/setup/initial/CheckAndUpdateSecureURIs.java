@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.UserManager;
@@ -55,7 +55,6 @@ import javax.jcr.RepositoryException;
  * secured URIs ("root" and "admininterface") had been removed, they are re-added (by means of the default
  * anonymous role's new permissions).</strong>
  *
- * @author vsteller
  * @version $Id$
  */
 public class CheckAndUpdateSecureURIs extends AllChildrenNodesOperation implements Task {

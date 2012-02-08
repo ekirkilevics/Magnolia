@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2003-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,31 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_6;
+package info.magnolia.setup.initial;
 
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 
 /**
- * Checks the value of <code>magnolia.develop</code> property.
+ * Updates login form location.
  *
  * @version $Id$
  */
-public class CheckMagnoliaDevelopProperty extends AbstractTask {
-
-    private static final String MSG = "The magnolia.develop property should be set to false by default.";
-    private static final String MSG_DETAILED = "The magnolia.develop property is now set to false by default. It used to be true in previous version of Magnolia, so if this is not intentional on your part, you might want to set it back to false.";
-
-    public CheckMagnoliaDevelopProperty() {
-        super("Check magnolia.develop", MSG);
+public class LoginFormPropertyMovedToFilter extends MoveAndRenamePropertyTask {
+    public LoginFormPropertyMovedToFilter() {
+        super("Login form", "/server/login", "LoginForm", "/server/filters/uriSecurity/clientCallback", "loginForm");
     }
 
     @Override
-    public void execute(InstallContext installContext) throws TaskExecutionException {
-        if (SystemProperty.getBooleanProperty("magnolia.develop")) {
-            installContext.warn(MSG_DETAILED);
+    protected String modifyCurrentValue(String currentValue) {
+        // pre-3.0.2
+        if ("/.resources/loginForm/login.html".equals(currentValue)) {
+            return "/mgnl-resources/loginForm/login.html";
+            // 3.0.2
+        } else if ("/mgnl-resources/loginForm/login.html".equals(currentValue)) {
+            return "/mgnl-resources/loginForm/login.html";
+            // customized
+        } else {
+            return currentValue;
         }
     }
 }

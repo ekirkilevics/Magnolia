@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2008-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,40 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AllModulesNodeOperation;
-
-import javax.jcr.RepositoryException;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 /**
- * Cleanup module description.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Checks the value of <code>magnolia.develop</code> property.
+ *
+ * @version $Id$
  */
-public class RemoveModuleDescriptorDetailsFromRepo extends AllModulesNodeOperation {
+public class CheckMagnoliaDevelopProperty extends AbstractTask {
 
-    public RemoveModuleDescriptorDetailsFromRepo() {
-        super("Cleanup modules node", "Removes the name, displayName and class properties from the modules nodes, as these are not used anymore.");
+    private static final String MSG = "The magnolia.develop property should be set to false by default.";
+    private static final String MSG_DETAILED = "The magnolia.develop property is now set to false by default. It used to be true in previous version of Magnolia, so if this is not intentional on your part, you might want to set it back to false.";
+
+    public CheckMagnoliaDevelopProperty() {
+        super("Check magnolia.develop", MSG);
     }
 
     @Override
-    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) {
-        deleteNodeDataIfExists(node, "name", ctx);
-        deleteNodeDataIfExists(node, "displayName", ctx);
-        deleteNodeDataIfExists(node, "class", ctx);
-    }
-
-    private void deleteNodeDataIfExists(Content node, String name, InstallContext ctx) {
-        try {
-            if (node.hasNodeData(name)) {
-                node.deleteNodeData(name);
-            }
-        } catch (RepositoryException e) {
-            ctx.warn("Could not delete property " + name + " from node " + node.getHandle() + ".");
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        if (SystemProperty.getBooleanProperty("magnolia.develop")) {
+            installContext.warn(MSG_DETAILED);
         }
     }
 }

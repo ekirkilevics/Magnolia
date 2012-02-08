@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_5;
+package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -41,7 +41,6 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.voting.voters.URIStartsWithVoter;
 
 import javax.jcr.RepositoryException;
@@ -49,9 +48,8 @@ import javax.jcr.RepositoryException;
 
 /**
  * Transforms unsecured URIs into bypasses of uriSecurity filter.
- * @author vsteller
- * @version $Id$
  *
+ * @version $Id$
  */
 public class CheckAndUpdateUnsecureURIs extends AllChildrenNodesOperation implements Task {
     private static final String FILTER_URI_SECURITY = "/server/filters/uriSecurity";
@@ -73,7 +71,7 @@ public class CheckAndUpdateUnsecureURIs extends AllChildrenNodesOperation implem
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final String bypassName = node.getName();
         final String bypassPattern = NodeDataUtil.getString(node, PROPERTY_URI);
-        final Class bypassClass = URIStartsWithVoter.class;
+        final Class<URIStartsWithVoter> bypassClass = URIStartsWithVoter.class;
         subtasks.addTask(new AddFilterBypassTask(FILTER_URI_SECURITY, bypassName, bypassClass, bypassPattern));
     }
 }
