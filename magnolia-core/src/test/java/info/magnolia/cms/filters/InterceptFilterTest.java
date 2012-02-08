@@ -57,6 +57,7 @@ import org.junit.Test;
 
 public class InterceptFilterTest {
 
+    private static final String MGNL_PREVIEW = "mgnlPreview";
     private MockWebContext ctx;
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -92,39 +93,39 @@ public class InterceptFilterTest {
     public void testPreviewIsSetInMgnlContextSession() throws Exception {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("PREVIEW");
-        when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn("true");
+        when(request.getParameter(MGNL_PREVIEW)).thenReturn("true");
         InterceptFilter filter = new InterceptFilter();
 
         //WHEN
         filter.intercept(request, response);
 
         //THEN
-        assertNotNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
+        assertNotNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
     }
 
     @Test
     public void testPreviewIsRemovedFromMgnlContextSession() throws Exception {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("PREVIEW");
-        when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn("false");
-        ctx.setAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, "true", Context.SESSION_SCOPE);
+        when(request.getParameter(MGNL_PREVIEW)).thenReturn("false");
+        ctx.setAttribute(MGNL_PREVIEW, "true", Context.SESSION_SCOPE);
         InterceptFilter filter = new InterceptFilter();
 
         //WHEN
         filter.intercept(request, response);
 
         //THEN
-        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
+        assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
 
         //GIVEN
-        ctx.setAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, "true", Context.SESSION_SCOPE);
-        when(request.getParameter(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE)).thenReturn(null);
+        ctx.setAttribute(MGNL_PREVIEW, "true", Context.SESSION_SCOPE);
+        when(request.getParameter(MGNL_PREVIEW)).thenReturn(null);
 
         //WHEN
         filter.intercept(request, response);
 
         //THEN
-        assertNull(MgnlContext.getAttribute(InterceptFilter.MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE));
+        assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
     }
 
     @Test(expected=PathNotFoundException.class)
