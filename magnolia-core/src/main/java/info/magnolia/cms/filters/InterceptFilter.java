@@ -108,7 +108,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
     /**
      * Attribute used for enabling the preview mode.
      */
-    private static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
+    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
