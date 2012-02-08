@@ -34,7 +34,7 @@
 package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -65,7 +65,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
                 try {
                     final String itemType = content.getItemType().getSystemName();
                     // TODO reconsider after 3.5 final: is ItemType.ROLE enough here?
-                    return itemType.startsWith("mgnl:") && !itemType.equals(ItemType.NT_METADATA);
+                    return itemType.startsWith("mgnl:") && !itemType.equals(MgnlNodeType.NT_METADATA);
                 }
                 catch (RepositoryException e) {
                     log.error("Unable to read itemtype for node {}", content.getHandle());
@@ -79,7 +79,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
 
     @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Content uriPermissionsNode = node.createContent("acl_uri", ItemType.CONTENTNODE);
+        final Content uriPermissionsNode = node.createContent("acl_uri", MgnlNodeType.NT_CONTENTNODE);
         if ("anonymous".equals(node.getName())) {
             if (isAuthorInstance) {
                 addPermission(uriPermissionsNode, "0", "/*", DENY);
@@ -94,7 +94,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     }
 
     private void addPermission(Content uriRepoNode, String permNodeName, String path, long value) throws RepositoryException {
-        final Content permNode = uriRepoNode.createContent(permNodeName, ItemType.CONTENTNODE);
+        final Content permNode = uriRepoNode.createContent(permNodeName, MgnlNodeType.NT_CONTENTNODE);
         permNode.createNodeData("path", path);
         permNode.createNodeData("permissions", Long.valueOf(value));
     }
