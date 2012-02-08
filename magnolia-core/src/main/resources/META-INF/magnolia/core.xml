@@ -119,10 +119,6 @@
       <implementation>info.magnolia.commands.CommandsManager</implementation>
     </component>
     <component>
-      <type>info.magnolia.cms.beans.config.ShutdownManager</type>
-      <implementation>info.magnolia.cms.beans.config.ShutdownManager</implementation>
-    </component>
-    <component>
       <type>info.magnolia.cms.i18n.I18nContentSupport</type>
       <workspace>config</workspace>
       <path>/server/i18n/content</path>

@@ -33,38 +33,34 @@
  */
 package info.magnolia.setup;
 
-import javax.inject.Inject;
-
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
+import javax.inject.Inject;
+
 /**
  * Core module life cycle class. Ensures registration of observation necessary for correct initialization of Magnolia.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  *
  * @content2bean.module name="core"
  */
 public class CoreModule implements ModuleLifecycle {
     private final VirtualURIManager virtualURIManager;
     private final CommandsManager commandsManager;
-    private final ShutdownManager shutdownManager;
 
     @Inject
-    public CoreModule(VirtualURIManager virtualURIManager, CommandsManager commandsManager, ShutdownManager shutdownManager) {
+    public CoreModule(VirtualURIManager virtualURIManager, CommandsManager commandsManager) {
         this.virtualURIManager = virtualURIManager;
         this.commandsManager = commandsManager;
-        this.shutdownManager = shutdownManager;
     }
 
     @Override
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("virtualURIMapping", virtualURIManager);
         ctx.registerModuleObservingComponent("commands", commandsManager);
-        ctx.registerModuleObservingComponent("shutdown", shutdownManager);
     }
 
     @Override

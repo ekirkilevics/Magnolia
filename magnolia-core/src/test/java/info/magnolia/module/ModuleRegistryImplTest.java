@@ -62,7 +62,7 @@ public class ModuleRegistryImplTest {
     @Test
     public void testCanGetModuleByClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
-        final CoreModule module = new CoreModule(null,null,null);
+        final CoreModule module = new CoreModule(null,null);
         reg.registerModuleInstance("foo", module);
 
         // yay, no cast needed.
@@ -73,8 +73,8 @@ public class ModuleRegistryImplTest {
     @Test
     public void testGetModuleByClassThrowExceptionIfMultipleModulesRegisteredWithSameClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
-        reg.registerModuleInstance("foo", new CoreModule(null,null,null));
-        reg.registerModuleInstance("bar", new CoreModule(null,null,null));
+        reg.registerModuleInstance("foo", new CoreModule(null,null));
+        reg.registerModuleInstance("bar", new CoreModule(null,null));
         try {
             reg.getModuleInstance(CoreModule.class);
             fail("should have thrown an exception, we have several modules registered for this class");
@@ -99,8 +99,8 @@ public class ModuleRegistryImplTest {
     @Test
     public void testCanGetModuleByNameIfMultipleModulesRegisteredWithSameClass() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
-        reg.registerModuleInstance("foo", new CoreModule(null,null,null));
-        reg.registerModuleInstance("bar", new CoreModule(null,null,null));
+        reg.registerModuleInstance("foo", new CoreModule(null,null));
+        reg.registerModuleInstance("bar", new CoreModule(null,null));
 
         final CoreModule foo = (CoreModule) reg.getModuleInstance("foo");
         final CoreModule bar = (CoreModule) reg.getModuleInstance("bar");
@@ -110,8 +110,8 @@ public class ModuleRegistryImplTest {
     @Test
     public void testThrowsExceptionForUnregisteredModuleName() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
-        reg.registerModuleInstance("foo", new CoreModule(null,null,null));
-        reg.registerModuleInstance("bar", new CoreModule(null,null,null));
+        reg.registerModuleInstance("foo", new CoreModule(null,null));
+        reg.registerModuleInstance("bar", new CoreModule(null,null));
         reg.registerModuleVersionHandler("bar", new DefaultModuleVersionHandler());
         reg.registerModuleDefinition("bar", new ModuleDefinition("bar", Version.parseVersion("1.0"), "foo.bar", DefaultModuleVersionHandler.class));
 
@@ -138,8 +138,8 @@ public class ModuleRegistryImplTest {
     @Test
     public void testCanCheckIfAModuleExists() {
         final ModuleRegistryImpl reg = new ModuleRegistryImpl();
-        reg.registerModuleInstance("foo", new CoreModule(null,null,null));
-        reg.registerModuleInstance("bar", new CoreModule(null,null,null));
+        reg.registerModuleInstance("foo", new CoreModule(null,null));
+        reg.registerModuleInstance("bar", new CoreModule(null,null));
 
         assertTrue(reg.isModuleRegistered("bar"));
         assertFalse(reg.isModuleRegistered("chalala"));
