@@ -33,29 +33,15 @@
  */
 package info.magnolia.module.workflow.setup;
 
-import static info.magnolia.nodebuilder.Ops.addNode;
-import static info.magnolia.nodebuilder.Ops.addProperty;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.junit.Assert.*;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.Permission;
+import static org.easymock.classextension.EasyMock.*;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.RoleManager;
 import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.SecuritySupportImpl;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
-import info.magnolia.module.model.Version;
-import info.magnolia.nodebuilder.NodeBuilder;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Arrays;
@@ -69,7 +55,8 @@ import org.junit.Test;
 
 /**
  * A test class for WorkflowModuleVersionHandler.
- * @author had
+ *
+ * @version $Id$
  */
 public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private RoleManager roleManager;
@@ -105,13 +92,6 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
 
         expect(roleManager.getRole("workflow-base")).andReturn(role).anyTimes();
         String testPath = "/modules/workflow/config/flows";
-        roleManager.addPermission(role, "config", testPath, Permission.READ);
-        roleManager.addPermission(role, "config", testPath + "/*", Permission.READ);
-
-        // 4.3
-        String otherTestPath = "/workflow-base";
-        roleManager.removePermission(role, "userroles", otherTestPath, Permission.READ);
-        roleManager.removePermission(role, "userroles", otherTestPath + "/*", Permission.READ);
 
         securitySupport.setRoleManager(roleManager);
         replay(roleManager, role);
@@ -129,49 +109,9 @@ public class WorkflowModuleVersionHandlerTest extends ModuleVersionHandlerTestCa
         super.tearDown();
     }
 
-    /**
-     * Workflow have been overwriting versioning command of DMS when introducing wkf support to DMS. The task to rememdy the situation have been introduced now
-     *
-     * Testing update to 4.2
-     */
     @Test
-    public void testDMSVersioningCommandUpdate() throws ModuleManagementException, RepositoryException {
-        // prepare nodes that should exist if the dms was really installed ...
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
-        Content commands = ContentUtil.createPath(hm, "/modules/dms/commands/dms", ItemType.CONTENTNODE, true);
-        final NodeBuilder nodeBuilder = new NodeBuilder(commands,
-                addNode("activate").then(
-                        addNode("version").then(
-                                addProperty("class", "info.magnolia.module.admininterface.commands.VersionCommand")
-                        )
-                )
-        );
-        nodeBuilder.exec();
-        hm.save();
-
-        // run the test itself
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1.1"));
-
-        // check the proper versioning commmand is used
-        assertEquals("info.magnolia.module.dms.commands.DocumentVersionCommand", hm.getNodeData("/modules/dms/commands/dms/activate/version/class").getString());
-    }
-
-    /**
-     * Workflow should enable itself for data module content activation if data module is installed.
-     * Testing update to 4.2
-     */
-    @Test
-    public void testDataActivationCommandUpdate() throws ModuleManagementException, RepositoryException {
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
-        // workflow configuration
-        Content path = ContentUtil.createPath(hm, "modules/data/commands/data/", ItemType.CONTENT);
-        path.createContent("activate", ItemType.CONTENTNODE);
-
-        hm.save();
-        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.1.1"));
-
-        // workflow is not installed so the wkf config class will not be set
-        assertFalse(hm.isExist("/modules/data/trees/data/configurationClass"));
+    public void testDeactivationCommandIsAddedWhenUpgradingTo4_4_1() throws RepositoryException {
+        // TODO dlipp - will be implemented tmr ;-)
     }
 
     @Override
