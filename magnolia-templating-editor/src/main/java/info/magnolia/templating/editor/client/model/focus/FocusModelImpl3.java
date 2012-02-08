@@ -93,6 +93,9 @@ public class FocusModelImpl3 implements FocusModel {
         if (storage.getEditBar(mgnlElement) != null) {
             storage.getEditBar(mgnlElement).setVisible(visible);
         }
+        if (storage.getAreaEndBar(mgnlElement) != null) {
+            storage.getAreaEndBar(mgnlElement).setVisible(visible);
+        }
 
         // toggle all direct child-areas placeholders visibility
         for (MgnlElement area : mgnlElement.getAreas()) {
@@ -150,6 +153,9 @@ public class FocusModelImpl3 implements FocusModel {
                 if (storage.getEditBar(root) != null) {
                     storage.getEditBar(root).setVisible(true);
                 }
+                if (storage.getAreaEndBar(root) != null) {
+                    storage.getAreaEndBar(root).setVisible(true);
+                }
                 if (storage.getAreaPlaceHolder(root) != null) {
                     storage.getAreaPlaceHolder(root).setVisible(true);
                     if (storage.getAreaPlaceHolder(root).getStyleName().contains("inactive")) {
@@ -164,7 +170,9 @@ public class FocusModelImpl3 implements FocusModel {
         for (MgnlElement root : storage.getRootElements()) {
             if (storage.getEditBar(root) != null) {
                 storage.getEditBar(root).setVisible(false);
-
+            }
+            if (storage.getAreaEndBar(root) != null) {
+                storage.getAreaEndBar(root).setVisible(false);
             }
             if (storage.getComponentPlaceHolder(root) != null) {
                 storage.getComponentPlaceHolder(root).setVisible(false);

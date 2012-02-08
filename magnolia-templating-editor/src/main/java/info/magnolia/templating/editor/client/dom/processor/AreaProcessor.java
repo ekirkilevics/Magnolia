@@ -39,6 +39,7 @@ import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.AreaBar;
+import info.magnolia.templating.editor.client.widget.controlbar.AreaEndBar;
 import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
 import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
@@ -66,6 +67,7 @@ public class AreaProcessor extends MgnlElementProcessor {
                 ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(getMgnlElement());
                 placeHolder.attach();
             }
+            new AreaEndBar(getMgnlElement());
         }
         catch (IllegalArgumentException e) {
             GWT.log("Not creating areabar for this element. Missing parameters. Will be deleted.");

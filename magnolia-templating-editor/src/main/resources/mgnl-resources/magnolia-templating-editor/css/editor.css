@@ -250,8 +250,6 @@ button.mgnlEditorButton:active {
 /* Component place holder */
 .mgnlPlaceHolder.component {
   width: 100%;
-  border-bottom: 5px solid #487000;
-  border-radius: 0 0 7px 7px;
   margin-bottom: 20px;
 }
 
@@ -416,3 +414,9 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 }
 
 /* --- End of mobile preview definitions --- */
+
+.mgnlEditorEndBar {
+  border-bottom: 5px solid #487000;
+  border-radius: 0 0 7px 7px;
+  clear: both;
+}
