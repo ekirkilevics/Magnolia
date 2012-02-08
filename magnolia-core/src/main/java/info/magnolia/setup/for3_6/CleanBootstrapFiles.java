@@ -55,9 +55,8 @@ import java.util.Iterator;
 
 /**
  * Removes <code>mix:versionable</code> from all bootstrap files.
- * @author philipp
- * @version $Id$
  *
+ * @version $Id$
  */
 public class CleanBootstrapFiles{
 

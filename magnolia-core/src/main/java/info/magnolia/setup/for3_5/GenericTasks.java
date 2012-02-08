@@ -34,6 +34,7 @@
 package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.cms.security.Realm;
@@ -84,11 +85,11 @@ public class GenericTasks {
         return Arrays.asList(
                 // - install server node
                 new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", RepositoryConstants.CONFIG, "/server", null,
-                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "server", ItemType.CONTENT.getSystemName())),
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "server", MgnlNodeType.NT_CONTENT)),
 
                 // - install or update modules node
                 new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", RepositoryConstants.CONFIG, "/modules", null,
-                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", MgnlNodeType.NT_CONTENT)),
 
                 new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
 

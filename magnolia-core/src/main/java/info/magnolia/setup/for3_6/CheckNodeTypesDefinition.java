@@ -55,8 +55,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks custom node type definition file for occurrence of mix:versionable.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  *
  */
 public class CheckNodeTypesDefinition extends AbstractCondition {

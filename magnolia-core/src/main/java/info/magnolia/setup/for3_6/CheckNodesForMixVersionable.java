@@ -50,8 +50,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Checks nodes for occurrence of mix:versionable supertype.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  *
  */
 public class CheckNodesForMixVersionable extends AbstractTask {
