@@ -33,9 +33,11 @@
  */
 package info.magnolia.setup.for4_5;
 
+import static java.lang.String.format;
+import static org.apache.commons.lang.ArrayUtils.contains;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.cms.util.ContentUtil;
@@ -55,10 +57,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-
-
-import static java.lang.String.format;
-import static org.apache.commons.lang.ArrayUtils.contains;
 
 /**
  * Updates the given security filter's client callback configuration to reflect the changes introduced in 4.5.
@@ -88,7 +86,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         final Content fromFilterNode = hm.getContent(FilterManager.SERVER_FILTERS + "/" + fromFilterName);
         final Content targetFilterNode = hm.getContent(FilterManager.SERVER_FILTERS + "/" + targetFilterName);
 
-        final Content newCallbacksNode = targetFilterNode.createContent("clientCallbacks", ItemType.CONTENTNODE);
+        final Content newCallbacksNode = targetFilterNode.createContent("clientCallbacks", MgnlNodeType.NT_CONTENTNODE);
         final Content currentCallbackNode = fromFilterNode.getContent("clientCallback");
         final String currentClass = currentCallbackNode.getNodeData("class").getString();
         if (contains(SIMPLE_CALLBACK_CLASSES, currentClass)) {
@@ -126,7 +124,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         }
     }
 
-    private void addCallback(InstallContext ctx, Content target, String givenCallbackName, Content source, String pathPattern) throws RepositoryException, TaskExecutionException {
+    private void addCallback(InstallContext ctx, Content target, String givenCallbackName, Content source, String pathPattern) throws RepositoryException {
         final String clazz = source.getNodeData("class").getString();
         final String newName;
         if (givenCallbackName == null && contains(SIMPLE_CALLBACK_CLASSES, clazz)) {
@@ -139,7 +137,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
             return;
         }
 
-        final Content newCallback = target.createContent(newName, ItemType.CONTENTNODE);
+        final Content newCallback = target.createContent(newName, MgnlNodeType.NT_CONTENTNODE);
         copyStringProperty(source, newCallback, "class");
         if (FORM_CLASS.equals(clazz)) {
             copyStringProperty(source, newCallback, "loginForm");
