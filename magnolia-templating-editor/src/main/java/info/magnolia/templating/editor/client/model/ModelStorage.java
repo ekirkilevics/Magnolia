@@ -37,6 +37,7 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.model.focus.FocusModel;
 import info.magnolia.templating.editor.client.model.focus.FocusModelImpl3;
 import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
+import info.magnolia.templating.editor.client.widget.controlbar.AreaEndBar;
 import info.magnolia.templating.editor.client.widget.overlay.AbstractOverlay;
 import info.magnolia.templating.editor.client.widget.placeholder.AbstractPlaceHolder;
 import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
@@ -65,6 +66,7 @@ public class ModelStorage {
     private Map<Element, MgnlElement> mgnlElements = new HashMap<Element, MgnlElement>();
     private Map<MgnlElement, AreaPlaceHolder> areaPlaceHolders = new HashMap<MgnlElement, AreaPlaceHolder>();
     private Map<MgnlElement, ComponentPlaceHolder> componentPlaceHolders = new HashMap<MgnlElement, ComponentPlaceHolder>();
+    private Map<MgnlElement, AreaEndBar> areaEndBars = new HashMap<MgnlElement, AreaEndBar>();
 
 
     public List<MgnlElement> rootElements = new LinkedList<MgnlElement>();
@@ -170,6 +172,14 @@ public class ModelStorage {
 
     public ComponentPlaceHolder getComponentPlaceHolder(MgnlElement mgnlElement) {
         return componentPlaceHolders.get(mgnlElement);
+    }
+
+    public void addAreaEndBar(MgnlElement mgnlElement, AreaEndBar areaEndBar) {
+        areaEndBars.put(mgnlElement, areaEndBar);
+    }
+
+    public AreaEndBar getAreaEndBar(MgnlElement mgnlElement) {
+        return areaEndBars.get(mgnlElement);
     }
 
     public void removeMgnlElement(MgnlElement mgnlElement) {
