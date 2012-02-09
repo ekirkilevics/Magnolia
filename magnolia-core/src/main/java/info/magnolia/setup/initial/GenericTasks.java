@@ -93,8 +93,8 @@ public class GenericTasks {
                         "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
                         "/mgnl-bootstrap/core/config.server.IPConfig.xml"),
 
-                new BootstrapSingleModuleResource("i18n content", "bootstrap the config", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
-                new BootstrapSingleModuleResource("i18n system", "bootstrap the config", "/mgnl-bootstrap/core/config.server.i18n.system.xml"),
+                new BootstrapSingleModuleResource("i18n content", "bootstrap the config", "config.server.i18n.content.xml"),
+                new BootstrapSingleModuleResource("i18n system", "bootstrap the config", "config.server.i18n.system.xml"),
 
 
                 new BootstrapSingleResource("New security configuration", "Install new configuration for security managers.", "/mgnl-bootstrap/core/config.server.security.xml"),
