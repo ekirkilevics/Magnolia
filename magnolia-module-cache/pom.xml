@@ -11,7 +11,7 @@
   <name>magnolia-module-cache</name>
 
   <properties>
-    <cloverCoverageThreshold>35</cloverCoverageThreshold>
+    <cloverCoverageThreshold>40</cloverCoverageThreshold>
   </properties>
 
   <dependencies>
