@@ -92,8 +92,6 @@ public class GenericTasks {
                         "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
                         "/mgnl-bootstrap/core/config.server.IPConfig.xml"),
 
-                new UpdateI18nConfiguration(),
-
                 new BootstrapSingleResource("New security configuration", "Install new configuration for security managers.", "/mgnl-bootstrap/core/config.server.security.xml"),
                 new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving.", "/mgnl-bootstrap/core/config.server.rendering.linkManagement.xml"),
 
@@ -154,7 +152,6 @@ public class GenericTasks {
 
                 // --- system-wide tasks (impact all modules)
                 new WarnIgnoredModuleFilters(),
-                new RenamedRenderersToTemplateRenderers(),
                 new UpdateURIMappings()
         );
     }
