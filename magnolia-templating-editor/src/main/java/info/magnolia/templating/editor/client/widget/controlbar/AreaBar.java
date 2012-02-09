@@ -89,8 +89,7 @@ public class AreaBar extends AbstractBar {
                         PageEditor.deleteComponent(path);
                     }
                 });
-                removeButton.addStyleName("mgnlRemoveButton");
-                addButton(removeButton, Float.RIGHT);
+                addSecondaryButton(removeButton, Float.RIGHT);
         }
         if (this.dialog != null) {
             Button editButton = new Button(getI18nMessage("buttons.edit.js"));
@@ -100,7 +99,7 @@ public class AreaBar extends AbstractBar {
                     PageEditor.openDialog(dialog, workspace, path, null, null);
                 }
             });
-            addButton(editButton, Float.RIGHT);
+            addPrimaryButton(editButton, Float.RIGHT);
         }
     }
 

@@ -96,7 +96,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         controlBar.add(buttonWrapper);
 
-        Label label = new Label("New Label goes here");
+        Label label = new Label("New Component");
         label.setStyleName("mgnlEditorBarLabel");
         controlBar.add(label);
 
@@ -104,8 +104,6 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         FlowPanel elementWrapper = new FlowPanel();
         elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
-
-        elementWrapper.add(new Label("New Component"));
 
         setVisible(false);
 

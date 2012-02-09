@@ -51,4 +51,7 @@ public interface FocusModel {
     public void onMouseDown(Element element);
 
     public void onMouseUp(MgnlElement mgnlElement);
+
+    void toggleRootSelection();
+
 }

@@ -214,4 +214,10 @@ public class FocusModelImpl2 implements FocusModel {
         }
     }
 
+    @Override
+    public void toggleRootSelection() {
+        // TODO Auto-generated method stub
+
+    }
+
 }

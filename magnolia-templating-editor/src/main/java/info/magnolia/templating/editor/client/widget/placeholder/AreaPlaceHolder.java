@@ -53,6 +53,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         this.addStyleName("area");
         String label = mgnlElement.getComment().getAttribute("label");
         Label areaName = new Label(label + " Placeholder");
+        areaName.setStyleName("label");
 
         if (mgnlElement.getRootArea() != mgnlElement) {
             setVisible(false);
@@ -80,4 +81,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         onAttach();
     }
 
+    public void setActive(boolean active) {
+        setStyleName("active", active);
+    }
 }

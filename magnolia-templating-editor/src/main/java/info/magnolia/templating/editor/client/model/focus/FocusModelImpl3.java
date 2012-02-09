@@ -44,6 +44,7 @@ import com.google.gwt.dom.client.Element;
 public class FocusModelImpl3 implements FocusModel {
 
     private ModelStorage storage;
+    private boolean rootSelected = false;
 
     public FocusModelImpl3(ModelStorage storage) {
         super();
@@ -64,18 +65,14 @@ public class FocusModelImpl3 implements FocusModel {
             reset();
         }
 
-        else if (mgnlElement != storage.getSelectedMgnlElement() && mgnlElement.getParentArea() != null) {
+        else if (mgnlElement.getParentArea() != null) {
             MgnlElement area = mgnlElement.getParentArea();
-            if (storage.getSelectedMgnlElement() != null && area == storage.getSelectedMgnlElement().getParentArea()) {
-                return;
+            if (area != storage.getSelectedMgnlElement()) {
+                deSelect();
+                hideRoot();
+                toggleSelection(area, true);
             }
-            deSelect();
-            hideRoot();
-            toggleSelection(area, true);
-
         }
-        storage.setSelectedMgnlElement(mgnlElement);
-
     }
 
 
@@ -85,7 +82,7 @@ public class FocusModelImpl3 implements FocusModel {
     @Override
     public void reset() {
         deSelect();
-        showRoot();
+        showRootPlaceHolder();
     }
 
     protected void toggleSelection(MgnlElement mgnlElement, boolean visible) {
@@ -115,57 +112,59 @@ public class FocusModelImpl3 implements FocusModel {
             for (MgnlElement area : component.getAreas()) {
 
                 if (storage.getAreaPlaceHolder(area) != null) {
-                    storage.getEditBar(area).setVisible(visible);
                     storage.getAreaPlaceHolder(area).setVisible(visible);
-
-                    storage.getComponentPlaceHolder(area).setVisible(visible);
                 }
             }
         }
 
-        if (storage.getAreaPlaceHolder(mgnlElement) != null && mgnlElement.getParent() != null) {
-            storage.getAreaPlaceHolder(mgnlElement).setVisible(visible);
-        }
-
-        if (mgnlElement.getParent() == null && storage.getAreaPlaceHolder(mgnlElement) != null) {
-            if (visible && storage.getAreaPlaceHolder(mgnlElement).getStyleName().contains("inactive")) {
-                storage.getAreaPlaceHolder(mgnlElement).removeStyleName("inactive");
+        if (storage.getAreaPlaceHolder(mgnlElement)!= null) {
+            if (mgnlElement.getParent() != null) {
+                storage.getAreaPlaceHolder(mgnlElement).setVisible(visible);
             }
-            else if (!visible){
-                storage.getAreaPlaceHolder(mgnlElement).addStyleName("inactive");
-            }
+            storage.getAreaPlaceHolder(mgnlElement).setActive(visible);
         }
 
         if (storage.getComponentPlaceHolder(mgnlElement) != null) {
             storage.getComponentPlaceHolder(mgnlElement).setVisible(visible);
         }
+        storage.setSelectedMgnlElement(mgnlElement);
 
     }
 
     public void deSelect() {
         if (storage.getSelectedMgnlElement() != null && storage.getSelectedMgnlElement().getParentArea() != null) {
             toggleSelection(storage.getSelectedMgnlElement().getParentArea(), false);
+            storage.setSelectedMgnlElement(null);
         }
     }
 
-    public void showRoot() {
+    @Override
+    public void toggleRootSelection() {
+        deSelect();
+
+        this.rootSelected = !this.rootSelected;
         for (MgnlElement root : storage.getRootElements()) {
-                if (storage.getEditBar(root) != null) {
-                    storage.getEditBar(root).setVisible(true);
-                }
-                if (storage.getAreaEndBar(root) != null) {
-                    storage.getAreaEndBar(root).setVisible(true);
-                }
-                if (storage.getAreaPlaceHolder(root) != null) {
-                    storage.getAreaPlaceHolder(root).setVisible(true);
-                    if (storage.getAreaPlaceHolder(root).getStyleName().contains("inactive")) {
-                        storage.getAreaPlaceHolder(root).removeStyleName("inactive");
-                    }
-                    storage.getComponentPlaceHolder(root).setVisible(true);
-
-                }
+            if (storage.getEditBar(root) != null) {
+                storage.getEditBar(root).setVisible(true);
+            }
+            if (storage.getAreaEndBar(root) != null) {
+                storage.getAreaEndBar(root).setVisible(true);
+            }
+            if (storage.getAreaPlaceHolder(root) != null) {
+                storage.getAreaPlaceHolder(root).setVisible(true);
+            }
         }
     }
+
+    public void showRootPlaceHolder() {
+        for (MgnlElement root : storage.getRootElements()) {
+            if (storage.getAreaPlaceHolder(root) != null) {
+                storage.getAreaPlaceHolder(root).setVisible(true);
+                storage.getAreaPlaceHolder(root).setActive(false);
+            }
+        }
+    }
+
     public void hideRoot() {
         for (MgnlElement root : storage.getRootElements()) {
             if (storage.getEditBar(root) != null) {

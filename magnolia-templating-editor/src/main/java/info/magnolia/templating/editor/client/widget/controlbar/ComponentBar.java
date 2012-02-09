@@ -139,7 +139,7 @@ public class ComponentBar extends AbstractBar {
 
                 }
             });
-            addButton(edit, Float.RIGHT);
+            addPrimaryButton(edit, Float.RIGHT);
         }
 
         //single area component obviously cannot be moved
@@ -151,7 +151,7 @@ public class ComponentBar extends AbstractBar {
                     PageEditor.moveComponentStart(id);
                 }
             });
-            addButton(move, Float.RIGHT);
+            addPrimaryButton(move, Float.RIGHT);
         }
 
         if (!this.isInherited) {
@@ -162,8 +162,7 @@ public class ComponentBar extends AbstractBar {
                     PageEditor.deleteComponent(path);
                 }
             });
-            removeButton.addStyleName("mgnlRemoveButton");
-            addButton(removeButton, Float.RIGHT);
+            addSecondaryButton(removeButton, Float.RIGHT);
         }
     }
 }

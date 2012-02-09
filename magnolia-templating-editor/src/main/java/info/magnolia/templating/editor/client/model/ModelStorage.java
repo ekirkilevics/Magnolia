@@ -39,7 +39,6 @@ import info.magnolia.templating.editor.client.model.focus.FocusModelImpl3;
 import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
 import info.magnolia.templating.editor.client.widget.controlbar.AreaEndBar;
 import info.magnolia.templating.editor.client.widget.overlay.AbstractOverlay;
-import info.magnolia.templating.editor.client.widget.placeholder.AbstractPlaceHolder;
 import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
 import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
@@ -162,7 +161,7 @@ public class ModelStorage {
         areaPlaceHolders.put(mgnlElement, placeHolder);
     }
 
-    public AbstractPlaceHolder getAreaPlaceHolder(MgnlElement mgnlElement) {
+    public AreaPlaceHolder getAreaPlaceHolder(MgnlElement mgnlElement) {
         return areaPlaceHolders.get(mgnlElement);
     }
 

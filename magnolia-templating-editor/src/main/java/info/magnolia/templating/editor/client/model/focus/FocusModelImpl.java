@@ -66,8 +66,6 @@ public class FocusModelImpl implements FocusModel {
             deSelect(storage.getSelectedMgnlElement());
         }
         select(mgnlElement);
-
-        storage.setSelectedMgnlElement(mgnlElement);
     }
 
     @Override
@@ -111,6 +109,8 @@ public class FocusModelImpl implements FocusModel {
                 }
                 computeOverlay();
            }
+        storage.setSelectedMgnlElement(mgnlElement);
+
     }
 
     public void deSelect() {
@@ -143,6 +143,8 @@ public class FocusModelImpl implements FocusModel {
             computeOverlay();
 
         }
+        storage.setSelectedMgnlElement(mgnlElement);
+
     }
 
     public void showRoot() {
@@ -186,6 +188,12 @@ public class FocusModelImpl implements FocusModel {
                 }
             }
         }
+    }
+
+    @Override
+    public void toggleRootSelection() {
+        // TODO Auto-generated method stub
+
     }
 
 }

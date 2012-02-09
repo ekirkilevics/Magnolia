@@ -49,7 +49,8 @@ div.mgnlEditorBar {
  */
 .mgnlEditorBar.area {
   border-radius: 7px 7px 0 0;
-  clear: both;
+  clear: both !important;
+  margin: 0 0 5px 0 !important;
 }
 
 /*
@@ -67,6 +68,8 @@ div.mgnlEditorBar {
   background-image: url("../img/mgnl-bar.component.png");
   background-repeat: repeat;
   color: #004000;
+  margin: 0 !important;
+
 }
 
 /*
@@ -98,6 +101,18 @@ div.mgnlEditorBar {
   padding-top: 1px;
 }
 
+.mgnlEditorBarSecondaryButtons {
+  width: auto !important;
+     margin: 0 0 0 0 !important;
+  float: left !important;
+}
+
+.mgnlEditorBarPrimaryButtons {
+    width: auto !important;
+    margin: 0 0 0 10px !important;
+    float: right !important;
+}
+
 /*
  * Buttons on component and area edit bars.
  */
@@ -116,10 +131,6 @@ div.mgnlEditorBar {
 
   font-family: Verdana, sans-serif;
   font-size: 11px;
-}
-
-.mgnlRemoveButton {
-  margin-right: 10px !important;
 }
 
 /* Buttons on page edit bar. */
@@ -146,11 +157,13 @@ div.mgnlEditorBar {
 }
 
 .mgnlEditorMainbarPreview .mgnlEditorBarButtons {
+  margin: 0 !important;
   float: left !important;
 }
 
 /* Buttons of page edit bar. */
 .mgnlEditorMainbar .mgnlEditorBarButtons {
+     margin: 0 !important;
   float: none !important;
 }
 
@@ -219,43 +232,39 @@ button.mgnlEditorButton:active {
 
   font-family: Verdana, sans-serif;
   font-size: 12px;
+    margin: 0 !important;
+
 }
 
 /* Area place holder, in focus. */
-.mgnlPlaceHolder.area {
-  margin: 0;
+.mgnlPlaceHolder.area.active {
+  margin: 0 !important;
   padding: 0;
-
   border-radius: 0 0 7px 7px;
-    background-color: #eeeeee;
 
-  color: #aaaaaa;
 }
 /* FIXME: remove this def when we don't show area ph labels any more. */
-.mgnlPlaceHolder.area .gwt-Label {
+.mgnlPlaceHolder.area.active .label {
   display: none;
 }
 
 /* Area place holder, not in focus. */
-.mgnlPlaceHolder.area.inactive {
-  margin: 10px 0;
+.mgnlPlaceHolder.area {
+  margin: 10px 0 !important;
   padding: 25px 15px;
-
+  background-color: #eeeeee;
+  color: #aaaaaa;
   border-radius: 7px;
-}
-.mgnlPlaceHolder.area.inactive .gwt-Label {
-  display: inline;
 }
 
 /* Component place holder */
 .mgnlPlaceHolder.component {
   width: 100%;
-  margin-bottom: 20px;
 }
 
 .mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
-  padding: 7px 7px;
-      background-color: #FFFFFF;
+    height: 45px;
+  background-color: #FFFFFF;
     border: 2px dotted #91BA26;
     border-top: none;
     margin: 0 !important;
@@ -423,4 +432,5 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
   border-bottom: 5px solid #487000;
   border-radius: 0 0 7px 7px;
   clear: both;
+  margin: 5px 0 !important;
 }
