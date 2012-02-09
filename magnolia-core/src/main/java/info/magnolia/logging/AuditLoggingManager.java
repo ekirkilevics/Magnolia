@@ -46,23 +46,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for auditory logging, it's optional to define it, configured in mgnl-beans.properties.
  *
- * @author tmiyar
+ * @version $Id$
  */
 public class AuditLoggingManager {
 
-    private List logConfigurations = new ArrayList();
+    private List<LogConfiguration> logConfigurations = new ArrayList<LogConfiguration>();
 
     private String defaultSeparator = ", ";
 
     private static Logger applog = LoggerFactory.getLogger(AuditLoggingManager.class);
 
-    public AuditLoggingManager() {
-
-    }
-
     public static AuditLoggingManager getInstance() {
         try {
-            return Components.getSingleton(AuditLoggingManager.class);
+            return Components.getComponent(AuditLoggingManager.class);
         } catch (Exception e) {
             // if not defined skip and return null
             applog.info("Class AuditLoggingManager not defined");
@@ -74,19 +70,19 @@ public class AuditLoggingManager {
         this.logConfigurations.add(action);
     }
 
-    public List getLogConfigurations() {
+    public List<LogConfiguration> getLogConfigurations() {
         return logConfigurations;
     }
 
-    public void setLogConfigurations(List logConfigurations) {
+    public void setLogConfigurations(List<LogConfiguration> logConfigurations) {
         this.logConfigurations = logConfigurations;
     }
 
     public LogConfiguration getLogConfiguration(String action) {
-        Iterator iterator = this.logConfigurations.iterator();
+        Iterator<LogConfiguration> iterator = this.logConfigurations.iterator();
         while (iterator.hasNext()) {
-            final LogConfiguration trail = (LogConfiguration)iterator.next();
-            if(StringUtils.equals(trail.getName(), action) ) {
+            final LogConfiguration trail = iterator.next();
+            if (StringUtils.equals(trail.getName(), action)) {
                 return trail;
             }
         }
@@ -95,10 +91,12 @@ public class AuditLoggingManager {
 
     public void log(String action, String[] data) {
         StringBuilder message = new StringBuilder();
-        try {
-            LogConfiguration trail = this.getLogConfiguration(action);
+        LogConfiguration trail = this.getLogConfiguration(action);
+        if (trail == null) {
+            applog.trace("Can't get log configuration");
+        } else {
             String separator = defaultSeparator;
-            if(!StringUtils.isEmpty(trail.getSeparator())) {
+            if (!StringUtils.isEmpty(trail.getSeparator())) {
                 separator = trail.getSeparator();
             }
             message.append(separator).append(action);
@@ -109,13 +107,8 @@ public class AuditLoggingManager {
                     }
 
                 }
-
-                org.apache.log4j.Logger.getLogger(trail.getLogName()).log(
-LoggingLevel.AUDIT_TRAIL, message.toString());
+                org.apache.log4j.Logger.getLogger(trail.getLogName()).log(LoggingLevel.AUDIT_TRAIL, message.toString());
             }
-
-        } catch (Exception e) {
-            applog.trace("Can't get log configuration");
         }
     }
 
@@ -126,5 +119,4 @@ LoggingLevel.AUDIT_TRAIL, message.toString());
     public void setDefaultSeparator(String defaultSeparator) {
         this.defaultSeparator = defaultSeparator;
     }
-
 }
