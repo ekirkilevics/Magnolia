@@ -86,7 +86,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public CoreModuleVersionHandler() {
         super();
 
-        register(DeltaBuilder.update("4.4.6", "")
+        register(DeltaBuilder.update("4.4.6", "minimal version required for updating to 4.5")
                 .addCondition(new FalseCondition("checkPrerequisite", "Updating to 4.5 is only supported from 4.4.6. Please udate to 4.4.6 first.")));
 
         register(DeltaBuilder.update("4.5", "")
