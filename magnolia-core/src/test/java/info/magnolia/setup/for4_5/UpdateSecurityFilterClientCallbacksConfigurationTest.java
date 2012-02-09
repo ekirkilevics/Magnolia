@@ -212,13 +212,13 @@ public class UpdateSecurityFilterClientCallbacksConfigurationTest extends Reposi
         assertThat(publicCallback.getNodeDataCollection(), hasSize(3));
         assertThat(publicCallback, allOf(
                 hasNodeData("class", "info.magnolia.cms.security.auth.callback.RedirectClientCallback"),
-                hasNodeData("pathPattern", "/demo-project/members-area/protected*"),
+                hasNodeData("urlPattern", "/demo-project/members-area/protected*"),
                 hasNodeData("location", "/demo-project/members-area/login.html")
         ));
         assertThat(magnoliaCallback.getNodeDataCollection(), hasSize(3));
         assertThat(magnoliaCallback, allOf(
                 hasNodeData("class", "info.magnolia.cms.security.auth.callback.FormClientCallback"),
-                hasNodeData("pathPattern", "*"),
+                hasNodeData("urlPattern", "*"),
                 hasNodeData("loginForm", "/mgnl-resources/loginForm/login.html")
         ));
 
@@ -367,7 +367,7 @@ public class UpdateSecurityFilterClientCallbacksConfigurationTest extends Reposi
         assertThat(customCallback2.getNodeDataCollection(), hasSize(3));
         assertThat(customCallback2, allOf(
                 hasNodeData("class", "org.foobar.CustomCallback2"),
-                hasNodeData("pathPattern", "/path2/*"),
+                hasNodeData("urlPattern", "/path2/*"),
                 hasNodeData("dings", "bums")
         ));
 

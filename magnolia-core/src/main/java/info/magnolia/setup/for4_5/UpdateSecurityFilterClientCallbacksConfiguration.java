@@ -124,7 +124,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         }
     }
 
-    private void addCallback(InstallContext ctx, Content target, String givenCallbackName, Content source, String pathPattern) throws RepositoryException {
+    private void addCallback(InstallContext ctx, Content target, String givenCallbackName, Content source, String urlPattern) throws RepositoryException {
         final String clazz = source.getNodeData("class").getString();
         final String newName;
         if (givenCallbackName == null && contains(SIMPLE_CALLBACK_CLASSES, clazz)) {
@@ -156,8 +156,8 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
             copyRemainingProperties(ctx, source, newCallback, "class");
         }
 
-        if (pathPattern != null) {
-            newCallback.setNodeData("pathPattern", pathPattern);
+        if (urlPattern != null) {
+            newCallback.setNodeData("urlPattern", urlPattern);
         }
 
     }
