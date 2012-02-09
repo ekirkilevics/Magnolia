@@ -35,6 +35,7 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -105,6 +106,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private String module;
 
+    private ContentFilter chieldFilter;
+
     /**
      * Logger.
      */
@@ -156,6 +159,15 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      */
     public boolean isPages() {
         return this.pages;
+    }
+
+    /**
+     * Setter for <code>chieldFilter</code>.
+     * This filter is used in the backupChildren method. Get all children of the current node that pass the current filter.
+     * If no filter is set, ALL_NODES_EXCEPT_JCR_CONTENT_FILTER is then used.
+     */
+    public void setChieldFilter(ContentFilter chieldFilter) {
+        this.chieldFilter = chieldFilter;
     }
 
     /**
@@ -480,7 +492,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             return;
         }
         try {
-            Iterator children = parentNode.getChildren(ContentUtil.ALL_NODES_EXCEPT_JCR_CONTENT_FILTER).iterator();
+            this.chieldFilter = this.chieldFilter!=null?this.chieldFilter:ContentUtil.ALL_NODES_EXCEPT_JCR_CONTENT_FILTER;
+            Iterator children = parentNode.getChildren(this.chieldFilter).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repository, hm.getWorkspace().getSession(), exported);
