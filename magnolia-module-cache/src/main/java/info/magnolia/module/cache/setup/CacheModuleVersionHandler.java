@@ -35,6 +35,7 @@ package info.magnolia.module.cache.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.Task;
 
@@ -48,11 +49,21 @@ import java.util.List;
  */
 public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
+    private final FilterOrderingTask placeGzipFitler = new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"});
+    private final FilterOrderingTask placeCacheFilter = new FilterOrderingTask("cache", new String[] { "gzip", "range", "i18n" });
+
+    public CacheModuleVersionHandler() {
+        register(DeltaBuilder.update("4.4.6", "")
+                .addTask(placeGzipFitler)
+                .addTask(placeCacheFilter)
+        );
+    }
+
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext installContext) {
         final List<Task> tasks = new ArrayList<Task>();
-        tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));
-        tasks.add(new FilterOrderingTask("cache", new String[] { "gzip", "range", "i18n" }));
+        tasks.add(placeGzipFitler);
+        tasks.add(placeCacheFilter);
         return tasks;
     }
 }
