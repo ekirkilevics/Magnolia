@@ -40,8 +40,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
  *
  * @see info.magnolia.cms.beans.config.ServerConfiguration
  *
- * @author had
- * @version $Id:$
+ * @version $Id$
  */
 public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
 
