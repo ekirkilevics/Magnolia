@@ -42,7 +42,6 @@ import info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration;
 import info.magnolia.module.delta.AddPermissionTask;
 import info.magnolia.module.delta.AddRoleToGroupTask;
 import info.magnolia.module.delta.AddUserToGroupTask;
-import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
@@ -60,22 +59,11 @@ import java.util.List;
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    private static final String BACKUP_PATH = "/server/install/backup";
     private final Task inboxMenu = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
             "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
     "security");
     private final Task flowsPageMenu = new AddSubMenuItemTask("config", "workflows", "menu.config.workflows",
             "MgnlAdminCentral.showContent('/.magnolia/pages/flows.html');", "/.resources/icons/16/dot.gif");
-
-    private final Task bootstrapSecurityConfig = new BootstrapResourcesTask("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs") {
-        @Override
-        protected String[] getResourcesToBootstrap(final InstallContext installContext) {
-            return new String[]{
-                    "/mgnl-bootstrap/workflow/config.modules.adminInterface.config.securityConfiguration.repositories.Expressions.xml",
-                    "/mgnl-bootstrap/workflow/config.modules.adminInterface.config.securityConfiguration.repositories.Store.xml"
-            };
-        }
-    };
 
     private final Task changeWebsiteTreeConfigurationTask = new CheckAndModifyPropertyValueTask("Website tree configuration", "Modifies the website tree configuration so that a message window pops up for activation.",
             RepositoryConstants.CONFIG,
@@ -95,7 +83,6 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                     "info.magnolia.module.dms.DMSAdminTreeConfig",
                     "info.magnolia.module.dms.WorkflowDMSAdminTreeConfig"
             ));
-
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {
