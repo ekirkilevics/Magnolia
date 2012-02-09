@@ -371,7 +371,7 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="securityCallbackFilter">
+  <sv:node sv:name="securityCallback">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:content</sv:value>
     </sv:property>
