@@ -38,6 +38,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.CreateNodeTask;
@@ -91,6 +92,10 @@ public class GenericTasks {
                 new BootstrapSingleResource("IPConfig rules changed",
                         "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
                         "/mgnl-bootstrap/core/config.server.IPConfig.xml"),
+
+                new BootstrapSingleModuleResource("i18n content", "bootstrap the config", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
+                new BootstrapSingleModuleResource("i18n system", "bootstrap the config", "/mgnl-bootstrap/core/config.server.i18n.system.xml"),
+
 
                 new BootstrapSingleResource("New security configuration", "Install new configuration for security managers.", "/mgnl-bootstrap/core/config.server.security.xml"),
                 new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving.", "/mgnl-bootstrap/core/config.server.rendering.linkManagement.xml"),
