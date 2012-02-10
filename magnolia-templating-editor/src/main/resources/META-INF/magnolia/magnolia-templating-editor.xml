@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
-  <name>magnolia-templating-editor</name>
+  <name>Magnolia Templating Editor</name>
   <version>${project.version}</version>
 
   <dependencies>
