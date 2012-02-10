@@ -53,7 +53,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
     private final FilterOrderingTask placeCacheFilter = new FilterOrderingTask("cache", new String[] { "gzip", "range", "i18n" });
 
     public CacheModuleVersionHandler() {
-        register(DeltaBuilder.update("4.4.6", "")
+        register(DeltaBuilder.update("4.5", "")
                 .addTask(placeGzipFitler)
                 .addTask(placeCacheFilter)
         );
