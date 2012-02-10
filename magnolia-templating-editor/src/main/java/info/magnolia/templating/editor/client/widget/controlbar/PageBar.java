@@ -188,6 +188,7 @@ public class PageBar extends AbstractBar {
         }
     }
 
+    @Override
     public void attach() {
         Document.get().getBody().insertFirst(getElement());
         onAttach();
