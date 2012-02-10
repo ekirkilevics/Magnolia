@@ -42,24 +42,23 @@ import java.util.List;
 /**
  * Helper class to build Delta instances.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class DeltaBuilder implements Delta {
 
     /**
      * Convenience factory method for an Update Delta with a single task.
      */
-    public static DeltaBuilder update(Version v, String description, Task task) {
-        return update(v, description).addTask(task);
+    public static DeltaBuilder update(Version fromVersion, String description, Task task) {
+        return update(fromVersion, description).addTask(task);
     }
 
-    public static DeltaBuilder update(String versionStr, String description) {
-        return update(Version.parseVersion(versionStr), description);
+    public static DeltaBuilder update(String fromVersionStr, String description) {
+        return update(Version.parseVersion(fromVersionStr), description);
     }
 
-    public static DeltaBuilder update(Version version, String description) {
-        return new DeltaBuilder(version, description, DeltaType.update);
+    public static DeltaBuilder update(Version fromVersion, String description) {
+        return new DeltaBuilder(fromVersion, description, DeltaType.update);
     }
 
     public static DeltaBuilder install(Version version, String description) {
