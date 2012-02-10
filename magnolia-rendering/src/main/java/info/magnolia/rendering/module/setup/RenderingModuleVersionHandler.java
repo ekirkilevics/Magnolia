@@ -48,9 +48,13 @@ public class RenderingModuleVersionHandler extends DefaultModuleVersionHandler {
     public RenderingModuleVersionHandler() {
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new BootstrapSingleResource(
-                        "Register Context Attribute",
+                        "Register FTL Context Attribute",
                         "Add cms and cmsfn context Attribute",
                         "/mgnl-bootstrap/rendering/config.modules.rendering.renderers.freemarker.contextAttributes.xml"))
+                .addTask(new BootstrapSingleResource(
+                        "Register JSP Context Attribute",
+                        "Add cmsfn context Attribute",
+                        "/mgnl-bootstrap/rendering/config.modules.rendering.renderers.jsp.contextAttributes.xml"))
                  );
     }
 }
