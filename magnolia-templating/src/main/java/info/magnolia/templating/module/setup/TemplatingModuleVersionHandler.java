@@ -66,10 +66,6 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                     "Register Context ",
                     "Add plaintext renderer Attribute",
                     "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.xml"))
-                .addTask(new BootstrapSingleResource(
-                    "Register Context Attribute",
-                    "Add cms and cmsfn context Attribute",
-                    "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.contextAttributes.xml"))
         );
     }
 
