@@ -130,7 +130,7 @@ public class ComponentBar extends AbstractBar {
 
     private void createButtons() {
 
-        if (!this.isInherited) {
+        if (dialog != null && !this.isInherited) {
             final Button edit = new Button(getI18nMessage("buttons.edit.js"));
             edit.addClickHandler(new ClickHandler() {
                 @Override
