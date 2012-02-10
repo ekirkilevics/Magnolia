@@ -33,72 +33,33 @@
  */
 package info.magnolia.module.exchangesimple.setup;
 
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.ArrayDelegateTask;
-import info.magnolia.module.delta.BootstrapSingleResource;
-import info.magnolia.module.delta.ConditionalDelegateTask;
-import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
-import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.module.exchangesimple.setup.for3_5.UpdateActivationConfigTask;
-import info.magnolia.repository.RepositoryConstants;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 3.5 being the first version of exchange-simple as a module, it is always "installed",
- * but we need it to behave differently if magnolia was installed previously
- * (ie. updating from 3.0), which is why there are so many "conditional
- * tasks". Once 3.5 is out the door, this will need to be revised
- * completely.
+ * VersionHandler of the ExchangeSimple module.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHandler {
-    private final Task createEmptyActivationConfig = new ArrayDelegateTask("Activation configuration", "Creates an empty activation configuration", new Task[] {
-            new CreateNodeTask("Activation configuration", "Creates empty activation configuration", RepositoryConstants.CONFIG, "/server", "activation", ItemType.CONTENT.getSystemName()),
-            new SetPropertyTask(RepositoryConstants.CONFIG, "/server/activation", "class", info.magnolia.module.exchangesimple.DefaultActivationManager.class.getName()),
-            new CreateNodeTask("Activation configuration", "Creates empty subscribers node", RepositoryConstants.CONFIG, "/server/activation", "subscribers", ItemType.CONTENT.getSystemName())
-    });
-
-    private final Task updateConfigFrom30OrBootstrap = new ConditionalDelegateTask("Activation configuration", "The activation configuration changed. This either updates your existing configuration or bootstraps a new one",
-            new UpdateActivationConfigTask(),
-            new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
-            "/mgnl-bootstrap/exchange-simple/config.server.activation.xml"), createEmptyActivationConfig)) {
-
-        @Override
-        protected boolean condition(InstallContext ctx) {
-            final HierarchyManager hm = ctx.getConfigHierarchyManager();
-            return hm.isExist(UpdateActivationConfigTask.CE30_ROOT_PATH) || hm.isExist(UpdateActivationConfigTask.EE30_ROOT_PATH);
-        }
-    };
-
-    private final BootstrapSingleResource bootstrapVirtualURIMapping = new BootstrapSingleResource("Bootstrap new virtual uri mapping", "Bootstrap new virtual uri mapping",
-    "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.virtualURIMapping.3_0_to_3_5.xml");
-
     public ExchangeSimpleModuleVersionHandler() {
         super();
 
-        DeltaBuilder deltaTo354 =  DeltaBuilder.update("3.5.4", "URL of activation filter has changed");
-        deltaTo354.addTask(bootstrapVirtualURIMapping);
-        deltaTo354.addTask(new SetPropertyTask(RepositoryConstants.CONFIG, "/server/filters/activation/bypasses/allButActivationHandler","pattern", "/.magnolia/activation"));
-        this.register(deltaTo354);
-
         register(DeltaBuilder.update("4.5", "URL of activation filter is no longer password protected but uses encryption instead.")
-                .addTask(new BootstrapSingleResource("", "", "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.pages.activationPage.xml"))
-                .addTask(new BootstrapSingleResource("", "", "/mgnl-bootstrap/exchange-simple/config.modules.adminInterface.config.menu.tools.activationPage.xml"))
+                .addTask(new BootstrapSingleModuleResource("", "", "config.modules.exchange-simple.pages.activationPage.xml"))
+                .addTask(new BootstrapSingleModuleResource("", "", "config.modules.adminInterface.config.menu.tools.activationPage.xml"))
                 .addTask(new IsAuthorInstanceDelegateTask("", "", new AbstractTask("", "") {
 
                     @Override
@@ -115,8 +76,8 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
     }
 
     @Override
-    protected List getBasicInstallTasks(InstallContext installContext) {
-        final List installTasks = new ArrayList(super.getBasicInstallTasks(installContext));
+    protected List<Task> getBasicInstallTasks(InstallContext installContext) {
+        final List<Task> installTasks = new ArrayList<Task>(super.getBasicInstallTasks(installContext));
         installTasks.add(new FilterOrderingTask("activation", new String[] { "context", "login", "multipartRequest" }));
         return installTasks;
     }
