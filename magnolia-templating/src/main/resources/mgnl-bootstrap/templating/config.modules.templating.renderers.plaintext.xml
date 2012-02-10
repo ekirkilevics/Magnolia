@@ -42,6 +42,9 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>9949c300-8d9e-4b1f-bca4-8c996a99e677</sv:value>
     </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.templating.renderers.PlainTextTemplateRenderer</sv:value>
+    </sv:property>
     <sv:property sv:name="jcr:createdBy" sv:type="String">
       <sv:value>admin</sv:value>
     </sv:property>
@@ -62,7 +65,7 @@
         <sv:value>2011-12-20T10:56:38.867+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2012-02-10T15:36:25.556+01:00</sv:value>
+        <sv:value>2012-02-10T17:20:14.492+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:title" sv:type="String">
         <sv:value/>
