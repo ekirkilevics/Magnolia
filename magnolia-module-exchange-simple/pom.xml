@@ -11,7 +11,7 @@
   <name>magnolia-module-exchange-simple</name>
 
   <properties>
-      <cloverCoverageThreshold>50</cloverCoverageThreshold>
+  	<cloverCoverageThreshold>55</cloverCoverageThreshold>
   </properties>
 
   <dependencies>
