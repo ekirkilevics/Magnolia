@@ -42,7 +42,6 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CopyNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.ModuleFilesExtraction;
-import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.repository.RepositoryConstants;
@@ -65,18 +64,6 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
      * First thing is to back up the old module, configuration and templates. Then the new content is bootstrapped.
      */
     public SamplesVersionHandler() {
-        register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
-                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample templates.",
-                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-templates"))
-                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample components.",
-                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-components"))
-                .addTask(new RemoveNodeTask("Remove menu items", "Removes the samples menu config item sample dialogs.",
-                            RepositoryConstants.CONFIG, "/modules/adminInterface/config/menu/config/sample-dialogs"))
-
-                .addTask(new RegisterModuleServletsTask())
-
-        );
-
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new RemoveNodeTask("Remove sample filter", "Removes the samples menu config item sample templates.",
                             RepositoryConstants.CONFIG, "/server/filters/sample"))
