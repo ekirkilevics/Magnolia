@@ -150,17 +150,24 @@ public class TemplateDefinitionRegistry {
     }
 
     protected boolean isAvailable(TemplateDefinition templateDefinition, Node content) {
-        if (templateDefinition.getId().equals(DELETED_PAGE_TEMPLATE)) {
-            return false;
-        }
+        return isVisible(templateDefinition) &&
+                isPageTemplate(templateDefinition, content) &&
+                templateAvailability.isAvailable(content, templateDefinition);
+
+    }
+
+    protected boolean isPageTemplate(TemplateDefinition templateDefinition, Node content) {
         // TODO temporary fix for limiting only website to <moduleName>:pages/*
         try {
-            if (content.getSession().getWorkspace().getName().equals("website") && !StringUtils.substringAfter(templateDefinition.getId(), ":").startsWith("pages/")) {
-                return false;
-            }
+            return content.getSession().getWorkspace().getName().equals("website") &&
+                    StringUtils.substringAfter(templateDefinition.getId(), ":").startsWith("pages/");
         } catch (RepositoryException e) {
+            return false;
         }
-        return templateAvailability.isAvailable(content, templateDefinition);
+    }
+
+    protected boolean isVisible(TemplateDefinition templateDefinition) {
+        return templateDefinition.getVisible() == null || templateDefinition.getVisible();
     }
 
     /**

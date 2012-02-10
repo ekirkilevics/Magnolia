@@ -43,6 +43,8 @@ import java.util.Map;
  */
 public interface TemplateDefinition extends RenderableDefinition {
 
+    Boolean getVisible();
+
     String getDialog();
 
     Map<String, AreaDefinition> getAreas();

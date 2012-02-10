@@ -46,8 +46,18 @@ import java.util.Map;
  */
 public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition implements TemplateDefinition {
 
+    private Boolean visible;
     private String dialog;
     private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
+
+    @Override
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     @Override
     public String getDialog() {

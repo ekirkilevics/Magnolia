@@ -144,8 +144,6 @@ import javax.jcr.Session;
 public class Template extends AbstractRenderable {
     private Content content;
 
-    private boolean visible = true;
-
     private Map<String, Template> subTemplates = new HashMap<String, Template>();
 
     /**
@@ -170,7 +168,7 @@ public class Template extends AbstractRenderable {
      * @return Returns the visible.
      */
     public boolean isVisible() {
-        return this.visible;
+        return this.getVisible() == null || this.getVisible();
     }
 
     public Template getSubTemplate(String extension) {
@@ -187,10 +185,6 @@ public class Template extends AbstractRenderable {
 
     public void setSubTemplates(Map<String, Template> subTemplates) {
         this.subTemplates = subTemplates;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     public boolean isAvailable(Content node) {
