@@ -34,36 +34,12 @@
 package info.magnolia.module.storeclient.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
-import info.magnolia.module.delta.ArrayDelegateTask;
-import info.magnolia.module.delta.BootstrapSingleModuleResource;
-import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.Task;
 
 
 /**
  * Magnolia Store Module VersionHandler.
- * @author dschivo
+ *
+ * @version $Id$
  */
 public class MagnoliaStoreModuleVersionHandler extends DefaultModuleVersionHandler {
-
-    public MagnoliaStoreModuleVersionHandler() {
-        register(DeltaBuilder.update("4.3", "").addTask(
-            new ArrayDelegateTask("", "", new Task[]{
-                new BootstrapSingleModuleResource(
-                    "Config",
-                    "Adds the config node",
-                    "config.modules.storeclient.config.xml"),
-                new BootstrapSingleModuleResource(
-                    "Module store menu",
-                    "Adds the module store menu",
-                    "config.modules.adminInterface.config.menu.store-client.xml"),
-                new BootstrapSingleModuleResource(
-                    "All modules list page",
-                    "Adds the all modules list page",
-                    "config.modules.storeclient.pages.allModulesList.xml"),
-                new BootstrapSingleModuleResource(
-                    "Installed modules list page",
-                    "Adds the installed modules list page",
-                    "config.modules.storeclient.pages.installedModulesList.xml")})));
-    }
 }
