@@ -206,19 +206,17 @@ public class UpdateSecurityFilterClientCallbacksConfigurationTest extends Reposi
 
         final Content publicCallback = callbacks.getContent("public");
         final Content magnoliaCallback = callbacks.getContent("magnolia");
-        assertThat(publicCallback.getChildren(), Matchers.<Content>empty());
-        assertThat(magnoliaCallback.getChildren(), Matchers.<Content>empty());
+        assertThat(publicCallback.getChildren(), hasSize(1));
+        assertThat(magnoliaCallback.getChildren(), hasSize(1));
 
-        assertThat(publicCallback.getNodeDataCollection(), hasSize(3));
+        assertThat(publicCallback.getNodeDataCollection(), hasSize(2));
         assertThat(publicCallback, allOf(
                 hasNodeData("class", "info.magnolia.cms.security.auth.callback.RedirectClientCallback"),
-                hasNodeData("urlPattern", "/demo-project/members-area/protected*"),
                 hasNodeData("location", "/demo-project/members-area/login.html")
         ));
-        assertThat(magnoliaCallback.getNodeDataCollection(), hasSize(3));
+        assertThat(magnoliaCallback.getNodeDataCollection(), hasSize(2));
         assertThat(magnoliaCallback, allOf(
                 hasNodeData("class", "info.magnolia.cms.security.auth.callback.FormClientCallback"),
-                hasNodeData("urlPattern", "*"),
                 hasNodeData("loginForm", "/mgnl-resources/loginForm/login.html")
         ));
 
@@ -363,11 +361,9 @@ public class UpdateSecurityFilterClientCallbacksConfigurationTest extends Reposi
         assertThat(callbacks, hasContent("custom2", "mgnl:contentNode"));
 
         final Content customCallback2 = callbacks.getContent("custom2");
-        assertThat(customCallback2.getChildren(), Matchers.<Content>empty());
-        assertThat(customCallback2.getNodeDataCollection(), hasSize(3));
+        assertThat(customCallback2.getNodeDataCollection(), hasSize(2));
         assertThat(customCallback2, allOf(
                 hasNodeData("class", "org.foobar.CustomCallback2"),
-                hasNodeData("urlPattern", "/path2/*"),
                 hasNodeData("dings", "bums")
         ));
 
