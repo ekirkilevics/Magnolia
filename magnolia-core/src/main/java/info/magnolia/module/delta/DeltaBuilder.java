@@ -49,16 +49,16 @@ public class DeltaBuilder implements Delta {
     /**
      * Convenience factory method for an Update Delta with a single task.
      */
-    public static DeltaBuilder update(Version fromVersion, String description, Task task) {
-        return update(fromVersion, description).addTask(task);
+    public static DeltaBuilder update(Version toVersion, String description, Task task) {
+        return update(toVersion, description).addTask(task);
     }
 
-    public static DeltaBuilder update(String fromVersionStr, String description) {
-        return update(Version.parseVersion(fromVersionStr), description);
+    public static DeltaBuilder update(String toVersionString, String description) {
+        return update(Version.parseVersion(toVersionString), description);
     }
 
-    public static DeltaBuilder update(Version fromVersion, String description) {
-        return new DeltaBuilder(fromVersion, description, DeltaType.update);
+    public static DeltaBuilder update(Version toVersion, String description) {
+        return new DeltaBuilder(toVersion, description, DeltaType.update);
     }
 
     public static DeltaBuilder install(Version version, String description) {
