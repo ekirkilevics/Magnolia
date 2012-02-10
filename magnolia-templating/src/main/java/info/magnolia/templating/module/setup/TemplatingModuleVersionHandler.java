@@ -58,6 +58,8 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
 
         register(DeltaBuilder.update("4.5", "")
                 .addTask(new RemoveNodeTask("Remove backwards compatibility filter", "", RepositoryConstants.CONFIG, "/server/filters/cms/backwardCompatibility"))
+                .addTask(new RemoveNodeTask("Remove template-renderers", "", RepositoryConstants.CONFIG, "/modules/templating/template-renderers"))
+                .addTask(new RemoveNodeTask("Remove paragraph-renderers", "", RepositoryConstants.CONFIG, "/modules/templating/paragraph-renderers"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "templatePath is now templateScript.", "templates", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "templatePath is now templateScript.", "paragraphs", "templatePath", "templateScript"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
