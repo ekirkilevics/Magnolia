@@ -63,6 +63,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "type is now renderType.", "templates", "type", "renderType"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "type is now renderType.", "paragraphs", "type", "renderType"))
                 .addTask(new BootstrapSingleResource(
+                    "Register Context ",
+                    "Add plaintext renderer Attribute",
+                    "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.xml"))
+                .addTask(new BootstrapSingleResource(
                     "Register Context Attribute",
                     "Add cms and cmsfn context Attribute",
                     "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.contextAttributes.xml"))
