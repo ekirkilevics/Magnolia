@@ -35,6 +35,7 @@ package info.magnolia.module.cache.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.Task;
@@ -56,6 +57,10 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("4.5", "")
                 .addTask(placeGzipFitler)
                 .addTask(placeCacheFilter)
+                .addTask(new BootstrapSingleResource(
+                    "Register Virtual Uri Mapping",
+                    "Add Virtual Uri for static resources",
+                    "/mgnl-bootstrap/cache/config.modules.cache.virtualURIMapping.xml"))
         );
     }
 
