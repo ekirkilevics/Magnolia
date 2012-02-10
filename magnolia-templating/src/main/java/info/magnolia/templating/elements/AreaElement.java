@@ -202,7 +202,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
         try {
             if (canRenderAreaScript()) {
-                if(isInherit()) {
+                if(isInherit() && areaNode != null) {
                     try {
                         areaNode = new DefaultInheritanceContentDecorator(areaNode, areaDefinition.getInheritance()).wrapNode(areaNode);
                     } catch (RepositoryException e) {
