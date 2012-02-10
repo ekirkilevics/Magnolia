@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.DialogHandlerManager;
 import info.magnolia.module.admininterface.DialogMVCHandler;
-import info.magnolia.module.admininterface.InvalidDialogHandlerException;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
@@ -67,46 +66,35 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         // build the dialog handler we will delegate to
         String paragraphName = params.getParameter("mgnlParagraph");
 
-        final String dialogName = getDialogUsedByParagraph(paragraphName);
+        final String dialogName = getDialogUsedByTemplate(paragraphName);
 
-        try {
+        if (StringUtils.isEmpty(dialogName)) {
+            dialogHandler = new NoDialogMVCHandler(request, response);
+        } else {
+
             dialogHandler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
 
             // needed for the creation of new paragraphs
             dialogHandler.getDialog().setConfig("paragraph", paragraphName);
             dialogHandler.getDialog().setConfig("collectionNodeCreationItemType", ItemType.AREA.getSystemName());
             dialogHandler.getDialog().setConfig("creationItemType", ItemType.COMPONENT.getSystemName());
-        } catch (InvalidDialogHandlerException e) {
-            if (dialogName.equals(paragraphName)) {
-                // we're probably in the hack of getDialogUsedByParagraph (trying to load a dialog by paragraph name), except there's no such dialog
-                dialogHandler = new NoDialogMVCHandler(request, response);
-            } else {
-                throw e;
-            }
         }
     }
 
-    private String getDialogUsedByParagraph(String paragraphName) {
-        if (StringUtils.isEmpty(paragraphName)) {
+    private String getDialogUsedByTemplate(String templateId) {
+        if (StringUtils.isEmpty(templateId)) {
             throw new IllegalStateException("No paragraph selected.");
         }
-        TemplateDefinition para;
+        TemplateDefinition templateDefinition;
         try {
-            para = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(paragraphName);
+            templateDefinition = Components.getComponent(TemplateDefinitionRegistry.class).getTemplateDefinition(templateId);
         } catch (RegistrationException e) {
-            // TODO dlipp: apply consistent ExceptionHandling.
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
-        if (para == null) {
-            throw new IllegalStateException("No paragraph registered with name " + paragraphName);
+        if (templateDefinition == null) {
+            throw new IllegalStateException("No template registered with name " + templateId);
         }
-        final String dialogName;
-        if (para.getDialog() != null) {
-            dialogName = para.getDialog();
-        } else {
-            dialogName = para.getName();
-        }
-        return dialogName;
+        return templateDefinition.getDialog();
     }
 
     // methods delegating to the paragraph's dialog handler
