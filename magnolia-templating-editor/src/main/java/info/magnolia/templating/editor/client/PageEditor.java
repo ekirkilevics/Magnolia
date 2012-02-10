@@ -34,6 +34,8 @@
 package info.magnolia.templating.editor.client;
 
 
+import info.magnolia.cms.filters.InterceptFilter;
+import info.magnolia.cms.filters.MultiChannelFilter;
 import info.magnolia.templating.editor.client.dom.Comment;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.dom.processor.CommentProcessor;
@@ -95,9 +97,9 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class PageEditor extends HTML implements EntryPoint {
 
-    private static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
-    private static final String MGNL_INTERCEPT_ATTRIBUTE = "mgnlIntercept";
-    private static final String MGNL_CHANNEL_ATTRIBUTE = "mgnlChannel";
+    private static final String MGNL_PREVIEW_ATTRIBUTE = InterceptFilter.MGNL_PREVIEW_ATTRIBUTE;
+    private static final String MGNL_INTERCEPT_ATTRIBUTE = InterceptFilter.INTERCEPT;
+    private static final String MGNL_CHANNEL_ATTRIBUTE = MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER;
 
     private static String locale;
     public final static ModelStorage model = ModelStorage.getInstance();
