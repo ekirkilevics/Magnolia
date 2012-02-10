@@ -157,7 +157,9 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         }
 
         if (urlPattern != null) {
-            newCallback.setNodeData("urlPattern", urlPattern);
+            Content urlPatternContent = newCallback.createContent("urlPattern", MgnlNodeType.NT_CONTENTNODE);
+            urlPatternContent.setNodeData("class", "info.magnolia.cms.util.SimpleUrlPattern");
+            urlPatternContent.setNodeData("patternString", urlPattern);
         }
 
     }
