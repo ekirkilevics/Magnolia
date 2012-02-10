@@ -71,17 +71,23 @@ public final class SimpleUrlPattern implements UrlPattern {
     /**
      * Regexp pattern used in match().
      */
-    private final Pattern pattern;
+    private Pattern pattern;
 
     /**
      * Pattern length. Longer patterns have higher priority.
      */
-    private final int length;
+    private int length;
 
     /**
      * internal pattern string.
      */
-    private final String patternString;
+    private String patternString;
+
+    /**
+     * Default constructor used by ContentToBean.
+     */
+    public SimpleUrlPattern() {
+    }
 
     /**
      * Compile a regexp pattern handling <code>*</code> and <code>?</code> chars.
@@ -148,6 +154,15 @@ public final class SimpleUrlPattern implements UrlPattern {
     @Override
     public String getPatternString() {
         return patternString;
+    }
+
+    /**
+     * Mainly used by ContentToBean.
+     */
+    public void setPatternString(String patternString) {
+        this.length = StringUtils.removeEnd(patternString, "*").length();
+        this.pattern = Pattern.compile(getEncodedString(patternString), Pattern.DOTALL);
+        this.patternString = patternString;
     }
 
     @Override
