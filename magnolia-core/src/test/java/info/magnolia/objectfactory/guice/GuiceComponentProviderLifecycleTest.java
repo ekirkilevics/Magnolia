@@ -37,12 +37,14 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+@Ignore
 public class GuiceComponentProviderLifecycleTest {
 
     public static abstract class LifecycleBase {
