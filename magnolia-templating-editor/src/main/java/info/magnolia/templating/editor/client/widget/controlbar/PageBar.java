@@ -154,7 +154,7 @@ public class PageBar extends AbstractBar {
         });
         addButton(properties, Float.RIGHT);
 
-        if(availableLocales != null) {
+        if(!availableLocales.isEmpty()) {
             LocaleSelector localeSelector = new LocaleSelector(availableLocales, currentURI);
             addButton(localeSelector, Float.RIGHT);
         }
