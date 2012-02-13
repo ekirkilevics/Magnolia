@@ -42,6 +42,7 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingManager;
+import info.magnolia.module.InstallContext.Message;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
@@ -56,6 +57,7 @@ import info.magnolia.test.RepositoryTestCase;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -159,9 +161,29 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
     }
 
     protected void assertNoMessages(InstallContext ctx) {
-        assertTrue(ctx.getMessages().isEmpty());
+        Map<String, List<Message>> messages = ctx.getMessages();
+        if (!messages.isEmpty()) {
+            Iterator<String> keyIterator = messages.keySet().iterator();
+            StringBuilder builder = new StringBuilder("Expected no Messages but got:\n");
+            String currentKey;
+            List<Message> currentMessages;
+            while (keyIterator.hasNext()) {
+                currentKey = keyIterator.next();
+                builder.append("Key: ").append(currentKey);
+                currentMessages = messages.get(currentKey);
+                Iterator<Message> messageIterator = currentMessages.iterator();
+                Message currentMessage;
+                while (messageIterator.hasNext()) {
+                    currentMessage = messageIterator.next();
+                    builder.append("\n");
+                    builder.append("    Message: ").append(currentMessage.getMessage());
+                    builder.append(" Details: ").append(currentMessage.getDetails());
+                }
+                builder.append("\n");
+            }
+            fail(builder.toString());
+        }
     }
-
     /**
      * Asserts that the install context contains one single message, with the expected contents and priority.
      */
