@@ -107,10 +107,6 @@ public class DropdownButton extends Button {
         dropdownPanel.setPopupPosition(left, top);
     }
 
-    protected void setDropdownWidth(int width, Unit cssUnit) {
-        dropdownPanel.setWidth(width + cssUnit.toString());
-    }
-
     protected void showDropdown() {
         dropdownMenuBar.setVisible(true);
         dropdownPanel.show();
