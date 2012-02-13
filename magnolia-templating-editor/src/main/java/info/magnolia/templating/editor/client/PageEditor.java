@@ -322,7 +322,7 @@ public class PageEditor extends HTML implements EntryPoint {
     private void postProcessLinksOnMobilePreview(Element root) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
 
-        final String mobilePreviewParams = MGNL_CHANNEL_ATTRIBUTE+"=mobile";
+        final String mobilePreviewParams = MGNL_CHANNEL_ATTRIBUTE+"=smartphone";
 
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));

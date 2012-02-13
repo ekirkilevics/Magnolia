@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client.widget.controlbar;
 
 
 import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
+import info.magnolia.channel.ChannelResolver;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.model.ModelStorage;
@@ -129,7 +130,7 @@ public class PageBar extends AbstractBar {
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
         MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
-        MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new MobilePreviewCommand("tablet", Orientation.LANDSCAPE));
+        MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new TabletPreviewCommand("tablet", Orientation.LANDSCAPE));
 
         List<MenuItem> options = new ArrayList<MenuItem>();
         options.add(desktop);
@@ -176,7 +177,7 @@ public class PageBar extends AbstractBar {
 
         @Override
         public void execute() {
-            PageEditor.createChannelPreview("mobile", deviceType, orientation);
+            PageEditor.createChannelPreview("smartphone", deviceType, orientation);
         }
     }
 
@@ -192,5 +193,21 @@ public class PageBar extends AbstractBar {
     public void attach() {
         Document.get().getBody().insertFirst(getElement());
         onAttach();
+    }
+
+    private class TabletPreviewCommand implements Command {
+
+        private String deviceType;
+        private Orientation orientation;
+
+        public TabletPreviewCommand(final String deviceType, final Orientation orientation) {
+           this.deviceType = deviceType;
+           this.orientation = orientation;
+        }
+
+        @Override
+        public void execute() {
+            PageEditor.createChannelPreview(ChannelResolver.ALL, deviceType, orientation);
+        }
     }
 }
