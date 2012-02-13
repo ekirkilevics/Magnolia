@@ -34,11 +34,11 @@
 package info.magnolia.templating.editor.client.widget.controlbar;
 
 
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 import info.magnolia.channel.ChannelResolver;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.CMSComment;
-import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
 import info.magnolia.templating.editor.client.widget.button.LocaleSelector;
@@ -104,7 +104,7 @@ public class PageBar extends AbstractBar {
 
             String availableLocalesAttribute = comment.getAttribute("availableLocales");
 
-            if(LegacyJavascript.isNotEmpty(availableLocalesAttribute)) {
+            if(JavascriptUtils.isNotEmpty(availableLocalesAttribute)) {
                 String[] localeAndUris = availableLocalesAttribute.split(",");
 
                 for(String localeAndUri: localeAndUris) {

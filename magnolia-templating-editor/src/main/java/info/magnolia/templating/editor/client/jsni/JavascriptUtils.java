@@ -46,17 +46,17 @@ import com.google.gwt.i18n.client.Dictionary;
  * @version $Id$
  *
  */
-public final class LegacyJavascript {
+public final class JavascriptUtils {
 
     private static Dictionary dictionary;
 
     static {
         //TODO move messages we need to this module?
-        LegacyJavascript.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
+        JavascriptUtils.exposeMgnlMessagesToGwtDictionary("info.magnolia.module.admininterface.messages");
         dictionary = Dictionary.getDictionary("mgnlGwtMessages");
     }
 
-    private LegacyJavascript() {
+    private JavascriptUtils() {
         //do not instantiate it.
     }
 

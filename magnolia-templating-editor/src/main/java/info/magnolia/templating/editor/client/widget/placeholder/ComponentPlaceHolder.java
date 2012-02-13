@@ -33,7 +33,7 @@
  */
 package info.magnolia.templating.editor.client.widget.placeholder;
 
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;

@@ -36,7 +36,7 @@ package info.magnolia.templating.editor.client.widget.controlbar;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.*;
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;

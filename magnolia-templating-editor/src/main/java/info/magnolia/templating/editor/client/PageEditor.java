@@ -40,7 +40,7 @@ import info.magnolia.templating.editor.client.dom.processor.CommentProcessor;
 import info.magnolia.templating.editor.client.dom.processor.ElementProcessor;
 import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessor;
 import info.magnolia.templating.editor.client.dom.processor.MgnlElementProcessorFactory;
-import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
@@ -117,7 +117,7 @@ public class PageEditor extends HTML implements EntryPoint {
             return;
         }
 
-        locale = LegacyJavascript.detectCurrentLocale();
+        locale = JavascriptUtils.detectCurrentLocale();
 
         long startTime = System.currentTimeMillis();
         processDocument(Document.get().getDocumentElement(), null);
@@ -165,27 +165,27 @@ public class PageEditor extends HTML implements EntryPoint {
             nodeName = "";
         }
 
-        LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
+        JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
     }
 
     public static void moveComponentStart(String id) {
-        LegacyJavascript.mgnlMoveNodeStart(id);
+        JavascriptUtils.mgnlMoveNodeStart(id);
     }
 
     public static void moveComponentEnd(AbstractBar source, String path) {
-        LegacyJavascript.mgnlMoveNodeEnd(source.getElement(), path);
+        JavascriptUtils.mgnlMoveNodeEnd(source.getElement(), path);
     }
 
     public static void moveComponentOver(AbstractBar source) {
-        LegacyJavascript.mgnlMoveNodeHigh(source.getElement());
+        JavascriptUtils.mgnlMoveNodeHigh(source.getElement());
     }
 
     public static void moveComponentOut(AbstractBar source) {
-        LegacyJavascript.mgnlMoveNodeReset(source.getElement());
+        JavascriptUtils.mgnlMoveNodeReset(source.getElement());
     }
 
     public static void deleteComponent(String path) {
-        LegacyJavascript.mgnlDeleteNode(path);
+        JavascriptUtils.mgnlDeleteNode(path);
     }
 
     public static void addComponent(String workspace, String path, String nodeName, String availableComponents) {
@@ -199,11 +199,11 @@ public class PageEditor extends HTML implements EntryPoint {
         if (availableComponents == null) {
             availableComponents = "";
         }
-        LegacyJavascript.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
+        JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
     }
 
     public static void showTree(String workspace, String path) {
-        LegacyJavascript.showTree(workspace, path);
+        JavascriptUtils.showTree(workspace, path);
 
     }
 
@@ -211,7 +211,7 @@ public class PageEditor extends HTML implements EntryPoint {
         GWT.log("Creating [" + itemType + "] in workspace [" + workspace + "] at path [" + path + "]");
 
         final StringBuilder url = new StringBuilder();
-        url.append(LegacyJavascript.getContextPath() + ".magnolia/pageeditor/PageEditorServlet");
+        url.append(JavascriptUtils.getContextPath() + ".magnolia/pageeditor/PageEditorServlet");
         url.append("?action=create");
         url.append("&workspace=" + workspace);
         url.append("&path=" + path);
@@ -330,7 +330,7 @@ public class PageEditor extends HTML implements EntryPoint {
 
             GWT.log("Starting to process link " + anchor.getHref());
 
-            if(LegacyJavascript.isEmpty(anchor.getHref())) {
+            if(JavascriptUtils.isEmpty(anchor.getHref())) {
                 continue;
             }
             String manipulatedHref = anchor.getHref().replaceFirst(Window.Location.getProtocol() + "//" + Window.Location.getHost(), "");

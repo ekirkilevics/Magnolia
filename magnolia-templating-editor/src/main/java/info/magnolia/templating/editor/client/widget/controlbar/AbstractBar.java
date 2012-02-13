@@ -36,7 +36,7 @@ package info.magnolia.templating.editor.client.widget.controlbar;
 
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
+import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -136,7 +136,7 @@ public abstract class AbstractBar extends FlowPanel {
      * Adds this widget to this bar as a button. It allows overriding the default (primary) style applied <code>mgnlEditorButton</code>. See also <code>editor.css</code>.
      */
     protected void addButton(final Widget button, final Float cssFloat, final String primaryStyleName) {
-        if(LegacyJavascript.isEmpty(primaryStyleName)) {
+        if(JavascriptUtils.isEmpty(primaryStyleName)) {
              addButton(button, cssFloat);
              return;
         }

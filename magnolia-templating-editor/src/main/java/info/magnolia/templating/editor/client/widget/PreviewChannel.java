@@ -34,7 +34,7 @@
 package info.magnolia.templating.editor.client.widget;
 
 
-import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI18nMessage;
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
