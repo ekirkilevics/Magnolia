@@ -37,10 +37,10 @@ import info.magnolia.module.InstallContext;
 
 /**
  * A Task which bootstraps a single file. If this file is located in the default dir
- * ("/mgnl-bootstrap/<yourModuleName>") you should use {@link info.magnolia.module.delta.BootstrapSingleModuleResource}
+ * ("/mgnl-bootstrap/<yourModuleName>") or in a subdir of it, you should use {@link info.magnolia.module.delta.BootstrapSingleModuleResource}
  * instead.
  *
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class BootstrapSingleResource extends BootstrapResourcesTask {
     private final String resource;
