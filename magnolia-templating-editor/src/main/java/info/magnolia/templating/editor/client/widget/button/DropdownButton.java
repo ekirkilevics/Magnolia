@@ -98,6 +98,11 @@ public class DropdownButton extends Button {
         this(caption, Arrays.asList(menuItems));
     }
 
+    /**
+     * Sets the dropdown's position relative to the browser's client area.
+     * @param left in px
+     * @param top in px
+     */
     protected void setDropdownPosition(int left, int top) {
         dropdownPanel.setPopupPosition(left, top);
     }
