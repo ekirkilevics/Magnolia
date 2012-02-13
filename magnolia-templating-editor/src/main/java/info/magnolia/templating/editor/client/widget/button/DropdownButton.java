@@ -36,6 +36,7 @@ package info.magnolia.templating.editor.client.widget.button;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -50,7 +51,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
  * <p>Usage sample:
  * <pre>
  *  ...
- *  // commands are already defined elsewhere
+ *  // commands are defined elsewhere
  *  MenuItem one = new MenuItem("Option one", true, optionCommandOne);
  *  MenuItem two = new MenuItem("Option two", true, optionCommandTwo);
  *  MenuItem three = new MenuItem("Option three", true, optionCommandThree);
@@ -88,9 +89,7 @@ public class DropdownButton extends Button {
         addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                dropdownMenuBar.setVisible(true);
-                setDropdownPosition(getAbsoluteLeft(), getAbsoluteTop() + getOffsetHeight());
-                dropdownPanel.show();
+               onClickCallback(event);
             }
         });
     }
@@ -99,15 +98,29 @@ public class DropdownButton extends Button {
         this(caption, Arrays.asList(menuItems));
     }
 
-    /**
-     * Callback method invoked when clicking on the drop-down button. By default the menu will appear just beneath the button, left aligned with it.
-     */
     protected void setDropdownPosition(int left, int top) {
         dropdownPanel.setPopupPosition(left, top);
     }
 
-    protected PopupPanel getDropdownPanel() {
-        return dropdownPanel;
+    protected void setDropdownWidth(int width, Unit cssUnit) {
+        dropdownPanel.setWidth(width + cssUnit.toString());
     }
 
+    protected void showDropdown() {
+        dropdownMenuBar.setVisible(true);
+        dropdownPanel.show();
+    }
+
+    protected void hideDropdown() {
+        dropdownMenuBar.setVisible(false);
+        dropdownPanel.hide();
+    }
+
+    /**
+     * Callback method invoked when clicking on the drop-down button. By default the menu will appear just beneath the button, left aligned with it.
+     */
+    protected void onClickCallback(ClickEvent event) {
+        setDropdownPosition(getAbsoluteLeft(), getAbsoluteTop() + getOffsetHeight());
+        showDropdown();
+    }
 }

@@ -81,12 +81,11 @@ public final class PreviewButton extends Composite {
         public PreviewDropdownButton(final List<MenuItem> menuItems) {
             super("-", menuItems); // We have to put at least a label here to ensure it gets properly aligned with other text buttons around.
         }
+
         @Override
-        protected void setDropdownPosition(int left, int top) {
-            getDropdownPanel().setPopupPosition(panel.getAbsoluteLeft(), panel.getAbsoluteTop() + panel.getOffsetHeight());
-            //TODO does this have the desired effect?
-            getDropdownPanel().setWidth(panel.getOffsetWidth()+"px");
+        protected void onClickCallback(ClickEvent event) {
+            setDropdownPosition(panel.getAbsoluteLeft(), panel.getAbsoluteTop() + panel.getOffsetHeight());
+            showDropdown();
         }
     }
-
 }
