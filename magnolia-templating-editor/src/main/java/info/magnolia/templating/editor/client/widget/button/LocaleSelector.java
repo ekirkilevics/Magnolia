@@ -43,12 +43,18 @@ import com.google.gwt.user.client.ui.ListBox;
 
 
 /**
- * LanguageSelector
+ * Locale selector widget. It will output a select box with all locales passed in. Changing selection will trigger page reloading by default. If you want to change this behavior, override
+ * {@link #onChangeCallback(ChangeEvent)}.
+ *
  * @version $Id$
  *
  */
 public class LocaleSelector extends ListBox {
-
+    /**
+     * @param availableLocales a map whose key is the locale string in a human readable form (i.e. English, Deutsch) and whose value is a string representing
+     * the URI for associated to that locale.
+     * @param currentURI a string used to select the current locale in the selector.
+     */
     public LocaleSelector(final Map<String, String> availableLocales, final String currentURI) {
         if(availableLocales != null && !availableLocales.isEmpty()) {
             int index = 0;
@@ -65,11 +71,14 @@ public class LocaleSelector extends ListBox {
 
                 @Override
                 public void onChange(ChangeEvent event) {
-                    ListBox languageSelector = (ListBox)event.getSource();
-                    Window.Location.assign(languageSelector.getValue(languageSelector.getSelectedIndex()));
+                   onChangeCallback(event);
                 }
             });
         }
     }
 
+    protected void onChangeCallback(ChangeEvent event) {
+        ListBox languageSelector = (ListBox)event.getSource();
+        Window.Location.assign(languageSelector.getValue(languageSelector.getSelectedIndex()));
+    }
 }
