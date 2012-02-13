@@ -44,8 +44,7 @@ import com.google.gwt.dom.client.Node;
 
 /**
  * Processor for comment elements.
- * @author espen
- *
+ * @version $Id$
  */
 public class CommentProcessor {
 
@@ -57,7 +56,7 @@ public class CommentProcessor {
 
         if (!comment.isClosing()) {
 
-            if (comment.getTagName().equals("cms:page")) {
+            if ("cms:page".equals(comment.getTagName())) {
                 GWT.log("element was detected as page edit bar. Injecting it...");
                 PageBar pageBarWidget = new PageBar(comment);
                 pageBarWidget.attach();

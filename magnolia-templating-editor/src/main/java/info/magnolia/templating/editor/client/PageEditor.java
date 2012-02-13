@@ -110,9 +110,10 @@ public class PageEditor extends HTML implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
-        if(Window.Location.getParameter(MGNL_CHANNEL_ATTRIBUTE) != null ) {
-            GWT.log("Found " + MGNL_CHANNEL_ATTRIBUTE + " in request, post processing links...");
-            postProcessLinksOnMobilePreview(Document.get().getDocumentElement());
+        String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_ATTRIBUTE);
+        if(mgnlChannel != null) {
+            GWT.log("Found " + mgnlChannel + " in request, post processing links...");
+            postProcessLinksOnMobilePreview(Document.get().getDocumentElement(), mgnlChannel);
             return;
         }
 
@@ -319,10 +320,10 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     //FIXME submitting forms still renders website channel and edit bars
-    private void postProcessLinksOnMobilePreview(Element root) {
+    private void postProcessLinksOnMobilePreview(Element root, String channel) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
 
-        final String mobilePreviewParams = MGNL_CHANNEL_ATTRIBUTE+"=smartphone";
+        final String mobilePreviewParams = MGNL_CHANNEL_ATTRIBUTE+"="+channel;
 
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));
@@ -375,9 +376,9 @@ public class PageEditor extends HTML implements EntryPoint {
     }-*/;
 
     public static void enablePreview(boolean preview) {
-        isPreview = preview;
+        setPreview(preview);
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-        GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview);
+        GWT.log("Current url is [" + urlBuilder.buildString() + "], setting preview to " + isPreview());
 
         //always cleanup the url
         urlBuilder.removeParameter(MGNL_PREVIEW_ATTRIBUTE);
