@@ -52,7 +52,7 @@ import com.google.gwt.user.client.ui.ListBox;
 public class LocaleSelector extends ListBox {
     /**
      * @param availableLocales a map whose key is the locale string in a human readable form (i.e. English, Deutsch) and whose value is a string representing
-     * the URI for associated to that locale.
+     * the URI associated to that locale.
      * @param currentURI a string used to select the current locale in the selector.
      */
     public LocaleSelector(final Map<String, String> availableLocales, final String currentURI) {
