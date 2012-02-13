@@ -38,13 +38,18 @@ import static info.magnolia.templating.editor.client.jsni.LegacyJavascript.getI1
 import info.magnolia.channel.ChannelResolver;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.CMSComment;
+import info.magnolia.templating.editor.client.jsni.LegacyJavascript;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
+import info.magnolia.templating.editor.client.widget.button.LocaleSelector;
 import info.magnolia.templating.editor.client.widget.button.PreviewButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -76,15 +81,19 @@ public class PageBar extends AbstractBar {
     private String workspace;
     private String path;
     private String dialog;
+    private String currentURI;
+    private Map<String,String> availableLocales = new HashMap<String, String>();
 
     public PageBar(final CMSComment comment) {
         super(null);
 
         String content = comment.getAttribute("content");
         int i = content.indexOf(':');
-        this.workspace = content.substring(0, i);
-        this.path = content.substring(i + 1);
-        this.dialog = comment.getAttribute("dialog");
+        workspace = content.substring(0, i);
+        path = content.substring(i + 1);
+        dialog = comment.getAttribute("dialog");
+
+        currentURI = comment.getAttribute("currentURI");
 
         boolean isPreview = Boolean.parseBoolean(comment.getAttribute("preview"));
         PageEditor.setPreview(isPreview);
@@ -92,6 +101,22 @@ public class PageBar extends AbstractBar {
         if(PageEditor.isPreview()){
             createPreviewModeBar();
         } else {
+
+            String availableLocalesAttribute = comment.getAttribute("availableLocales");
+
+            if(LegacyJavascript.isNotEmpty(availableLocalesAttribute)) {
+                String[] localeAndUris = availableLocalesAttribute.split(",");
+
+                for(String localeAndUri: localeAndUris) {
+                    String[] tmp = localeAndUri.split(":");
+                    if(tmp.length != 2) {
+                        GWT.log("Could not split string [" + tmp + "] while getting locales and uris");
+                        continue;
+                    }
+                    GWT.log("Found available locale [" + tmp[0] + "," + tmp[1] + "]");
+                    availableLocales.put(tmp[0],tmp[1]);
+                }
+            }
             createAuthoringModeBar();
         }
 
@@ -119,6 +144,7 @@ public class PageBar extends AbstractBar {
         //the placeholder must be added as the first child of the bar element (before the buttons wrapper) so that the style applied to it centers it correctly.
         getElement().insertFirst(mainbarPlaceholder.getElement());
 
+
         Button properties = new Button(getI18nMessage("buttons.properties.js"));
         properties.addClickHandler(new ClickHandler() {
             @Override
@@ -127,6 +153,11 @@ public class PageBar extends AbstractBar {
             }
         });
         addButton(properties, Float.RIGHT);
+
+        if(availableLocales != null) {
+            LocaleSelector localeSelector = new LocaleSelector(availableLocales, currentURI);
+            addButton(localeSelector, Float.RIGHT);
+        }
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
         MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
