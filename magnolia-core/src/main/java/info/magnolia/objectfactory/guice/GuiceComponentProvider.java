@@ -50,7 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Injector;
-import com.google.inject.ProvisionException;
 import com.mycila.inject.jsr250.Jsr250Injector;
 
 
@@ -144,11 +143,20 @@ public class GuiceComponentProvider implements ComponentProvider {
     }
 
     public void destroy() {
+/*
+
+        Destroy using @PreDestroy is disabled because the implementation acquires instances for lazy-init singletons
+        only to destroy them. It also tries to acquire instances that have non-existing scopes leading to exceptions
+        being thrown. This usually results in shutdown of the application being interrupted before having a chance to
+        properly close down JackRabbit. With (at least) the derby persistence manager this results in threads not being
+        closed down properly and therefore Tomcat stalls at shutdown.
+
         try {
             injector.destroy();
         } catch (ProvisionException e) {
             logger.error("Error destroying component provider: [" + e.getMessage() + "] ", e);
         }
+         */
     }
 
     @Override
