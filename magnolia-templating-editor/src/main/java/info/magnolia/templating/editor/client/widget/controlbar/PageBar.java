@@ -156,7 +156,7 @@ public class PageBar extends AbstractBar {
 
         if(!availableLocales.isEmpty()) {
             LocaleSelector localeSelector = new LocaleSelector(availableLocales, currentURI);
-            addButton(localeSelector, Float.RIGHT);
+            addButton(localeSelector, Float.RIGHT, "mgnlEditorLocaleSelector");
         }
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());

@@ -286,6 +286,11 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
   width: auto;
 }
 
+.mgnlEditorLocaleSelector {
+  margin-top: 1px;
+  margin-right: 4px;
+}
+
 /* --- End of edit place holder definitions --- */
 
 /* -------------------------------
