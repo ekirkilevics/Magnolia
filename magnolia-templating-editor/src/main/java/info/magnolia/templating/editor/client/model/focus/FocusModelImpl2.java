@@ -220,4 +220,8 @@ public class FocusModelImpl2 implements FocusModel {
 
     }
 
+    @Override
+    public void toggleSelection(MgnlElement mgnlElement, boolean visible) {
+    }
+
 }

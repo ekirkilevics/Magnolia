@@ -196,4 +196,13 @@ public class ModelStorage {
         }
     }
 
+    public MgnlElement findMgnlElementByContentId(String contentId) {
+        for (MgnlElement element : elements.keySet()) {
+            if(contentId.equals(element.getComment().getAttribute("content"))){
+                return element;
+            }
+        }
+        return null;
+    }
+
 }

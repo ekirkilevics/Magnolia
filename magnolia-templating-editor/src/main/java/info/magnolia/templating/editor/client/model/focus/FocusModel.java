@@ -54,4 +54,6 @@ public interface FocusModel {
 
     void toggleRootSelection();
 
+    public abstract void toggleSelection(MgnlElement mgnlElement, boolean visible);
+
 }

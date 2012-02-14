@@ -70,8 +70,11 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -110,11 +113,29 @@ public class PageEditor extends HTML implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
+
         String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_ATTRIBUTE);
         if(mgnlChannel != null) {
             GWT.log("Found " + mgnlChannel + " in request, post processing links...");
             postProcessLinksOnMobilePreview(Document.get().getDocumentElement(), mgnlChannel);
             return;
+        }
+
+        // save x/y positon
+        Window.addWindowScrollHandler(new ScrollHandler() {
+
+            @Override
+            public void onWindowScroll(ScrollEvent event) {
+                Cookies.setCookie("editor-position", event.getScrollLeft() + ":" + event.getScrollTop());
+            }
+        });
+
+        String position = Cookies.getCookie("editor-position");
+        if(position!=null){
+            String[] tokens = position.split(":");
+            int left = Integer.parseInt(tokens[0]);
+            int top = Integer.parseInt(tokens[1]);
+            Window.scrollTo(left, top);
         }
 
         locale = JavascriptUtils.detectCurrentLocale();
@@ -126,6 +147,17 @@ public class PageEditor extends HTML implements EntryPoint {
         GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
 
         model.getFocusModel().reset();
+
+        String contentId = Cookies.getCookie("editor-content-id");
+        if(contentId != null){
+            MgnlElement selectedMgnlElement = model.findMgnlElementByContentId(contentId);
+            if(selectedMgnlElement != null){
+                model.getFocusModel().toggleSelection(selectedMgnlElement, true);
+            }
+            else{
+                Cookies.removeCookie("editor-content-id");
+            }
+        }
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
             @Override
