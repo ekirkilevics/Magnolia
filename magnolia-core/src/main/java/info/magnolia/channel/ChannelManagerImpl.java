@@ -33,7 +33,7 @@
  */
 package info.magnolia.channel;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -43,7 +43,7 @@ import java.util.Map;
  */
 public class ChannelManagerImpl implements ChannelManager {
 
-    private Map<String, ChannelConfiguration> channels = new HashMap<String, ChannelConfiguration>();
+    private Map<String, ChannelConfiguration> channels = new LinkedHashMap<String, ChannelConfiguration>();
 
     public ChannelManagerImpl() {
         super();
