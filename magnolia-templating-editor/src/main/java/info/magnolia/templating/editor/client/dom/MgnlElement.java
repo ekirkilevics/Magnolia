@@ -56,6 +56,7 @@ public class MgnlElement {
     private Element componentElement;
     private Element areaElement;
     private Element editElement;
+    private CMSComment endComment;
 
     private static final String MARKER_AREA = "cms:area";
     private static final String MARKER_COMPONENT = "cms:component";
@@ -233,4 +234,11 @@ public class MgnlElement {
         return editElement;
     }
 
+    public void setEndComment(CMSComment endComment) {
+        this.endComment = endComment;
+    }
+
+    public CMSComment getEndComment() {
+        return this.endComment;
+    }
 }
