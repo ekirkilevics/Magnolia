@@ -60,7 +60,7 @@ public class AreaProcessor extends MgnlElementProcessor {
 
             boolean noComponent = getMgnlElement().getComment().getAttribute("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
             if (getMgnlElement().getComponents().isEmpty() && !noComponent) {
-                AreaPlaceHolder placeHolder = new AreaPlaceHolder(getMgnlElement());
+                new AreaPlaceHolder(getMgnlElement());
             }
 
             else if (!noComponent) {

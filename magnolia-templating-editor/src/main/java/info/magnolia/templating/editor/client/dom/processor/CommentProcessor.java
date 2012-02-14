@@ -87,6 +87,7 @@ public class CommentProcessor {
         }
 
         else if (mgnlElement != null) {
+            mgnlElement.setEndComment(comment);
             mgnlElement = mgnlElement.getParent();
         }
 
