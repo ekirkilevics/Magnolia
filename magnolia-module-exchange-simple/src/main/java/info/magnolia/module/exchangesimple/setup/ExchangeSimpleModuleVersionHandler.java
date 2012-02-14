@@ -58,9 +58,9 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         super();
 
         register(DeltaBuilder.update("4.5", "URL of activation filter is no longer password protected but uses encryption instead.")
-                .addTask(new BootstrapSingleModuleResource("", "", "config.modules.exchange-simple.pages.activationPage.xml"))
-                .addTask(new BootstrapSingleModuleResource("", "", "config.modules.adminInterface.config.menu.tools.activationPage.xml"))
-                .addTask(new IsAuthorInstanceDelegateTask("", "", new AbstractTask("", "") {
+                .addTask(new BootstrapSingleModuleResource("Configure ActivationPage", "Register class to be used.", "config.modules.exchange-simple.pages.activationPage.xml"))
+                .addTask(new BootstrapSingleModuleResource("ActivationPage Menu", "Configure menu in AdminInterface.", "config.modules.adminInterface.config.menu.tools.activationPage.xml"))
+                .addTask(new IsAuthorInstanceDelegateTask("Security update", "Update security keys if on author instance.", new AbstractTask("", "") {
 
                     @Override
                     public void execute(InstallContext installContext) throws TaskExecutionException {
