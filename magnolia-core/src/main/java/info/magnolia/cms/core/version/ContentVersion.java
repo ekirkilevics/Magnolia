@@ -52,6 +52,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -147,17 +148,20 @@ public class ContentVersion extends DefaultContent {
     /**
      * The node as existing in the workspace. Not the version node.
      */
-    private final AbstractContent base;
+    private final Content base;
 
     /**
      * Rule used to create this version.
      */
     private Rule rule;
 
-    public ContentVersion(Version thisVersion, AbstractContent base) throws RepositoryException {
+    private final Version versionedNode;
+
+    public ContentVersion(Version thisVersion, Content base) throws RepositoryException {
         if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
         }
+        this.versionedNode = thisVersion;
         if (thisVersion instanceof VersionedNode) {
             this.state = ((VersionedNode) thisVersion).unwrap();
         } else {
@@ -389,7 +393,7 @@ public class ContentVersion extends DefaultContent {
         ArrayList<Content> result = new ArrayList<Content>();
         result.addAll(wrap(super.getChildren(filter, namePattern, orderCriteria)));
 
-        Collection<Content> transientChildren = this.base.getChildren(filter, namePattern, orderCriteria);
+        Collection<Content> transientChildren = ((AbstractContent)this.base).getChildren(filter, namePattern, orderCriteria);
         for (Content transientChild : transientChildren) {
             try {
                 if(!rule.isAllowed(transientChild.getNodeTypeName())){
@@ -774,5 +778,10 @@ public class ContentVersion extends DefaultContent {
     public Version[] getPredecessors() throws RepositoryException {
         // would prefer to return the above version (List of ContentVersions), but since our other APIs return jcr Version as well ...
         return this.state.getPredecessors();
+    }
+    
+    @Override
+    public Node getJCRNode() {
+        return versionedNode;
     }
 }

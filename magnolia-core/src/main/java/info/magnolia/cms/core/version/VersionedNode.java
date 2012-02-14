@@ -35,12 +35,17 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
 
 import java.util.Calendar;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 
@@ -53,10 +58,63 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
 
 
     private final Version version;
+    private final Node baseNode;
 
-    public VersionedNode(Version versionedNode) throws PathNotFoundException, RepositoryException {
+    private class VersionedNodeChild extends DelegateNodeWrapper implements Node {
+
+        private final DelegateNodeWrapper versionedParent;
+
+        public VersionedNodeChild(VersionedNode versionedNode, Node node) {
+            super(node);
+            this.versionedParent = versionedNode;
+        }
+
+        public VersionedNodeChild(VersionedNodeChild versionedNode, Node node) {
+            super(node);
+            this.versionedParent = versionedNode;
+        }
+
+        @Override
+        public int getDepth() throws RepositoryException {
+            return this.versionedParent.getDepth() + 1;
+        }
+
+        @Override
+        public Node getParent() throws ItemNotFoundException,
+        AccessDeniedException, RepositoryException {
+            return this.versionedParent;
+        }
+
+        @Override
+        public String getPath() throws RepositoryException {
+            return this.versionedParent.getPath() + "/" + getName();
+        }
+
+        @Override
+        protected Property wrap(Property property) {
+            return new DelegatePropertyWrapper(property) {
+                @Override
+                public String getPath() throws RepositoryException {
+                    return VersionedNodeChild.this.getPath() + "/" + getName();
+                }
+            };
+        }
+
+        @Override
+        public Node wrap(Node node) {
+            return new VersionedNodeChild(VersionedNodeChild.this, node);
+        }
+    }
+
+    public VersionedNode(Version versionedNode, Node baseNode) throws PathNotFoundException, RepositoryException {
         super(versionedNode.getNode(ItemType.JCR_FROZENNODE));
         this.version = versionedNode;
+        this.baseNode = baseNode;
+    }
+
+    @Override
+    public int getDepth() throws RepositoryException {
+        return this.baseNode.getDepth();
     }
 
     public Version unwrap() {
@@ -96,5 +154,35 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
     @Override
     public Version[] getSuccessors() throws RepositoryException {
         return version.getSuccessors();
+    }
+
+    @Override
+    public Node wrap(Node node) {
+        return new VersionedNodeChild(this, node);
+    }
+
+    @Override
+    public String getPath() throws RepositoryException {
+        return baseNode.getPath();
+    }
+
+    @Override
+    public Node getParent() throws ItemNotFoundException,
+    AccessDeniedException, RepositoryException {
+        return baseNode.getParent();
+    }
+
+    @Override
+    public boolean isNodeType(String nodeTypeName) throws RepositoryException {
+        return baseNode.isNodeType(nodeTypeName);
+    }
+
+    public Node getBaseNode() {
+        return baseNode;
+    }
+
+    @Override
+    public Session getSession() throws RepositoryException {
+        return baseNode.getSession();
     }
 }

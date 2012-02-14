@@ -319,7 +319,7 @@ public abstract class BaseVersionManager {
     RepositoryException {
         VersionHistory history = this.getVersionHistory(node);
         if (history != null) {
-            return new VersionedNode(history.getVersion(name));
+            return new VersionedNode(history.getVersion(name), node);
         }
         log.error("Node " + node.getPath() + " was never versioned");
         return null;

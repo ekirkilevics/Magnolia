@@ -104,7 +104,7 @@ public class NodeUtilTest {
     public void testUnwrap() throws Exception {
         final Version version = mock(Version.class);
         when(version.getNode(MgnlNodeType.JCR_FROZENNODE)).thenReturn(root);
-        final VersionedNode wrapper = new VersionedNode(version);
+        final VersionedNode wrapper = new VersionedNode(version, root);
 
         assertEquals(root, NodeUtil.unwrap(wrapper));
     }

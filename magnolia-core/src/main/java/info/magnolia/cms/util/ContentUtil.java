@@ -39,6 +39,8 @@ import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
@@ -73,6 +75,7 @@ import org.slf4j.LoggerFactory;
  *
  * @deprecated since 4.5 - use {@link info.magnolia.jcr.util.NodeUtil} instead.
  */
+@Deprecated
 public class ContentUtil {
     private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
 
@@ -196,7 +199,7 @@ public class ContentUtil {
      * If the node doesn't exist just create it. If the parameter save is true the parent node is saved.
      */
     public static Content getOrCreateContent(Content node, String name, ItemType contentType, boolean save)
-        throws AccessDeniedException, RepositoryException {
+    throws AccessDeniedException, RepositoryException {
         Content res = null;
         try {
             res = node.getContent(name);
@@ -402,33 +405,33 @@ public class ContentUtil {
     }
 
     public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+    PathNotFoundException, RepositoryException {
         return createPath(hm, path, false);
     }
 
     public static Content createPath(HierarchyManager hm, String path, boolean save) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+    PathNotFoundException, RepositoryException {
         return createPath(hm, path, ItemType.CONTENT, save);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+    PathNotFoundException, RepositoryException {
         return createPath(hm, path, type, false);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type, boolean save) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+    PathNotFoundException, RepositoryException {
         Content root = hm.getRoot();
         return createPath(root, path, type, save);
     }
 
     public static Content createPath(Content parent, String path, ItemType type) throws RepositoryException,
-        PathNotFoundException, AccessDeniedException {
+    PathNotFoundException, AccessDeniedException {
         return createPath(parent, path, type, false);
     }
 
     public static Content createPath(Content parent, String path, ItemType type, boolean save) throws RepositoryException,
-        PathNotFoundException, AccessDeniedException {
+    PathNotFoundException, AccessDeniedException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
 
@@ -490,10 +493,10 @@ public class ContentUtil {
     }
 
     public static void deleteAndRemoveEmptyParents(Content node, int level) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
+    AccessDeniedException {
         Content parent = null;
         if(node.getLevel() != 0){
-             parent = node.getParent();
+            parent = node.getParent();
         }
         node.delete();
         if(parent != null && parent.getLevel()>level && parent.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).size()==0){
@@ -517,9 +520,9 @@ public class ContentUtil {
             IOUtils.closeQuietly(outStream);
             FileInputStream inStream = new FileInputStream(file);
             session.importXML(
-                destParentPath,
-                inStream,
-                ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+                    destParentPath,
+                    inStream,
+                    ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inStream);
             file.delete();
             if(!StringUtils.equals(src.getName(), destNodeName)){
@@ -630,9 +633,9 @@ public class ContentUtil {
             FileUtils.writeStringToFile(file, replaced);
             inStream = new FileInputStream(file);
             session.importXML(
-                destParentPath,
-                inStream,
-                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
+                    destParentPath,
+                    inStream,
+                    ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING);
 
         } catch (IOException e) {
             throw new RepositoryException("Can't replace node " + node.getHandle(), e);
@@ -645,6 +648,15 @@ public class ContentUtil {
 
     public static Content asContent(Node content) {
         if(content == null) {
+            return null;
+        }
+        if (content instanceof VersionedNode) {
+            VersionedNode version = (VersionedNode) content;
+            try {
+                return new ContentVersion(version, ContentUtil.asContent(version.getBaseNode()));
+            } catch (RepositoryException e) {
+                log.error("Failed to create content version", e);
+            }
             return null;
         }
         return new DefaultContent(content);
