@@ -81,7 +81,8 @@ public class AreaBar extends AbstractBar {
     }
 
     private void createButtons() {
-        if(this.optional && this.created) {
+        if(this.optional) {
+            if (this.created) {
                 Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
@@ -90,6 +91,19 @@ public class AreaBar extends AbstractBar {
                     }
                 });
                 addSecondaryButton(removeButton, Float.RIGHT);
+            }
+            else {
+                Button createbutton = new Button(getI18nMessage("buttons.create.js"));
+                createbutton.setStylePrimaryName("mgnlEditorButton");
+
+                createbutton.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        PageEditor.createComponent(workspace, path, "mgnl:area");
+                    }
+                });
+                addSecondaryButton(createbutton, Float.RIGHT);
+            }
         }
         if (this.dialog != null) {
             Button editButton = new Button(getI18nMessage("buttons.edit.js"));

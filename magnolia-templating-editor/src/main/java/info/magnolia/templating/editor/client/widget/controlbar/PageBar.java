@@ -123,7 +123,7 @@ public class PageBar extends AbstractBar {
         addDomHandler(new MouseDownHandler() {
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                ModelStorage.getInstance().getFocusModel().toggleRootSelection();
+                ModelStorage.getInstance().getFocusModel().toggleRootAreaBar(true);
                 event.stopPropagation();
             }
         }, MouseDownEvent.getType());

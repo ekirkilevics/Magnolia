@@ -206,4 +206,14 @@ public abstract class AbstractBar extends FlowPanel {
         return mgnlElement;
     }
 
+    public void toggleButtons(boolean visible) {
+        MgnlElement parent = mgnlElement.getParent();
+        if (parent != null) {
+            for (MgnlElement component : parent.getComponents()) {
+                PageEditor.model.getEditBar(component).primaryButtons.setVisible(visible);
+                PageEditor.model.getEditBar(component).secondaryButtons.setVisible(visible);
+            }
+        }
+
+    }
 }

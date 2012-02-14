@@ -71,7 +71,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.Window.ScrollHandler;
@@ -113,7 +112,6 @@ public class PageEditor extends HTML implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
-
         String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_ATTRIBUTE);
         if(mgnlChannel != null) {
             GWT.log("Found " + mgnlChannel + " in request, post processing links...");
@@ -152,6 +150,8 @@ public class PageEditor extends HTML implements EntryPoint {
         if(contentId != null){
             MgnlElement selectedMgnlElement = model.findMgnlElementByContentId(contentId);
             if(selectedMgnlElement != null){
+                model.setSelectedMgnlElement(selectedMgnlElement);
+                model.getFocusModel().toggleRootAreaBar(false);
                 model.getFocusModel().toggleSelection(selectedMgnlElement, true);
             }
             else{
@@ -179,11 +179,6 @@ public class PageEditor extends HTML implements EntryPoint {
 
         GWT.log("Trying to run onPageEditorReady callbacks...");
         onPageEditorReady();
-    }
-
-    @Override
-    public void onBrowserEvent(Event event) {
-        super.onBrowserEvent(event);
     }
 
     /**

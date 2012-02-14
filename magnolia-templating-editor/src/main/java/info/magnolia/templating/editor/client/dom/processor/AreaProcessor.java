@@ -63,10 +63,14 @@ public class AreaProcessor extends MgnlElementProcessor {
                 new AreaPlaceHolder(getMgnlElement());
             }
 
-            else if (!noComponent) {
+            try {
                 ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(getMgnlElement());
                 placeHolder.attach();
             }
+            catch(IllegalArgumentException e) {
+                GWT.log("Not creating componentPLaceHolder for this element. Missing parameters.");
+            }
+
             new AreaEndBar(getMgnlElement());
         }
         catch (IllegalArgumentException e) {
@@ -83,8 +87,6 @@ public class AreaProcessor extends MgnlElementProcessor {
 
             // remove it from the Model
             PageEditor.model.removeMgnlElement(getMgnlElement());
-
-
         }
     }
 

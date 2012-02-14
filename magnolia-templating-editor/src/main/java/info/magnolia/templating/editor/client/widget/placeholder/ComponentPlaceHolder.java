@@ -34,11 +34,15 @@
 package info.magnolia.templating.editor.client.widget.placeholder;
 
 import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
+
+import java.util.Map;
+
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -64,26 +68,11 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private String name = "";
     private FlowPanel buttonWrapper;
 
-    public ComponentPlaceHolder(MgnlElement mgnlElement) {
+    public ComponentPlaceHolder(MgnlElement mgnlElement) throws IllegalArgumentException {
 
         super(mgnlElement);
-        this.showAddButton = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("showAddButton"));
-        this.optional = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("optional"));
-        this.created = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("created"));
-        this.type = mgnlElement.getComment().getAttribute("type");
-        this.name = mgnlElement.getComment().getAttribute("name");
 
-
-        String areaContent = mgnlElement.getComment().getAttribute("content");
-        int i = areaContent.indexOf(':');
-        this.areaWorkspace = areaContent.substring(0, i);
-        this.areaPath = areaContent.substring(i + 1);
-
-        if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
-            this.availableComponents = "";
-        } else {
-            this.availableComponents = mgnlElement.getComment().getAttribute("availableComponents");
-        }
+        checkMandatories(mgnlElement.getComment().getAttributes());
 
         this.addStyleName("component");
 
@@ -114,6 +103,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         PageEditor.model.addComponentPlaceHolder(mgnlElement, this);
     }
 
+    @SuppressWarnings("unused")
     private void createMouseEventsHandlers() {
 
         if (this.optional && !this.created) {
@@ -143,21 +133,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
     private void createButtons() {
 
-        if (this.optional && !this.created) {
-            if(!this.created) {
-                Button button = new Button(getI18nMessage("buttons.create.js"));
-                button.setStylePrimaryName("mgnlEditorButton");
-
-                button.addClickHandler(new ClickHandler() {
-                    @Override
-                    public void onClick(ClickEvent event) {
-                        PageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
-                    }
-                });
-                buttonWrapper.add(button);
-            }
-        }
-        else if (this.showAddButton){
+        if (this.showAddButton){
             Button button = new Button(getI18nMessage("buttons.add.js"));
             button.setStylePrimaryName("mgnlEditorButton");
 
@@ -173,14 +149,61 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
     public void attach() {
         Element parent = getMgnlElement().getComponentElement();
+
         if (parent == null) {
-            parent = PageEditor.model.getEditBar(getMgnlElement()).getElement().getParentElement();
-            parent.appendChild(getElement());
+            if (getMgnlElement().getLastElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
+                attach(getMgnlElement());
+            }
+            else {
+                attach(getMgnlElement().getEndComment().getElement());
+            }
         }
         else {
             parent.insertFirst(getElement());
         }
         onAttach();
+    }
+
+    public void attach(MgnlElement mgnlElement) {
+        Element element = mgnlElement.getFirstElement();
+        if (element != null) {
+            element.appendChild(getElement());
+        }
+    }
+
+    public void attach(Element element) {
+        final Node parentNode = element.getParentNode();
+        parentNode.insertBefore(getElement(), element);
+    }
+
+    private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
+
+        this.showAddButton = Boolean.parseBoolean(attributes.get("showAddButton"));
+        this.optional = Boolean.parseBoolean(attributes.get("optional"));
+        this.created = Boolean.parseBoolean(attributes.get("created"));
+        this.type = attributes.get("type");
+        this.name = attributes.get("name");
+
+
+        String areaContent = attributes.get("content");
+        int i = areaContent.indexOf(':');
+        this.areaWorkspace = areaContent.substring(0, i);
+        this.areaPath = areaContent.substring(i + 1);
+
+        if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
+            this.availableComponents = "";
+        } else {
+            this.availableComponents = attributes.get("availableComponents");
+        }
+
+        if (availableComponents.equals("")) {
+            throw new IllegalArgumentException();
+        }
+
+        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && this.created && !getMgnlElement().getComponents().isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
     }
 
 }

@@ -33,14 +33,24 @@
  */
 package info.magnolia.templating.editor.client.widget.controlbar;
 
-import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DragStartEvent;
+
+import com.google.gwt.event.dom.client.DragEndEvent;
+import com.google.gwt.event.dom.client.DragEndHandler;
+import com.google.gwt.event.dom.client.DragOverEvent;
+import com.google.gwt.event.dom.client.DragOverHandler;
+import com.google.gwt.event.dom.client.DragStartHandler;
+import com.google.gwt.event.dom.client.DropEvent;
+import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -97,6 +107,48 @@ public class ComponentBar extends AbstractBar {
         attach();
         PageEditor.model.addEditBar(getMgnlElement(), this);
 
+        if (!this.isInherited) {
+            createDragAndDropHandlers();
+        }
+    }
+
+    private void createDragAndDropHandlers() {
+        this.addDomHandler(new DragStartHandler() {
+            @Override
+            public void onDragStart(DragStartEvent event) {
+                ComponentBar.this.getElement().getStyle().setCursor(Cursor.MOVE);
+                toggleButtons(false);
+                event.setData("id", id);
+                event.getDataTransfer().setDragImage(getElement(), 10, 10);
+            }
+        }, DragStartEvent.getType());
+
+        this.addDomHandler(new DragEndHandler() {
+            @Override
+            public void onDragEnd(DragEndEvent event) {
+                toggleButtons(true);
+            }
+        }, DragEndEvent.getType());
+
+        this.addDomHandler(new DragOverHandler() {
+            @Override
+            public void onDragOver(DragOverEvent event) {
+                event.stopPropagation();
+            }
+        }, DragOverEvent.getType());
+
+
+        this.addDomHandler(new DropHandler() {
+            @Override
+            public void onDrop(DropEvent event) {
+                String idSource = event.getData("id");
+                String parentPath = path.substring(0, path.lastIndexOf("/"));
+                moveComponent(id, idSource, parentPath);
+                //PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
+            }
+        }, DropEvent.getType());
+
+        this.getElement().setDraggable(Element.DRAGGABLE_TRUE);
     }
 
     private void createMouseEventsHandlers() {
@@ -107,7 +159,6 @@ public class ComponentBar extends AbstractBar {
             public void onMouseDown(MouseDownEvent event) {
                 String parentPath = path.substring(0, path.lastIndexOf("/"));
                 PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
-
             }
         }, MouseDownEvent.getType());
 
@@ -116,6 +167,7 @@ public class ComponentBar extends AbstractBar {
             @Override
             public void onMouseOver(MouseOverEvent event) {
                 PageEditor.moveComponentOver((ComponentBar)event.getSource());
+
             }
         }, MouseOverEvent.getType());
 
@@ -143,16 +195,17 @@ public class ComponentBar extends AbstractBar {
         }
 
         //single area component obviously cannot be moved
-        if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
+/*        if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
             final Button move = new Button(getI18nMessage("buttons.move.js"));
             move.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
+                    toggleButtons(false);
                     PageEditor.moveComponentStart(id);
                 }
             });
             addPrimaryButton(move, Float.RIGHT);
-        }
+        }*/
 
         if (!this.isInherited) {
             final Button removeButton = new Button(getI18nMessage("buttons.delete.js"));
@@ -165,4 +218,6 @@ public class ComponentBar extends AbstractBar {
             addSecondaryButton(removeButton, Float.RIGHT);
         }
     }
+
+
 }

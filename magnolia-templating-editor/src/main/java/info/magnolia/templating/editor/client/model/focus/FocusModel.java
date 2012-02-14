@@ -52,7 +52,7 @@ public interface FocusModel {
 
     public void onMouseUp(MgnlElement mgnlElement);
 
-    void toggleRootSelection();
+    void toggleRootAreaBar(boolean visible);
 
     public abstract void toggleSelection(MgnlElement mgnlElement, boolean visible);
 

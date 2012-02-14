@@ -83,6 +83,7 @@ public class FocusModelImpl3 implements FocusModel {
     @Override
     public void reset() {
         deSelect();
+        toggleRootAreaBar(true);
         showRootPlaceHolder();
     }
 
@@ -143,19 +144,19 @@ public class FocusModelImpl3 implements FocusModel {
     }
 
     @Override
-    public void toggleRootSelection() {
+    public void toggleRootAreaBar(boolean visible) {
         deSelect();
 
         this.rootSelected = !this.rootSelected;
         for (MgnlElement root : storage.getRootElements()) {
             if (storage.getEditBar(root) != null) {
-                storage.getEditBar(root).setVisible(true);
+                storage.getEditBar(root).setVisible(visible);
             }
             if (storage.getAreaEndBar(root) != null) {
-                storage.getAreaEndBar(root).setVisible(true);
+                storage.getAreaEndBar(root).setVisible(visible);
             }
             if (storage.getAreaPlaceHolder(root) != null) {
-                storage.getAreaPlaceHolder(root).setVisible(true);
+                storage.getAreaPlaceHolder(root).setVisible(visible);
             }
         }
     }

@@ -38,6 +38,7 @@ import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 
@@ -61,12 +62,33 @@ public class AreaEndBar extends FlowPanel {
     }
 
     public void attach() {
-
-            Element parent = PageEditor.model.getEditBar(mgnlElement).getElement().getParentElement();
-            parent.appendChild(getElement());
-            PageEditor.model.addAreaEndBar(mgnlElement, this);
-
-            onAttach();
+        if (mgnlElement.getFirstElement() != null && mgnlElement.getFirstElement() == mgnlElement.getLastElement()) {
+            attach(mgnlElement);
+        }
+        else {
+            attach(mgnlElement.getEndComment().getElement());
+        }
     }
+
+    public void attach(MgnlElement mgnlElement) {
+        Element element = mgnlElement.getFirstElement();
+        if (element != null) {
+            element.appendChild(getElement());
+        }
+        onAttach();
+    }
+
+    public void attach(Element element) {
+        final Node parentNode = element.getParentNode();
+        parentNode.insertBefore(getElement(), element);
+        onAttach();
+    }
+
+    @Override
+    protected void onAttach() {
+        PageEditor.model.addAreaEndBar(mgnlElement, this);
+        super.onAttach();
+    }
+
 
  }
