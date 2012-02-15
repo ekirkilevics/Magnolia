@@ -38,6 +38,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -557,7 +558,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             }
             // use temporary node in mgnlSystem workspace to extract the top level node and copy its properties
             Content activationTmp = ContentUtil.getOrCreateContent(systemHM.getRoot(), "activation-tmp", ItemType.FOLDER, true);
-            final Content transientNode = activationTmp.createContent(uuid, ItemType.CONTENTNODE.toString());
+            final Content transientNode = activationTmp.createContent(uuid, MgnlNodeType.NT_PAGE);
             final String transientStoreHandle = transientNode.getHandle();
             // import properties into transientStore
             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);

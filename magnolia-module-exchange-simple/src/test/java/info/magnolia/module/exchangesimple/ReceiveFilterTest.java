@@ -212,7 +212,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
         // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:page"))).andReturn(tempNode);
 
         Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
         replay(mocks);
@@ -290,7 +290,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
         // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:page"))).andReturn(tempNode);
 
         Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
         replay(mocks);
@@ -364,7 +364,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         expect(root.getContent("activation-tmp")).andReturn(activationTmp).anyTimes();
         // creating temp node. The node is created with UUID of the parent as a name, so can't really get the name here. Later on we pretend the name (and therefore the handle) is DUMMY-UUID
-        expect(activationTmp.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(tempNode);
+        expect(activationTmp.createContent(isA(String.class), eq("mgnl:page"))).andReturn(tempNode);
 
         Object[] mocks = new Object[] {existingNode, tempNode, importedNode, existingParent, root, activationTmp};
         replay(mocks);
@@ -511,7 +511,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(request.getHeader("mgnlExchangeWorkspaceName")).andReturn("some-workspace").anyTimes();
         expect(request.getHeader("mgnlExchangeResourceMappingFile")).andReturn("blah.xml").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
         // TODO : check if different rules are passed in different cases ?
-        expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:contentNode,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
+        expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:page,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
         expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
         expect(request.getSession()).andReturn(null).anyTimes();
         expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
