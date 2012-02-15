@@ -59,6 +59,7 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.io.File;
@@ -73,6 +74,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -240,8 +242,12 @@ public class ResourceCollector {
         FileInputStream tmpFileInStream = null;
         try {
             tmpFileOutStream = new FileOutputStream(tempFile);
-            // has to get path via JCR node since if "content" is of type ContentVersion, getHandle() call would have returned path to the base
-            session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
+            // has to get path via unwrapped JCR node since all else would have returned path to the base
+            Node node = content.getJCRNode();
+            if (node instanceof DelegateNodeWrapper) {
+                node = ((DelegateNodeWrapper) node).getWrappedNode();
+            }
+            session.exportSystemView(node.getPath(), tmpFileOutStream, false, noRecurse);
             tmpFileOutStream.flush();
             tmpFileOutStream.close();
 
