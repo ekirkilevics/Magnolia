@@ -370,30 +370,30 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 
 .mobilePreview.tabletLandscape {
   background: url(../img/preview/mobile/tablet/landscape.png) no-repeat;
-  width: 1108px;
-  height: 852px;
+  width: 1300px;
+  height: 1025px;
 }
 
 .mobilePreview.tabletLandscape .popupContent {
   position: absolute;
-  top: 120px;
-  left: 42px;
+  top: 211px;
+  left: 128px;
   width: 1024px;
-  height: 690px;
+  height: 672px;
 }
 
 .mobilePreview.tabletPortrait {
   background: url(../img/preview/mobile/tablet/portrait.png) no-repeat;
-  width: 852px;
-  height: 1108px;
+  width: 1020px;
+  height: 1300px;
 }
 
 .mobilePreview.tabletPortrait .popupContent {
   position: absolute;
-  top: 120px;
-  left: 42px;
-  height: 946px;
+  top: 224px;
+  left: 118px;
   width: 768px;
+  height: 928px;
 }
 
 .mobilePreview.smartphoneLandscape {
