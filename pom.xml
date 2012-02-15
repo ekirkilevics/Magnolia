@@ -272,6 +272,12 @@ for Java Content Repositories (JCR).
           </exclusion>
         </exclusions>
       </dependency>
+      <!-- JCR-3158, MAGNOLIA-3892 -->
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>1.4</version>
+      </dependency>
       <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcprov-jdk16</artifactId>
