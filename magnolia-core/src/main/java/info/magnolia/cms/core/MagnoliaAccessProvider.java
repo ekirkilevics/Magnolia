@@ -48,7 +48,6 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.NamespaceException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.security.AccessControlException;
 import javax.jcr.security.AccessControlPolicy;
 
 import org.apache.jackrabbit.core.ItemImpl;
@@ -196,29 +195,8 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     public boolean canAccessRoot(Set<Principal> principals) throws RepositoryException {
         checkInitialized();
 
-        // superuser is also admin user!
-        if (isAdminOrSystem(principals)) {
-            return true;
-        }
-
-        final String workspaceName = super.session.getWorkspace().getName();
-
-        ACL acl = PrincipalUtil.findAccessControlList(principals, workspaceName);
-        if (acl != null) {
-            AccessManagerImpl ami = new AccessManagerImpl();
-            ami.setPermissionList(acl.getList());
-            return ami.isGranted("/", Permission.READ);
-        }
-
-        try {
-            // JR delegates to the ACL editor ... not sure this is what we want ...
-            boolean ret = super.canAccessRoot(principals);
-            log.debug("canAccessRoot({})=>{}", principals, ret);
-            return ret;
-        } catch (AccessControlException e) {
-            // thrown when there no known principal ... e.g. when there is no authenticated user
-            return false;
-        }
+        // old Magnolia security allowed access to root to every user
+        return true;
     }
 
     @Override
