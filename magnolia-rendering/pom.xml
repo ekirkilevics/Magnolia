@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.5-SNAPSHOT</version>
+    <version>4.5-beta6</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -16,7 +16,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.5-SNAPSHOT</version>
+      <version>4.5-beta6</version>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>4.5-SNAPSHOT</version>
+      <version>4.5-beta6</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
