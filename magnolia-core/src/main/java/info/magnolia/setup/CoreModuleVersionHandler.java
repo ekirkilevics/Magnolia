@@ -50,6 +50,7 @@ import info.magnolia.module.delta.FalseCondition;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
+import info.magnolia.module.delta.RenameNodesTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
@@ -116,6 +117,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace forum for role superuser", "superuser", "acl_forum"))
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/system", "realName", "system"))
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/admin", "realName", "admin"))
+                .addTask(new RenameNodesTask("Update servlet mapping names", "Update '--resources--' servlet mapping names to use '.'.", RepositoryConstants.CONFIG, "/server/filters/servlets", "--resources--", "-.resources--", MgnlNodeType.NT_CONTENTNODE))
         );
     }
 

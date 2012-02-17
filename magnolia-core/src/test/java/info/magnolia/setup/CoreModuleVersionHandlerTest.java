@@ -144,6 +144,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode(FilterManager.SERVER_FILTERS);
         setupConfigNode("/server/security/userManagers/system");
         setupConfigNode("/server/security/userManagers/admin");
+        setupConfigNode("/server/filters/servlets");
 
         // WHEN
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
