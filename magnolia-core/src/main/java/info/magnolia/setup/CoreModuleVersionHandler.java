@@ -42,6 +42,7 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
@@ -87,19 +88,19 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         super();
 
         register(DeltaBuilder.update("4.4.6", "minimal version required for updating to 4.5")
-                .addCondition(new FalseCondition("checkPrerequisite", "Updating to 4.5 is only supported from 4.4.6. Please udate to 4.4.6 first.")));
+                .addCondition(new FalseCondition("checkPrerequisite", "Updating to 4.5 is only supported from 4.4.6 or higher. Please udate to 4.4.6 or higher 4.4.x first.")));
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())
                 .addTask(new RenameACLNodesTask())
                 .addTask(new ArrayDelegateTask("New security filter", "Adds the securityCallback filter.",
-                        new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, "config", FilterManager.SERVER_FILTERS,
+                        new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, RepositoryConstants.CONFIG, FilterManager.SERVER_FILTERS,
                                 addNode("securityCallback", MgnlNodeType.NT_CONTENT).then(
                                         addProperty("class", "info.magnolia.cms.security.SecurityCallbackFilter"),
                                         addNode("bypasses", MgnlNodeType.NT_CONTENTNODE)
                                 )
                         ),
-                        new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", "config", FilterManager.SERVER_FILTERS + "/securityCallback", "uriSecurity")
+                        new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", RepositoryConstants.CONFIG, FilterManager.SERVER_FILTERS + "/securityCallback", "uriSecurity")
                 ))
 
                 .addTask(new UpdateSecurityFilterClientCallbacksConfiguration("uriSecurity", "securityCallback"))
@@ -113,6 +114,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace Expression for role superuser", "superuser", "acl_Expressions"))
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace Store for role superuser", "superuser", "acl_Store"))
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace forum for role superuser", "superuser", "acl_forum"))
+                .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/system", "realName", "system"))
+                .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/admin", "realName", "admin"))
         );
     }
 

@@ -41,6 +41,7 @@ import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
+import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
 
@@ -127,8 +128,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     @Test
-    public void test45InstallsWhenFrom446() throws RepositoryException{
-        setupConfigNode(FilterManager.SERVER_FILTERS+"/uriSecurity/clientCallback");
+    public void test45InstallsWhenFrom446() throws RepositoryException {
+        setupConfigNode(FilterManager.SERVER_FILTERS + "/uriSecurity/clientCallback");
         setupConfigNode("/server/security/userManagers");
 
         try {
@@ -147,4 +148,24 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
             assertTrue(t.getMessage().contains("<stoppedConditionsNotMet>"));
         }
     }
+
+    @Test
+    public void testUpgradeFrom446FixesRealNamePropertiesOnSecurityUserManagers() throws Exception{
+        // GIVEN
+        setupConfigNode("/server/filters/uriSecurity/clientCallback");
+        setupConfigNode(FilterManager.SERVER_FILTERS);
+        setupConfigNode("/server/security/userManagers/system");
+        setupConfigNode("/server/security/userManagers/admin");
+
+        // WHEN
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
+
+        // THEN
+        String systemUserManagerRealNameValue = MgnlContext.getJCRSession(RepositoryConstants.CONFIG).getNode("/server/security/userManagers/system").getProperty("realName").getString();
+        String adminUserManagerRealNameValue = MgnlContext.getJCRSession(RepositoryConstants.CONFIG).getNode("/server/security/userManagers/admin").getProperty("realName").getString();
+
+        assertEquals("system", systemUserManagerRealNameValue);
+        assertEquals("admin", adminUserManagerRealNameValue);
+    }
+
 }
