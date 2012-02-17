@@ -98,6 +98,11 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         @Override
         public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
 
+            if ((itemId != null && "cafebabe-cafe-babe-cafe-babecafebabe".equals(itemId.toString())) || (itemPath != null && "/".equals(itemPath.toString()))) {
+                // quick check - allow access to root to all like in old mgnl security
+                return true;
+            }
+
             if (itemPath == null) {
 
                 // we deal only with permissions on nodes
@@ -146,6 +151,68 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
     }
 
+    /**
+     * Permissions granting access to all users to root Caches the result of resolving paths from ids, the caching implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}. See {@link MagnoliaAccessProvider#canAccessRoot(Set)} for details.
+     * 
+     * @version $Id$
+     */
+    public class RootOnlyPermissions extends AbstractCompiledPermissions {
+
+        @SuppressWarnings("unchecked")
+        private final Map<ItemId, Boolean> readCache = new GrowingLRUMap(1024, 5000);
+        private final Object monitor = new Object();
+
+        @Override
+        public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
+
+            if (itemPath == null) {
+
+                // we deal only with permissions on nodes
+                if (!itemId.denotesNode()) {
+                    itemId = ((PropertyId) itemId).getParentId();
+                }
+
+                synchronized (monitor) {
+
+                    if (readCache.containsKey(itemId)) {
+                        return readCache.get(itemId);
+                    }
+
+                    itemPath = session.getHierarchyManager().getPath(itemId);
+
+                    boolean canRead = "/".equals(pathResolver.getJCRPath(itemPath));
+                    readCache.put(itemId, canRead);
+                    return canRead;
+                }
+            }
+
+            String path = pathResolver.getJCRPath(itemPath);
+            log.debug("Read request for " + path + " :: " + itemId);
+            return "/".equals(pathResolver.getJCRPath(itemPath));
+        }
+
+        @Override
+        protected Result buildResult(Path absPath) throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Result getResult(Path absPath) throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean grants(Path absPath, int permissions) throws RepositoryException {
+            return "/".equals(pathResolver.getJCRPath(absPath));
+        }
+
+        @Override
+        public int getPrivileges(Path absPath) throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessProvider.class);
 
     /**
@@ -178,6 +245,8 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         {org.apache.jackrabbit.core.security.authorization.Permission.LIFECYCLE_MNGMT, Permission.EXECUTE},
         {org.apache.jackrabbit.core.security.authorization.Permission.RETENTION_MNGMT, Permission.EXECUTE},
     };
+
+    private CompiledPermissions RootOnlyPermission;
 
     private long convertJackrabbitPermissionsToMagnoliaPermissions(long jackRabbitPermissions) {
         long magnoliaPermissions = 0;
@@ -222,7 +291,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             return getUserPermissions(acl.getList());
         }
 
-        return CompiledPermissions.NO_PERMISSION;
+        return RootOnlyPermission;
     }
 
     private CompiledPermissions getUserPermissions(List<Permission> permissions) {
@@ -251,6 +320,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     public void init(Session systemSession, Map configuration) throws RepositoryException {
         log.debug("init({}, {})", systemSession, configuration);
         super.init(systemSession, configuration);
+        RootOnlyPermission = new RootOnlyPermissions();
     }
 
     @Override
