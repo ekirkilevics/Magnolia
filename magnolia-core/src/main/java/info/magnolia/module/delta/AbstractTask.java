@@ -33,6 +33,9 @@
  */
 package info.magnolia.module.delta;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Abstract implementation of the Task interface which handles the mandatory properties name and description.
@@ -45,6 +48,10 @@ public abstract class AbstractTask implements Task {
 
     private final String description;
 
+    /**
+     * @deprecated since 4.5 - declare proper static final Logger in sublcasses.
+     */
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     public AbstractTask(String taskName, String taskDescription) {
         this.name = taskName;
