@@ -53,6 +53,7 @@ public class ElementProcessor {
         Element element = node.cast();
         if (element.hasTagName("A")) {
             disableLink(element);
+            removeHover(element);
         }
         PageEditor.model.addElement(mgnlElement, element);
 
@@ -77,6 +78,10 @@ public class ElementProcessor {
         else if (element.hasAttribute(CMS_EDIT)) {
             mgnlElement.setEditElement(element);
         }
+    }
+
+    public static void removeHover (Element element) {
+        element.addClassName("disabled");
     }
 
     public native static void disableLink(Element element) /*-{

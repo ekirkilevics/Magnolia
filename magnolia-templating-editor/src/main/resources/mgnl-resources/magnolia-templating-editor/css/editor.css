@@ -2,6 +2,9 @@
  * Edit bars definitions
  * --------------------------- */
 
+a.disabled:hover {
+  cursor: default !important;
+}
 /*
  * General appearance of edit bar.
  *

@@ -50,7 +50,13 @@ public class ComponentProcessor extends MgnlElementProcessor {
     @Override
     public void process() {
         GWT.log("element is edit bar placeholder. Injecting it...");
-        ComponentBar editBarWidget = new ComponentBar(getMgnlElement());
+        try {
+            ComponentBar editBarWidget = new ComponentBar(getMgnlElement());
+        }
+        catch(IllegalArgumentException e) {
+            GWT.log("This component is inherited. Skipping..");
+
+        }
     }
 
 }

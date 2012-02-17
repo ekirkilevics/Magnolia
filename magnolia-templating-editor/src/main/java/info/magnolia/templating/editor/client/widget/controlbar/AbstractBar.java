@@ -165,6 +165,7 @@ public abstract class AbstractBar extends FlowPanel {
         if (getMgnlElement().getEditElement() != null) {
             Element parent = getMgnlElement().getEditElement();
             parent.insertFirst(getElement());
+            onAttach();
         }
         else if (getMgnlElement().getFirstElement() != null && getMgnlElement().getFirstElement() == getMgnlElement().getLastElement()) {
             attach(getMgnlElement());

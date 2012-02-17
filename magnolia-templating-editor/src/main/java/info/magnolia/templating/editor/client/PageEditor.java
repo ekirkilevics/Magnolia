@@ -50,7 +50,6 @@ import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
@@ -59,8 +58,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
@@ -105,7 +102,7 @@ public class PageEditor extends HTML implements EntryPoint {
     public final static ModelStorage model = ModelStorage.getInstance();
     private LinkedList<MgnlElement> mgnlElements = new LinkedList<MgnlElement>();
 
-    // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
+        // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
     public static boolean process = true;
     private static boolean isPreview= false;
 
@@ -140,23 +137,21 @@ public class PageEditor extends HTML implements EntryPoint {
 
         long startTime = System.currentTimeMillis();
         processDocument(Document.get().getDocumentElement(), null);
-
         processMgnlElements();
+
         GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
 
-        model.getFocusModel().reset();
 
         String contentId = Cookies.getCookie("editor-content-id");
-        if(contentId != null){
-            MgnlElement selectedMgnlElement = model.findMgnlElementByContentId(contentId);
-            if(selectedMgnlElement != null){
-                model.setSelectedMgnlElement(selectedMgnlElement);
-                model.getFocusModel().toggleRootAreaBar(false);
-                model.getFocusModel().toggleSelection(selectedMgnlElement, true);
-            }
-            else{
-                Cookies.removeCookie("editor-content-id");
-            }
+        MgnlElement selectedMgnlElement = null;
+        if(contentId != null) {
+            selectedMgnlElement = model.findMgnlElementByContentId(contentId);
+        }
+        if(selectedMgnlElement != null) {
+            model.getFocusModel().onLoadSelect(selectedMgnlElement);
+        }
+        else {
+            model.getFocusModel().reset();
         }
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
@@ -167,15 +162,6 @@ public class PageEditor extends HTML implements EntryPoint {
                 event.stopPropagation();
             }
         }, MouseUpEvent.getType());
-
-        RootPanel.get().addDomHandler(new MouseDownHandler() {
-            @Override
-            public void onMouseDown(MouseDownEvent event) {
-
-                model.getFocusModel().onMouseDown((Element)event.getNativeEvent().getEventTarget().cast());
-                event.stopPropagation();
-            }
-        }, MouseDownEvent.getType());
 
         GWT.log("Trying to run onPageEditorReady callbacks...");
         onPageEditorReady();

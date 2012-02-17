@@ -31,25 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.templating.editor.client.model.focus;
-
-import info.magnolia.templating.editor.client.dom.MgnlElement;
-
-import com.google.gwt.dom.client.Element;
+package info.magnolia.templating.editor.client.widget.dnd;
 
 
+import com.google.gwt.core.client.GWT;
+
+
+import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 
 /**
- * Interface for Focus Model.
+ * Area bar.
  */
-public interface FocusModel {
+public abstract class DragAndDrop {
 
-    void onMouseUp(Element element);
+    private static final DragAndDropImpl dndImpl = GWT.create(DragAndDropImpl.class);
 
-    void toggleRootAreaBar(boolean visible);
-
-    void reset();
-
-    void onLoadSelect(MgnlElement selectedMgnlElement);
-
+    public static void dragAndDrop (final ComponentBar abstractBar) {
+        dndImpl.dragAndDrop(abstractBar);
+    }
 }

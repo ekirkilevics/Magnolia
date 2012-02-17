@@ -44,23 +44,18 @@ import com.google.gwt.user.client.Cookies;
  */
 public class FocusModelImpl3 implements FocusModel {
 
-    private ModelStorage storage;
+    private ModelStorage model;
     private boolean rootSelected = false;
 
-    public FocusModelImpl3(ModelStorage storage) {
+    public FocusModelImpl3(ModelStorage model) {
         super();
-        this.storage = storage;
-    }
-
-    @Override
-    public void onMouseUp(MgnlElement mgnlElement) {
-
+        this.model = model;
     }
 
     @Override
     public void onMouseUp(Element element) {
 
-        MgnlElement mgnlElement = storage.getMgnlElement(element);
+        MgnlElement mgnlElement = model.getMgnlElement(element);
 
         if (mgnlElement == null) {
             reset();
@@ -68,7 +63,7 @@ public class FocusModelImpl3 implements FocusModel {
 
         else if (mgnlElement.getParentArea() != null) {
             MgnlElement area = mgnlElement.getParentArea();
-            if (area != storage.getSelectedMgnlElement()) {
+            if (area != model.getSelectedMgnlElement()) {
                 deSelect();
                 hideRoot();
                 toggleSelection(area, true);
@@ -76,10 +71,13 @@ public class FocusModelImpl3 implements FocusModel {
         }
     }
 
-
     @Override
-    public void onMouseDown(Element element) {}
-
+    public void onLoadSelect(MgnlElement selectedMgnlElement) {
+        model.setSelectedMgnlElement(selectedMgnlElement);
+        toggleRootAreaBar(false);
+        showRootPlaceHolder();
+        toggleSelection(selectedMgnlElement, true);
+    }
     @Override
     public void reset() {
         deSelect();
@@ -87,59 +85,58 @@ public class FocusModelImpl3 implements FocusModel {
         showRootPlaceHolder();
     }
 
-    @Override
-    public void toggleSelection(MgnlElement mgnlElement, boolean visible) {
+    private void toggleSelection(MgnlElement mgnlElement, boolean visible) {
         String contentId = mgnlElement.getComment().getAttribute("content");
         Cookies.setCookie("editor-content-id", contentId);
 
-        if (storage.getEditBar(mgnlElement) != null) {
-            storage.getEditBar(mgnlElement).setVisible(visible);
+        if (model.getEditBar(mgnlElement) != null) {
+            model.getEditBar(mgnlElement).setVisible(visible);
         }
-        if (storage.getAreaEndBar(mgnlElement) != null) {
-            storage.getAreaEndBar(mgnlElement).setVisible(visible);
+        if (model.getAreaEndBar(mgnlElement) != null) {
+            model.getAreaEndBar(mgnlElement).setVisible(visible);
         }
 
         // toggle all direct child-areas placeholders visibility
         for (MgnlElement area : mgnlElement.getAreas()) {
 
-            if (storage.getAreaPlaceHolder(area) != null) {
-                storage.getAreaPlaceHolder(area).setVisible(visible);
+            if (model.getAreaPlaceHolder(area) != null) {
+                model.getAreaPlaceHolder(area).setVisible(visible);
             }
         }
 
         for (MgnlElement component : mgnlElement.getComponents()) {
 
             // toggle all child-components editbar visibility - does this case occure?
-            if (storage.getEditBar(component) != null) {
-                storage.getEditBar(component).setVisible(visible);
+            if (model.getEditBar(component) != null) {
+                model.getEditBar(component).setVisible(visible);
             }
             // toggle all child-components-area placeholder visibility
             for (MgnlElement area : component.getAreas()) {
 
-                if (storage.getAreaPlaceHolder(area) != null) {
-                    storage.getAreaPlaceHolder(area).setVisible(visible);
+                if (model.getAreaPlaceHolder(area) != null) {
+                    model.getAreaPlaceHolder(area).setVisible(visible);
                 }
             }
         }
 
-        if (storage.getAreaPlaceHolder(mgnlElement)!= null) {
+        if (model.getAreaPlaceHolder(mgnlElement)!= null) {
             if (mgnlElement.getParent() != null) {
-                storage.getAreaPlaceHolder(mgnlElement).setVisible(visible);
+                model.getAreaPlaceHolder(mgnlElement).setVisible(visible);
             }
-            storage.getAreaPlaceHolder(mgnlElement).setActive(visible);
+            model.getAreaPlaceHolder(mgnlElement).setActive(visible);
         }
 
-        if (storage.getComponentPlaceHolder(mgnlElement) != null) {
-            storage.getComponentPlaceHolder(mgnlElement).setVisible(visible);
+        if (model.getComponentPlaceHolder(mgnlElement) != null) {
+            model.getComponentPlaceHolder(mgnlElement).setVisible(visible);
         }
-        storage.setSelectedMgnlElement(mgnlElement);
+        model.setSelectedMgnlElement(mgnlElement);
 
     }
 
-    public void deSelect() {
-        if (storage.getSelectedMgnlElement() != null && storage.getSelectedMgnlElement().getParentArea() != null) {
-            toggleSelection(storage.getSelectedMgnlElement().getParentArea(), false);
-            storage.setSelectedMgnlElement(null);
+    private void deSelect() {
+        if (model.getSelectedMgnlElement() != null && model.getSelectedMgnlElement().getParentArea() != null) {
+            toggleSelection(model.getSelectedMgnlElement().getParentArea(), false);
+            model.setSelectedMgnlElement(null);
         }
     }
 
@@ -148,43 +145,42 @@ public class FocusModelImpl3 implements FocusModel {
         deSelect();
 
         this.rootSelected = !this.rootSelected;
-        for (MgnlElement root : storage.getRootElements()) {
-            if (storage.getEditBar(root) != null) {
-                storage.getEditBar(root).setVisible(visible);
+        for (MgnlElement root : model.getRootElements()) {
+            if (model.getEditBar(root) != null) {
+                model.getEditBar(root).setVisible(visible);
             }
-            if (storage.getAreaEndBar(root) != null) {
-                storage.getAreaEndBar(root).setVisible(visible);
+            if (model.getAreaEndBar(root) != null) {
+                model.getAreaEndBar(root).setVisible(visible);
             }
-            if (storage.getAreaPlaceHolder(root) != null) {
-                storage.getAreaPlaceHolder(root).setVisible(visible);
-            }
-        }
-    }
-
-    public void showRootPlaceHolder() {
-        for (MgnlElement root : storage.getRootElements()) {
-            if (storage.getAreaPlaceHolder(root) != null) {
-                storage.getAreaPlaceHolder(root).setVisible(true);
-                storage.getAreaPlaceHolder(root).setActive(false);
+            if (model.getAreaPlaceHolder(root) != null) {
+                model.getAreaPlaceHolder(root).setVisible(visible);
             }
         }
     }
 
-    public void hideRoot() {
-        for (MgnlElement root : storage.getRootElements()) {
-            if (storage.getEditBar(root) != null) {
-                storage.getEditBar(root).setVisible(false);
-            }
-            if (storage.getAreaEndBar(root) != null) {
-                storage.getAreaEndBar(root).setVisible(false);
-            }
-            if (storage.getComponentPlaceHolder(root) != null) {
-                storage.getComponentPlaceHolder(root).setVisible(false);
-            }
-            if (storage.getAreaPlaceHolder(root) != null) {
-                storage.getAreaPlaceHolder(root).addStyleName("inactive");
+    private void showRootPlaceHolder() {
+        for (MgnlElement root : model.getRootElements()) {
+            if (model.getAreaPlaceHolder(root) != null) {
+                model.getAreaPlaceHolder(root).setVisible(true);
+                model.getAreaPlaceHolder(root).setActive(false);
             }
         }
     }
 
+    private void hideRoot() {
+        for (MgnlElement root : model.getRootElements()) {
+            if (model.getEditBar(root) != null) {
+                model.getEditBar(root).setVisible(false);
+            }
+            if (model.getAreaEndBar(root) != null) {
+                model.getAreaEndBar(root).setVisible(false);
+            }
+            if (model.getComponentPlaceHolder(root) != null) {
+                model.getComponentPlaceHolder(root).setVisible(false);
+            }
+            if (model.getAreaPlaceHolder(root) != null) {
+                model.getAreaPlaceHolder(root).addStyleName("inactive");
+            }
+        }
+    }
 }

@@ -86,6 +86,7 @@ public class AreaEndBar extends FlowPanel {
 
     @Override
     protected void onAttach() {
+        PageEditor.model.addElements(mgnlElement, getElement());
         PageEditor.model.addAreaEndBar(mgnlElement, this);
         super.onAttach();
     }

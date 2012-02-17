@@ -33,24 +33,19 @@
  */
 package info.magnolia.templating.editor.client.widget.controlbar;
 
+import java.util.Map;
+
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.widget.dnd.DragAndDrop;
 import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Cursor;
+
+
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DragStartEvent;
 
-import com.google.gwt.event.dom.client.DragEndEvent;
-import com.google.gwt.event.dom.client.DragEndHandler;
-import com.google.gwt.event.dom.client.DragOverEvent;
-import com.google.gwt.event.dom.client.DragOverHandler;
-import com.google.gwt.event.dom.client.DragStartHandler;
-import com.google.gwt.event.dom.client.DropEvent;
-import com.google.gwt.event.dom.client.DropHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -60,95 +55,59 @@ import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.ui.Button;
 
 
+
+
 /**
  * Edit bar.
  */
-public class ComponentBar extends AbstractBar {
+public class ComponentBar extends AbstractBar  {
 
     private String workspace;
-    private String path;
+    public String path;
     private String dialog;
-    private String id;
-    private String parentAreaType;
+    public String id;
     private boolean isInherited;
 
-    public ComponentBar(MgnlElement mgnlElement) {
+    public ComponentBar(MgnlElement mgnlElement) throws IllegalArgumentException {
 
         super(mgnlElement);
 
-        if(mgnlElement.getParentArea() != null) {
-
-            MgnlElement area = mgnlElement.getParentArea();
-            String content = mgnlElement.getComment().getAttribute("content");
-            int i = content.indexOf(':');
-            this.workspace = content.substring(0, i);
-            this.path = content.substring(i + 1);
-
-            this.id = path.substring(path.lastIndexOf("/") + 1);
-
-            setId("__"+id);
-
-            this.dialog = mgnlElement.getComment().getAttribute("dialog");
-
-            this.parentAreaType = area.getComment().getAttribute("type");
-        }
-        this.isInherited = Boolean.parseBoolean(mgnlElement.getComment().getAttribute("inherited"));
-
+        checkMandatories(mgnlElement.getComment().getAttributes());
         addStyleName("component");
-        if (isInherited) {
-            addStyleName("mgnlInherited");
-        }
-        else {
-            createButtons();
-            createMouseEventsHandlers();
-        }
 
+        createButtons();
+        createMouseEventsHandlers();
         setVisible(false);
         attach();
+
         PageEditor.model.addEditBar(getMgnlElement(), this);
 
-        if (!this.isInherited) {
-            createDragAndDropHandlers();
+        createDragAndDropHandlers();
+    }
+
+    private void checkMandatories(Map<String, String> attributes) {
+        String content = attributes.get("content");
+        int i = content.indexOf(':');
+        this.workspace = content.substring(0, i);
+        this.path = content.substring(i + 1);
+
+        this.id = path.substring(path.lastIndexOf("/") + 1);
+
+        setId("__"+id);
+
+        this.dialog = attributes.get("dialog");
+
+
+        this.isInherited = Boolean.parseBoolean(attributes.get("inherited"));
+
+        if (this.isInherited) {
+            throw new IllegalArgumentException();
         }
+
     }
 
     private void createDragAndDropHandlers() {
-        this.addDomHandler(new DragStartHandler() {
-            @Override
-            public void onDragStart(DragStartEvent event) {
-                ComponentBar.this.getElement().getStyle().setCursor(Cursor.MOVE);
-                toggleButtons(false);
-                event.setData("id", id);
-                event.getDataTransfer().setDragImage(getElement(), 10, 10);
-            }
-        }, DragStartEvent.getType());
-
-        this.addDomHandler(new DragEndHandler() {
-            @Override
-            public void onDragEnd(DragEndEvent event) {
-                toggleButtons(true);
-            }
-        }, DragEndEvent.getType());
-
-        this.addDomHandler(new DragOverHandler() {
-            @Override
-            public void onDragOver(DragOverEvent event) {
-                event.stopPropagation();
-            }
-        }, DragOverEvent.getType());
-
-
-        this.addDomHandler(new DropHandler() {
-            @Override
-            public void onDrop(DropEvent event) {
-                String idSource = event.getData("id");
-                String parentPath = path.substring(0, path.lastIndexOf("/"));
-                moveComponent(id, idSource, parentPath);
-                //PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
-            }
-        }, DropEvent.getType());
-
-        this.getElement().setDraggable(Element.DRAGGABLE_TRUE);
+        DragAndDrop.dragAndDrop(this);
     }
 
     private void createMouseEventsHandlers() {
