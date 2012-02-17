@@ -128,18 +128,6 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     @Test
-    public void test45InstallsWhenFrom446() throws RepositoryException {
-        setupConfigNode(FilterManager.SERVER_FILTERS + "/uriSecurity/clientCallback");
-        setupConfigNode("/server/security/userManagers");
-
-        try {
-            executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
-        } catch (Throwable t) {
-            fail("Unexpected throwable" + t);
-        }
-    }
-
-    @Test
     public void test45DoesNotInstallWhenFromSmallerThan446() {
         try {
             executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.5"));
