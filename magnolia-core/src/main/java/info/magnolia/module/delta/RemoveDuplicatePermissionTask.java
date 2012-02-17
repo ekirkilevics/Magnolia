@@ -33,27 +33,32 @@
  */
 package info.magnolia.module.delta;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
 import info.magnolia.cms.security.Security;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.SameChildNodeTypeIterator;
 import info.magnolia.module.InstallContext;
 import info.magnolia.repository.RepositoryConstants;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A task to find and remove duplicate permission from a role and a workspace.
- * 
+ *
  * @version $Id$
  */
 public class RemoveDuplicatePermissionTask extends AbstractRepositoryTask {
+    private static final Logger log = LoggerFactory.getLogger(RemoveDuplicatePermissionTask.class);
+
 
     private final String roleName;
     private final String workspaceName;
@@ -69,7 +74,7 @@ public class RemoveDuplicatePermissionTask extends AbstractRepositoryTask {
         try {
             Session session = MgnlContext.getJCRSession(RepositoryConstants.USER_ROLES);
             Collection<Node> deleteNode = new ArrayList<Node>();
-            
+
             Node roleNode = session.getNodeByIdentifier(Security.getRoleManager().getRole(roleName).getId());
             Node aclNode = roleNode.getNode(workspaceName);
             NodeIterator childrenIter = new SameChildNodeTypeIterator(aclNode);
@@ -82,7 +87,7 @@ public class RemoveDuplicatePermissionTask extends AbstractRepositoryTask {
                         if(child.getProperty("path").getString().equals(otherChild.getProperty("path").getString()) && child.getProperty("permissions").getLong() == otherChild.getProperty("permissions").getLong()){
                             log.warn("Found duplicate permission. Role: " + roleName + " Workspace: " + workspaceName + " Permission: " + otherChild.getProperty("permissions").getLong() + " Path: " + otherChild.getProperty("path").getString());
                             deleteNode.add(otherChild);
-                            break;                     
+                            break;
                         }
                     }
                 }

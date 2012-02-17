@@ -52,6 +52,8 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
@@ -61,10 +63,12 @@ import com.google.common.collect.Sets;
 /**
  * Updates the given security filter's client callback configuration to reflect the changes introduced in 4.5.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRepositoryTask {
+
+    private static final Logger log = LoggerFactory.getLogger(UpdateSecurityFilterClientCallbacksConfiguration.class);
+
     private static final String FORM_CLASS = "info.magnolia.cms.security.auth.callback.FormClientCallback";
     private static final String COMPOSITE_CLASS = "info.magnolia.cms.security.auth.callback.CompositeCallback";
     private static final String BASIC_CLASS = "info.magnolia.cms.security.auth.callback.BasicClientCallback";

@@ -47,14 +47,19 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Task to encrypt base64 encoded passwords. Will skip all non-base64 entries.
- * 
+ *
  * @version $Id$
- * 
+ *
  */
 public final class HashUsersPasswords extends AllChildrenNodesOperation {
+
+    private static final Logger log = LoggerFactory.getLogger(HashUsersPasswords.class);
+
     private static final Content.ContentFilter filter = new Content.ContentFilter() {
 
         @Override

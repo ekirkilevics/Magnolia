@@ -40,15 +40,18 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * An abstract implementation of a RepositoryTask that only needs to be executed when a specific node is not found in the
  * repository. Can be used to easily create self-check tasks for mandatory configuration.
- * @author fgiust
- * @version $Revision: $ ($Author: $)
+ *
+ * @version $Id$
  */
 public abstract class AbstractConditionalRepositoryTask extends AbstractRepositoryTask {
+    private static final Logger log = LoggerFactory.getLogger(AbstractConditionalRepositoryTask.class);
 
     /**
      * @param name task name
