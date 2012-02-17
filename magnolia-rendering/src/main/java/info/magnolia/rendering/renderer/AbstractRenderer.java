@@ -37,6 +37,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
+import info.magnolia.jcr.wrapper.I18nNodeWrapper;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ParameterInfo;
@@ -262,10 +263,8 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
     protected Node wrapNodeForModel(Node content, Node mainContent) {
-
-        return wrapWithChannelVisibilityWrapper(content);
-        //      FIXME
-        //        return new I18nContentWrapper(content);
+        content = wrapWithChannelVisibilityWrapper(content);
+        return new I18nNodeWrapper(content);
     }
 
     /**
@@ -276,10 +275,8 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
     protected Node wrapNodeForTemplate(Node content, Node mainContent) {
-
-        return wrapWithChannelVisibilityWrapper(content);
-        //        FIXME
-        //        return new I18nContentWrapper(content);
+        content = wrapWithChannelVisibilityWrapper(content);
+        return new I18nNodeWrapper(content);
     }
 
     private Node wrapWithChannelVisibilityWrapper(Node content) {
