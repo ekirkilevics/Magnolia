@@ -38,7 +38,6 @@ import static org.mockito.Mockito.*;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.RenameNodesTask;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
@@ -50,8 +49,6 @@ import javax.jcr.Session;
 import org.junit.Test;
 
 /**
- * Test case for RenameACLNodesTask.
- *
  * @version $Id$
  */
 public class RenameNodesTaskTest extends RepositoryTestCase {
