@@ -69,6 +69,7 @@ public class InterceptFilterTest {
         MockSession session = new MockSession("website");
         session.getRootNode().addNode("1");
         session.getRootNode().addNode("2");
+        session.getRootNode().addNode("3");
 
         ctx.addSession("website", session);
         ctx.setUser(mock(User.class));
@@ -143,12 +144,14 @@ public class InterceptFilterTest {
     }
 
     @Test
-    public void testSortNodeAction() throws Exception {
+    public void testSortNodeDefaultAction() throws Exception {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("NODE_SORT");
         when(request.getParameter("mgnlPathSelected")).thenReturn("/2");
-        when(request.getParameter("mgnlPathSortAbove")).thenReturn("/1");
+        when(request.getParameter("mgnlPathTarget")).thenReturn("/1");
         when(request.getParameter("mgnlPath")).thenReturn("/");
+        when(request.getParameter("order")).thenReturn(null);
+
 
         NodeIterator nodes = ctx.getJCRSession("website").getRootNode().getNodes();
         assertEquals("1", ((Node)nodes.next()).getName());
@@ -162,5 +165,53 @@ public class InterceptFilterTest {
         nodes = ctx.getJCRSession("website").getRootNode().getNodes();
         assertEquals("2", ((Node)nodes.next()).getName());
         assertEquals("1", ((Node)nodes.next()).getName());
+    }
+
+    @Test
+    public void testSortNodeBeforeAction() throws Exception {
+        //GIVEN
+        when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("NODE_SORT");
+        when(request.getParameter("mgnlPathSelected")).thenReturn("/2");
+        when(request.getParameter("mgnlPathTarget")).thenReturn("/1");
+        when(request.getParameter("mgnlPath")).thenReturn("/");
+        when(request.getParameter("order")).thenReturn("before");
+
+        NodeIterator nodes = ctx.getJCRSession("website").getRootNode().getNodes();
+        assertEquals("1", ((Node)nodes.next()).getName());
+        assertEquals("2", ((Node)nodes.next()).getName());
+
+        InterceptFilter filter = new InterceptFilter();
+        //WHEN
+        filter.intercept(request, response);
+
+        //THEN
+        nodes = ctx.getJCRSession("website").getRootNode().getNodes();
+        assertEquals("2", ((Node)nodes.next()).getName());
+        assertEquals("1", ((Node)nodes.next()).getName());
+    }
+
+    @Test //TODO
+    public void testSortNodeAfterAction() throws Exception {
+        //GIVEN
+        when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("NODE_SORT");
+        when(request.getParameter("mgnlPathSelected")).thenReturn("/2");
+        when(request.getParameter("mgnlPathTarget")).thenReturn("/3");
+        when(request.getParameter("mgnlPath")).thenReturn("/");
+        when(request.getParameter("order")).thenReturn("after");
+
+        NodeIterator nodes = ctx.getJCRSession("website").getRootNode().getNodes();
+        assertEquals("1", ((Node)nodes.next()).getName());
+        assertEquals("2", ((Node)nodes.next()).getName());
+        assertEquals("3", ((Node)nodes.next()).getName());
+
+        InterceptFilter filter = new InterceptFilter();
+        //WHEN
+        filter.intercept(request, response);
+
+        //THEN
+        nodes = ctx.getJCRSession("website").getRootNode().getNodes();
+        assertEquals("1", ((Node)nodes.next()).getName());
+        assertEquals("3", ((Node)nodes.next()).getName());
+        assertEquals("2", ((Node)nodes.next()).getName());
     }
 }

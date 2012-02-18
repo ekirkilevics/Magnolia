@@ -182,8 +182,8 @@ function mgnlMoveNodeReset(bar)
             href=mgnlRemoveParameter(href,"mgnlPathSelected");
             href=mgnlAddParameter(href,"mgnlPathSelected",pathSelected);
 
-            href=mgnlRemoveParameter(href,"mgnlPathSortAbove");
-            href=mgnlAddParameter(href,"mgnlPathSortAbove",pathSortAbove);
+            href=mgnlRemoveParameter(href,"mgnlPathTarget");
+            href=mgnlAddParameter(href,"mgnlPathTarget",pathSortAbove);
 
             document.location.href=href;
             }

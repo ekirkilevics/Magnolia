@@ -37,7 +37,6 @@ import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.moveCo
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.DragEndEvent;
 import com.google.gwt.event.dom.client.DragEndHandler;
 import com.google.gwt.event.dom.client.DragOverEvent;
@@ -48,30 +47,31 @@ import com.google.gwt.event.dom.client.DropEvent;
 import com.google.gwt.event.dom.client.DropHandler;
 
 /**
- * Area bar.
+ * DragAndDropImpl.
  */
 public class DragAndDropImpl {
 
-    public void dragAndDrop (final ComponentBar abstractBar) {
-        abstractBar.addDomHandler(new DragStartHandler() {
+    public void dragAndDrop (final ComponentBar bar) {
+        bar.addDomHandler(new DragStartHandler() {
             @Override
             public void onDragStart(DragStartEvent event) {
-                abstractBar.getElement().getStyle().setCursor(Cursor.MOVE);
-                abstractBar.toggleButtons(false);
-                event.getDataTransfer().setDragImage(abstractBar.getElement(), 10, 10);
-                event.getDataTransfer().setData("text/plain", abstractBar.id);
+                bar.toggleButtons(false);
+                int x = bar.getAbsoluteLeft();
+                int y = bar.getAbsoluteTop();
+                event.setData("text", bar.id + "," + x +","+y);
+                event.getDataTransfer().setDragImage(bar.getElement(), 10, 10);
 
             }
         }, DragStartEvent.getType());
 
-        abstractBar.addDomHandler(new DragEndHandler() {
+        bar.addDomHandler(new DragEndHandler() {
             @Override
             public void onDragEnd(DragEndEvent event) {
-                abstractBar.toggleButtons(true);
+                bar.toggleButtons(true);
             }
         }, DragEndEvent.getType());
 
-        abstractBar.addDomHandler(new DragOverHandler() {
+        bar.addDomHandler(new DragOverHandler() {
             @Override
             public void onDragOver(DragOverEvent event) {
                 event.stopPropagation();
@@ -79,18 +79,36 @@ public class DragAndDropImpl {
         }, DragOverEvent.getType());
 
 
-        abstractBar.addDomHandler(new DropHandler() {
+        bar.addDomHandler(new DropHandler() {
             @Override
             public void onDrop(DropEvent event) {
-                String idSource = event.getDataTransfer().getData("text/plain");
-                String path = abstractBar.path;
-                String parentPath = path.substring(0, path.lastIndexOf("/"));
-                moveComponent(abstractBar.id, idSource, parentPath);
+                String data = event.getData("text");
+                String[] tokens = data.split(",");
+                String idSource = tokens[0];
+
+                int xTarget = bar.getAbsoluteLeft();
+                int yTarget = bar.getAbsoluteTop();
+                int xOrigin = Integer.valueOf(tokens[1]);
+                int yOrigin = Integer.valueOf(tokens[2]);
+
+                boolean isDragUp = yOrigin > yTarget;
+                boolean isDragDown = !isDragUp;
+                boolean isDragLeft = xOrigin > xTarget;
+                boolean isDragRight = !isDragLeft;
+
+                String order = "before";
+
+                if(isDragUp || isDragLeft) {
+                    order = "before";
+                } else if(isDragDown || isDragRight) {
+                    order = "after";
+                }
+                String parentPath = bar.path.substring(0, bar.path.lastIndexOf("/"));
+                moveComponent(bar.id, idSource, parentPath, order);
                 event.preventDefault();
-                //PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
             }
         }, DropEvent.getType());
 
-        abstractBar.getElement().setDraggable(Element.DRAGGABLE_TRUE);
+        bar.getElement().setDraggable(Element.DRAGGABLE_TRUE);
     }
 }

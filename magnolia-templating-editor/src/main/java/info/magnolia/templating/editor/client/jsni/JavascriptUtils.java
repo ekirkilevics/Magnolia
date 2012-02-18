@@ -143,19 +143,23 @@ public final class JavascriptUtils {
         return locale;
     }
 
-    public static void moveComponent(String idTarget, String idSource, String path) {
-
+    public static void moveComponent(String idTarget, String idSource, String path, String order) {
+        if(isEmpty(idTarget) || isEmpty(idSource) || isEmpty(path) || idTarget.equals(idSource)) {
+            return;
+        }
         String pathSource = path+"//"+idSource;
         String pathTarget = path+"//"+idTarget;
 
         UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         urlBuilder.removeParameter("mgnlIntercept");
         urlBuilder.removeParameter("mgnlPathSelected");
-        urlBuilder.removeParameter("mgnlPathSortAbove");
+        urlBuilder.removeParameter("mgnlPathTarget");
+        urlBuilder.removeParameter("order");
 
         urlBuilder.setParameter("mgnlIntercept", "NODE_SORT");
         urlBuilder.setParameter("mgnlPathSelected", pathSource);
-        urlBuilder.setParameter("mgnlPathSortAbove",pathTarget);
+        urlBuilder.setParameter("mgnlPathTarget", pathTarget);
+        urlBuilder.setParameter("order", order);
 
         Window.Location.replace(urlBuilder.buildString());
 

@@ -98,7 +98,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
     /**
      * request parameter: sort-above paragraph.
      */
-    private static final String PARAM_PATH_SORT_ABOVE = "mgnlPathSortAbove";
+    private static final String PARAM_PATH_TARGET = "mgnlPathTarget";
 
     /**
      * request parameter: selected paragraph.
@@ -193,15 +193,22 @@ public class InterceptFilter extends AbstractMgnlFilter {
                 // sort paragraphs
                 try {
                     String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
-                    String pathSortAbove = request.getParameter(PARAM_PATH_SORT_ABOVE);
+                    String pathTarget = request.getParameter(PARAM_PATH_TARGET);
                     String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
                     String srcName = StringUtils.substringAfterLast(pathSelected, "/");
-                    String destName = StringUtils.substringAfterLast(pathSortAbove, "/");
+                    String destName = StringUtils.substringAfterLast(pathTarget, "/");
+                    String order = StringUtils.defaultIfEmpty(request.getParameter("order"), "before");
                     if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
                         destName = null;
                     }
                     Node parent = session.getNode(pathParent+srcName);
-                    NodeUtil.orderBefore(parent, destName);
+
+                    if("before".equals(order)) {
+                        NodeUtil.orderBefore(parent, destName);
+                    } else {
+                        NodeUtil.orderAfter(parent, destName);
+                    }
+
                     Node page = session.getNode(handle);
                     MetaDataUtil.updateMetaData(page);
                     session.save();

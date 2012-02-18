@@ -43,7 +43,6 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Float;
 
-
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -82,10 +81,7 @@ public abstract class AbstractBar extends FlowPanel {
             }
         }
 
-
-
         setClassName("mgnlEditorBar");
-
     }
 
     protected void setId(String id){
@@ -151,6 +147,7 @@ public abstract class AbstractBar extends FlowPanel {
     }
 
     /**
+     * Shorthand for <code>getElement().getStyle()</code>.
      * @return the element's underlying {@link Style}. You can use this object to manipulate the css style attribute of this bar widget.
      */
     protected Style getStyle() {
@@ -160,7 +157,6 @@ public abstract class AbstractBar extends FlowPanel {
     /**
      *  TODO: we should not have to call onAttach ourself?
      */
-
     public void attach() {
         if (getMgnlElement().getEditElement() != null) {
             Element parent = getMgnlElement().getEditElement();

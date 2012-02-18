@@ -42,10 +42,12 @@ import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
 
 
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
+import com.google.gwt.event.dom.client.DragDropEventBase;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseOutEvent;
@@ -75,14 +77,19 @@ public class ComponentBar extends AbstractBar  {
         checkMandatories(mgnlElement.getComment().getAttributes());
         addStyleName("component");
 
-        createButtons();
-        createMouseEventsHandlers();
+        if(DragDropEventBase.isSupported()) {
+            getStyle().setCursor(Cursor.MOVE);
+            createButtons(false);
+            createDragAndDropHandlers();
+        } else {
+            createButtons(true);
+            createMouseEventsHandlers();
+        }
+
         setVisible(false);
         attach();
 
         PageEditor.model.addEditBar(getMgnlElement(), this);
-
-        createDragAndDropHandlers();
     }
 
     private void checkMandatories(Map<String, String> attributes) {
@@ -96,7 +103,6 @@ public class ComponentBar extends AbstractBar  {
         setId("__"+id);
 
         this.dialog = attributes.get("dialog");
-
 
         this.isInherited = Boolean.parseBoolean(attributes.get("inherited"));
 
@@ -139,7 +145,7 @@ public class ComponentBar extends AbstractBar  {
         }, MouseOutEvent.getType());
     }
 
-    private void createButtons() {
+    private void createButtons(boolean createMoveButton) {
 
         if (dialog != null && !this.isInherited) {
             final Button edit = new Button(getI18nMessage("buttons.edit.js"));
@@ -153,8 +159,7 @@ public class ComponentBar extends AbstractBar  {
             addPrimaryButton(edit, Float.RIGHT);
         }
 
-        //single area component obviously cannot be moved
-/*        if(AreaDefinition.TYPE_LIST.equals(parentAreaType)) {
+        if(createMoveButton && !this.isInherited) {
             final Button move = new Button(getI18nMessage("buttons.move.js"));
             move.addClickHandler(new ClickHandler() {
                 @Override
@@ -164,7 +169,7 @@ public class ComponentBar extends AbstractBar  {
                 }
             });
             addPrimaryButton(move, Float.RIGHT);
-        }*/
+        }
 
         if (!this.isInherited) {
             final Button removeButton = new Button(getI18nMessage("buttons.delete.js"));
@@ -177,6 +182,4 @@ public class ComponentBar extends AbstractBar  {
             addSecondaryButton(removeButton, Float.RIGHT);
         }
     }
-
-
 }

@@ -40,7 +40,7 @@ import com.google.gwt.core.client.GWT;
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 
 /**
- * Area bar.
+ * DragAndDrop.
  */
 public abstract class DragAndDrop {
 
