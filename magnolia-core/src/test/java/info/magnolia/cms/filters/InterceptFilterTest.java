@@ -190,7 +190,7 @@ public class InterceptFilterTest {
         assertEquals("1", ((Node)nodes.next()).getName());
     }
 
-    @Test //TODO
+    @Test
     public void testSortNodeAfterAction() throws Exception {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("NODE_SORT");
