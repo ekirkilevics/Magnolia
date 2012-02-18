@@ -169,7 +169,7 @@ function mgnlMoveNodeReset(bar)
             mgnlMoveNodeSetClassName(bar,"PUSHED");
             var href=document.location.href;
             var pathSelected=path+"/"+mgnlMoveNodeCollection+"/"+mgnlMoveNode;
-            var pathSortAbove=path+"/"+mgnlMoveNodeCollection+"/"+tmp[1];
+            var pathTarget=path+"/"+mgnlMoveNodeCollection+"/"+tmp[1];
 
 
             //'MoveNodeCollection='+mgnlMoveNodeCollection+'&MoveNode='+mgnlMoveNode+'&MoveNodeAbove='+tmp[1]+'&path='+path+'&actions=moveNode';
@@ -183,7 +183,7 @@ function mgnlMoveNodeReset(bar)
             href=mgnlAddParameter(href,"mgnlPathSelected",pathSelected);
 
             href=mgnlRemoveParameter(href,"mgnlPathTarget");
-            href=mgnlAddParameter(href,"mgnlPathTarget",pathSortAbove);
+            href=mgnlAddParameter(href,"mgnlPathTarget",pathTarget);
 
             document.location.href=href;
             }
