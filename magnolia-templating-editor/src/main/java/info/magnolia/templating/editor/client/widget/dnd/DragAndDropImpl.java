@@ -58,7 +58,7 @@ public class DragAndDropImpl {
                 bar.toggleButtons(false);
                 int x = bar.getAbsoluteLeft();
                 int y = bar.getAbsoluteTop();
-                event.setData("text", bar.id + "," + x +","+y);
+                event.setData("text", bar.getNodeName() + "," + x +","+y);
                 event.getDataTransfer().setDragImage(bar.getElement(), 10, 10);
 
             }
@@ -78,7 +78,6 @@ public class DragAndDropImpl {
             }
         }, DragOverEvent.getType());
 
-
         bar.addDomHandler(new DropHandler() {
             @Override
             public void onDrop(DropEvent event) {
@@ -96,15 +95,15 @@ public class DragAndDropImpl {
                 boolean isDragLeft = xOrigin > xTarget;
                 boolean isDragRight = !isDragLeft;
 
-                String order = "before";
+                String order = null;
 
                 if(isDragUp || isDragLeft) {
                     order = "before";
                 } else if(isDragDown || isDragRight) {
                     order = "after";
                 }
-                String parentPath = bar.path.substring(0, bar.path.lastIndexOf("/"));
-                moveComponent(bar.id, idSource, parentPath, order);
+                String parentPath = bar.getPath().substring(0, bar.getPath().lastIndexOf("/"));
+                moveComponent(bar.getNodeName(), idSource, parentPath, order);
                 event.preventDefault();
             }
         }, DropEvent.getType());

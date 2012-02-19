@@ -65,9 +65,9 @@ import com.google.gwt.user.client.ui.Button;
 public class ComponentBar extends AbstractBar  {
 
     private String workspace;
-    public String path;
+    private String path;
     private String dialog;
-    public String id;
+    private String nodeName;
     private boolean isInherited;
 
     public ComponentBar(MgnlElement mgnlElement) throws IllegalArgumentException {
@@ -98,9 +98,9 @@ public class ComponentBar extends AbstractBar  {
         this.workspace = content.substring(0, i);
         this.path = content.substring(i + 1);
 
-        this.id = path.substring(path.lastIndexOf("/") + 1);
+        this.nodeName = path.substring(path.lastIndexOf("/") + 1);
 
-        setId("__"+id);
+        setId("__" + nodeName);
 
         this.dialog = attributes.get("dialog");
 
@@ -110,6 +110,14 @@ public class ComponentBar extends AbstractBar  {
             throw new IllegalArgumentException();
         }
 
+    }
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public String getPath() {
+        return path;
     }
 
     private void createDragAndDropHandlers() {
@@ -165,7 +173,7 @@ public class ComponentBar extends AbstractBar  {
                 @Override
                 public void onClick(ClickEvent event) {
                     toggleButtons(false);
-                    PageEditor.moveComponentStart(id);
+                    PageEditor.moveComponentStart(nodeName);
                 }
             });
             addPrimaryButton(move, Float.RIGHT);
