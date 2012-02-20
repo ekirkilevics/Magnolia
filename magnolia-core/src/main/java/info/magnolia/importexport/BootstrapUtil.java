@@ -91,7 +91,7 @@ public class BootstrapUtil {
 
             log.debug("Will bootstrap {}", resourceName);
 
-            final InputStream stream = BootstrapUtil.class.getResourceAsStream(resourceName);
+            InputStream stream = BootstrapUtil.class.getResourceAsStream(resourceName);
             if (stream == null) {
                 throw new IOException("Can't find resource to bootstrap at " + resourceName);
             }
@@ -127,13 +127,13 @@ public class BootstrapUtil {
             try{
                 DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
             }
-
             // MAGNOLIA-3973, JCR-3239: a runtime exception wrapping the item exists exception is thrown
             catch(RuntimeException e){
                 // if we originally deleted the node and the exception mentions the uuid of the node
                 if (deleted && e.getMessage().contains(formerUUID)){
                     // then we import using the remove existing strategy
-                    DataTransporter.importXmlStream(stream, repository, pathName, name, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING, false, true);;
+                    stream = BootstrapUtil.class.getResourceAsStream(resourceName);
+                    DataTransporter.importXmlStream(stream, repository, pathName, name, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING, false, true);;
                 }
                 else{
                     throw e;
