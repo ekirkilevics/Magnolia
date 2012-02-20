@@ -26,8 +26,8 @@ div.mgnlEditorBar {
   border-left: 1px solid #81a312;
   border-bottom: 1px solid #305000;
   border-right: 1px solid #305000;
-  background: transparent url("../img/mgnl-bar.png") repeat;
-  color: #F0F2E6;
+  background: transparent url("../img/bars/mgnl-bar.png") repeat;
+  color: #f0f2e6;
 }
 
 /*
@@ -50,9 +50,17 @@ div.mgnlEditorBar {
  * Area edit bar.
  */
 .mgnlEditorBar.area {
-  border-radius: 7px 7px 0 0;
+  border-radius: 5px 5px 0 0;
   clear: both !important;
   margin: 0 0 5px 0 !important;
+}
+
+.mgnlEditorBar.area.end {
+  height: 5px;
+  border-radius: 0 0 5px 5px;
+  clear: both;
+  margin: 5px 0 !important;
+  background-image: url("../img/bars/mgnl-bar.area.end.png");
 }
 
 /*
@@ -62,16 +70,21 @@ div.mgnlEditorBar {
  *   with overlaid gradient: #81a312, transparency shifting from 100% to 0%
  */
 .mgnlEditorBar.component, .mgnlEditorBar.placeholder {
+  height: 21px;
+    /* Component edit bars are one pixel less high than other bars. */
+  line-height: 20px;
+    /* See .mgnlEditorBar for an explanation of this */
+
+  margin: 0 !important;
   border-top: 1px solid #91ba26;
   border-left: 1px solid #91ba26;
   border-bottom: 1px solid #719302;
   border-right: 1px solid #719302;
-  background-color: transparent;
-  background-image: url("../img/mgnl-bar.component.png");
-  background-repeat: repeat;
-  color: #004000;
-  margin: 0 !important;
 
+  background-color: transparent;
+  background-image: url("../img/bars/mgnl-bar.component.png");
+  background-repeat: repeat;
+  color: #2f491b;
 }
 
 /*
@@ -94,56 +107,133 @@ div.mgnlEditorBar {
  */
 .mgnlEditorBarButtons {
   /* Some definitions for div containing bar buttons
-   required to make it work in the footer. */
+     required to make it work in the footer. */
   float: right !important;
   width: auto !important;
     /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
   margin: 0 !important;
-
-  padding-top: 1px;
 }
 
 .mgnlEditorBarSecondaryButtons {
   width: auto !important;
-     margin: 0 0 0 0 !important;
+  margin: 0 0 0 0 !important;
   float: left !important;
 }
 
 .mgnlEditorBarPrimaryButtons {
-    width: auto !important;
-    margin: 0 0 0 10px !important;
-    float: right !important;
+  width: auto !important;
+  margin: 0 0 0 10px !important;
+  float: right !important;
 }
 
 /*
- * Buttons on component and area edit bars.
+ * Buttons on edit bars.
  */
 
-
 .mgnlEditorPushButton {
-  width: 12px;
-  height: 12px;
+  height: 21px;
+  width: 21px;
   cursor: pointer;
+
+  outline: 0;
 }
 
-.mgnlEditorPushButton.edit {
-    background: transparent no-repeat url("../img/edit.png");
+/*
+ * Buttons on area edit bars.
+ */
+
+ /* edit */
+.mgnlEditorBar.area .mgnlEditorPushButton.edit {
+    background: transparent no-repeat url("../img/bars/area.buttons/edit.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.edit:hover {
+    background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.edit:active {
+    background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png");
 }
 
-.mgnlEditorPushButton.remove {
-    background: transparent no-repeat url("../img/delete.png");
+/* add */
+.mgnlEditorBar.area .mgnlEditorPushButton.add {
+    background: transparent no-repeat url("../img/bars/area.buttons/add.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.add:hover {
+    background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.add:active {
+    background: transparent no-repeat url("../img/bars/area.buttons/add_click.png");
 }
 
-.mgnlEditorPushButton.add {
-    background: transparent no-repeat url("../img/add.png");
+/* remove */
+.mgnlEditorBar.area .mgnlEditorPushButton.remove {
+    background: transparent no-repeat url("../img/bars/area.buttons/delete.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.remove:hover {
+    background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png");
+}
+.mgnlEditorBar.area .mgnlEditorPushButton.remove:active {
+    background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png");
 }
 
-.mgnlEditorPushButton.move {
-    background: transparent no-repeat url("../img/add.png");
+/*
+ * Buttons on component edit bars.
+ */
+
+/* edit */
+.mgnlEditorBar.component .mgnlEditorPushButton.edit {
+    background: transparent no-repeat url("../img/bars/component.buttons/edit.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.edit:hover {
+    background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.edit:active {
+    background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png");
 }
 
+/* move (fallback on old browsers) */
+.mgnlEditorBar.component .mgnlEditorPushButton.move {
+    background: transparent no-repeat url("../img/bars/component.buttons/add.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.move:hover {
+    background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.move:active {
+    background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
+}
+
+/* remove */
+.mgnlEditorBar.component .mgnlEditorPushButton.remove {
+    background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.remove:hover {
+    background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png");
+}
+.mgnlEditorBar.component .mgnlEditorPushButton.remove:active {
+    background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png");
+}
+
+
+/*
+ * Buttons on component placeholders.
+ */
+
+/* add */
+.mgnlPlaceHolder.component .mgnlEditorPushButton.add {
+    background: transparent no-repeat url("../img/bars/component.buttons/add.png");
+}
+.mgnlPlaceHolder.component .mgnlEditorPushButton.add:hover {
+    background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
+}
+.mgnlPlaceHolder.component .mgnlEditorPushButton.add:active {
+    background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
+}
+
+
+/*
+ * Text buttons on page edit bar.
+ */
 .mgnlEditorButton {
-  height: 20px; /* have to give the height for all browsers to properly calculate it. */
+  height: 17px; /* have to give the height for all browsers to properly calculate it. */
 
   padding: 0 3px 0 3px;
 
@@ -152,49 +242,40 @@ div.mgnlEditorBar {
   border-bottom: 1px solid #305000;
   border-right: 1px solid #305000;
 
-  color: #F0F2E6;
-  background-color: #487000;
+  color: #f0f2e6;
+  background-color: transparent;
 
   font-family: Verdana, sans-serif;
   font-size: 11px;
 }
 
 /* Buttons on page edit bar. */
+.mgnlEditorMainbar .mgnlEditorBarButtons {
+  margin: 0 !important;
+  float: none !important;
+}
 .mgnlEditorMainbar button.mgnlEditorButton {
   padding: 1px 10px;
 }
-
-.mgnlEditorMainbarPreview button.mgnlEditorButton {
-  padding: 1px 10px;
-}
-
 .mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
   padding: 1px 8px;
-}
-
-/* Buttons on component edit bar. */
-.mgnlEditorBar.component button.mgnlEditorButton, .mgnlEditorBar.placeholder button.mgnlEditorButton {
-  border-top: 1px solid #c1ea56;
-  border-left: 1px solid #c1ea56;
-  border-bottom: 1px solid #719302;
-  border-right: 1px solid #719302;
-  color: #004000;
-  background-color: #91ba26;
 }
 
 .mgnlEditorMainbarPreview .mgnlEditorBarButtons {
   margin: 0 !important;
   float: left !important;
 }
-
-/* Buttons of page edit bar. */
-.mgnlEditorMainbar .mgnlEditorBarButtons {
-     margin: 0 !important;
-  float: none !important;
+.mgnlEditorMainbarPreview .mgnlEditorButton {
+  float: left !important;
+  margin: 0 !important;
+}
+.mgnlEditorMainbarPreview button.mgnlEditorButton {
+  padding: 1px 10px;
 }
 
+
 /*
- * Visual feedback when interacting with bar buttons.
+ * Visual feedback when interacting with text buttons on bars.
  */
 button.mgnlEditorButton:hover {
   cursor: pointer;
@@ -248,6 +329,8 @@ button.mgnlEditorButton:active {
 .mgnlPlaceHolder {
   clear: both;
 
+  margin: 0 !important;
+
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widhts. */
   -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -258,29 +341,27 @@ button.mgnlEditorButton:active {
 
   font-family: Verdana, sans-serif;
   font-size: 12px;
-    margin: 0 !important;
-
 }
 
 /* Area place holder, in focus. */
 .mgnlPlaceHolder.area.active {
   margin: 0 !important;
   padding: 0;
-  border-radius: 0 0 7px 7px;
 
-}
-/* FIXME: remove this def when we don't show area ph labels any more. */
-.mgnlPlaceHolder.area.active .label {
-  display: none;
+  border-radius: 0 0 5px 5px;
 }
 
 /* Area place holder, not in focus. */
 .mgnlPlaceHolder.area {
   margin: 10px 0 !important;
   padding: 25px 15px;
+
+  border-radius: 5px;
+
   background-color: #eeeeee;
   color: #aaaaaa;
-  border-radius: 7px;
+
+  text-align: center;
 }
 
 /* Component place holder */
@@ -289,11 +370,13 @@ button.mgnlEditorButton:active {
 }
 
 .mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
-    height: 45px;
-  background-color: #FFFFFF;
-    border: 2px dotted #91BA26;
-    border-top: none;
-    margin: 0 !important;
+  height: 45px;
+  margin: 0 !important;
+
+  border: 2px dotted #91BA26;
+  border-top: none;
+
+  background-color: white;
 }
 
 /* Component ph following are ph should have not top margin. */
@@ -351,7 +434,7 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
   border-bottom: 1px solid #305000;
 
   background-color: #487000 !important;
-  color: #F0F2E6 !important;
+  color: #f0f2e6 !important;
   text-align: right;
 
   font-family: Verdana, sans-serif;
@@ -361,7 +444,7 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 }
 
 .mgnlPreviewMenuItem-selected {
-  background: #A1BF39 !important;
+  background: #a1bf39 !important;
   color: #305000 !important;
 }
 
@@ -378,7 +461,7 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
  * Smartphone and tablet previews.
  */
 .mgnlEditorPreviewBackground {
-  background-color: #000;
+  background-color: black;
   opacity: 0.3;
   filter: alpha(opacity = 30);
   z-index: 900;
@@ -386,10 +469,6 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 
 .mobilePreview {
   z-index: 901;
-  /*border-radius: 7px 7px 7px 7px;
-    padding: 10px;
-    background: gray;
-  */
   cursor: pointer;
 }
 
@@ -422,8 +501,7 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 }
 
 .mobilePreview.smartphoneLandscape {
-  background: url(../img/preview/mobile/smartphone/landscape.png)
-    no-repeat;
+  background: url(../img/preview/mobile/smartphone/landscape.png) no-repeat;
   width: 752px;
   height: 461px;
 }
@@ -459,9 +537,3 @@ div#site-info .mgnlPlaceHolder.component .gwt-Label {
 
 /* --- End of mobile preview definitions --- */
 
-.mgnlEditorEndBar {
-  border-bottom: 5px solid #487000;
-  border-radius: 0 0 7px 7px;
-  clear: both;
-  margin: 5px 0 !important;
-}

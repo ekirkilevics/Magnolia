@@ -53,7 +53,9 @@ public class AreaEndBar extends FlowPanel {
     public AreaEndBar(MgnlElement mgnlElement) {
 
         this.mgnlElement = mgnlElement;
-        this.setStyleName("mgnlEditorEndBar");
+        this.setStyleName("mgnlEditorBar");
+        this.addStyleName("area");
+        this.addStyleName("end");
 
         setVisible(false);
 
