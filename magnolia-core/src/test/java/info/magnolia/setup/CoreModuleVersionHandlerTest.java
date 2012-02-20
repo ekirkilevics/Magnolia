@@ -34,6 +34,7 @@
 package info.magnolia.setup;
 
 import static org.junit.Assert.*;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.context.MgnlContext;
@@ -44,6 +45,7 @@ import info.magnolia.module.model.Version;
 import info.magnolia.repository.RepositoryConstants;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.junit.After;
 import org.junit.Before;
@@ -138,23 +140,34 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     }
 
     @Test
-    public void testUpgradeFrom446FixesRealNamePropertiesOnSecurityUserManagers() throws Exception{
+    public void testUpgradeFrom446() throws Exception{
         // GIVEN
         setupConfigNode("/server/filters/uriSecurity/clientCallback");
         setupConfigNode(FilterManager.SERVER_FILTERS);
         setupConfigNode("/server/security/userManagers/system");
         setupConfigNode("/server/security/userManagers/admin");
         setupConfigNode("/server/filters/servlets");
+        setupConfigNode("/server/filters/securityCallback/bypasses");
+        setupConfigNode("/server/filters/securityCallback/clientCallbacks/magnolia", ItemType.CONTENTNODE);
+        setupConfigNode("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern");
+        setupConfigNode("/server/filters/securityCallback/clientCallbacks/public");
 
         // WHEN
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
 
         // THEN
-        String systemUserManagerRealNameValue = MgnlContext.getJCRSession(RepositoryConstants.CONFIG).getNode("/server/security/userManagers/system").getProperty("realName").getString();
-        String adminUserManagerRealNameValue = MgnlContext.getJCRSession(RepositoryConstants.CONFIG).getNode("/server/security/userManagers/admin").getProperty("realName").getString();
+        // check userManagers
+        final Session configSession = MgnlContext.getJCRSession(RepositoryConstants.CONFIG);
+        String systemUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/system").getProperty("realName").getString();
+        String adminUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/admin").getProperty("realName").getString();
 
         assertEquals("system", systemUserManagerRealNameValue);
         assertEquals("admin", adminUserManagerRealNameValue);
-    }
 
+        // check securityCallbacks
+        assertFalse(configSession.itemExists("/server/filters/securityCallback/bypasses"));
+        assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern"));
+        assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia"));
+        assertTrue(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/form"));
+    }
 }
