@@ -38,12 +38,10 @@ import java.util.Map;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.dnd.DragAndDrop;
-import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
 
 
 import com.google.gwt.dom.client.Style.Cursor;
-import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
@@ -54,7 +52,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.PushButton;
 
 
 
@@ -156,19 +154,20 @@ public class ComponentBar extends AbstractBar  {
     private void createButtons(boolean createMoveButton) {
 
         if (dialog != null && !this.isInherited) {
-            final Button edit = new Button(getI18nMessage("buttons.edit.js"));
+            final PushButton edit = new PushButton();
             edit.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     PageEditor.openDialog(dialog, workspace, path, null, null);
-
                 }
             });
-            addPrimaryButton(edit, Float.RIGHT);
+            edit.setStylePrimaryName("mgnlEditorPushButton");
+            edit.addStyleName("edit");
+            addPrimaryButton(edit);
         }
 
         if(createMoveButton && !this.isInherited) {
-            final Button move = new Button(getI18nMessage("buttons.move.js"));
+            final PushButton move = new PushButton();
             move.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
@@ -176,18 +175,23 @@ public class ComponentBar extends AbstractBar  {
                     PageEditor.moveComponentStart(nodeName);
                 }
             });
-            addPrimaryButton(move, Float.RIGHT);
+            move.setStylePrimaryName("mgnlEditorPushButton");
+            move.addStyleName("move");
+            addPrimaryButton(move);
         }
 
         if (!this.isInherited) {
-            final Button removeButton = new Button(getI18nMessage("buttons.delete.js"));
-            removeButton.addClickHandler(new ClickHandler() {
+            final PushButton remove = new PushButton();
+            remove.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     PageEditor.deleteComponent(path);
                 }
             });
-            addSecondaryButton(removeButton, Float.RIGHT);
+            remove.setStylePrimaryName("mgnlEditorPushButton");
+            remove.addStyleName("remove");
+
+            addSecondaryButton(remove);
         }
     }
 }

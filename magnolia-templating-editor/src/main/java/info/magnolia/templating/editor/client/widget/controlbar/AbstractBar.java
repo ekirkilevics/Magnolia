@@ -101,29 +101,24 @@ public abstract class AbstractBar extends FlowPanel {
     /**
      * Adds this widget to this bar as a button. The default (primary) style applied is <code>mgnlEditorButton</code>. See also <code>editor.css</code>.
      */
-    protected void addSecondaryButton(final Widget button, final Float cssFloat) {
+    protected void addSecondaryButton(final Widget button) {
         if (secondaryButtons == null) {
             secondaryButtons = new FlowPanel();
             secondaryButtons.setStylePrimaryName("mgnlEditorBarSecondaryButtons");
             buttonWrapper.add(secondaryButtons);
         }
-        button.setStylePrimaryName("mgnlEditorButton");
-        button.getElement().getStyle().setFloat(cssFloat);
-
         secondaryButtons.add(button);
     }
 
     /**
      * Adds this widget to this bar as a button. The default (primary) style applied is <code>mgnlEditorButton</code>. See also <code>editor.css</code>.
      */
-    protected void addPrimaryButton(final Widget button, final Float cssFloat) {
+    protected void addPrimaryButton(final Widget button) {
         if (primaryButtons == null) {
             primaryButtons = new FlowPanel();
             primaryButtons.setStylePrimaryName("mgnlEditorBarPrimaryButtons");
             buttonWrapper.add(primaryButtons);
         }
-        button.setStylePrimaryName("mgnlEditorButton");
-        button.getElement().getStyle().setFloat(cssFloat);
 
         primaryButtons.add(button);
     }

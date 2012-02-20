@@ -20,15 +20,13 @@ div.mgnlEditorBar {
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
-  padding: 0 3px;
-  margin: 0;
+  padding: 0 3px ! important;
+  margin: 0 !important;
   border-top: 1px solid #81a312;
   border-left: 1px solid #81a312;
   border-bottom: 1px solid #305000;
   border-right: 1px solid #305000;
-  background-color: transparent;
-  background-image: url("../img/mgnl-bar.png");
-  background-repeat: repeat;
+  background: transparent url("../img/mgnl-bar.png") repeat;
   color: #F0F2E6;
 }
 
@@ -120,6 +118,30 @@ div.mgnlEditorBar {
 /*
  * Buttons on component and area edit bars.
  */
+
+
+.mgnlEditorPushButton {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+}
+
+.mgnlEditorPushButton.edit {
+    background: transparent no-repeat url("../img/edit.png");
+}
+
+.mgnlEditorPushButton.remove {
+    background: transparent no-repeat url("../img/delete.png");
+}
+
+.mgnlEditorPushButton.add {
+    background: transparent no-repeat url("../img/add.png");
+}
+
+.mgnlEditorPushButton.move {
+    background: transparent no-repeat url("../img/add.png");
+}
+
 .mgnlEditorButton {
   height: 20px; /* have to give the height for all browsers to properly calculate it. */
 

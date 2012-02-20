@@ -39,14 +39,12 @@ import java.util.Map;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
-import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.*;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.PushButton;
 
 
 /**
@@ -83,17 +81,19 @@ public class AreaBar extends AbstractBar {
     private void createButtons() {
         if(this.optional) {
             if (this.created) {
-                Button removeButton = new Button(getI18nMessage("buttons.remove.js"));
+                PushButton removeButton = new PushButton();
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
                         PageEditor.deleteComponent(path);
                     }
                 });
-                addSecondaryButton(removeButton, Float.RIGHT);
+                removeButton.setStylePrimaryName("mgnlEditorPushButton");
+                removeButton.addStyleName("remove");
+                addSecondaryButton(removeButton);
             }
             else {
-                Button createbutton = new Button(getI18nMessage("buttons.create.js"));
+                PushButton createbutton = new PushButton();
                 createbutton.setStylePrimaryName("mgnlEditorButton");
 
                 createbutton.addClickHandler(new ClickHandler() {
@@ -102,18 +102,22 @@ public class AreaBar extends AbstractBar {
                         PageEditor.createComponent(workspace, path, "mgnl:area");
                     }
                 });
-                addSecondaryButton(createbutton, Float.RIGHT);
+                createbutton.setStylePrimaryName("mgnlEditorPushButton");
+                createbutton.addStyleName("add");
+                addSecondaryButton(createbutton);
             }
         }
         if (this.dialog != null) {
-            Button editButton = new Button(getI18nMessage("buttons.edit.js"));
+            PushButton editButton = new PushButton();
             editButton.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
                     PageEditor.openDialog(dialog, workspace, path, null, null);
                 }
             });
-            addPrimaryButton(editButton, Float.RIGHT);
+            editButton.setStylePrimaryName("mgnlEditorPushButton");
+            editButton.addStyleName("edit");
+            addPrimaryButton(editButton);
         }
     }
 

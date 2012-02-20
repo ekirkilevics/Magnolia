@@ -33,7 +33,6 @@
  */
 package info.magnolia.templating.editor.client.widget.placeholder;
 
-import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 
 import java.util.Map;
 
@@ -47,9 +46,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PushButton;
 
 /**
  * A Widget for adding components to area.
@@ -134,8 +133,9 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private void createButtons() {
 
         if (this.showAddButton){
-            Button button = new Button(getI18nMessage("buttons.add.js"));
-            button.setStylePrimaryName("mgnlEditorButton");
+            PushButton button = new PushButton();
+            button.setStylePrimaryName("mgnlEditorPushButton");
+            button.addStyleName("add");
 
             button.addClickHandler(new ClickHandler() {
                 @Override
