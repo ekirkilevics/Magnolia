@@ -125,9 +125,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new PropertyValueDelegateTask("Remove urlPattern", "Remove urlPattern from 'magnolia' clientCallback if previously set to '*'", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern", "patternString", "*", true, new RemoveNodeTask("Update form clientCallback", "Remove 'urlPattern' from new 'magnolia' clientCallback", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern")))
                 .addTask(new RenameNodesTask("Rename clientCallback", "Rename 'magnolia' clientCallback to 'form'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks", "magnolia", "form", MgnlNodeType.NT_CONTENTNODE))
                 .addTask(new OrderNodeBeforeTask("Order clientCallbacks", "Order 'form' clientCallback before 'public'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/form", "public"))
-                // TODO dlipp - next line cannot yet be activated (SCRUM-986) - have to check first, why realmName is not set under securityCallback!
-//                .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))
-
+                .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))
         );
     }
 

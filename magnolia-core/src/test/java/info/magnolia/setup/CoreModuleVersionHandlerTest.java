@@ -171,5 +171,6 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern"));
         assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia"));
         assertTrue(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/form"));
+        assertFalse(configSession.itemExists("/server/filters/cms/contentSecurity/clientCallback"));
     }
 }
