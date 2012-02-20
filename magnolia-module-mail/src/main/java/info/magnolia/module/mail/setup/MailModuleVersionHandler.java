@@ -34,6 +34,8 @@
 package info.magnolia.module.mail.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.delta.BootstrapSingleModuleResource;
+import info.magnolia.module.delta.DeltaBuilder;
 
 /**
  * Module's version handler.
@@ -41,4 +43,14 @@ import info.magnolia.module.DefaultModuleVersionHandler;
  * @version $Id$
  */
 public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
+
+
+
+    public MailModuleVersionHandler() {
+        register(DeltaBuilder.update("4.5", "")
+            .addTask(new BootstrapSingleModuleResource("Reconfigure the templates Configuration","","config.modules.mail.config.templatesConfiguration.xml"))
+        );
+    }
+
+
 }
