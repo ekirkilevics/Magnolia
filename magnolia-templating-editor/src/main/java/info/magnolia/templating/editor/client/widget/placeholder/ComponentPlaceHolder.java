@@ -200,7 +200,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
             throw new IllegalArgumentException();
         }
 
-        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && this.created && !getMgnlElement().getComponents().isEmpty()) {
+        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && (this.created || !getMgnlElement().getComponents().isEmpty())) {
             throw new IllegalArgumentException();
         }
 

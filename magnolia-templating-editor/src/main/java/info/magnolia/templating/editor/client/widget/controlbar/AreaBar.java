@@ -146,6 +146,10 @@ public class AreaBar extends AbstractBar {
             return;
         }
 
+        else if (this.type.equals(AreaDefinition.TYPE_SINGLE)) {
+            return;
+        }
+
         // can add components to area
         else if (showAddButton && !availableComponents.isEmpty()) {
             return;

@@ -34,6 +34,8 @@
 package info.magnolia.templating.editor.client.widget.dnd;
 
 import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.moveComponent;
+import info.magnolia.templating.editor.client.PageEditor;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 
 import com.google.gwt.dom.client.Element;
@@ -56,6 +58,12 @@ public class DragAndDropImpl {
             @Override
             public void onDragStart(DragStartEvent event) {
                 bar.toggleButtons(false);
+
+                MgnlElement area = bar.getMgnlElement().getParentArea();
+                if (area != null && PageEditor.model.getComponentPlaceHolder(area) != null) {
+                    PageEditor.model.getComponentPlaceHolder(area).setVisible(false);
+                }
+
                 int x = bar.getAbsoluteLeft();
                 int y = bar.getAbsoluteTop();
                 event.setData("text", bar.getNodeName() + "," + x +","+y);
@@ -68,6 +76,10 @@ public class DragAndDropImpl {
             @Override
             public void onDragEnd(DragEndEvent event) {
                 bar.toggleButtons(true);
+                MgnlElement area = bar.getMgnlElement().getParentArea();
+                if (area != null && PageEditor.model.getComponentPlaceHolder(area) != null) {
+                    PageEditor.model.getComponentPlaceHolder(area).setVisible(true);
+                }
             }
         }, DragEndEvent.getType());
 
