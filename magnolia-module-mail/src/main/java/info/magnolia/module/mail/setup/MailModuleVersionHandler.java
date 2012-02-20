@@ -44,13 +44,9 @@ import info.magnolia.module.delta.DeltaBuilder;
  */
 public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
 
-
-
     public MailModuleVersionHandler() {
         register(DeltaBuilder.update("4.5", "")
-            .addTask(new BootstrapSingleModuleResource("Reconfigure the templates Configuration","","config.modules.mail.config.templatesConfiguration.xml"))
+            .addTask(new BootstrapSingleModuleResource("Templates configuration","Reconfigure the templates configuration.","config.modules.mail.config.templatesConfiguration.xml"))
         );
     }
-
-
 }
