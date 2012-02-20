@@ -54,6 +54,7 @@ import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
+import info.magnolia.templating.freemarker.AbstractDirective;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.io.IOException;
@@ -67,6 +68,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -76,6 +79,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AreaElement extends AbstractContentTemplatingElement {
 
+    private static final Logger log = LoggerFactory.getLogger(AreaElement.class);
     public static final String CMS_AREA = "cms:area";
 
     public static final String ATTRIBUTE_COMPONENT = "component";
@@ -150,7 +154,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if (isAdmin()) {
             MarkupHelper helper = new MarkupHelper(out);
 
-            helper.openComment(CMS_AREA).attribute("content", this.areaPath);
+            helper.openComment(CMS_AREA).attribute(AbstractDirective.CONTENT_ATTRIBUTE, this.areaPath);
             helper.attribute("name", this.name);
             helper.attribute("availableComponents", this.availableComponents);
             helper.attribute("type", this.type);
@@ -174,17 +178,22 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private Node createNewAreaNode(Node parentNode) throws RepositoryException {
         final String parentId = parentNode.getIdentifier();
         final String workspaceName = parentNode.getSession().getWorkspace().getName();
-
-        MgnlContext.doInSystemContext(new MgnlContext.Op<Void, RepositoryException>() {
-            @Override
-            public Void exec() throws RepositoryException {
-                Node parentNodeInSystemSession = NodeUtil.getNodeByIdentifier(workspaceName, parentId);
-                Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, MgnlNodeType.NT_AREA);
-                NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
-                newAreaNode.getSession().save();
-                return null;
-            }
-        });
+        try {
+            MgnlContext.doInSystemContext(new MgnlContext.Op<Void, RepositoryException>() {
+                @Override
+                public Void exec() throws RepositoryException {
+                    Node parentNodeInSystemSession = NodeUtil.getNodeByIdentifier(workspaceName, parentId);
+                    Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, MgnlNodeType.NT_AREA);
+                    NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
+                    newAreaNode.getSession().save();
+                    return null;
+                }
+            });
+        } catch (RepositoryException e) {
+            log.error("ignoring problem w/ creating area in workspace {} for node {}", workspaceName, parentId);
+            // ignore, when working w/ versioned nodes ...
+            return null;
+        }
         return parentNode.getNode(this.name);
     }
 

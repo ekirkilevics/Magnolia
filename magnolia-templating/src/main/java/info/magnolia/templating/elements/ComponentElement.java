@@ -46,6 +46,7 @@ import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
+import info.magnolia.templating.freemarker.AreaDirective;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
     private Node content;
-    private TemplateDefinitionAssignment templateDefinitionAssignment;
+    private final TemplateDefinitionAssignment templateDefinitionAssignment;
 
     private String dialog;
 
@@ -93,7 +94,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
             helper.openComment("cms:component");
 
 
-            helper.attribute("content", getNodePath(content));
+            helper.attribute(AreaDirective.CONTENT_ATTRIBUTE, getNodePath(content));
 
             if(content instanceof InheritanceNodeWrapper) {
                 if (((InheritanceNodeWrapper) content).isInherited()) {

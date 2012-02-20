@@ -44,6 +44,7 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.templating.freemarker.AreaDirective;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class InitElement extends AbstractContentTemplatingElement {
 
         helper.openComment(CMS_PAGE_TAG);
         if(content != null) {
-            helper.attribute("content", getNodePath(content));
+            helper.attribute(AreaDirective.CONTENT_ATTRIBUTE, getNodePath(content));
         }
         helper.attribute("dialog", dialog);
         helper.attribute("preview", String.valueOf(MgnlContext.getAggregationState().isPreviewMode()));
