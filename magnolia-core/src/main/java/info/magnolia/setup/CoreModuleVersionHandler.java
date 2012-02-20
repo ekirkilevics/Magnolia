@@ -43,12 +43,14 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
+import info.magnolia.module.delta.ChildrenExistsDelegateTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FalseCondition;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenameNodesTask;
@@ -118,11 +120,14 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/system", "realName", "system"))
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/admin", "realName", "admin"))
                 .addTask(new RenameNodesTask("Update servlet mapping names", "Update '--resources--' servlet mapping names to use '.'.", RepositoryConstants.CONFIG, "/server/filters/servlets", "--resources--", "-.resources--", MgnlNodeType.NT_CONTENTNODE))
-                .addTask(new RemoveNodeTask("Update securityCallback", "Remove empty bypasses node from securityCallback.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses"))
-                .addTask(new RemoveNodeTask("Update form clientCallback", "Remove 'urlPattern' from new 'magnolia' clientCallback", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern"))
+
+                .addTask(new ChildrenExistsDelegateTask("name", "description", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses", MgnlNodeType.NT_CONTENTNODE, null, new RemoveNodeTask("Update securityCallback", "Remove empty bypasses node from securityCallback.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses")))
+                .addTask(new PropertyValueDelegateTask("Remove urlPattern", "Remove urlPattern from 'magnolia' clientCallback if previously set to '*'", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern", "patternString", "*", true, new RemoveNodeTask("Update form clientCallback", "Remove 'urlPattern' from new 'magnolia' clientCallback", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern")))
                 .addTask(new RenameNodesTask("Rename clientCallback", "Rename 'magnolia' clientCallback to 'form'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks", "magnolia", "form", MgnlNodeType.NT_CONTENTNODE))
                 .addTask(new OrderNodeBeforeTask("Order clientCallbacks", "Order 'form' clientCallback before 'public'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/form", "public"))
-                .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))
+                // TODO dlipp - next line cannot yet be activated (SCRUM-986) - have to check first, why realmName is not set under securityCallback!
+//                .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))
+
         );
     }
 

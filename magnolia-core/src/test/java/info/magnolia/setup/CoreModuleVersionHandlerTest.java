@@ -152,6 +152,7 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern");
         setupConfigNode("/server/filters/securityCallback/clientCallbacks/public");
         setupConfigNode("/server/filters/cms/contentSecurity/clientCallback");
+        setupConfigProperty("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern", "patternString", "*");
 
         // WHEN
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
@@ -170,6 +171,5 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern"));
         assertFalse(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/magnolia"));
         assertTrue(configSession.itemExists("/server/filters/securityCallback/clientCallbacks/form"));
-        assertFalse(configSession.itemExists("/server/filters/cms/contentSecurity/clientCallback"));
     }
 }
