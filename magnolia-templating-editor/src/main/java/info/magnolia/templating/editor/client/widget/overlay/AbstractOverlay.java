@@ -52,7 +52,7 @@ public class AbstractOverlay extends FlowPanel {
     private double top;
     public AbstractOverlay(MgnlElement element) {
 
-        this.label = element.getComment().getAttribute("label");
+        this.label = element.getAttribute("label");
 
         for (MgnlElement parent = element.getParent(); parent != null; parent = parent.getParent()) {
             this.level++;

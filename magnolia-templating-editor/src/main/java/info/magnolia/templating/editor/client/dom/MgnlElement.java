@@ -35,6 +35,7 @@ package info.magnolia.templating.editor.client.dom;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 
@@ -58,8 +59,12 @@ public class MgnlElement {
     private Element editElement;
     private CMSComment endComment;
 
+    private Map<String, String> attributes;
+
     private static final String MARKER_AREA = "cms:area";
     private static final String MARKER_COMPONENT = "cms:component";
+
+    private static final String[] INHERITED_ATTRIBUTES = {"editable"};
 
 /**
  * @throws IllegalArgumentException if comments tagname is not a defined marker.
@@ -71,6 +76,16 @@ public class MgnlElement {
         }
         this.comment = comment;
         this.parent = parent;
+
+        this.attributes = comment.getAttributes();
+
+        if (this.parent != null) {
+            for (String inheritedAttribute : INHERITED_ATTRIBUTES) {
+                if (this.parent.containsAttribute(inheritedAttribute)) {
+                    attributes.put(inheritedAttribute, this.parent.getAttribute(inheritedAttribute));
+                }
+            }
+        }
     }
     public boolean isMgnlElement(String tagName) {
         if (tagName.equals(MARKER_AREA)) {
@@ -146,6 +161,7 @@ public class MgnlElement {
         return parentArea;
     }
 
+    @Deprecated
     public CMSComment getComment() {
         return comment;
     }
@@ -240,5 +256,16 @@ public class MgnlElement {
 
     public CMSComment getEndComment() {
         return this.endComment;
+    }
+
+    public String getAttribute(String key) {
+        return this.attributes.get(key);
+    }
+
+    public boolean containsAttribute(String key) {
+        return this.attributes.containsKey(key);
+    }
+    public Map<String, String> getAttributes() {
+        return this.attributes;
     }
 }

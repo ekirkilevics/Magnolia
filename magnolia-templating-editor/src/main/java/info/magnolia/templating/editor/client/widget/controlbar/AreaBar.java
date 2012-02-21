@@ -58,13 +58,14 @@ public class AreaBar extends AbstractBar {
     private String name;
     private String type;
     private String dialog;
-    private boolean optional = false;
-    private boolean created = true;
+    private boolean optional;
+    private boolean created;
+    private boolean editable = true;
 
     public AreaBar(MgnlElement mgnlElement) throws IllegalArgumentException {
         super(mgnlElement);
 
-        checkMandatories(mgnlElement.getComment().getAttributes());
+        checkMandatories(mgnlElement.getAttributes());
 
         GWT.log("Area ["+this.name+"] is of type " + this.type);
 
@@ -136,6 +137,10 @@ public class AreaBar extends AbstractBar {
 
         this.dialog = attributes.get("dialog");
 
+        if (attributes.containsKey("editable")) {
+            this.editable = Boolean.parseBoolean(attributes.get("editable"));
+        }
+
         String availableComponents = "";
         if(!AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             availableComponents = attributes.get("availableComponents");
@@ -145,8 +150,13 @@ public class AreaBar extends AbstractBar {
         this.optional = Boolean.parseBoolean(attributes.get("optional"));
         this.created = Boolean.parseBoolean(attributes.get("created"));
 
+        // break no matter what follows
+        if (!this.editable) {
+            throw new IllegalArgumentException("Not injecting any Areabar");
+        }
+
         // area can be deleted or created
-        if (this.optional) {
+       if (this.optional) {
             return;
         }
 
@@ -163,6 +173,7 @@ public class AreaBar extends AbstractBar {
         else if (dialog != null && !dialog.isEmpty()) {
             return;
         }
+
         else {
             throw new IllegalArgumentException("Not injecting any Areabar");
         }

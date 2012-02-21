@@ -71,7 +71,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         super(mgnlElement);
 
-        checkMandatories(mgnlElement.getComment().getAttributes());
+        checkMandatories(mgnlElement.getAttributes());
 
         this.addStyleName("component");
 

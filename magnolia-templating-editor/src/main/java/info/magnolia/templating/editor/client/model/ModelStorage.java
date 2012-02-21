@@ -198,7 +198,7 @@ public class ModelStorage {
 
     public MgnlElement findMgnlElementByContentId(String contentId) {
         for (MgnlElement element : elements.keySet()) {
-            if(contentId.equals(element.getComment().getAttribute("content"))){
+            if(contentId.equals(element.getAttribute("content"))){
                 return element;
             }
         }

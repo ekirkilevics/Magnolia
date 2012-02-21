@@ -86,7 +86,7 @@ public class FocusModelImpl3 implements FocusModel {
     }
 
     private void toggleSelection(MgnlElement mgnlElement, boolean visible) {
-        String contentId = mgnlElement.getComment().getAttribute("content");
+        String contentId = mgnlElement.getAttribute("content");
         Cookies.setCookie("editor-content-id", contentId);
 
         if (model.getEditBar(mgnlElement) != null) {

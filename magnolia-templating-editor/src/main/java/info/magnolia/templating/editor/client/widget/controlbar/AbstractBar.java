@@ -69,7 +69,7 @@ public abstract class AbstractBar extends FlowPanel {
         add(buttonWrapper);
 
         if (mgnlElement != null) {
-            this.label = mgnlElement.getComment().getAttribute("label");
+            this.label = mgnlElement.getAttribute("label");
             if (label != null && !label.isEmpty()) {
                 Label areaName = new Label(this.label);
                 //tooltip. Nice to have when area label is truncated because too long.

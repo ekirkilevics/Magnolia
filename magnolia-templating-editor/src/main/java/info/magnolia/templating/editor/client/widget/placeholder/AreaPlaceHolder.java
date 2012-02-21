@@ -52,7 +52,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         super(mgnlElement);
 
         this.addStyleName("area");
-        String label = mgnlElement.getComment().getAttribute("label");
+        String label = mgnlElement.getAttribute("label");
         areaName = new Label(label + " Placeholder");
         areaName.setStyleName("label");
 

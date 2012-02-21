@@ -67,12 +67,13 @@ public class ComponentBar extends AbstractBar  {
     private String dialog;
     private String nodeName;
     private boolean isInherited;
+    private boolean editable = true;
 
     public ComponentBar(MgnlElement mgnlElement) throws IllegalArgumentException {
 
         super(mgnlElement);
 
-        checkMandatories(mgnlElement.getComment().getAttributes());
+        checkMandatories(mgnlElement.getAttributes());
         addStyleName("component");
 
         if(DragDropEventBase.isSupported()) {
@@ -104,7 +105,11 @@ public class ComponentBar extends AbstractBar  {
 
         this.isInherited = Boolean.parseBoolean(attributes.get("inherited"));
 
-        if (this.isInherited) {
+        if (attributes.containsKey("editable")) {
+            this.editable = Boolean.parseBoolean(attributes.get("editable"));
+        }
+
+        if (this.isInherited || !this.editable) {
             throw new IllegalArgumentException();
         }
 
