@@ -19,7 +19,7 @@ div.mgnlEditorBar {
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
-  padding: 0 3px ! important;
+  padding: 0 3px;
   margin: 0 !important;
   border-top: 1px solid #96b158;
   border-left: 1px solid #96b158;
@@ -36,6 +36,7 @@ div.mgnlEditorBar {
   position: static;
   z-index: 900;
   margin: 0pt;
+  padding-top: 2px !important; /* ... instead of proper vertical aligning the buttons. */
 }
 
 #mgnlEditorMainbarPlaceholder {

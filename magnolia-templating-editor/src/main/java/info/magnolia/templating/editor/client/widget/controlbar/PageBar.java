@@ -180,7 +180,7 @@ public class PageBar extends AbstractBar {
         });
         addButton(adminCentral, Float.LEFT);
 
-        setClassName("mgnlEditorMainbar mgnlEditorBar");
+        setClassName("mgnlEditorBar mgnlEditorMainbar");
 
     }
 
