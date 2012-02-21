@@ -33,7 +33,20 @@
  */
 package info.magnolia.cms.core.version;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockContext;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
@@ -47,18 +60,6 @@ import javax.jcr.version.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.test.RepositoryTestCase;
-import info.magnolia.test.mock.MockContext;
 
 /**
  * @author philipp
@@ -145,7 +146,8 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         Node root = session.getRootNode();
 
-        root.addNode("firstPage", MgnlNodeType.NT_PAGE);
+        Node firstPage = root.addNode("firstPage", MgnlNodeType.NT_PAGE);
+
 
         session.save();
         VersionManager versionManager = VersionManager.getInstance();
@@ -155,11 +157,23 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         rule.addAllowType(MgnlNodeType.NT_CONTENTNODE);
         rule.addAllowType(MgnlNodeType.NT_RESOURCE);
 
-        versionManager.addVersion(root.getNode("firstPage"), rule);
-        assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 2);
+        firstPage.setProperty("title", "v1title");
+        firstPage.addNode("v1child", "mgnl:area");
+        firstPage.save();
+        Version v1 = versionManager.addVersion(firstPage, rule);
+        assertEquals(versionManager.getAllVersions(firstPage).getSize(), 2);
+        Node versionedNode = versionManager.getVersion(firstPage, v1.getName());
+        assertEquals("v1title", versionedNode.getProperty("title").getString());
+        assertTrue(versionedNode.hasNode("v1child"));
 
-        versionManager.addVersion(root.getNode("firstPage"), rule);
-        assertEquals(versionManager.getAllVersions(root.getNode("firstPage")).getSize(), 3);
+        firstPage.setProperty("title", "v2title");
+        firstPage.addNode("v2child", "mgnl:area");
+        firstPage.save();
+        Version v2 = versionManager.addVersion(firstPage, rule);
+        versionedNode = versionManager.getVersion(firstPage, v2.getName());
+        assertEquals(versionManager.getAllVersions(firstPage).getSize(), 3);
+        assertEquals("v2title", versionedNode.getProperty("title").getString());
+        assertTrue(versionedNode.hasNode("v2child"));
     }
 
     @Override

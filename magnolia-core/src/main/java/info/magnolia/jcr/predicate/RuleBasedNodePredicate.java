@@ -34,7 +34,6 @@
 package info.magnolia.jcr.predicate;
 
 import info.magnolia.cms.util.Rule;
-import info.magnolia.jcr.util.VersionUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -61,16 +60,13 @@ public class RuleBasedNodePredicate extends AbstractPredicate<Node> {
 
     @Override
     public boolean evaluateTyped(Node content) {
-        String nodeType = "";
         try {
-            nodeType = VersionUtil.getNodeTypeName(content);
+            return this.rule.isAllowed(content);
         }
         catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("failed to retrieve node type : " + re.getMessage(), re);
-            }
+            log.error("Failed to retrieve node type : " + re.getMessage(), re);
         }
-        return this.rule.isAllowed(nodeType);
+        return false;
     }
 
 }

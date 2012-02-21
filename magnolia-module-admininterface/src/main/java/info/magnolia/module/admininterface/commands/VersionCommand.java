@@ -39,18 +39,18 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.version.Version;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.version.Version;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -123,7 +123,7 @@ public class VersionCommand extends RuleBasedCommand {
             @Override
             public boolean accept(Content content) {
                 try {
-                    return !getRule().isAllowed(content.getNodeTypeName());
+                    return !getRule().isAllowed(content.getJCRNode());
                 }
                 catch (RepositoryException e) {
                     log.error("can't get nodetype", e);
