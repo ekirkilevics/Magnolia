@@ -1,10 +1,12 @@
 /* ---------------------------
  * Edit bars definitions
- * --------------------------- */
+ * ---------------------------
+ */
 
 a.disabled:hover {
   cursor: default !important;
 }
+
 /*
  * General appearance of edit bar.
  */
@@ -212,13 +214,13 @@ div.mgnlEditorBar {
  */
 
 /* add */
-.mgnlPlaceHolder.component .mgnlEditorPushButton.add {
+.mgnlEditorPlaceholder.component .mgnlEditorPushButton.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add.png");
 }
-.mgnlPlaceHolder.component .mgnlEditorPushButton.add:hover {
+.mgnlEditorPlaceholder.component .mgnlEditorPushButton.add:hover {
     background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
 }
-.mgnlPlaceHolder.component .mgnlEditorPushButton.add:active {
+.mgnlEditorPlaceholder.component .mgnlEditorPushButton.add:active {
     background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
 }
 
@@ -305,15 +307,15 @@ button.mgnlEditorButton:active {
 }
 
 /* --- End of edit bars definitions --- */
+
+
 /* ----------------------------------
  * Definitions for edit place holders
  * ----------------------------------
- *
- * TODO: add "Editor" prefix for these defs as well (e.g. mgnlEditorPlaceHolder)
  */
 
  /* General place holder definitions */
-.mgnlPlaceHolder {
+.mgnlEditorPlaceholder {
   clear: both;
 
   margin: 0 !important;
@@ -331,7 +333,7 @@ button.mgnlEditorButton:active {
 }
 
 /* Area place holder, in focus. */
-.mgnlPlaceHolder.area.active {
+.mgnlEditorPlaceholder.area.active {
   margin: 0 !important;
   padding: 0;
 
@@ -339,7 +341,7 @@ button.mgnlEditorButton:active {
 }
 
 /* Area place holder, not in focus. */
-.mgnlPlaceHolder.area {
+.mgnlEditorPlaceholder.area {
   margin: 10px 0 !important;
   padding: 25px 15px;
 
@@ -352,11 +354,11 @@ button.mgnlEditorButton:active {
 }
 
 /* Component place holder */
-.mgnlPlaceHolder.component {
+.mgnlEditorPlaceholder.component {
   width: 100%;
 }
 
-.mgnlPlaceHolder.component .mgnlEditorPlaceholderElements {
+.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
   height: 45px;
   margin: 0 !important;
 
@@ -367,7 +369,7 @@ button.mgnlEditorButton:active {
 }
 
 /* Component ph following are ph should have not top margin. */
-.mgnlPlaceHolder.area > .mgnlPlaceHolder.component {
+.mgnlEditorPlaceholder.area > .mgnlEditorPlaceholder.component {
   margin-top: 0;
 }
 
@@ -376,7 +378,7 @@ div#site-info .mgnlEditorPlaceholderElements {
   width: 100%;
 }
 
-div#site-info .mgnlPlaceHolder.component .gwt-Label {
+div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
   display: inline-block !important;
   width: auto;
 }
