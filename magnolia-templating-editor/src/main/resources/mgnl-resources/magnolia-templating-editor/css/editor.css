@@ -142,10 +142,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.area .mgnlEditorPushButton.edit {
     background: transparent no-repeat url("../img/bars/area.buttons/edit.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.edit:hover {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
     background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.edit:active {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
     background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png");
 }
 
@@ -153,10 +153,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.area .mgnlEditorPushButton.add {
     background: transparent no-repeat url("../img/bars/area.buttons/add.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.add:hover {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
     background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.add:active {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
     background: transparent no-repeat url("../img/bars/area.buttons/add_click.png");
 }
 
@@ -164,10 +164,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.area .mgnlEditorPushButton.remove {
     background: transparent no-repeat url("../img/bars/area.buttons/delete.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.remove:hover {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
     background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png");
 }
-.mgnlEditorBar.area .mgnlEditorPushButton.remove:active {
+.mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
     background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png");
 }
 
@@ -179,10 +179,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.component .mgnlEditorPushButton.edit {
     background: transparent no-repeat url("../img/bars/component.buttons/edit.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.edit:hover {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
     background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.edit:active {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
     background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png");
 }
 
@@ -190,10 +190,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.component .mgnlEditorPushButton.move {
     background: transparent no-repeat url("../img/bars/component.buttons/move.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.move:hover {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.move {
     background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.move:active {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.move {
     background: transparent no-repeat url("../img/bars/component.buttons/move_click.png");
 }
 
@@ -201,10 +201,10 @@ div.mgnlEditorBar {
 .mgnlEditorBar.component .mgnlEditorPushButton.remove {
     background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.remove:hover {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
     background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png");
 }
-.mgnlEditorBar.component .mgnlEditorPushButton.remove:active {
+.mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
     background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png");
 }
 
@@ -217,10 +217,10 @@ div.mgnlEditorBar {
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add.png");
 }
-.mgnlEditorPlaceholder.component .mgnlEditorPushButton.add:hover {
+.mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
 }
-.mgnlEditorPlaceholder.component .mgnlEditorPushButton.add:active {
+.mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
 }
 
