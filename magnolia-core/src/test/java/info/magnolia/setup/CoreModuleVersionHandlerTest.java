@@ -153,6 +153,8 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         setupConfigNode("/server/filters/securityCallback/clientCallbacks/public");
         setupConfigNode("/server/filters/cms/contentSecurity/clientCallback");
         setupConfigProperty("/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern", "patternString", "*");
+        setupConfigNode("/server/i18n/system");
+        setupConfigNode("/server/i18n/content");
 
         // WHEN
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
