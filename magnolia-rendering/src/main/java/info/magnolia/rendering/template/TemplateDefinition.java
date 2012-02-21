@@ -49,4 +49,5 @@ public interface TemplateDefinition extends RenderableDefinition {
 
     Map<String, AreaDefinition> getAreas();
 
+    TemplateAvailability getTemplateAvailability();
 }

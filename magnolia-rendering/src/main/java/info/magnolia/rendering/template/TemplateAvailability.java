@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,26 +31,16 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.assignment;
-
-import java.util.Collection;
-
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.rendering.template.TemplateDefinition;
+package info.magnolia.rendering.template;
 
 import javax.jcr.Node;
 
-
 /**
- * Knows which template to use for the rendering of the content.
+ * Strategy interface for controlling where a template can be used.
  *
  * @version $Id$
  */
-public interface TemplateDefinitionAssignment {
+public interface TemplateAvailability {
 
-    TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException;
-
-    TemplateDefinition getDefaultTemplate(Node content);
-
-    Collection<TemplateDefinition> getAvailableTemplates(Node content);
+    boolean isAvailable(Node content, TemplateDefinition templateDefinition);
 }

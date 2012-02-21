@@ -183,7 +183,7 @@ public abstract class AbstractDirectiveTestCase {
 
         configuration.registerInstance(RenderingEngine.class, renderingEngine);
 
-        final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry(null);
+        final TemplateDefinitionRegistry tdr = new TemplateDefinitionRegistry();
         tdr.register(p0provider);
         tdr.register(p1provider);
         tdr.register(p2provider);

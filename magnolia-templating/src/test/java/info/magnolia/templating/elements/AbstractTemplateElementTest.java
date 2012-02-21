@@ -82,7 +82,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
         when(p1provider.getTemplateDefinition()).thenReturn(p1);
         when(p1provider.getId()).thenReturn(p1.getName());
 
-        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry(null);
+        final TemplateDefinitionRegistry pman = new TemplateDefinitionRegistry();
         pman.register(p0provider);
         pman.register(p1provider);
 

@@ -83,7 +83,7 @@ public class TemplateDefinitionRegistryTest {
     public void testRegisterAndGetTemplateDefinition() throws RegistrationException {
 
         // GIVEN
-        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         ConfiguredTemplateDefinition definition = new ConfiguredTemplateDefinition();
 
         // WHEN
@@ -98,7 +98,7 @@ public class TemplateDefinitionRegistryTest {
     @Test
     public void testGetTemplateDefinitionsWithProviderReturningNullDefinition() {
         // GIVEN
-        final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         registry.register(new SimpleTemplateDefinitionProvider("returnsNullTemplateDefinition", null));
 
         // WHEN
@@ -113,7 +113,7 @@ public class TemplateDefinitionRegistryTest {
     public void testGetTemplateDefinitionThrowsOnBadId() throws RegistrationException {
 
         // GIVEN
-        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
 
         // WHEN
         registry.getTemplateDefinition("nonExistingId");
@@ -125,7 +125,7 @@ public class TemplateDefinitionRegistryTest {
     public void testGetTemplateDefinitionsIgnoresFailingProvider() {
 
         // GIVEN
-        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         registry.register(new TemplateDefinitionProvider() {
             @Override
             public String getId() {
@@ -149,7 +149,7 @@ public class TemplateDefinitionRegistryTest {
     public void testUnregisterAndRegister() {
         // GIVEN
         String providerId = "onlyOneToRemove";
-        final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry(null);
+        final TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinitionProvider provider = mock(TemplateDefinitionProvider.class);
         when(provider.getId()).thenReturn(providerId);
         registry.register(provider);

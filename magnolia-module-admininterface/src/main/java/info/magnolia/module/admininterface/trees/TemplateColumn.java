@@ -44,6 +44,7 @@ import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import java.util.Collection;
@@ -63,13 +64,15 @@ import org.slf4j.LoggerFactory;
 public class TemplateColumn extends TreeColumn {
     private static final Logger log = LoggerFactory.getLogger(TemplateColumn.class);
 
-    private final TemplateDefinitionRegistry templateManager;
+    private TemplateDefinitionRegistry templateRegistry;
+    private TemplateDefinitionAssignment templateAssignment;
     Select templateSelect;
 
     public TemplateColumn(String javascriptTree, HttpServletRequest request) {
         super(javascriptTree, request);
         // TODO dlipp: use IoC here.
-        this.templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
+        this.templateRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
+        this.templateAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
 
         templateSelect = new Select();
         templateSelect.setName(javascriptTree + TreeColumn.EDIT_NAMEADDITION);
@@ -100,7 +103,7 @@ public class TemplateColumn extends TreeColumn {
 
         TemplateDefinition template = null;
         try {
-            template = templateManager.getTemplateDefinition(templateName);
+            template = templateRegistry.getTemplateDefinition(templateName);
         }
         catch (RegistrationException e) {
             log.error("Template with id {} doesn't exist.", templateName);
@@ -111,7 +114,7 @@ public class TemplateColumn extends TreeColumn {
 
     @Override
     public String getHtmlEdit() {
-        Collection<TemplateDefinition> templateDefinitons = templateManager.getAvailableTemplates(this.getWebsiteNode().getJCRNode());
+        Collection<TemplateDefinition> templateDefinitons = templateAssignment.getAvailableTemplates(this.getWebsiteNode().getJCRNode());
 
         templateSelect.getOptions().clear();
 

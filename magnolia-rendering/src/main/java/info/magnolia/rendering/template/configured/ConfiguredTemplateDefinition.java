@@ -34,6 +34,7 @@
 package info.magnolia.rendering.template.configured;
 
 import info.magnolia.rendering.template.AreaDefinition;
+import info.magnolia.rendering.template.TemplateAvailability;
 import info.magnolia.rendering.template.TemplateDefinition;
 
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
     private Boolean visible;
     private String dialog;
     private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
+    private TemplateAvailability templateAvailability;
 
     @Override
     public Boolean getVisible() {
@@ -79,5 +81,14 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
 
     public void addArea(String name, AreaDefinition areaDefinition){
         this.areaDefinitions.put(name, areaDefinition);
+    }
+
+    @Override
+    public TemplateAvailability getTemplateAvailability() {
+        return templateAvailability;
+    }
+
+    public void setTemplateAvailability(TemplateAvailability templateAvailability) {
+        this.templateAvailability = templateAvailability;
     }
 }

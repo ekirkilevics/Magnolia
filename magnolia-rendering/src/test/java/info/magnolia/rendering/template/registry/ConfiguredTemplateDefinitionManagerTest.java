@@ -88,7 +88,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
         moduleRegistry = mock(ModuleRegistry.class);
         when(moduleRegistry.getModuleNames()).thenReturn(moduleNames);
 
-        templateDefinitionRegistry = new TemplateDefinitionRegistry(null);
+        templateDefinitionRegistry = new TemplateDefinitionRegistry();
     }
 
     @Override

@@ -40,6 +40,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 import javax.jcr.Node;
@@ -59,12 +60,14 @@ import org.slf4j.LoggerFactory;
 public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(WebsiteTreeHandler.class);
 
-    private final TemplateDefinitionRegistry templateManager;
+    private TemplateDefinitionRegistry templateRegistry;
+    private TemplateDefinitionAssignment templateAssignment;
 
     public WebsiteTreeHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         // TODO dlipp: use IoC.
-        templateManager = Components.getComponent(TemplateDefinitionRegistry.class);
+        templateAssignment = Components.getComponent(TemplateDefinitionAssignment.class);
+        templateRegistry = Components.getComponent(TemplateDefinitionRegistry.class);
     }
 
     @Override
@@ -90,13 +93,13 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
     }
 
     protected TemplateDefinition getDefaultTemplate(Node node) {
-        return templateManager.getDefaultTemplate(node);
+        return templateAssignment.getDefaultTemplate(node);
     }
 
     @Override
     public String show() {
         //show start page if no templates present yet or if only available template is mgnlDeleted
-        Collection<TemplateDefinition> templateDefinitions = templateManager.getTemplateDefinitions();
+        Collection<TemplateDefinition> templateDefinitions = templateRegistry.getTemplateDefinitions();
         //TODO I know this hardcoded check is ugly but could not find a better way
         boolean isDeletedNodeTemplate = templateDefinitions.size() == 1 && "adminInterface:mgnlDeleted".equals(templateDefinitions.iterator().next().getId());
         if (templateDefinitions.isEmpty() || isDeletedNodeTemplate) {

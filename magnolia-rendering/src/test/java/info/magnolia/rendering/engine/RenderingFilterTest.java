@@ -82,7 +82,7 @@ public class RenderingFilterTest {
     @Before
     public void setUp() {
         renderingEngine = mock(RenderingEngine.class);
-        templateDefinitionRegistry = new TemplateDefinitionRegistry(null);
+        templateDefinitionRegistry = new TemplateDefinitionRegistry();
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         chain = mock(FilterChain.class);
