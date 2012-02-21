@@ -41,6 +41,8 @@ import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DragEndEvent;
 import com.google.gwt.event.dom.client.DragEndHandler;
+import com.google.gwt.event.dom.client.DragLeaveEvent;
+import com.google.gwt.event.dom.client.DragLeaveHandler;
 import com.google.gwt.event.dom.client.DragOverEvent;
 import com.google.gwt.event.dom.client.DragOverHandler;
 import com.google.gwt.event.dom.client.DragStartEvent;
@@ -60,8 +62,13 @@ public class DragAndDropImpl {
                 bar.toggleButtons(false);
 
                 MgnlElement area = bar.getMgnlElement().getParentArea();
-                if (area != null && PageEditor.model.getComponentPlaceHolder(area) != null) {
-                    PageEditor.model.getComponentPlaceHolder(area).setVisible(false);
+                if (area != null) {
+                    for (MgnlElement component : area.getComponents()) {
+                        ComponentBar componentBar = (ComponentBar) PageEditor.model.getEditBar(component);
+                        if (componentBar != null && componentBar != bar) {
+                            componentBar.setStyleName("moveTarget", true);
+                        }
+                    }
                 }
 
                 int x = bar.getAbsoluteLeft();
@@ -77,8 +84,13 @@ public class DragAndDropImpl {
             public void onDragEnd(DragEndEvent event) {
                 bar.toggleButtons(true);
                 MgnlElement area = bar.getMgnlElement().getParentArea();
-                if (area != null && PageEditor.model.getComponentPlaceHolder(area) != null) {
-                    PageEditor.model.getComponentPlaceHolder(area).setVisible(true);
+                if (area != null) {
+                    for (MgnlElement component : area.getComponents()) {
+                        ComponentBar componentBar = (ComponentBar) PageEditor.model.getEditBar(component);
+                        if (componentBar != null && componentBar != bar) {
+                            componentBar.setStyleName("moveTarget", false);
+                        }
+                    }
                 }
             }
         }, DragEndEvent.getType());
@@ -86,9 +98,25 @@ public class DragAndDropImpl {
         bar.addDomHandler(new DragOverHandler() {
             @Override
             public void onDragOver(DragOverEvent event) {
+                String data = event.getData("text");
+                String[] tokens = data.split(",");
+                String idSource = tokens[0];
+
+                if (!bar.getNodeName().equals(idSource)){
+                    bar.setStyleName("moveOver", true);
+                }
                 event.stopPropagation();
             }
         }, DragOverEvent.getType());
+
+        bar.addDomHandler(new DragLeaveHandler() {
+
+            @Override
+            public void onDragLeave(DragLeaveEvent event) {
+                bar.setStyleName("moveOver", false);
+                event.stopPropagation();
+            }
+        }, DragLeaveEvent.getType());
 
         bar.addDomHandler(new DropHandler() {
             @Override
@@ -97,25 +125,28 @@ public class DragAndDropImpl {
                 String[] tokens = data.split(",");
                 String idSource = tokens[0];
 
-                int xTarget = bar.getAbsoluteLeft();
-                int yTarget = bar.getAbsoluteTop();
-                int xOrigin = Integer.valueOf(tokens[1]);
-                int yOrigin = Integer.valueOf(tokens[2]);
+                if (!bar.getNodeName().equals(idSource)) {
+                    int xTarget = bar.getAbsoluteLeft();
+                    int yTarget = bar.getAbsoluteTop();
+                    int xOrigin = Integer.valueOf(tokens[1]);
+                    int yOrigin = Integer.valueOf(tokens[2]);
 
-                boolean isDragUp = yOrigin > yTarget;
-                boolean isDragDown = !isDragUp;
-                boolean isDragLeft = xOrigin > xTarget;
-                boolean isDragRight = !isDragLeft;
+                    boolean isDragUp = yOrigin > yTarget;
+                    boolean isDragDown = !isDragUp;
+                    boolean isDragLeft = xOrigin > xTarget;
+                    boolean isDragRight = !isDragLeft;
 
-                String order = null;
+                    String order = null;
 
-                if(isDragUp || isDragLeft) {
-                    order = "before";
-                } else if(isDragDown || isDragRight) {
-                    order = "after";
+                    if(isDragUp || isDragLeft) {
+                        order = "before";
+                    } else if(isDragDown || isDragRight) {
+                        order = "after";
+                    }
+                    String parentPath = bar.getPath().substring(0, bar.getPath().lastIndexOf("/"));
+                    moveComponent(bar.getNodeName(), idSource, parentPath, order);
                 }
-                String parentPath = bar.getPath().substring(0, bar.getPath().lastIndexOf("/"));
-                moveComponent(bar.getNodeName(), idSource, parentPath, order);
+
                 event.preventDefault();
             }
         }, DropEvent.getType());
