@@ -31,7 +31,6 @@
       <param name="cacheSize" value="1000" />
       <param name="forceConsistencyCheck" value="false" />
       <param name="autoRepair" value="true" />
-      <param name="analyzer" value="org.apache.lucene.analysis.standard.StandardAnalyzer" />
       <param name="queryClass" value="org.apache.jackrabbit.core.query.QueryImpl" />
       <param name="respectDocumentOrder" value="true" />
       <param name="resultFetchSize" value="2147483647" />

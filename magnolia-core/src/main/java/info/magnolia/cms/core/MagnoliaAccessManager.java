@@ -34,6 +34,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManagerImpl;
+
 import java.security.Principal;
 import java.util.Set;
 
@@ -52,14 +53,12 @@ import org.apache.jackrabbit.core.id.ItemId;
 import org.apache.jackrabbit.core.security.AMContext;
 import org.apache.jackrabbit.core.security.DefaultAccessManager;
 import org.apache.jackrabbit.core.security.authorization.AccessControlProvider;
-import org.apache.jackrabbit.core.security.authorization.PrivilegeRegistry;
+import org.apache.jackrabbit.core.security.authorization.Permission;
 import org.apache.jackrabbit.core.security.authorization.WorkspaceAccessManager;
 import org.apache.jackrabbit.spi.Name;
 import org.apache.jackrabbit.spi.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.jackrabbit.core.security.authorization.Permission;
 
 /**
  * Magnolia's own access manager exposing access to repository to all Magnolia users.
@@ -67,6 +66,7 @@ import org.apache.jackrabbit.core.security.authorization.Permission;
  * @version $Id: $
  * @deprecated this class will change package as part of removal direct JR dependencies.
  */
+@Deprecated
 public class MagnoliaAccessManager extends DefaultAccessManager {
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessManager.class);
@@ -177,12 +177,6 @@ public class MagnoliaAccessManager extends DefaultAccessManager {
     public AccessControlPolicy[] getPolicies(String absPath) throws PathNotFoundException, AccessDeniedException, RepositoryException {
         log.debug("getPolicies({})", absPath);
         return super.getPolicies(absPath);
-    }
-
-    @Override
-    protected PrivilegeRegistry getPrivilegeRegistry() throws RepositoryException {
-        log.debug("getPrivilegeRegistry()");
-        return super.getPrivilegeRegistry();
     }
 
     @Override

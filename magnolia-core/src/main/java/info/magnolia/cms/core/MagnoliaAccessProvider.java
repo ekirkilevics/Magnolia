@@ -57,6 +57,7 @@ import org.apache.jackrabbit.core.id.PropertyId;
 import org.apache.jackrabbit.core.security.authorization.AbstractCompiledPermissions;
 import org.apache.jackrabbit.core.security.authorization.AccessControlEditor;
 import org.apache.jackrabbit.core.security.authorization.CompiledPermissions;
+import org.apache.jackrabbit.core.security.authorization.PrivilegeManagerImpl;
 import org.apache.jackrabbit.core.security.authorization.combined.CombinedProvider;
 import org.apache.jackrabbit.spi.Name;
 import org.apache.jackrabbit.spi.Path;
@@ -149,6 +150,16 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             throw new UnsupportedOperationException();
         }
 
+        @Override
+        protected Result buildRepositoryResult() throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected PrivilegeManagerImpl getPrivilegeManagerImpl() throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
     /**
@@ -211,6 +222,15 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             throw new UnsupportedOperationException();
         }
 
+        @Override
+        protected Result buildRepositoryResult() throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected PrivilegeManagerImpl getPrivilegeManagerImpl() throws RepositoryException {
+            throw new UnsupportedOperationException();
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessProvider.class);

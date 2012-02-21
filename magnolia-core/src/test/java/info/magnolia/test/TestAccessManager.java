@@ -100,4 +100,9 @@ public class TestAccessManager implements AccessManager {
         return true;
     }
 
+    @Override
+    public void checkRepositoryPermission(int arg0) throws AccessDeniedException, RepositoryException {
+        // do nothing ==> grant all
+    }
+
 }
