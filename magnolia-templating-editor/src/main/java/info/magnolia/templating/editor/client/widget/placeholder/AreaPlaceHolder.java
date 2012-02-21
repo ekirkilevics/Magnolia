@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.Label;
  */
 public class AreaPlaceHolder extends AbstractPlaceHolder {
 
+    private Label areaName;
 
     public AreaPlaceHolder(MgnlElement mgnlElement) {
 
@@ -52,7 +53,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
 
         this.addStyleName("area");
         String label = mgnlElement.getComment().getAttribute("label");
-        Label areaName = new Label(label + " Placeholder");
+        areaName = new Label(label + " Placeholder");
         areaName.setStyleName("label");
 
         if (mgnlElement.getRootArea() != mgnlElement) {
@@ -83,5 +84,6 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
 
     public void setActive(boolean active) {
         setStyleName("active", active);
+        areaName.setVisible(!active);	// Hide area name in case area placeholder gets active and vice versa.
     }
 }
