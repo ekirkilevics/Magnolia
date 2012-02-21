@@ -231,7 +231,7 @@ div.mgnlEditorBar {
 .mgnlEditorButton {
   height: 19px; /* have to give the height for all browsers to properly calculate dimensions. */
 
-  padding: 0 3px 0 3px;
+  padding: 1px 10px;
 
   border-top: 1px solid #9dc114;
   border-left: 1px solid #9dc114;
@@ -248,10 +248,6 @@ div.mgnlEditorBar {
 .mgnlEditorMainbar .mgnlEditorBarButtons {
   margin: 0 !important;
   float: none !important;
-  background-color: red;
-}
-.mgnlEditorMainbar button.mgnlEditorButton {
-  padding: 1px 10px;
 }
 .mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
   padding: 1px 8px;
@@ -422,7 +418,7 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 
   border-bottom: 1px solid #305000;
 
-  background-color: #487000 !important;
+  background-color: #538d0b !important;
   color: #f0f2e6 !important;
   text-align: right;
 
@@ -434,7 +430,7 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 
 .mgnlPreviewMenuItem-selected {
   background: #a1bf39 !important;
-  color: #305000 !important;
+  color: #2f491b !important;
 }
 
 .mgnlEditorButton-previewMenuButton {
@@ -442,7 +438,7 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
   border-left: 0px !important;
 
   background: center no-repeat url(../img/preview/down-arrow-white.gif);
-  background-color: #487000;
+  background-color: #538D0B;
   text-indent: -1000px; /* Ensure that the text on the button we need for aligning the button, is invisible. */
 }
 
