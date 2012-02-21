@@ -188,13 +188,13 @@ div.mgnlEditorBar {
 
 /* move (fallback on old browsers) */
 .mgnlEditorBar.component .mgnlEditorPushButton.move {
-    background: transparent no-repeat url("../img/bars/component.buttons/add.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/move.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.move:hover {
-    background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.move:active {
-    background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/move_click.png");
 }
 
 /* remove */
@@ -229,7 +229,7 @@ div.mgnlEditorBar {
  * Text buttons on page edit bar.
  */
 .mgnlEditorButton {
-  height: 17px; /* have to give the height for all browsers to properly calculate it. */
+  height: 19px; /* have to give the height for all browsers to properly calculate dimensions. */
 
   padding: 0 3px 0 3px;
 
@@ -245,10 +245,10 @@ div.mgnlEditorBar {
   font-size: 11px;
 }
 
-/* Buttons on page edit bar. */
 .mgnlEditorMainbar .mgnlEditorBarButtons {
   margin: 0 !important;
   float: none !important;
+  background-color: red;
 }
 .mgnlEditorMainbar button.mgnlEditorButton {
   padding: 1px 10px;
