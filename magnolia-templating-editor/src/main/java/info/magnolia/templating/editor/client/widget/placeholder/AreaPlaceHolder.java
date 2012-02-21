@@ -84,6 +84,6 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
 
     public void setActive(boolean active) {
         setStyleName("active", active);
-        areaName.setVisible(!active);	// Hide area name in case area placeholder gets active and vice versa.
+        areaName.setVisible(!active); // Hide area name in case area placeholder gets active and vice versa.
     }
 }
