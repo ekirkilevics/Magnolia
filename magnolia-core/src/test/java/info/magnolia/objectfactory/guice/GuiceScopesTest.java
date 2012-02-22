@@ -46,8 +46,8 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.annotation.RequestLocal;
-import info.magnolia.objectfactory.annotation.SessionLocal;
+import info.magnolia.objectfactory.annotation.LocalScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockWebContext;
@@ -93,12 +93,12 @@ public class GuiceScopesTest {
         Provider<HttpSession> sessionProvider;
     }
 
-    @RequestLocal
-    public static class MockRequestLocalObject {
+    @LocalScoped
+    public static class MockLocalScopedObject {
     }
 
-    @SessionLocal
-    public static class MockSessionLocalObject {
+    @SessionScoped
+    public static class MockSessionScopedObject {
     }
 
     @Test
@@ -183,14 +183,14 @@ public class GuiceScopesTest {
         webContext.setRequest(new MockHttpServletRequest());
         webContext.setResponse(new MockHttpServletResponse());
         MgnlContext.setInstance(webContext);
-        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockRequestLocalObject.class);
+        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockLocalScopedObject.class);
 
         // WHEN
-        MockRequestLocalObject component = provider.getComponent(MockRequestLocalObject.class);
+        MockLocalScopedObject component = provider.getComponent(MockLocalScopedObject.class);
 
         // THEN
         assertNotNull(component);
-        assertSame(component, provider.getComponent(MockRequestLocalObject.class));
+        assertSame(component, provider.getComponent(MockLocalScopedObject.class));
 
         // WHEN we switch request
         webContext = new MockWebContext();
@@ -199,7 +199,7 @@ public class GuiceScopesTest {
         MgnlContext.setInstance(webContext);
 
         // THEN we get a new object
-        MockRequestLocalObject component2 = provider.getComponent(MockRequestLocalObject.class);
+        MockLocalScopedObject component2 = provider.getComponent(MockLocalScopedObject.class);
         assertNotNull(component2);
         assertNotSame(component2, component);
     }
@@ -208,10 +208,10 @@ public class GuiceScopesTest {
     public void testRequestScopeFailsWhenNotInWebContext() {
         // GIVEN
         MgnlContext.setInstance(mock(Context.class));
-        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockRequestLocalObject.class);
+        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockLocalScopedObject.class);
 
         // WHEN - THEN
-        assertNull(provider.getComponent(MockRequestLocalObject.class));
+        assertNull(provider.getComponent(MockLocalScopedObject.class));
     }
     @Test
     public void testSessionScope() {
@@ -222,14 +222,14 @@ public class GuiceScopesTest {
         webContext.setRequest(request);
         MgnlContext.setInstance(webContext);
 
-        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionLocalObject.class);
+        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionScopedObject.class);
 
         // WHEN
-        MockSessionLocalObject component = provider.getComponent(MockSessionLocalObject.class);
+        MockSessionScopedObject component = provider.getComponent(MockSessionScopedObject.class);
 
         // THEN
         assertNotNull(component);
-        assertSame(component, provider.getComponent(MockSessionLocalObject.class));
+        assertSame(component, provider.getComponent(MockSessionScopedObject.class));
 
         // WHEN we switch request
         webContext = new MockWebContext();
@@ -239,7 +239,7 @@ public class GuiceScopesTest {
         MgnlContext.setInstance(webContext);
 
         // THEN we get a new object
-        MockSessionLocalObject component2 = provider.getComponent(MockSessionLocalObject.class);
+        MockSessionScopedObject component2 = provider.getComponent(MockSessionScopedObject.class);
         assertNotNull(component2);
         assertNotSame(component2, component);
     }
@@ -248,10 +248,10 @@ public class GuiceScopesTest {
     public void testSessionScopeFailsWhenNotInWebContext() {
         // GIVEN
         MgnlContext.setInstance(mock(Context.class));
-        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionLocalObject.class);
+        GuiceComponentProvider provider = createComponentProviderWithSingleImplementation(MockSessionScopedObject.class);
 
         // WHEN
-        provider.getComponent(MockSessionLocalObject.class);
+        provider.getComponent(MockSessionScopedObject.class);
 
         // THEN we expect an exception
     }

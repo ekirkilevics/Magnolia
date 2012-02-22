@@ -42,7 +42,7 @@ package info.magnolia.module.model;
 public class ComponentDefinition {
 
     public static final String SCOPE_SINGLETON = "singleton";
-    public static final String SCOPE_REQUEST = "request";
+    public static final String SCOPE_LOCAL = "local";
     public static final String SCOPE_SESSION = "session";
 
     private String type;

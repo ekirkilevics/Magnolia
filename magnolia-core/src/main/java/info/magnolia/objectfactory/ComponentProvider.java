@@ -35,7 +35,7 @@ package info.magnolia.objectfactory;
 
 /**
  * ComponentProvider is responsible for providing components, these can be scoped as singletons or live in narrower
- * scopes such as request and session, or be non scoped in which case a new instances will be created. Magnolia "beans",
+ * scopes such as local and session, or be non scoped in which case a new instances will be created. Magnolia "beans",
  * "managers" etc are all provided by this.
  *
  * Since Magnolia 4.5, you are encouraged to use IoC, only in rare cases should you need to directly use this class.

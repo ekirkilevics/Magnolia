@@ -61,7 +61,7 @@ public class MagnoliaScopes {
     /**
      * HTTP servlet request scope.
      */
-    public static final Scope REQUEST = new RequestScope();
+    public static final Scope LOCAL = new LocalScope();
 
     /**
      * HTTP session scope.
@@ -99,9 +99,9 @@ public class MagnoliaScopes {
      * Scope for object local to the current request.
      *
      * @version $Id$
-     * @see info.magnolia.objectfactory.annotation.RequestLocal
+     * @see info.magnolia.objectfactory.annotation.LocalScoped
      */
-    public static class RequestScope implements Scope {
+    public static class LocalScope implements Scope {
 
         @Override
         public <T> Provider<T> scope(Key<T> key, final Provider<T> creator) {
@@ -133,14 +133,14 @@ public class MagnoliaScopes {
 
                 @Override
                 public String toString() {
-                    return String.format("%s[%s]", creator, REQUEST);
+                    return String.format("%s[%s]", creator, LOCAL);
                 }
             };
         }
 
         @Override
         public String toString() {
-            return "MagnoliaScopes.REQUEST";
+            return "MagnoliaScopes.LOCAL";
         }
     }
 
@@ -148,7 +148,7 @@ public class MagnoliaScopes {
      * Scope for object local to the current session.
      *
      * @version $Id$
-     * @see info.magnolia.objectfactory.annotation.SessionLocal
+     * @see info.magnolia.objectfactory.annotation.SessionScoped
      */
     public static class SessionScope implements Scope {
 

@@ -182,7 +182,7 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
 
         ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
         ConfiguredComponentConfiguration<SingletonObject> observed = new ConfiguredComponentConfiguration<SingletonObject>(SingletonObject.class, RepositoryConstants.CONFIG, "/foo/bar/singleton", true);
-        observed.setScope(ComponentDefinition.SCOPE_REQUEST);
+        observed.setScope(ComponentDefinition.SCOPE_LOCAL);
         configuration.addComponent(observed);
 
         MockHttpServletRequest request = new MockHttpServletRequest();

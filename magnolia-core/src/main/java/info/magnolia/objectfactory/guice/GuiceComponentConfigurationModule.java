@@ -36,8 +36,8 @@ package info.magnolia.objectfactory.guice;
 import info.magnolia.module.model.ComponentDefinition;
 import info.magnolia.objectfactory.ComponentFactory;
 import info.magnolia.objectfactory.annotation.LazySingleton;
-import info.magnolia.objectfactory.annotation.RequestLocal;
-import info.magnolia.objectfactory.annotation.SessionLocal;
+import info.magnolia.objectfactory.annotation.LocalScoped;
+import info.magnolia.objectfactory.annotation.SessionScoped;
 import info.magnolia.objectfactory.configuration.ComponentConfiguration;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.configuration.ConfiguredComponentConfiguration;
@@ -184,11 +184,11 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
         if (ComponentDefinition.SCOPE_SINGLETON.equalsIgnoreCase(scope) && componentConfiguration.isLazy()) {
             return LazySingleton.class;
         }
-        if (ComponentDefinition.SCOPE_REQUEST.equalsIgnoreCase(scope)) {
-            return RequestLocal.class;
+        if (ComponentDefinition.SCOPE_LOCAL.equalsIgnoreCase(scope)) {
+            return LocalScoped.class;
         }
         if (ComponentDefinition.SCOPE_SESSION.equalsIgnoreCase(scope)) {
-            return SessionLocal.class;
+            return SessionScoped.class;
         }
         throw new IllegalStateException("Unknown scope [" + scope + "] for component with type [" + componentConfiguration.getType() + "]");
     }
