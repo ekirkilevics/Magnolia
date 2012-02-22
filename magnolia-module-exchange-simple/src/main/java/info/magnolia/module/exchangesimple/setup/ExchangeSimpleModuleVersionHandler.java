@@ -33,16 +33,22 @@
  */
 package info.magnolia.module.exchangesimple.setup;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
+import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.repository.RepositoryConstants;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -54,6 +60,12 @@ import java.util.List;
  * @version $Id$
  */
 public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHandler {
+    private final Task createEmptyActivationConfig = new ArrayDelegateTask("Activation configuration", "Creates an empty activation configuration", new Task[] {
+            new CreateNodeTask("Activation configuration", "Creates empty activation configuration", RepositoryConstants.CONFIG, "/server", "activation", MgnlNodeType.NT_CONTENT),
+            new SetPropertyTask(RepositoryConstants.CONFIG, "/server/activation", "class", info.magnolia.module.exchangesimple.DefaultActivationManager.class.getName()),
+            new CreateNodeTask("Activation configuration", "Creates empty subscribers node", RepositoryConstants.CONFIG, "/server/activation", "subscribers", MgnlNodeType.NT_CONTENT)
+    });
+
     public ExchangeSimpleModuleVersionHandler() {
         super();
 
@@ -79,6 +91,9 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
     protected List<Task> getBasicInstallTasks(InstallContext installContext) {
         final List<Task> installTasks = new ArrayList<Task>(super.getBasicInstallTasks(installContext));
         installTasks.add(new FilterOrderingTask("activation", new String[] { "context", "login", "multipartRequest" }));
+        installTasks.add(new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
+                "/info/magnolia/module/exchangesimple/setup/config.server.activation.xml"), createEmptyActivationConfig));
+
         return installTasks;
     }
 

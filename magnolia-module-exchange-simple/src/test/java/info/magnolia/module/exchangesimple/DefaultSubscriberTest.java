@@ -33,7 +33,8 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.ActivationManager;
@@ -87,7 +88,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
 
     @Test
     public void testDefaultTimeout() throws Exception {
-        BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+        BootstrapUtil.bootstrap(new String[] { "/info/magnolia/module/exchangesimple/setup/config.server.activation.xml" }, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
@@ -101,7 +102,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
 
     @Test
     public void testCustomTimeout() throws Exception {
-        BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+        BootstrapUtil.bootstrap(new String[] { "/info/magnolia/module/exchangesimple/setup/config.server.activation.xml" }, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
         Content subContent = hm.getContent("/server/activation/subscribers/magnoliaPublic8080");
         // make sure settings works no matter what data type users use
@@ -119,7 +120,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
 
     @Test
     public void testTimeoutSet() throws Exception {
-        BootstrapUtil.bootstrap(new String[]{"/mgnl-bootstrap/exchange-simple/config.server.activation.xml"}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+        BootstrapUtil.bootstrap(new String[] { "/info/magnolia/module/exchangesimple/setup/config.server.activation.xml" }, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
         HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
