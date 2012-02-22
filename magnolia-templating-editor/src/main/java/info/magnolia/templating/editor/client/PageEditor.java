@@ -105,8 +105,8 @@ public class PageEditor extends HTML implements EntryPoint {
     public static boolean process = true;
     private static boolean isPreview = false;
 
-    public static String editorPositionUniqueCookieName = "editor-position-" + Window.Location.getPath();
-    public static String editorContentIdUniqueCookieName = "editor-content-id-" + Window.Location.getPath();
+    private static String editorPositionUniqueCookieName = "editor-position-" + Window.Location.getPath();
+    private static String editorContentIdUniqueCookieName = "editor-content-id-" + Window.Location.getPath();
 
     @Override
     public void onModuleLoad() {
