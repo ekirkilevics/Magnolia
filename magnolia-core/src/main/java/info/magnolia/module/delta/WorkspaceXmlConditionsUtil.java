@@ -41,8 +41,7 @@ import java.util.List;
  * A utility class for workspace.xml related conditions, which will add
  * conditions to a given list of tasks based on some conditions.
  *
- * @author had
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class WorkspaceXmlConditionsUtil {
     private final List<Condition> conditions;
@@ -51,11 +50,34 @@ public class WorkspaceXmlConditionsUtil {
         this.conditions = conditions;
     }
 
+    /**
+     * @deprecated since 4.5 - use {@link #textFilterClassesAreNotSet()} instead.
+     */
     public void workspaceHasOldIndexer() {
-        List names = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer();
+        textFilterClassesAreNotSet();
+    }
+
+    public void textFilterClassesAreNotSet() {
+        List<String> names =  WorkspaceXmlUtil.getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
+
         if (names.size() > 0) {
             for (int i = 0; i < names.size(); i++) {
                 conditions.add(new FalseCondition("workspace.xml updates",
+                        "Workspace definition in workspace " + names.get(i) +
+                                " references indexer which has changed; please update value of parameter named" +
+                                " textFilterClasses in your workspace.xml file."));
+            }
+        }
+    }
+
+    /**
+     * Until https://issues.apache.org/jira/browse/JCR-3236 is fixed the param "analyzer" should not be around.
+     */
+    public void paramAnalyzerIsNotSet() {
+        List<String> names = WorkspaceXmlUtil.getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='analyzer']/@value");
+        if (names.size() > 0) {
+            for (int i = 0; i < names.size(); i++) {
+                conditions.add(new WarnCondition("workspace.xml updates",
                         "Workspace definition in workspace " + names.get(i) +
                                 " references indexer which has changed; please update value of parameter named" +
                                 " textFilterClasses in your workspace.xml file."));

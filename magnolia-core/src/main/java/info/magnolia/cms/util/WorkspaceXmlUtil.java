@@ -34,36 +34,54 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.xpath.XPath;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
 
 /**
  * Contains utility methods to check workspace.xml.
  *
- * @author had
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public class WorkspaceXmlUtil {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkspaceXmlUtil.class);
 
+    /**
+     * @return the names of all workspace descriptor files containing the indexer attribute.
+     *
+     * @deprecated since 4.5 - directly use {@link #getWorkspaceNamesMatching(String, String)} instead.
+     */
     public static List<String> getWorkspaceNamesWithIndexer() {
+        return getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", ".*\\.jackrabbit\\.extractor\\..*");
+    }
+
+    /**
+     * @return the names of all workspace descriptor files containing the provided XPath expression.
+     */
+    public static List<String> getWorkspaceNamesMatching(String xPathExpression) {
+        return getWorkspaceNamesMatching(xPathExpression, ".*");
+    }
+
+    /**
+     * @return the names of all workspace descriptor files containing the provided XPath expression that match the expectation.
+     */
+    public static List<String> getWorkspaceNamesMatching(String xPathExpression, String expectation) {
         final List<String> names = new ArrayList<String>();
         final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
-        final SAXBuilder builder = new SAXBuilder();
         File[] files = sourceDir.listFiles();
         if (files == null) {
             // new repo
             return names;
         }
+        final SAXBuilder builder = new SAXBuilder();
         for (File f : files) {
             if (!f.isDirectory()) {
                 continue;
@@ -75,8 +93,8 @@ public class WorkspaceXmlUtil {
             log.debug("Checking {} for old indexer.", f.getName());
             try {
                 // check for the indexer def in wks
-                final List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
-                if (list.size() > 0 && ((Attribute) list.get(0)).getValue().matches(".*\\.core\\.query\\..*")) {
+                final List<Attribute> list = getElementsFromXPath(builder.build(wks), xPathExpression);
+                if (list.size() > 0 && list.get(0).getValue().matches(expectation)) {
                     names.add(wks.getAbsolutePath());
                 }
             } catch (JDOMException e) {
@@ -84,19 +102,16 @@ public class WorkspaceXmlUtil {
             } catch (IOException e) {
                 throw new RuntimeException(e); // TODO
             }
-
         }
         return names;
     }
 
-    private static List getElementsFromXPath(Document doc, String xpathExpr) {
-        try {
-            final XPath xpath = XPath.newInstance(xpathExpr);
-            // must add the namespace and use it: there is no default namespace elsewise
-            xpath.addNamespace("ws", "file://workspace.xml");
-            return xpath.selectNodes(doc);
-        } catch (JDOMException e) {
-            throw new RuntimeException(e); // TODO
-        }
+    @SuppressWarnings("unchecked")
+    private static List<Attribute> getElementsFromXPath(Document doc, String xpathExpr) throws JDOMException {
+        final XPath xpath = XPath.newInstance(xpathExpr);
+        // must add the namespace and use it: there is no default namespace elsewise
+        xpath.addNamespace("ws", "file://workspace.xml");
+
+        return xpath.selectNodes(doc);
     }
 }

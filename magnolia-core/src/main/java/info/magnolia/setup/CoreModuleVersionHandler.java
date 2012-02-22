@@ -165,7 +165,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.listenerIsDeprecated("info.magnolia.cms.servlets.PropertyInitializer", "info.magnolia.cms.servlets.MgnlServletContextListener");
         u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
-        u2.workspaceHasOldIndexer();
+        u2.textFilterClassesAreNotSet();
+        u2.paramAnalyzerIsNotSet();
 
         conditions.add(new SystemTmpDirCondition());
         conditions.add(new CheckKeyProperty());

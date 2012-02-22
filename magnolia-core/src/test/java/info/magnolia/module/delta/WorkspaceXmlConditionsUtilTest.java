@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2009-2011 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,11 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.module.delta;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.SystemProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -45,22 +46,47 @@ import org.junit.Test;
 /**
  * @version $Id$
  */
-public class WorkspaceXmlUtilTest {
+public class WorkspaceXmlConditionsUtilTest {
+
+    private List<Condition> conditions;
+    private WorkspaceXmlConditionsUtil util;
 
     @Before
     public void setUp() {
+        conditions = new ArrayList<Condition>();
+        util = new WorkspaceXmlConditionsUtil(conditions);
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "src/test/resources/info/magnolia/cms/util");
     }
 
     @Test
-    public void testWorkspaceOldIndexer() {
-        List<String> names = WorkspaceXmlUtil.getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", ".*\\.jackrabbit\\.extractor\\..*");
-        assertEquals("Found incorrect amount of indexers", 1, names.size());
+    public void testParamAnalyzerIsNotAround() {
+        // GIVEN - all done in setup
+
+        // WHEN
+        util.paramAnalyzerIsNotSet();
+
+        // THEN
+        assertEquals(1,conditions.size());
+        assertTrue(conditions.get(0) instanceof WarnCondition);
+        assertTrue("Received condition was expected to be comming from the outdated config!", conditions.get(0).getDescription().contains("/outdated/workspace.xml"));
+    }
+
+
+    @Test
+    public void testTextFilterClassesAreNotSet() {
+        // GIVEN - all done in setup
+
+        // WHEN
+        util.textFilterClassesAreNotSet();
+
+        // THEN
+        assertEquals(1,conditions.size());
+        assertTrue(conditions.get(0) instanceof FalseCondition);
+        assertTrue("Received condition was expected to be comming from the outdated config!", conditions.get(0).getDescription().contains("/outdated/workspace.xml"));
     }
 
     @After
     public void tearDown() {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "");
     }
-
 }
