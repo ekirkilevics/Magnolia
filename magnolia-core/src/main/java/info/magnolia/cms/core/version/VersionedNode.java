@@ -41,6 +41,7 @@ import info.magnolia.jcr.wrapper.PropertyWrappingNodeWrapper;
 import java.util.Calendar;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -82,6 +83,18 @@ public class VersionedNode extends PropertyWrappingNodeWrapper implements Versio
         }
 
         @Override
+        public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+            // at some point we will enter the real hierarchy, so its easiest to loop
+            Node parent = getParent();
+            while(parent.getDepth() > depth){
+                parent = parent.getParent();
+            }
+            return parent;
+        }
+
+
+
+        @Override
         public Node getParent() throws ItemNotFoundException,
         AccessDeniedException, RepositoryException {
             return this.versionedParent;
@@ -114,7 +127,7 @@ public class VersionedNode extends PropertyWrappingNodeWrapper implements Versio
 
         @Override
         public Node wrapNode(Node node) {
-            return new VersionedNodeChild(VersionedNodeChild.this, node);
+            return new VersionedNodeChild(this, node);
         }
     }
 
@@ -127,6 +140,11 @@ public class VersionedNode extends PropertyWrappingNodeWrapper implements Versio
     @Override
     public int getDepth() throws RepositoryException {
         return this.baseNode.getDepth();
+    }
+
+    @Override
+    public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+        return this.baseNode.getAncestor(depth);
     }
 
     public Version unwrap() {
