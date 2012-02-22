@@ -55,6 +55,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.LoginException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -275,7 +276,12 @@ public abstract class BaseVersionManager {
      * Get node from version store.
      */
     protected Node getVersionedNode(String uuid) throws RepositoryException {
-        return getSession().getNodeByIdentifier(uuid);
+        try {
+            return getSession().getNodeByIdentifier(uuid);
+        } catch (ItemNotFoundException e) {
+            // node is not versioned yet
+            return null;
+        }
     }
 
     /**
@@ -297,11 +303,12 @@ public abstract class BaseVersionManager {
             Node versionedNode = this.getVersionedNode(node);
             if (versionedNode == null) {
                 // node does not exist in version store so no version history
-                log.info("No VersionHistory found for this node");
+                log.debug("No VersionHistory found for {} node.", node);
                 return null;
             }
             return versionedNode.getVersionHistory();
         } catch (UnsupportedRepositoryOperationException e) {
+            log.debug("Node {} is not versionable.", node);
             // node is not versionable or underlying repo doesn't support versioning.
             return null;
         }
