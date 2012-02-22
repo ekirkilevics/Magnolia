@@ -43,7 +43,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Apply this to implementation classes when you want the instance to be created and held per session.
+ * Apply this to implementation classes when you want the instance to be created and held per request.
  *
  * @version $Id$
  */
@@ -51,6 +51,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Scope
-public @interface SessionScoped {
+public @interface RequestLocal {
 
 }

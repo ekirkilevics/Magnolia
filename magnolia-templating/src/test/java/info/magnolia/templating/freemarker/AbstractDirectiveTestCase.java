@@ -94,8 +94,6 @@ import org.junit.Before;
  * @version $Id$
  */
 public abstract class AbstractDirectiveTestCase {
-    public static class MockRequestScopedObject {
-    }
 
     private WebContext ctx;
     private MockHierarchyManager session;

@@ -99,7 +99,7 @@ public class MagnoliaScopes {
      * Scope for object local to the current request.
      *
      * @version $Id$
-     * @see info.magnolia.objectfactory.annotation.RequestScoped
+     * @see info.magnolia.objectfactory.annotation.RequestLocal
      */
     public static class RequestScope implements Scope {
 
@@ -148,7 +148,7 @@ public class MagnoliaScopes {
      * Scope for object local to the current session.
      *
      * @version $Id$
-     * @see info.magnolia.objectfactory.annotation.SessionScoped
+     * @see info.magnolia.objectfactory.annotation.SessionLocal
      */
     public static class SessionScope implements Scope {
 

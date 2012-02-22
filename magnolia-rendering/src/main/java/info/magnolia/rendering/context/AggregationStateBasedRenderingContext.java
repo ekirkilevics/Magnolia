@@ -36,7 +36,7 @@ package info.magnolia.rendering.context;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.objectfactory.annotation.RequestScoped;
+import info.magnolia.objectfactory.annotation.RequestLocal;
 import info.magnolia.rendering.engine.OutputProvider;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderExceptionHandler;
@@ -58,7 +58,7 @@ import javax.jcr.Node;
  *
  * @version $Id$
  */
-@RequestScoped
+@RequestLocal
 public class AggregationStateBasedRenderingContext implements RenderingContext {
 
     // TODO dlipp: add reasonable javadoc! Uses and updates the {@link AggregationState}.

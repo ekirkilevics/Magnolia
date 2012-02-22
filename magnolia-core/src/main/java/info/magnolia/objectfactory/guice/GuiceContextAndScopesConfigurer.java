@@ -44,8 +44,8 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.objectfactory.annotation.LazySingleton;
-import info.magnolia.objectfactory.annotation.RequestScoped;
-import info.magnolia.objectfactory.annotation.SessionScoped;
+import info.magnolia.objectfactory.annotation.RequestLocal;
+import info.magnolia.objectfactory.annotation.SessionLocal;
 
 /**
  * Registers request and session scopes and providers for accessing MgnlContext.
@@ -69,41 +69,41 @@ public class GuiceContextAndScopesConfigurer extends AbstractGuiceComponentConfi
             public WebContext get() {
                 return MgnlContext.getWebContext();
             }
-        }).in(RequestScoped.class);
+        }).in(RequestLocal.class);
         bind(AggregationState.class).toProvider(new Provider<AggregationState>() {
             @Override
             public AggregationState get() {
                 return MgnlContext.getAggregationState();
             }
-        }).in(RequestScoped.class);
+        }).in(RequestLocal.class);
         bind(Channel.class).toProvider(new Provider<Channel>() {
             @Override
             public Channel get() {
                 return MgnlContext.getAggregationState().getChannel();
             }
-        }).in(RequestScoped.class);
+        }).in(RequestLocal.class);
         bind(HttpSession.class).toProvider(new Provider<HttpSession>() {
             @Override
             public HttpSession get() {
                 return MgnlContext.getWebContext().getRequest().getSession();
             }
-        }).in(SessionScoped.class);
+        }).in(SessionLocal.class);
         bind(HttpServletRequest.class).toProvider(new Provider<HttpServletRequest>() {
             @Override
             public HttpServletRequest get() {
                 return MgnlContext.getWebContext().getRequest();
             }
-        }).in(RequestScoped.class);
+        }).in(RequestLocal.class);
         bind(HttpServletResponse.class).toProvider(new Provider<HttpServletResponse>() {
             @Override
             public HttpServletResponse get() {
                 return MgnlContext.getWebContext().getResponse();
             }
-        }).in(RequestScoped.class);
+        }).in(RequestLocal.class);
 
         // But the scopes need to be registered at every level
-        bindScope(RequestScoped.class, MagnoliaScopes.REQUEST);
-        bindScope(SessionScoped.class, MagnoliaScopes.SESSION);
+        bindScope(RequestLocal.class, MagnoliaScopes.REQUEST);
+        bindScope(SessionLocal.class, MagnoliaScopes.SESSION);
         bindScope(LazySingleton.class, MagnoliaScopes.LAZY_SINGLETON);
     }
 }
