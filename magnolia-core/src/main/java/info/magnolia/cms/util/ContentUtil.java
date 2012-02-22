@@ -39,8 +39,6 @@ import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
@@ -648,15 +646,6 @@ public class ContentUtil {
 
     public static Content asContent(Node content) {
         if(content == null) {
-            return null;
-        }
-        if (content instanceof VersionedNode) {
-            VersionedNode version = (VersionedNode) content;
-            try {
-                return new ContentVersion(version, ContentUtil.asContent(version.getBaseNode()));
-            } catch (RepositoryException e) {
-                log.error("Failed to create content version", e);
-            }
             return null;
         }
         return new DefaultContent(content);

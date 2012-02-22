@@ -36,6 +36,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
+import info.magnolia.jcr.wrapper.PropertyWrappingNodeWrapper;
 
 import java.util.Calendar;
 
@@ -46,6 +47,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 
@@ -54,13 +56,13 @@ import javax.jcr.version.VersionHistory;
  *
  * @version $Id$
  */
-public class VersionedNode extends DelegateNodeWrapper implements Version {
+public class VersionedNode extends PropertyWrappingNodeWrapper implements Version {
 
 
     private final Version version;
     private final Node baseNode;
 
-    private class VersionedNodeChild extends DelegateNodeWrapper implements Node {
+    private class VersionedNodeChild extends PropertyWrappingNodeWrapper implements Node {
 
         private final DelegateNodeWrapper versionedParent;
 
@@ -91,7 +93,17 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
         }
 
         @Override
-        protected Property wrap(Property property) {
+        public NodeType getPrimaryNodeType() throws RepositoryException {
+            return getSession().getWorkspace().getNodeTypeManager().getNodeType(getWrappedNode().getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString());
+        }
+
+        @Override
+        public boolean isNodeType(String nodeTypeName) throws RepositoryException {
+            return getPrimaryNodeType().isNodeType(nodeTypeName);
+        }
+
+        @Override
+        public Property wrapProperty(Property property) {
             return new DelegatePropertyWrapper(property) {
                 @Override
                 public String getPath() throws RepositoryException {
@@ -101,7 +113,7 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
         }
 
         @Override
-        public Node wrap(Node node) {
+        public Node wrapNode(Node node) {
             return new VersionedNodeChild(VersionedNodeChild.this, node);
         }
     }
@@ -157,8 +169,18 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
     }
 
     @Override
-    public Node wrap(Node node) {
+    public Node wrapNode(Node node) {
         return new VersionedNodeChild(this, node);
+    }
+
+    @Override
+    public Property wrapProperty(Property property) {
+        return new DelegatePropertyWrapper(property) {
+            @Override
+            public String getPath() throws RepositoryException {
+                return getPath() + "/" + getName();
+            }
+        };
     }
 
     @Override
@@ -175,6 +197,11 @@ public class VersionedNode extends DelegateNodeWrapper implements Version {
     @Override
     public boolean isNodeType(String nodeTypeName) throws RepositoryException {
         return baseNode.isNodeType(nodeTypeName);
+    }
+
+    @Override
+    public NodeType getPrimaryNodeType() throws RepositoryException {
+        return baseNode.getPrimaryNodeType();
     }
 
     public Node getBaseNode() {
