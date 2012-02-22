@@ -256,10 +256,31 @@ public class ConfiguredInheritanceTest {
         ConfiguredInheritance.NodeDepthComparator comparator = new ConfiguredInheritance.NodeDepthComparator();
         MockNode parent = new MockNode();
         Node child = parent.addNode("child");
-        assertTrue(comparator.compare(parent, child) > 0);
-        assertTrue(comparator.compare(child, parent) < 0);
+        assertTrue(comparator.compare(parent, child) < 0);
+        assertTrue(comparator.compare(child, parent) > 0);
         assertTrue(comparator.compare(child, child) == 0);
         assertTrue(comparator.compare(parent, parent) == 0);
+    }
+
+    @Test
+    public void testNodeDepthComparatorForSiblings() throws Exception {
+        ConfiguredInheritance.NodeDepthComparator comparator = new ConfiguredInheritance.NodeDepthComparator();
+        MockNode parent = new MockNode();
+        Node child1 = parent.addNode("child1");
+        Node child2 = parent.addNode("child2");
+        Node child3 = parent.addNode("child3");
+
+        assertTrue(comparator.compare(child1, child1) == 0);
+        assertTrue(comparator.compare(child1, child2) < 0);
+        assertTrue(comparator.compare(child1, child3) < 0);
+
+        assertTrue(comparator.compare(child2, child2) == 0);
+        assertTrue(comparator.compare(child2, child1) > 0);
+        assertTrue(comparator.compare(child2, child3) < 0);
+
+        assertTrue(comparator.compare(child3, child3) == 0);
+        assertTrue(comparator.compare(child3, child1) > 0);
+        assertTrue(comparator.compare(child3, child2) > 0);
     }
 
     public static class TestNodeComparator implements Comparator<Node> {

@@ -43,6 +43,7 @@ import info.magnolia.rendering.template.InheritanceConfiguration;
 import java.util.Comparator;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -172,16 +173,35 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     }
 
     /**
-     * Comparator for ordering nodes by depth placing inherited nodes first.
+     * Comparator for ordering nodes by depth placing nodes deeper in the hierarchy after those further up and ordering
+     * nodes on the same level by the order they appear as siblings.
      */
     public static class NodeDepthComparator implements Comparator<Node> {
+
         @Override
         public int compare(Node lhs, Node rhs) {
-            try {
-                return rhs.getDepth() - lhs.getDepth();
+            try { 
+                if (lhs.getDepth() != rhs.getDepth())
+                    return lhs.getDepth() - rhs.getDepth();
+                return getSiblingIndex(lhs) - getSiblingIndex(rhs);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
+        }
+
+        private int getSiblingIndex(Node node) throws RepositoryException {
+            if (node.getDepth() == 0) {
+                return 0;
+            }
+            int index = 0;
+            NodeIterator nodes = node.getParent().getNodes();
+            while (nodes.hasNext()) {
+                if (NodeUtil.isSame(node, nodes.nextNode())) {
+                    return index;
+                }
+                index++;
+            }
+            return -1;
         }
     }
 }
