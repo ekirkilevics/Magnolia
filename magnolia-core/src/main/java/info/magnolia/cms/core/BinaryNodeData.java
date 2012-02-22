@@ -96,15 +96,20 @@ public class BinaryNodeData extends AbstractNodeData {
                 else if(createIfNotExisting){
                     binaryNode = parentJCRNode.addNode(name, ItemType.NT_RESOURCE);
                 }
-                // In case of wrapped node like I18NWrapped content, we have to UnWrapp to get access to jcr:data property.
-                if (binaryNode instanceof DelegateNodeWrapper) {
-                   binaryNode = ((DelegateNodeWrapper) binaryNode).deepUnwrap(I18nNodeWrapper.class);
-                }
             }
             catch (RepositoryException e) {
                 throw new RuntimeException(e);
             }
         }
+        try {
+            // In case of wrapped node like I18NWrapped content, we have to UnWrapp to get access to jcr:data property.
+            if (binaryNode instanceof DelegateNodeWrapper) {
+               binaryNode = ((DelegateNodeWrapper) binaryNode).deepUnwrap(I18nNodeWrapper.class);
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+
         return binaryNode;
     }
 
