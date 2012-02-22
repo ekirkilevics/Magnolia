@@ -46,7 +46,6 @@ import info.magnolia.templating.editor.client.widget.PreviewChannel;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
 import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -104,7 +103,10 @@ public class PageEditor extends HTML implements EntryPoint {
 
         // In case we're in preview mode, we will stop processing the document, after the pagebar has been injected.
     public static boolean process = true;
-    private static boolean isPreview= false;
+    private static boolean isPreview = false;
+
+    public static String editorPositionUniqueCookieName = "editor-position-" + Window.Location.getPath();
+    public static String editorContentIdUniqueCookieName = "editor-content-id-" + Window.Location.getPath();
 
     @Override
     public void onModuleLoad() {
@@ -121,16 +123,20 @@ public class PageEditor extends HTML implements EntryPoint {
 
             @Override
             public void onWindowScroll(ScrollEvent event) {
-                Cookies.setCookie("editor-position", event.getScrollLeft() + ":" + event.getScrollTop());
+            	String value = event.getScrollLeft() + ":" + event.getScrollTop();
+            	GWT.log("Setting "+ getEditorPositionUniqueCookieName() + " cookie to value " + value);
+                Cookies.setCookie(getEditorPositionUniqueCookieName(), value);
             }
         });
 
-        String position = Cookies.getCookie("editor-position");
+        String position = Cookies.getCookie(getEditorPositionUniqueCookieName());
         if(position!=null){
             String[] tokens = position.split(":");
             int left = Integer.parseInt(tokens[0]);
             int top = Integer.parseInt(tokens[1]);
+            GWT.log("Scrolling to position left:" + left +", top: "+ top);
             Window.scrollTo(left, top);
+            Cookies.removeCookie(getEditorPositionUniqueCookieName());
         }
 
         locale = JavascriptUtils.detectCurrentLocale();
@@ -142,7 +148,7 @@ public class PageEditor extends HTML implements EntryPoint {
         GWT.log("Time spent to process cms comments: " + (System.currentTimeMillis() - startTime) + "ms");
 
 
-        String contentId = Cookies.getCookie("editor-content-id");
+        String contentId = Cookies.getCookie(getEditorContentIdUniqueCookieName());
         MgnlElement selectedMgnlElement = null;
         if(contentId != null) {
             selectedMgnlElement = model.findMgnlElementByContentId(contentId);
@@ -153,6 +159,7 @@ public class PageEditor extends HTML implements EntryPoint {
         else {
             model.getFocusModel().reset();
         }
+        Cookies.removeCookie(getEditorContentIdUniqueCookieName());
 
         RootPanel.get().addDomHandler(new MouseUpHandler() {
             @Override
@@ -163,7 +170,9 @@ public class PageEditor extends HTML implements EntryPoint {
             }
         }, MouseUpEvent.getType());
 
-        GWT.log("Trying to run onPageEditorReady callbacks...");
+        resetEditorCookies();
+
+        GWT.log("Running onPageEditorReady callbacks...");
         onPageEditorReady();
     }
 
@@ -275,6 +284,14 @@ public class PageEditor extends HTML implements EntryPoint {
 
     }
 
+    public static String getEditorContentIdUniqueCookieName() {
+		return editorContentIdUniqueCookieName;
+	}
+
+    public static String getEditorPositionUniqueCookieName() {
+		return editorPositionUniqueCookieName;
+	}
+
     public static void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
@@ -309,8 +326,6 @@ public class PageEditor extends HTML implements EntryPoint {
             }
         }
     }
-
-
 
     private void processMgnlElements() {
         List<MgnlElement> rootElements = new LinkedList<MgnlElement>(model.getRootElements());
@@ -387,6 +402,20 @@ public class PageEditor extends HTML implements EntryPoint {
              }
          }
     }-*/;
+
+    /**
+     * Removes all editor cookies not belonging to this page/module. Each time we navigate to a different link within the webapp
+     * the GWT module is unloaded and then reloaded, we need a clean slate when accessing cookies on a given page to avoid weird
+     * behaviour, i.e. page scrolling to last saved position when you come back to it after having been on a different page.
+     */
+    private void resetEditorCookies() {
+    	for(String cookie : Cookies.getCookieNames()) {
+    		if(cookie.startsWith("editor-") && !getEditorContentIdUniqueCookieName().equals(cookie)
+    				|| !getEditorPositionUniqueCookieName().equals(cookie)) {
+    			Cookies.removeCookie(cookie);
+    		}
+    	}
+    }
 
     public static void enablePreview(boolean preview) {
         setPreview(preview);
