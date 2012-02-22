@@ -140,7 +140,7 @@ div.mgnlEditorBar {
 
 .mgnlEditorBarPrimaryButtons {
   width: auto !important;
-  margin: 0 0 0 10px !important;
+  margin: 0 0 0 7px !important;
   float: right !important;
 }
 
@@ -160,37 +160,37 @@ div.mgnlEditorBar {
  * Buttons on area edit bars.
  */
 
- /* edit */
+/* edit */
 .mgnlEditorBar.area .mgnlEditorPushButton.edit {
-    background: transparent no-repeat url("../img/bars/area.buttons/edit.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
-    background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
-    background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png");
 }
 
 /* add */
 .mgnlEditorBar.area .mgnlEditorPushButton.add {
-    background: transparent no-repeat url("../img/bars/area.buttons/add.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
-    background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
-    background: transparent no-repeat url("../img/bars/area.buttons/add_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add_click.png");
 }
 
 /* remove */
 .mgnlEditorBar.area .mgnlEditorPushButton.remove {
-    background: transparent no-repeat url("../img/bars/area.buttons/delete.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
-    background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png");
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
-    background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png");
 }
 
 /*
@@ -199,35 +199,38 @@ div.mgnlEditorBar {
 
 /* edit */
 .mgnlEditorBar.component .mgnlEditorPushButton.edit {
-    background: transparent no-repeat url("../img/bars/component.buttons/edit.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
-    background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
-    background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png");
 }
 
 /* move (fallback on old browsers) */
 .mgnlEditorBar.component .mgnlEditorPushButton.move {
-    background: transparent no-repeat url("../img/bars/component.buttons/move.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.move {
-    background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.move {
-    background: transparent no-repeat url("../img/bars/component.buttons/move_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move_click.png");
 }
 
 /* remove */
+.mgnlEditorBar.component .mgnlEditorPushButton {
+  margin-top: -1px;
+}
 .mgnlEditorBar.component .mgnlEditorPushButton.remove {
-    background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
-    background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png");
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
-    background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png");
 }
 
 
