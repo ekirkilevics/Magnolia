@@ -254,7 +254,19 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 webContext.push(webContext.getRequest(), webContext.getResponse());
                 setAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
                 try {
-                    renderingEngine.render(areaNode, areaDefinition, contextObjects, new AppendableOnlyOutputProvider(out));
+                    AppendableOnlyOutputProvider appendable = new AppendableOnlyOutputProvider(out);
+                    if(StringUtils.isNotEmpty(areaDefinition.getTemplateScript())){
+                        renderingEngine.render(areaNode, areaDefinition, contextObjects, appendable);
+                    }
+                    // no script
+                    else{
+                        for (ContentMap component : components) {
+                            ComponentElement componentElement = Components.newInstance(ComponentElement.class);
+                            componentElement.setContent(component.getJCRNode());
+                            componentElement.begin(out);
+                            componentElement.end(out);
+                        }
+                    }
                 } finally {
                     webContext.pop();
                     webContext.setPageContext(null);
