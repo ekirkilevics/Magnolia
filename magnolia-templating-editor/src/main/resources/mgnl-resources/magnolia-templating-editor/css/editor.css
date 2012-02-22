@@ -410,8 +410,8 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 
 /* selected drop target */
 .mgnlEditorBar.component.moveOver {
-  height: 16px;
-  line-height: 15px;
+  height: 17px;
+  line-height: 16px;
 
   padding: 0 1px;
 
