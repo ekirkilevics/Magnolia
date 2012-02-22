@@ -79,8 +79,18 @@ public class WorkspaceXmlConditionsUtil {
             for (int i = 0; i < names.size(); i++) {
                 conditions.add(new WarnCondition("workspace.xml updates",
                         "Workspace definition in workspace " + names.get(i) +
-                                " references indexer which has changed; please update value of parameter named" +
-                                " textFilterClasses in your workspace.xml file."));
+                                " Should not have an analyzer set - this will lead to error-logs when strarting up your server."));
+            }
+        }
+    }
+
+    public void accessControlProviderIsSet() {
+        List<String> names = WorkspaceXmlUtil.getWorkspaceNames("/Workspace/WorkspaceSecurity/AccessControlProvider/@class", null);
+        if (names.size() > 0) {
+            for (int i = 0; i < names.size(); i++) {
+                conditions.add(new FalseCondition("workspace.xml updates",
+                        "Workspace definition in workspace " + names.get(i) +
+                                " must have an AccessControlProvider set."));
             }
         }
     }

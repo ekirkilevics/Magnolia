@@ -167,6 +167,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.textFilterClassesAreNotSet();
         u2.paramAnalyzerIsNotSet();
+        u2.accessControlProviderIsSet();
 
         conditions.add(new SystemTmpDirCondition());
         conditions.add(new CheckKeyProperty());

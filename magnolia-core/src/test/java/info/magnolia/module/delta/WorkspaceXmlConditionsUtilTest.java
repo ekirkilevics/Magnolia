@@ -85,6 +85,20 @@ public class WorkspaceXmlConditionsUtilTest {
         assertTrue("Received condition was expected to be comming from the outdated config!", conditions.get(0).getDescription().contains("/outdated/workspace.xml"));
     }
 
+    @Test
+    public void testAccessControlProviderIsSet() {
+        // GIVEN - all done in setup
+
+        // WHEN
+        util.accessControlProviderIsSet();
+
+        // THEN
+        assertEquals(1,conditions.size());
+        assertTrue(conditions.get(0) instanceof FalseCondition);
+        assertTrue("Received condition was expected to be comming from the outdated config!", conditions.get(0).getDescription().contains("/outdated/workspace.xml"));
+    }
+
+
     @After
     public void tearDown() {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "");

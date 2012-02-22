@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import info.magnolia.cms.core.SystemProperty;
 
 import java.util.List;
@@ -41,7 +41,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 /**
  * @version $Id$
  */
@@ -53,14 +52,21 @@ public class WorkspaceXmlUtilTest {
     }
 
     @Test
-    public void testWorkspaceOldIndexer() {
-        List<String> names = WorkspaceXmlUtil.getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", ".*\\.jackrabbit\\.extractor\\..*");
+    public void testWorkspaceNamesWithNonNullExpectation() {
+        List<String> names = WorkspaceXmlUtil.getWorkspaceNames("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", ".*\\.jackrabbit\\.extractor\\..*");
         assertEquals("Found incorrect amount of indexers", 1, names.size());
+        assertTrue(names.get(0).contains("/outdated/workspace.xml"));
+    }
+
+    @Test
+    public void testWorkspaceNamesWithNullExpectation() {
+        List<String> names = WorkspaceXmlUtil.getWorkspaceNames("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", null);
+        assertEquals("Found incorrect amount of indexers", 1, names.size());
+        assertTrue(names.get(0).contains("/website/workspace.xml"));
     }
 
     @After
     public void tearDown() {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "");
     }
-
 }

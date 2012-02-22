@@ -52,28 +52,33 @@ import org.jdom.xpath.XPath;
  * @version $Id$
  */
 public class WorkspaceXmlUtil {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkspaceXmlUtil.class);
 
     /**
-     * @return the names of all workspace descriptor files containing the indexer attribute.
-     *
-     * @deprecated since 4.5 - directly use {@link #getWorkspaceNamesMatching(String, String)} instead.
+     * @deprecated since 4.5 - directly use {@link #getWorkspaceNamesMatching(String, String, boolean)} instead.
      */
     public static List<String> getWorkspaceNamesWithIndexer() {
-        return getWorkspaceNamesMatching("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value", ".*\\.jackrabbit\\.extractor\\..*");
+        return getWorkspaceNames("/Workspace/SearchIndex/param[@name='textFilterClasses']/@value",
+                ".*\\.jackrabbit\\.extractor\\..*");
     }
 
-    /**
-     * @return the names of all workspace descriptor files containing the provided XPath expression.
-     */
     public static List<String> getWorkspaceNamesMatching(String xPathExpression) {
-        return getWorkspaceNamesMatching(xPathExpression, ".*");
+        return getWorkspaceNames(xPathExpression, ".*");
     }
 
     /**
-     * @return the names of all workspace descriptor files containing the provided XPath expression that match the expectation.
+     * Create and return list of workspaces names. If expectation is not null, all workspace with configs containing
+     * entries identified by the xPathExpression will be contained if they match the expectation. If expectation is
+     * null, all workspace names with configs that don't contain anything matching the xPathExpression will be returned.
+     *
+     * @param xPathExpression
+     *            the xpath expression
+     * @param expectation
+     *            value the matches of the xPathExpression should be compared with - special meaning of 'null': in that
+     *            case xPathExpression should not be contained!
+     *
+     * @return the list of workspace names
      */
-    public static List<String> getWorkspaceNamesMatching(String xPathExpression, String expectation) {
+    public static List<String> getWorkspaceNames(String xPathExpression, String expectation) {
         final List<String> names = new ArrayList<String>();
         final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
         File[] files = sourceDir.listFiles();
@@ -90,17 +95,22 @@ public class WorkspaceXmlUtil {
             if (!wks.exists() || !wks.canRead()) {
                 continue;
             }
-            log.debug("Checking {} for old indexer.", f.getName());
             try {
-                // check for the indexer def in wks
+                // check for the xPathExpression in wks
                 final List<Attribute> list = getElementsFromXPath(builder.build(wks), xPathExpression);
-                if (list.size() > 0 && list.get(0).getValue().matches(expectation)) {
-                    names.add(wks.getAbsolutePath());
+                if (expectation == null) {
+                    if (list.size() == 0) {
+                        names.add(wks.getAbsolutePath());
+                    }
+                } else {
+                    if (list.size() > 0 && list.get(0).getValue().matches(expectation)) {
+                        names.add(wks.getAbsolutePath());
+                    }
                 }
             } catch (JDOMException e) {
-                throw new RuntimeException(e); // TODO
+                throw new RuntimeException(e);
             } catch (IOException e) {
-                throw new RuntimeException(e); // TODO
+                throw new RuntimeException(e);
             }
         }
         return names;
