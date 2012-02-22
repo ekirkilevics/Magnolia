@@ -57,6 +57,13 @@ public class ComponentTag extends AbstractTag<ComponentElement> {
     // Edit Tag Variable
     private String dialog;
     private Object contextAttributes;
+    private Boolean editable;
+
+    @Attribute(required=false, rtexprvalue=true)
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
+    }
+
 
     @Attribute(required=false, rtexprvalue=true)
     public void setDialog(String dialog) {
@@ -75,6 +82,7 @@ public class ComponentTag extends AbstractTag<ComponentElement> {
 
         Map<String,Object> contextAttributes = mapConvertor(this.contextAttributes, "contextAttributes",false);
         templatingElement.setDialog(dialog);
+        templatingElement.setEditable(editable);
         templatingElement.setContextAttributes(contextAttributes);
     }
 

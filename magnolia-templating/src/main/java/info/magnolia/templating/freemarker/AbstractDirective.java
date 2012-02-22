@@ -162,7 +162,7 @@ public abstract class AbstractDirective<C extends TemplatingElement> implements 
         return _param(params, key, TemplateBooleanModel.class, true).getAsBoolean();
     }
 
-    protected boolean bool(Map<String, TemplateModel> params, String key, boolean defaultValue) throws TemplateModelException {
+    protected Boolean bool(Map<String, TemplateModel> params, String key, Boolean defaultValue) throws TemplateModelException {
         final TemplateBooleanModel m = _param(params, key, TemplateBooleanModel.class, false);
         if (m == null) {
             return defaultValue;

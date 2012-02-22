@@ -81,6 +81,19 @@ public class ComponentElementTest extends AbstractElementTestCase {
     }
 
     @Test
+    public void testRenderBeginWithEditable() throws Exception {
+        // GIVEN
+        element.setContent(getComponentNode());
+        element.setEditable(false);
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertEquals("<!-- cms:component content=\"website:/foo/bar/paragraphs/0\" editable=\"false\" dialog=\"dialog\" label=\"Title\" description=\"Description\" -->\n", out.toString());
+    }
+
+    @Test
     public void testPostRender() throws Exception {
         element.end(out);
         assertEquals("<!-- /cms:component -->\n", out.toString());

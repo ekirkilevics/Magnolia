@@ -50,6 +50,7 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
     private Boolean visible;
     private String dialog;
     private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
+    private Boolean editable;
     private TemplateAvailability templateAvailability;
 
     @Override
@@ -59,6 +60,15 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
+    }
+
+    @Override
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
     }
 
     @Override

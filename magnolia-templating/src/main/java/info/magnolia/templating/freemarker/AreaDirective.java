@@ -62,6 +62,7 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
         String type = string(params, "type", null);
         String label = string(params, "label", null);
         String description = string(params, "description", null);
+        Boolean editable = bool(params, "editable", (Boolean) null);
 
         Map<String,Object> contextAttributes = (Map<String, Object>) object(params, "contextAttributes");
 
@@ -72,6 +73,7 @@ public class AreaDirective extends AbstractDirective<AreaElement> {
         templatingElement.setType(type);
         templatingElement.setLabel(label);
         templatingElement.setDescription(description);
+        templatingElement.setEditable(editable);
 
         templatingElement.setContextAttributes(contextAttributes);
     }

@@ -62,6 +62,14 @@ public class AreaTag extends AbstractTag<AreaElement> {
     private String dialog;
     private String type;
     private Object contextAttributes;
+    private Boolean editable;
+
+
+
+    @Attribute(required=false, rtexprvalue=true)
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
+    }
 
     @Attribute(required=false, rtexprvalue=true)
     public void setArea(Object area) {
@@ -106,6 +114,7 @@ public class AreaTag extends AbstractTag<AreaElement> {
         templatingElement.setDialog(dialog);
         templatingElement.setType(type);
         templatingElement.setContextAttributes(contextAttributes);
+        templatingElement.setEditable(editable);
     }
 
 }

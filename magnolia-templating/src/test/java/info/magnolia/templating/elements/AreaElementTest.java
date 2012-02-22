@@ -130,6 +130,19 @@ public class AreaElementTest extends AbstractElementTestCase {
     }
 
     @Test
+    public void testBeginWithEditable() throws Exception {
+        // GIVEN
+        element.setName("stage");
+        element.setEditable(false);
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertThat(out.toString(),containsString("<!-- cms:area content=\"website:/foo/bar/paragraphs/stage\" name=\"stage\" availableComponents=\"componentAvailability_Id\" type=\"type_testCnfTemplate\" dialog=\"dialog_testCnfTemplate\" label=\"title_testCnfTemplate\" inherit=\"false\" editable=\"false\" optional=\"false\" showAddButton=\"true\" description=\"Description\" -->"));
+    }
+
+    @Test
     public void testBeginGetContentFromParent() throws Exception {
         // GIVEN
         element.setName("stage");

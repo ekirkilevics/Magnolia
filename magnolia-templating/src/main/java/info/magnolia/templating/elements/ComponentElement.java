@@ -68,8 +68,10 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     private final RenderingEngine renderingEngine;
     private Node content;
     private final TemplateDefinitionAssignment templateDefinitionAssignment;
+    private TemplateDefinition componentDefinition;
 
     private String dialog;
+    private Boolean editable;
 
     @Inject
     public ComponentElement(ServerConfiguration server, RenderingContext renderingContext, RenderingEngine renderingEngine, TemplateDefinitionAssignment templateDefinitionAssignment ) {
@@ -81,7 +83,6 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     @Override
     public void begin(Appendable out) throws IOException, RenderException {
 
-        TemplateDefinition componentDefinition = null;
         content = getPassedContent();
 
         if(content == null) {
@@ -101,17 +102,21 @@ public class ComponentElement extends AbstractContentTemplatingElement {
                     helper.attribute("inherited", "true");
                 }
             }
-
             try {
-                componentDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
+                this.componentDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
             } catch (RegistrationException e) {
                 throw new RenderException("No template definition found for the current content", e);
             }
 
             final Messages messages = MessagesManager.getMessages(componentDefinition.getI18nBasename());
 
+            this.editable = resolveEditable();
+            if (this.editable != null) {
+                helper.attribute("editable", String.valueOf(this.editable));
+            }
+
             if(StringUtils.isEmpty(dialog)) {
-                dialog = resolveDialog(componentDefinition);
+                dialog = resolveDialog();
             }
             helper.attribute("dialog", dialog);
 
@@ -144,6 +149,10 @@ public class ComponentElement extends AbstractContentTemplatingElement {
         }
     }
 
+    private Boolean resolveEditable() {
+        return editable != null ? editable : componentDefinition != null && componentDefinition.getEditable() != null ? componentDefinition.getEditable() : null;
+    }
+
     @Override
     public void end(Appendable out) throws IOException, RenderException {
         if(isAdmin()){
@@ -159,11 +168,11 @@ public class ComponentElement extends AbstractContentTemplatingElement {
         this.contextAttributes = contextAttributes;
     }
 
-    private String resolveDialog(TemplateDefinition component) {
+    private String resolveDialog() {
         if (StringUtils.isNotEmpty(this.dialog)) {
             return this.dialog;
         }
-        String dialog = component.getDialog();
+        String dialog = componentDefinition.getDialog();
         if (StringUtils.isNotEmpty(dialog)) {
             return dialog;
         }
@@ -172,5 +181,13 @@ public class ComponentElement extends AbstractContentTemplatingElement {
 
     public void setDialog(String dialog) {
         this.dialog = dialog;
+    }
+
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
+    }
+
+    public Boolean getEditable() {
+        return editable;
     }
 }

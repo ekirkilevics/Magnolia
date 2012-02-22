@@ -55,8 +55,11 @@ public class ComponentDirective extends AbstractDirective<ComponentElement> {
         initContentElement(params, templatingElement);
 
         String dialog = string(params, "dialog", null);
+        Boolean editable = bool(params, "editable", (Boolean) null);
+
         Map<String,Object> contextAttributes = (Map<String, Object>) object(params, "contextAttributes");
         templatingElement.setDialog(dialog);
         templatingElement.setContextAttributes(contextAttributes);
+        templatingElement.setEditable(editable);
     }
 }

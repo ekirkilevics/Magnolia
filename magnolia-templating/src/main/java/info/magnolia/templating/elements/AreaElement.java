@@ -97,6 +97,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String label;
     private String description;
     private boolean inherit;
+    private Boolean editable;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
 
@@ -130,6 +131,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
         this.inherit = isInheritanceEnabled();
+        this.editable = resolveEditable();
 
         this.description = templateDefinition.getDescription();
 
@@ -161,6 +163,9 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.attribute("dialog", this.dialog);
             helper.attribute("label", messages.getWithDefault(this.label, this.label));
             helper.attribute("inherit", String.valueOf(this.inherit));
+            if (this.editable != null) {
+                helper.attribute("editable", String.valueOf(this.editable));
+            }
             helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
             if(isOptionalAreaCreated()) {
                 helper.attribute("created", "true");
@@ -372,6 +377,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
         return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : StringUtils.capitalize(name));
     }
 
+    private Boolean resolveEditable() {
+        return editable != null ? editable : areaDefinition != null && areaDefinition.getEditable() != null ? areaDefinition.getEditable() : null;
+    }
+
     private boolean isInheritanceEnabled() {
         return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled() != null && areaDefinition.getInheritance().isEnabled();
     }
@@ -477,6 +486,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setInherit(boolean inherit) {
         this.inherit = inherit;
+    }
+
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
     }
 
     public Map<String, Object> getContextAttributes() {
