@@ -37,7 +37,6 @@ import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.moveCo
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
-import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
 import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
 import com.google.gwt.dom.client.Element;
@@ -62,6 +61,8 @@ public class DragAndDropImpl {
             @Override
             public void onDragStart(DragStartEvent event) {
                 bar.toggleButtons(false);
+
+                bar.setStyleName("moveSource", true);
 
                 MgnlElement area = bar.getMgnlElement().getParentArea();
                 if (area != null) {
@@ -89,6 +90,9 @@ public class DragAndDropImpl {
             @Override
             public void onDragEnd(DragEndEvent event) {
                 bar.toggleButtons(true);
+
+                bar.setStyleName("moveSource", false);
+
                 MgnlElement area = bar.getMgnlElement().getParentArea();
                 if (area != null) {
                     for (MgnlElement component : area.getComponents()) {
