@@ -405,11 +405,6 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 
 /* possible drop targets */
 .mgnlEditorBar.component.moveTarget {
-  height: 20px;
-  line-height: 19px;
-
-  padding: 0 3px;
-
   border: 1px solid #d0234b;
 }
 
