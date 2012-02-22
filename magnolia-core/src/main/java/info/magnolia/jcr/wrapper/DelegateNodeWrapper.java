@@ -113,12 +113,12 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     @Override
     public Node addNode(String relPath) throws ItemExistsException, PathNotFoundException, VersionException, ConstraintViolationException, LockException, RepositoryException {
-        return wrap(getWrappedNode().addNode(relPath));
+        return getWrappedNode().addNode(relPath);
     }
 
     @Override
     public Node addNode(String relPath, String primaryNodeTypeName) throws ItemExistsException, PathNotFoundException, NoSuchNodeTypeException, LockException, VersionException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().addNode(relPath, primaryNodeTypeName));
+        return getWrappedNode().addNode(relPath, primaryNodeTypeName);
     }
 
     @Override
@@ -193,7 +193,7 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     @Override
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrap(getWrappedNode().getNode(relPath));
+        return getWrappedNode().getNode(relPath);
     }
 
     @Override
@@ -373,82 +373,82 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     @Override
     public Property setProperty(String name, Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, values));
+        return getWrappedNode().setProperty(name, values);
     }
 
     @Override
     public Property setProperty(String name, String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, values));
+        return getWrappedNode().setProperty(name, values);
     }
 
     @Override
     public Property setProperty(String name, String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value));
+        return getWrappedNode().setProperty(name, value);
     }
 
     @Override
     public Property setProperty(String name, Value value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value, type));
+        return getWrappedNode().setProperty(name, value, type);
     }
 
     @Override
     public Property setProperty(String name, Value[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, values, type));
+        return getWrappedNode().setProperty(name, values, type);
     }
 
     @Override
     public Property setProperty(String name, String[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, values, type));
+        return getWrappedNode().setProperty(name, values, type);
     }
 
     @Override
     public Property setProperty(String name, String value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
-        return wrap(getWrappedNode().setProperty(name, value, type));
+        return getWrappedNode().setProperty(name, value, type);
     }
 
     @Override
@@ -589,18 +589,4 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         return super.clone();
     }
 
-
-    /**
-     * By default noOp. Extending classes should override this method if they want any child returned from the wrapper to be wrapepd as well.
-     */
-    public Node wrap(Node node) {
-        return node;
-    }
-
-    /**
-     * By default noOp. Extending classes should override this method if they want any property returned from the wrapper to be wrapepd as well.
-     */
-    protected Property wrap(Property property) {
-        return property;
-    }
 }
