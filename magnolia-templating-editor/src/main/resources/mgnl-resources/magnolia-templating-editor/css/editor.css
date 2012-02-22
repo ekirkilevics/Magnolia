@@ -393,21 +393,34 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
  * -------------------------------------
  */
 
+/* drag source */
+.mgnlEditorBar.component.moveSource {
+  border-top: 1px solid #deeab7;
+  border-left: 1px solid #deeab7;
+  border-bottom: 1px solid #b3c587;
+  border-right: 1px solid #b3c587;
+
+  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png");
+}
+
 /* possible drop targets */
 .mgnlEditorBar.component.moveTarget {
-  height: 19px;
-  line-height: 18px;
+  height: 20px;
+  line-height: 19px;
 
-  padding: 0 2px;
+  padding: 0 3px;
 
-  border: 2px solid #d0234b;
-
-  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
+  border: 1px solid #d0234b;
 }
 
 /* selected drop target */
 .mgnlEditorBar.component.moveOver {
-  background-image: url("../img/bars/mgnl-bar.component.png");
+  height: 16px;
+  line-height: 15px;
+
+  padding: 0 1px;
+
+  border: 3px solid #d0234b;
 }
 
 /* make component placeholder slightly less strong */
@@ -417,7 +430,7 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
   border-bottom: 1px solid #b3c587;
   border-right: 1px solid #b3c587;
 
-  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
+  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png");
 }
 
 .mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorPlaceholderElements {
