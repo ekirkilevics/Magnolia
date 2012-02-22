@@ -410,8 +410,8 @@ public class PageEditor extends HTML implements EntryPoint {
      */
     private void resetEditorCookies() {
         for(String cookie : Cookies.getCookieNames()) {
-            if(cookie.startsWith("editor-") && !getEditorContentIdUniqueCookieName().equals(cookie)
-                    || !getEditorPositionUniqueCookieName().equals(cookie)) {
+            if(cookie.startsWith("editor-") && !(getEditorContentIdUniqueCookieName().equals(cookie)
+                    || getEditorPositionUniqueCookieName().equals(cookie))) {
                 Cookies.removeCookie(cookie);
             }
         }
