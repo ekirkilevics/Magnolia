@@ -100,27 +100,6 @@ div.mgnlEditorBar {
 }
 
 /*
- * Drag and drop of component edit bar.
- */
-
-/* possible drop targets */
-.mgnlEditorBar.component.moveTarget {
-  height: 19px;
-  line-height: 18px;
-
-  padding: 0 2px;
-
-  border: 2px solid #d0234b;
-
-  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
-}
-
-/* selected drop target */
-.mgnlEditorBar.component.moveOver {
-  background-image: url("../img/bars/mgnl-bar.component.png");
-}
-
-/*
  * Div carrying buttons.
  */
 .mgnlEditorBarButtons {
@@ -407,6 +386,55 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 }
 
 /* --- End of edit place holder definitions --- */
+
+
+/* -------------------------------------
+ *  Drag and drop of component edit bar
+ * -------------------------------------
+ */
+
+/* possible drop targets */
+.mgnlEditorBar.component.moveTarget {
+  height: 19px;
+  line-height: 18px;
+
+  padding: 0 2px;
+
+  border: 2px solid #d0234b;
+
+  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
+}
+
+/* selected drop target */
+.mgnlEditorBar.component.moveOver {
+  background-image: url("../img/bars/mgnl-bar.component.png");
+}
+
+/* make component placeholder slightly less strong */
+.mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorBar {
+  border-top: 1px solid #deeab7;
+  border-left: 1px solid #deeab7;
+  border-bottom: 1px solid #b3c587;
+  border-right: 1px solid #b3c587;
+
+  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
+}
+
+.mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorPlaceholderElements {
+  border: 2px dotted #b3c587;
+  border-top: none;
+}
+
+.mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorBarLabel {
+  display: none;
+}
+
+.mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorPushButton {
+  display: none;
+}
+
+/* --- End of DnD definitions --- */
+
 
 /* -------------------------------
  *  Definitions for Mobile Preview

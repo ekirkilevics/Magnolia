@@ -37,6 +37,8 @@ import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.moveCo
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
+import info.magnolia.templating.editor.client.widget.placeholder.AreaPlaceHolder;
+import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DragEndEvent;
@@ -69,6 +71,10 @@ public class DragAndDropImpl {
                             componentBar.setStyleName("moveTarget", true);
                         }
                     }
+                    ComponentPlaceHolder placeholder = (ComponentPlaceHolder) PageEditor.model.getComponentPlaceHolder(area);
+                    if (placeholder != null) {
+                        placeholder.setStyleName("moveOngoing", true);
+                    }
                 }
 
                 int x = bar.getAbsoluteLeft();
@@ -90,6 +96,10 @@ public class DragAndDropImpl {
                         if (componentBar != null && componentBar != bar) {
                             componentBar.setStyleName("moveTarget", false);
                         }
+                    }
+                    ComponentPlaceHolder placeholder = (ComponentPlaceHolder) PageEditor.model.getComponentPlaceHolder(area);
+                    if (placeholder != null) {
+                        placeholder.setStyleName("moveOngoing", false);
                     }
                 }
             }
