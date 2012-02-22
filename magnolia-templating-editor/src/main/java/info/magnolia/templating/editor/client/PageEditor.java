@@ -123,8 +123,8 @@ public class PageEditor extends HTML implements EntryPoint {
 
             @Override
             public void onWindowScroll(ScrollEvent event) {
-            	String value = event.getScrollLeft() + ":" + event.getScrollTop();
-            	GWT.log("Setting "+ getEditorPositionUniqueCookieName() + " cookie to value " + value);
+                String value = event.getScrollLeft() + ":" + event.getScrollTop();
+                GWT.log("Setting "+ getEditorPositionUniqueCookieName() + " cookie to value " + value);
                 Cookies.setCookie(getEditorPositionUniqueCookieName(), value);
             }
         });
@@ -285,12 +285,12 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     public static String getEditorContentIdUniqueCookieName() {
-		return editorContentIdUniqueCookieName;
-	}
+        return editorContentIdUniqueCookieName;
+    }
 
     public static String getEditorPositionUniqueCookieName() {
-		return editorPositionUniqueCookieName;
-	}
+        return editorPositionUniqueCookieName;
+    }
 
     public static void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
         GWT.log("Creating preview for channel type [" + channelType + "] ");
@@ -409,12 +409,12 @@ public class PageEditor extends HTML implements EntryPoint {
      * behaviour, i.e. page scrolling to last saved position when you come back to it after having been on a different page.
      */
     private void resetEditorCookies() {
-    	for(String cookie : Cookies.getCookieNames()) {
-    		if(cookie.startsWith("editor-") && !getEditorContentIdUniqueCookieName().equals(cookie)
-    				|| !getEditorPositionUniqueCookieName().equals(cookie)) {
-    			Cookies.removeCookie(cookie);
-    		}
-    	}
+        for(String cookie : Cookies.getCookieNames()) {
+            if(cookie.startsWith("editor-") && !getEditorContentIdUniqueCookieName().equals(cookie)
+                    || !getEditorPositionUniqueCookieName().equals(cookie)) {
+                Cookies.removeCookie(cookie);
+            }
+        }
     }
 
     public static void enablePreview(boolean preview) {
