@@ -49,7 +49,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.IOUtils;
@@ -64,10 +63,6 @@ import org.slf4j.LoggerFactory;
  */
 public class BootstrapUtil {
     private static final Logger log = LoggerFactory.getLogger(BootstrapUtil.class);
-
-    public static void bootstrap(String resource) throws IOException, RepositoryException {
-        bootstrap(new String[]{resource}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
-    }
 
     public static void bootstrap(String[] resourceNames, int importUUIDBehavior) throws IOException, RepositoryException {
         // sort by length --> import parent node first
@@ -84,14 +79,9 @@ public class BootstrapUtil {
             String fullPath = getFullpathFromResource(resourceName);
             String nodeName = StringUtils.substringAfterLast(fullPath, "/");
 
-            // MAGNOLIA-3973, JCR-3239: overwriting of top level nodes fail in jackrabbit 2.2.11
-            // despite the fact that we delete a item exists exception is thrown
-            boolean deleted = false;
-            String formerUUID = null;
-
             log.debug("Will bootstrap {}", resourceName);
 
-            InputStream stream = BootstrapUtil.class.getResourceAsStream(resourceName);
+            final InputStream stream = BootstrapUtil.class.getResourceAsStream(resourceName);
             if (stream == null) {
                 throw new IOException("Can't find resource to bootstrap at " + resourceName);
             }
@@ -104,41 +94,23 @@ public class BootstrapUtil {
             // if the path already exists --> delete it
             try {
 
-                // hm can be null if module is not properly registered and the repository has not been created
+                // HM can be null if module is not properly registered and the repository has not been created
                 if (hm != null && hm.isExist(fullPath)) {
                     // but keep the order
                     Content node = hm.getContent(fullPath);
-                    // MAGNOLIA-3973, JCR-3239: remember the uuid to check after a wrong an item exists exception
-                    formerUUID = node.getUUID();
-
                     SiblingsHelper siblings = SiblingsHelper.of(node);
                     if(!siblings.isLast()){
                         nameOfNodeAfterTheImportedNode = siblings.next().getName();
                     }
 
                     hm.delete(fullPath);
-                    deleted = true;
                     log.warn("Deleted already existing node for bootstrapping: {}", fullPath);
                 }
             } catch (RepositoryException e) {
                 throw new RepositoryException("Can't check existence of node for bootstrap file: [" + name + "]", e);
             }
 
-            try{
-                DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
-            }
-            // MAGNOLIA-3973, JCR-3239: a runtime exception wrapping the item exists exception is thrown
-            catch(RuntimeException e){
-                // if we originally deleted the node and the exception mentions the uuid of the node
-                if (deleted && e.getMessage().contains(formerUUID)){
-                    // then we import using the remove existing strategy
-                    stream = BootstrapUtil.class.getResourceAsStream(resourceName);
-                    DataTransporter.importXmlStream(stream, repository, pathName, name, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING, false, true);;
-                }
-                else{
-                    throw e;
-                }
-            }
+            DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
 
             if(nameOfNodeAfterTheImportedNode != null){
                 Content newNode = hm.getContent(fullPath);
@@ -214,3 +186,4 @@ public class BootstrapUtil {
     }
 
 }
+
