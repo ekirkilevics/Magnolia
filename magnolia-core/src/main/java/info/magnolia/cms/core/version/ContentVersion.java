@@ -779,9 +779,18 @@ public class ContentVersion extends DefaultContent {
         // would prefer to return the above version (List of ContentVersions), but since our other APIs return jcr Version as well ...
         return this.state.getPredecessors();
     }
-    
+
     @Override
     public Node getJCRNode() {
+        // we seem to build content version from 2 different types of nodes - from Version and from jcr:frozenNode
+        try {
+            if (versionedNode.hasNode("jcr:frozenNode")) {
+                return versionedNode.getFrozenNode();
+            }
+        } catch (RepositoryException e) {
+            log.error("Failed to retrieve frozen node from version " + versionedNode, e);
+        }
+
         return versionedNode;
     }
 }
