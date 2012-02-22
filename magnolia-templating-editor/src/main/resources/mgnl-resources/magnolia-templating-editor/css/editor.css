@@ -220,9 +220,6 @@ div.mgnlEditorBar {
 }
 
 /* remove */
-.mgnlEditorBar.component .mgnlEditorPushButton {
-  margin-top: -1px;
-}
 .mgnlEditorBar.component .mgnlEditorPushButton.remove {
   background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
 }
