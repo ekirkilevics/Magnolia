@@ -47,6 +47,21 @@ div.mgnlEditorBar {
 }
 
 /*
+ * Page edit bar in preview mode.
+ */
+.mgnlEditorMainbarPreview {
+  position: absolute;
+  z-index: 900;
+  top: 0pt;
+  left: 0pt;
+  margin: 0pt;
+  padding: 2px 3px 0 3px;
+  margin: 0px;
+  height: 20px;
+  background-color: transparent;
+}
+
+/*
  * Area edit bar.
  */
 .mgnlEditorBar.area {
@@ -85,18 +100,24 @@ div.mgnlEditorBar {
 }
 
 /*
- * Page edit bar in preview mode.
+ * Drag and drop of component edit bar.
  */
-.mgnlEditorMainbarPreview {
-  position: absolute;
-  z-index: 900;
-  top: 0pt;
-  left: 0pt;
-  margin: 0pt;
-  padding: 2px 3px 0 3px;
-  margin: 0px;
-  height: 20px;
-  background-color: transparent;
+
+/* possible drop targets */
+.mgnlEditorBar.component.moveTarget {
+  height: 19px;
+  line-height: 18px;
+
+  padding: 0 2px;
+
+  border: 2px solid #d0234b;
+
+  background-image: url("../img/bars/mgnl-bar.component.possibleTarget.png");
+}
+
+/* selected drop target */
+.mgnlEditorBar.component.moveOver {
+  background-image: url("../img/bars/mgnl-bar.component.png");
 }
 
 /*
