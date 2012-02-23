@@ -56,6 +56,7 @@ import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenameNodesTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.TextFileConditionsUtil;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.nodebuilder.task.ErrorHandling;
@@ -97,6 +98,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())
+                .addConditions(get45ConfigFileConditions())
                 .addTask(new RenameACLNodesTask())
                 .addTask(new ArrayDelegateTask("New security filter", "Adds the securityCallback filter.",
                         new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, RepositoryConstants.CONFIG, FilterManager.SERVER_FILTERS,
@@ -168,11 +170,24 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.textFilterClassesAreNotSet();
-        u2.paramAnalyzerIsNotSet();
-        u2.accessControlProviderIsSet();
 
         conditions.add(new SystemTmpDirCondition());
         conditions.add(new CheckKeyProperty());
+
+        return conditions;
+    }
+
+    private List<Condition> get45ConfigFileConditions() {
+        List<Condition> conditions = new ArrayList<Condition>();
+
+        final TextFileConditionsUtil u = new TextFileConditionsUtil(conditions);
+        u.addFalseConditionIfExpressionIsContained(System.getProperty("java.security.auth.login.config"), "^Jackrabbit.*");
+
+        final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
+        u2.textFilterClassesAreNotSet();
+        u2.paramAnalyzerIsNotSet();
+        u2.accessControlProviderIsSet();
+
 
         return conditions;
     }

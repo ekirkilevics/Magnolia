@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.SystemProperty;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +45,8 @@ import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains utility methods to check workspace.xml.
@@ -52,6 +54,8 @@ import org.jdom.xpath.XPath;
  * @version $Id$
  */
 public class WorkspaceXmlUtil {
+
+    private final static Logger log = LoggerFactory.getLogger(WorkspaceXmlUtil.class);
 
     /**
      * @deprecated since 4.5 - directly use {@link #getWorkspaceNamesMatching(String, String, boolean)} instead.
@@ -80,7 +84,9 @@ public class WorkspaceXmlUtil {
      */
     public static List<String> getWorkspaceNames(String xPathExpression, String expectation) {
         final List<String> names = new ArrayList<String>();
-        final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
+        final String dir = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_HOME) + "/magnolia/workspaces/";
+        log.debug("Checking directory " + dir);
+        final File sourceDir = new File(dir);
         File[] files = sourceDir.listFiles();
         if (files == null) {
             // new repo
@@ -96,6 +102,7 @@ public class WorkspaceXmlUtil {
                 continue;
             }
             try {
+                log.debug("Analysing file " + wks.getAbsolutePath());
                 // check for the xPathExpression in wks
                 final List<Attribute> list = getElementsFromXPath(builder.build(wks), xPathExpression);
                 if (expectation == null) {

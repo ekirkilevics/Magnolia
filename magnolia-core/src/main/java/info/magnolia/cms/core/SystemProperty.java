@@ -57,6 +57,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class SystemProperty {
 
+    public static final String MAGNOLIA_REPOSITORIES_HOME = "magnolia.repositories.home";
+
     public static final String MAGNOLIA_REPOSITORIES_CONFIG = "magnolia.repositories.config";
 
     public static final String MAGNOLIA_EXCHANGE_HISTORY = "magnolia.exchange.history";

@@ -61,13 +61,17 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     public void setUp() throws Exception {
         super.setUp();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "./src/test/resources");
+        // We have also have an invalid workspace.xml under .../workspaces/outdated - in order to not run into it, we cheat by setting the repo-home
+        // to a value, that will not include it.
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_REPOSITORIES_HOME, "src/test/resources/config/repositories/magnolia/workspaces/current");
         SystemProperty.setProperty("magnolia.author.key.location", "/path/to/the/key");
+        System.setProperty("java.security.auth.login.config", "src/test/resources/config/current-jaas.config");
     }
 
     @Override
     @After
     public void tearDown() throws Exception {
-        System.clearProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR);
+        SystemProperty.clear();
         super.tearDown();
     }
 

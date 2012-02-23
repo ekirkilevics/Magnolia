@@ -64,8 +64,7 @@ public class WorkspaceXmlConditionsUtil {
             for (int i = 0; i < names.size(); i++) {
                 conditions.add(new FalseCondition("workspace.xml updates",
                         "Workspace definition in workspace " + names.get(i) +
-                                " references indexer which has changed; please update value of parameter named" +
-                                " textFilterClasses in your workspace.xml file."));
+                                " references indexer which has changed; please remove the parameter 'textFilterClasses'."));
             }
         }
     }
