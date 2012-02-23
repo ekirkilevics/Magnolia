@@ -40,9 +40,9 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Output provider wrapping response.
- * 
+ *
  * @version $Id$
- * 
+ *
  */
 public class ResponseOutputProvider implements OutputProvider {
 
@@ -55,18 +55,18 @@ public class ResponseOutputProvider implements OutputProvider {
     }
 
     @Override
-    public Appendable getAppendable() throws RenderException, IOException {
+    public Appendable getAppendable() throws IOException {
         if (streamCalled) {
-            throw new RenderException("Can't use appendable and output stream in parallel. getOutputStream() was already called.");
+            throw new IOException("Can't use appendable and output stream in parallel. getOutputStream() was already called.");
         }
         writerCalled = true;
         return response.getWriter();
     }
 
     @Override
-    public OutputStream getOutputStream() throws RenderException, IOException {
+    public OutputStream getOutputStream() throws IOException {
         if (writerCalled) {
-            throw new RenderException("Can't use appendable and output stream in parallel. getAppendable() was already called.");
+            throw new IOException("Can't use appendable and output stream in parallel. getAppendable() was already called.");
         }
         streamCalled = true;
         return response.getOutputStream();

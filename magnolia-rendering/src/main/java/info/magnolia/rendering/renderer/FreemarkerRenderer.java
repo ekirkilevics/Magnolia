@@ -33,6 +33,7 @@
  */
 package info.magnolia.rendering.renderer;
 
+import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.objectfactory.Components;
@@ -48,7 +49,6 @@ import java.util.Map;
 
 import javax.jcr.Node;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,16 +82,12 @@ public class FreemarkerRenderer extends AbstractRenderer {
 
         try {
             AppendableWriter out = renderingCtx.getAppendable();
-            try {
-                fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
-            }
-            catch (Throwable e) {
-                // FIXME we don't throw exceptions to not block the rendering
-                // the 'normal' exception handler should actually not throw exceptions so that we can re-throw them
-                // throw new RenderException("Can't render template " + templateScript + ": " + ExceptionUtils.getRootCauseMessage(e), e);
-                log.error("Failed to render freemarker template: " + ExceptionUtils.getRootCauseMessage(e), e);
-            }
-        } catch (IOException e) {
+            fmHelper.render(templateScript, locale, definition.getI18nBasename(), ctx, out);
+        }
+        catch (TemplateException e) {
+            throw new RenderException(e);
+        }
+        catch (IOException e) {
             throw new RenderException(e);
         }
     }

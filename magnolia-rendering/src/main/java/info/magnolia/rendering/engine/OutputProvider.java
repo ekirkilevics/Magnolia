@@ -38,13 +38,13 @@ import java.io.OutputStream;
 
 /**
  * Output provider interface. Calls to the type of output sink might be mutually exclusive depending on the implementation of the interface.
- * 
+ *
  * @version $Id$
- * 
+ *
  */
 public interface OutputProvider {
 
-    Appendable getAppendable() throws RenderException, IOException;
+    Appendable getAppendable() throws IOException;
 
-    OutputStream getOutputStream() throws RenderException, IOException;
+    OutputStream getOutputStream() throws IOException;
 }

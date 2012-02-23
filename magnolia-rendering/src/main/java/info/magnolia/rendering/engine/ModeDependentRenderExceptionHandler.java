@@ -35,11 +35,18 @@ package info.magnolia.rendering.engine;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.context.RenderingContext;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
 import javax.inject.Inject;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Exception handler providing different output based on the configuration of the current instance. Full stacktrace gets
@@ -49,8 +56,10 @@ import javax.inject.Inject;
  */
 public class ModeDependentRenderExceptionHandler implements RenderExceptionHandler {
 
+    private static Logger log = LoggerFactory.getLogger(ModeDependentRenderExceptionHandler.class);
+
     public static final String RENDER_ERROR_MESSAGE_BEGIN =
-            "<!-- ERROR MESSAGE STARTS HERE --><script language=javascript>//\"></script><script language=javascript>//\'></script><script language=javascript>//\"></script><script language=javascript>//\'></script></title></xmp></script></noscript></style></object></head></pre></table></form></table></table></table></a></u></i></b><div align=left style='background-color:#FFFF00; color:#FF0000; display:block; border-top:double; padding:2pt; font-size:medium; font-family:Arial,sans-serif; font-style: normal; font-variant: normal; font-weight: normal; text-decoration: none; text-transform: none'><b style='font-size:medium'>FreeMarker template error!</b><pre><xmp>";
+            "<!-- ERROR MESSAGE STARTS HERE --><script language=javascript>//\"></script><script language=javascript>//\'></script><script language=javascript>//\"></script><script language=javascript>//\'></script></title></xmp></script></noscript></style></object></head></pre></table></form></table></table></table></a></u></i></b><div align=left style='background-color:#FFFF00; color:#FF0000; display:block; border-top:double; padding:2pt; font-size:medium; font-family:Arial,sans-serif; font-style: normal; font-variant: normal; font-weight: normal; text-decoration: none; text-transform: none'><b style='font-size:medium'>Template Error!</b><pre><xmp>";
 
     public static final String RENDER_ERROR_MESSAGE_END = "</xmp></pre></div></html>";
 
@@ -62,30 +71,43 @@ public class ModeDependentRenderExceptionHandler implements RenderExceptionHandl
     }
 
     @Override
-    public void handleException(RenderException renderException, Writer out) {
-        if ( serverConfiguration.isAdmin() && !MgnlContext.getAggregationState().isPreviewMode()) {
-            inEditMode(renderException, out);
-        } else {
-            inPublicMode(renderException, out);
+    public void handleException(RenderException renderException, RenderingContext renderingContext) {
+        String path;
+        try {
+            path = renderingContext.getCurrentContent().getPath();
         }
+        catch (RepositoryException e) {
+            path = "Can't read content";
+        }
+        String id = renderingContext.getRenderableDefinition().getId();
+        PrintWriter out;
+        try {
+            out = getPrintWriterFor(renderingContext.getAppendable());
+            String msg = "Error while rendering [" + path + "] with template ["+id+"]: " + ExceptionUtils.getMessage(renderException);
+            if ( serverConfiguration.isAdmin() && !MgnlContext.getAggregationState().isPreviewMode()) {
+                inEditMode(msg, renderException, out);
+            } else {
+                inPublicMode(msg, renderException, out);
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Can't log template exception.", e);
+        }
+        out.flush();
     }
 
     private PrintWriter getPrintWriterFor(Writer out) {
         return (out instanceof PrintWriter) ? (PrintWriter) out : new PrintWriter(out);
     }
 
-    protected void inPublicMode(RenderException renderException, Writer out) {
-        final PrintWriter pw = getPrintWriterFor(out);
-        renderException.printStackTrace(pw);
-        pw.flush();
-
+    protected void inPublicMode(String msg, RenderException renderException, PrintWriter out) {
+        log.error(msg, renderException);
     }
 
-    protected void inEditMode(RenderException renderException, Writer out) {
-        final PrintWriter pw = getPrintWriterFor(out);
-        pw.println(RENDER_ERROR_MESSAGE_BEGIN);
-        renderException.printStackTrace(pw);
-        pw.println(RENDER_ERROR_MESSAGE_END);
-        pw.flush();
+    protected void inEditMode(String msg, RenderException renderException, PrintWriter out) {
+        log.error(msg, renderException);
+        out.println(RENDER_ERROR_MESSAGE_BEGIN);
+        out.println(msg);
+        out.println(RENDER_ERROR_MESSAGE_END);
     }
 }

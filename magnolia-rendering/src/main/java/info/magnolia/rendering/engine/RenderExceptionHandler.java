@@ -33,8 +33,7 @@
  */
 package info.magnolia.rendering.engine;
 
-import java.io.Writer;
-
+import info.magnolia.rendering.context.RenderingContext;
 
 /**
  * Handler for RenderExceptions.
@@ -43,5 +42,5 @@ import java.io.Writer;
  */
 public interface RenderExceptionHandler {
 
-    public void handleException(RenderException renderException, Writer out);
+    public void handleException(RenderException renderException, RenderingContext renderingContext);
 }

@@ -76,8 +76,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
     private Map<String, ContextAttributeConfiguration> contextAttributes = new HashMap<String, ContextAttributeConfiguration>();
 
-
-
     @Override
     public void render(RenderingContext renderingCtx, Map<String, Object> contextObjects) throws RenderException {
 

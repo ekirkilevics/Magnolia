@@ -45,7 +45,6 @@ import info.magnolia.rendering.util.AppendableWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -167,17 +166,17 @@ public class AggregationStateBasedRenderingContext implements RenderingContext {
     }
 
     @Override
-    public AppendableWriter getAppendable() throws RenderException, IOException {
+    public AppendableWriter getAppendable() throws IOException {
         return new AppendableWriter(this.currentOutputProvider.getAppendable());
     }
 
     @Override
-    public OutputStream getOutputStream() throws RenderException, IOException {
+    public OutputStream getOutputStream() throws IOException {
         return this.currentOutputProvider.getOutputStream();
     }
 
     @Override
-    public void handleException(RenderException renderException, Writer out) {
-        exceptionHandler.handleException(renderException, out);
+    public void handleException(RenderException renderException) {
+        exceptionHandler.handleException(renderException, this);
     }
 }

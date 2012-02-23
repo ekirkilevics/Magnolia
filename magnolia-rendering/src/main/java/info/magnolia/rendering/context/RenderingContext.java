@@ -35,7 +35,6 @@ package info.magnolia.rendering.context;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 
 import javax.jcr.Node;
 
@@ -73,9 +72,9 @@ public interface RenderingContext {
 
     void pop();
 
-    AppendableWriter getAppendable() throws RenderException, IOException;
+    AppendableWriter getAppendable() throws IOException;
 
-    OutputStream getOutputStream() throws RenderException, IOException;
+    OutputStream getOutputStream() throws IOException;
 
-    void handleException(RenderException renderException, Writer out);
+    void handleException(RenderException renderException);
 }

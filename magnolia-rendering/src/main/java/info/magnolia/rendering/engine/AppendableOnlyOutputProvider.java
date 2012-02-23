@@ -38,9 +38,9 @@ import java.io.OutputStream;
 
 /**
  * Output provider wrapping only Appendable and not providing output stream.
- * 
+ *
  * @version $Id$
- * 
+ *
  */
 public class AppendableOnlyOutputProvider implements OutputProvider {
 
@@ -51,12 +51,12 @@ public class AppendableOnlyOutputProvider implements OutputProvider {
     }
 
     @Override
-    public Appendable getAppendable() throws RenderException, IOException {
+    public Appendable getAppendable() throws IOException {
         return out;
     }
 
     @Override
-    public OutputStream getOutputStream() throws RenderException, IOException {
+    public OutputStream getOutputStream() throws IOException {
         throw new IOException("Output stream is not available in this provider.");
     }
 

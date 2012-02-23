@@ -41,7 +41,6 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 import info.magnolia.rendering.template.variation.RenderableVariationResolver;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -97,11 +96,7 @@ public class DefaultRenderingEngine implements RenderingEngine {
         try {
             renderer.render(renderingContext, contextObjects);
         } catch (RenderException e){
-            try {
-                renderingContext.handleException(e, renderingContext.getAppendable());
-            } catch (IOException ioEx) {
-                throw new RenderException(ioEx);
-            }
+            renderingContext.handleException(e);
         }
 
         finally {

@@ -144,8 +144,8 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         verify(freemarkerRenderer).render(renderingCtx, DefaultRenderingEngine.EMPTY_CONTEXT);
     }
 
-    @Test(expected = RenderException.class)
-    public void testRenderThrowsRenderExceptionInCaseOfInternalIOException() throws Exception {
+    @Test
+    public void testRenderThrowsRenderExceptionAndTheExceptionHandlerIsInvocedInCaseOfInternalIOException() throws Exception {
         // GIVEN
         final Node content = new MockNode("parent");
 
@@ -177,6 +177,7 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         renderingEngine.render(content, builderWrapper);
 
         // THEN - no code here as we expect an Exception
+        verify(renderingCtx).handleException(renderException);
     }
 
     @Test(expected = RenderException.class)
@@ -228,7 +229,7 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
         renderingEngine.render(content, builderWrapper);
 
         // THEN
-        verify(renderingCtx).handleException(e, writer);
+        verify(renderingCtx).handleException(e);
     }
 
     @Test(expected = RenderException.class)

@@ -37,12 +37,16 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.context.RenderingContext;
+import info.magnolia.rendering.template.RenderableDefinition;
+import info.magnolia.rendering.util.AppendableWriter;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
+
+import javax.jcr.Node;
 
 import org.junit.After;
 import org.junit.Before;
@@ -54,9 +58,24 @@ import org.junit.Test;
 
 public class ModeDependentRenderExceptionHandlerTest {
 
+    private RenderingContext renderingContext;
+    private AppendableWriter out;
+
     @Before
     public void setUp() throws Exception {
         MockUtil.initMockContext();
+        renderingContext = mock(RenderingContext.class);
+
+        Node content = mock(Node.class);
+        when(content.getPath()).thenReturn("/curren");
+        when(renderingContext.getCurrentContent()).thenReturn(content);
+
+        RenderableDefinition renderableDefinition = mock(RenderableDefinition.class);
+        when(renderableDefinition.getId()).thenReturn("the-id");
+        when(renderingContext.getRenderableDefinition()).thenReturn(renderableDefinition);
+
+        out = mock(AppendableWriter.class);
+        when(renderingContext.getAppendable()).thenReturn(out);
     }
 
     @After
@@ -66,9 +85,8 @@ public class ModeDependentRenderExceptionHandlerTest {
     }
 
     @Test
-    public void testOnlyExceptionGetsFlushedInPublicMode() {
+    public void testOnlyExceptionGetsFlushedInPublicMode() throws IOException {
         // GIVEN
-        final PrintWriter pw = mock(PrintWriter.class);
         final RenderException ex = mock(RenderException.class);
         final ServerConfiguration serverConfig = new ServerConfiguration();
         serverConfig.setAdmin(false);
@@ -76,17 +94,16 @@ public class ModeDependentRenderExceptionHandlerTest {
         ModeDependentRenderExceptionHandler handler = new ModeDependentRenderExceptionHandler(serverConfig);
 
         // WHEN
-        handler.handleException(ex, pw);
+        handler.handleException(ex, renderingContext);
 
         // THEN
-        verify(ex).printStackTrace(pw);
-        verify(pw).flush();
+        verify(ex).printStackTrace((PrintWriter) any());
+        verify(out).flush();
     }
 
     @Test
-    public void testOnlyExceptionGetsFlushedInAdminPreviewMode() {
+    public void testOnlyExceptionGetsFlushedInAdminPreviewMode() throws IOException {
         // GIVEN
-        final PrintWriter pw = mock(PrintWriter.class);
         final RenderException ex = mock(RenderException.class);
         final ServerConfiguration serverConfig = new ServerConfiguration();
         serverConfig.setAdmin(true);
@@ -95,18 +112,17 @@ public class ModeDependentRenderExceptionHandlerTest {
         ModeDependentRenderExceptionHandler handler = new ModeDependentRenderExceptionHandler(serverConfig);
 
         // WHEN
-        handler.handleException(ex, pw);
+        handler.handleException(ex, renderingContext);
 
         // THEN
-        verify(ex).printStackTrace(pw);
-        verify(pw).flush();
+        verify(ex).printStackTrace((PrintWriter) any());
+        verify(out).flush();
     }
 
     @Test
     public void testExceptionAndAdditionalMessageGetsFlushedAdminNonPreviewMode() throws IOException{
         // GIVEN
         // use non-printWriter on purpose here in order to test this setUp as well.
-        final Writer w = mock(Writer.class);
         final RenderException ex = mock(RenderException.class);
         final ServerConfiguration serverConfig = new ServerConfiguration();
         serverConfig.setAdmin(true);
@@ -115,13 +131,13 @@ public class ModeDependentRenderExceptionHandlerTest {
         ModeDependentRenderExceptionHandler handler = new ModeDependentRenderExceptionHandler(serverConfig);
 
         // WHEN
-        handler.handleException(ex, w);
+        handler.handleException(ex, renderingContext);
 
         // THEN
-        verify(w).write(ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_BEGIN, 0, ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_BEGIN.length());
+        verify(out).write(ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_BEGIN, 0, ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_BEGIN.length());
         verify(ex).printStackTrace((PrintWriter) any());
-        verify(w).write(ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_END, 0, ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_END.length());
-        verify(w).flush();
+        verify(out).write(ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_END, 0, ModeDependentRenderExceptionHandler.RENDER_ERROR_MESSAGE_END.length());
+        verify(out).flush();
     }
 
 }
