@@ -88,7 +88,6 @@ public class ComponentBar extends AbstractBar  {
         setVisible(false);
         attach();
 
-        PageEditor.model.addEditBar(getMgnlElement(), this);
     }
 
     private void checkMandatories(Map<String, String> attributes) {

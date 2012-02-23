@@ -180,7 +180,7 @@ public class FocusModelImpl3 implements FocusModel {
                 model.getComponentPlaceHolder(root).setVisible(false);
             }
             if (model.getAreaPlaceHolder(root) != null) {
-                model.getAreaPlaceHolder(root).addStyleName("inactive");
+                model.getAreaPlaceHolder(root).setVisible(true);
             }
         }
     }

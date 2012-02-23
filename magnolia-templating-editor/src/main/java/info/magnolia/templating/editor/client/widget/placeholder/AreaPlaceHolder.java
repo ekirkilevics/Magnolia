@@ -33,6 +33,9 @@
  */
 package info.magnolia.templating.editor.client.widget.placeholder;
 
+import java.util.Map;
+
+import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
@@ -47,9 +50,11 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
 
     private Label areaName;
 
-    public AreaPlaceHolder(MgnlElement mgnlElement) {
+    public AreaPlaceHolder(MgnlElement mgnlElement) throws IllegalArgumentException {
 
         super(mgnlElement);
+
+        checkMandatories(mgnlElement.getAttributes());
 
         this.addStyleName("area");
         String label = mgnlElement.getAttribute("label");
@@ -61,11 +66,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         }
         add(areaName);
 
-        ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(mgnlElement);
-
-        add(placeHolder);
         attach();
-        PageEditor.model.addAreaPlaceHolder(getMgnlElement(), this);
 
     }
 
@@ -80,10 +81,20 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
         }
 
         onAttach();
+        PageEditor.model.addAreaPlaceHolder(getMgnlElement(), this);
     }
 
     public void setActive(boolean active) {
         setStyleName("active", active);
-        areaName.setVisible(!active); // Hide area name in case area placeholder gets active and vice versa.
     }
+
+    private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
+
+        boolean noComponent = attributes.get("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
+
+        if (!getMgnlElement().getComponents().isEmpty() || noComponent) {
+            throw new IllegalArgumentException();
+        }
+    }
+
 }

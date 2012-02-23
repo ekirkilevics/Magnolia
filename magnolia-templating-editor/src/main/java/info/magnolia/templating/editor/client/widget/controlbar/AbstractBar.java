@@ -187,6 +187,7 @@ public abstract class AbstractBar extends FlowPanel {
     @Override
     protected void onAttach() {
         PageEditor.model.addElements(this.getMgnlElement(), getElement());
+        PageEditor.model.addEditBar(this.getMgnlElement(), this);
         super.onAttach();
     }
 

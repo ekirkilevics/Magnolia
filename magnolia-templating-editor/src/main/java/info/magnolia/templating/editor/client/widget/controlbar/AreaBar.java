@@ -75,7 +75,6 @@ public class AreaBar extends AbstractBar {
         createButtons();
 
         attach();
-        PageEditor.model.addEditBar(getMgnlElement(), this);
 
     }
 

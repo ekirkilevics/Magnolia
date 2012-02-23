@@ -99,7 +99,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         add(elementWrapper);
 
         createButtons();
-        PageEditor.model.addComponentPlaceHolder(mgnlElement, this);
+        attach();
     }
 
     @SuppressWarnings("unused")
@@ -162,6 +162,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
             parent.insertFirst(getElement());
         }
         onAttach();
+        PageEditor.model.addComponentPlaceHolder(getMgnlElement(), this);
     }
 
     public void attach(MgnlElement mgnlElement) {
@@ -200,7 +201,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
             throw new IllegalArgumentException();
         }
 
-        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && (this.created || !getMgnlElement().getComponents().isEmpty())) {
+        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && this.created && !getMgnlElement().getComponents().isEmpty()) {
             throw new IllegalArgumentException();
         }
 

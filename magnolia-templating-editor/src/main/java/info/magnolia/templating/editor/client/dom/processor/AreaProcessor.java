@@ -35,7 +35,6 @@ package info.magnolia.templating.editor.client.dom.processor;
 
 import com.google.gwt.core.client.GWT;
 
-import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.AreaBar;
@@ -52,29 +51,30 @@ public class AreaProcessor extends MgnlElementProcessor {
         super(mgnlElement);
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void process() {
         AreaBar areaBar = null;
         try {
             areaBar = new AreaBar(getMgnlElement());
 
-            boolean noComponent = getMgnlElement().getAttribute("type").equals(AreaDefinition.TYPE_NO_COMPONENT);
-            if (getMgnlElement().getComponents().isEmpty() && !noComponent) {
+            try {
                 new AreaPlaceHolder(getMgnlElement());
             }
-
+            catch(IllegalArgumentException e) {
+                GWT.log("Not creating area placeholder for this element. Missing parameters.");
+            }
             try {
-                ComponentPlaceHolder placeHolder = new ComponentPlaceHolder(getMgnlElement());
-                placeHolder.attach();
+                new ComponentPlaceHolder(getMgnlElement());
             }
             catch(IllegalArgumentException e) {
-                GWT.log("Not creating componentPLaceHolder for this element. Missing parameters.");
+                GWT.log("Not creating component placeholder for this element. Missing parameters.");
             }
 
             new AreaEndBar(getMgnlElement());
         }
         catch (IllegalArgumentException e) {
-            GWT.log("Not creating areabar for this element. Missing parameters. Will be deleted.");
+            GWT.log("Not creating areabar and area endbar for this element. Missing parameters. Will be deleted.");
         }
 
         if (areaBar == null) {

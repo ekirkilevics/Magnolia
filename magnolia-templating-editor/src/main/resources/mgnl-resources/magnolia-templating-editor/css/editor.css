@@ -331,22 +331,16 @@ button.mgnlEditorButton:active {
 
 /* Area place holder, in focus. */
 .mgnlEditorPlaceholder.area.active {
-  margin: 0 !important;
-  padding: 0;
-
-  border-radius: 0 0 5px 5px;
+    display: none;
 }
 
 /* Area place holder, not in focus. */
 .mgnlEditorPlaceholder.area {
   margin: 10px 0 !important;
   padding: 25px 15px;
-
   border-radius: 5px;
-
   background-color: #eeeeee;
   color: #aaaaaa;
-
   text-align: center;
 }
 
