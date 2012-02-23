@@ -96,7 +96,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private String availableComponents;
     private String label;
     private String description;
-    private boolean inherit;
+    private Boolean inherit;
+    private Boolean optional;
     private Boolean editable;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
@@ -131,6 +132,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         this.label = resolveLabel();
         this.availableComponents = resolveAvailableComponents();
         this.inherit = isInheritanceEnabled();
+        this.optional = resolveOptional();
         this.editable = resolveEditable();
 
         this.description = templateDefinition.getDescription();
@@ -166,7 +168,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             if (this.editable != null) {
                 helper.attribute("editable", String.valueOf(this.editable));
             }
-            helper.attribute("optional", String.valueOf(this.areaDefinition.isOptional()));
+            helper.attribute("optional", String.valueOf(this.optional));
             if(isOptionalAreaCreated()) {
                 helper.attribute("created", "true");
             }
@@ -377,6 +379,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
         return label != null ? label : (areaDefinition != null && StringUtils.isNotBlank(areaDefinition.getTitle()) ? areaDefinition.getTitle() : StringUtils.capitalize(name));
     }
 
+    private Boolean resolveOptional() {
+        return optional != null ? optional : areaDefinition != null && areaDefinition.isOptional() != null ? areaDefinition.isOptional() : Boolean.FALSE;
+    }
+
     private Boolean resolveEditable() {
         return editable != null ? editable : areaDefinition != null && areaDefinition.getEditable() != null ? areaDefinition.getEditable() : null;
     }
@@ -386,7 +392,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     }
 
     private boolean isOptionalAreaCreated() {
-        return this.areaDefinition.isOptional() && this.areaNode != null;
+        return this.optional && this.areaNode != null;
     }
 
     private boolean hasComponents(Node parent) throws RenderException {

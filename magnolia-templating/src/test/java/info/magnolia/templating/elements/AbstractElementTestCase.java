@@ -50,7 +50,6 @@ import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.DefaultRenderingEngine;
 import info.magnolia.rendering.engine.OutputProvider;
-import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
@@ -194,12 +193,12 @@ public abstract class AbstractElementTestCase {
         context.push(currentNode, templateDefinition, new OutputProvider() {
 
             @Override
-            public OutputStream getOutputStream() throws RenderException, IOException {
+            public OutputStream getOutputStream() throws IOException {
                 return null;
             }
 
             @Override
-            public Appendable getAppendable() throws RenderException, IOException {
+            public Appendable getAppendable() throws IOException {
                 return out;
             }
         });

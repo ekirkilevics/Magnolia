@@ -47,6 +47,8 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     static final String TYPE_NO_COMPONENT = "noComponent";
     static final String TYPE_LIST = "list";
     static final String TYPE_SINGLE = "single";
+    static final String CONTENT_STRUCTURE_FLAT = "flat";
+    static final String CONTENT_STRUCTURE_NODE = "node";
     static final String DEFAULT_TYPE = TYPE_LIST;
 
     Map<String, ComponentAvailability> getAvailableComponents();
@@ -54,6 +56,8 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     Boolean isEnabled();
 
     String getType();
+
+    String getContentStructure();
 
     InheritanceConfiguration getInheritance();
 

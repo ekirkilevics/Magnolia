@@ -51,9 +51,9 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     // default value is undefined to allow for merging with possibly defined values by parents
     private Boolean enabled;
-
-    private Boolean optional = false;
+    private Boolean optional;
     private String type;
+    private String contentStructure;
     private InheritanceConfiguration inheritance = new ConfiguredInheritance();
 
     @Override
@@ -85,6 +85,14 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getContentStructure() {
+        return contentStructure;
+    }
+
+    public void setContentStructure(String contentStructure) {
+        this.contentStructure = contentStructure;
     }
 
     @Override

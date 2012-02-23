@@ -57,7 +57,6 @@ import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
-import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.assignment.MetaDataBasedTemplateDefinitionAssignment;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
@@ -233,12 +232,12 @@ public abstract class AbstractDirectiveTestCase {
             renderingContext.push(aggState.getCurrentContent().getJCRNode(), renderableDefinition, new OutputProvider() {
 
                 @Override
-                public OutputStream getOutputStream() throws RenderException, IOException {
+                public OutputStream getOutputStream() throws IOException {
                     return null;
                 }
 
                 @Override
-                public Appendable getAppendable() throws RenderException, IOException {
+                public Appendable getAppendable() throws IOException {
                     return new StringWriter();
                 }
             });
