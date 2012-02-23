@@ -279,6 +279,17 @@ for Java Content Repositories (JCR).
         <version>1.4</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-parsers</artifactId>
+        <version>0.9</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>org.bouncycastle</groupId>
         <artifactId>bcprov-jdk16</artifactId>
         <version>1.46</version>
@@ -521,7 +532,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.6.1</version>
+        <version>1.6.4</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
