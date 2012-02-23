@@ -11,7 +11,7 @@ a.disabled:hover {
  * General appearance of edit bar.
  */
 div.mgnlEditorBar {
-  width: 100 !important;
+  width: 100% !important;
     /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
   height: 22px;
     /* Set height else on FF default buttons height screws up layout. */
@@ -19,7 +19,7 @@ div.mgnlEditorBar {
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
-  padding: 0 3px;
+  padding: 0 !important;
   margin: 0 !important;
   border-top: 1px solid #96b158;
   border-left: 1px solid #96b158;
@@ -111,7 +111,7 @@ div.mgnlEditorBar {
   margin: 0 !important;
 }
 
-.mgnlEditorBarSecondaryButtons {
+.mgnlEditorBarSecondaryButtons, .mgnlEditorBarPrimaryButtons {
   width: auto !important;
   margin: 0 0 0 0 !important;
   float: left !important;
@@ -119,7 +119,7 @@ div.mgnlEditorBar {
 
 .mgnlEditorBarPrimaryButtons {
   width: auto !important;
-  margin: 0 0 0 7px !important;
+  margin: 0 0 0 4px !important;
   float: right !important;
 }
 
@@ -128,11 +128,13 @@ div.mgnlEditorBar {
  */
 
 .mgnlEditorPushButton {
+  width: auto !important;
+  margin: 0 3px 0 0 !important;
   height: 21px;
-  width: 21px;
+  width: 21px !important;
   cursor: pointer;
+  float: none !important;
 
-  outline: 0;
 }
 
 /*
@@ -287,7 +289,7 @@ button.mgnlEditorButton:active {
 .mgnlEditorBarLabel {
   width: auto !important;
     /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
-  margin: 0 0 0 2px !important;
+  margin: 0 0 0 5px !important;
     /* Move label a tad further in than buttons on the right, */
     /* but ensure that all other margins defined for labels are not applied. */
 
