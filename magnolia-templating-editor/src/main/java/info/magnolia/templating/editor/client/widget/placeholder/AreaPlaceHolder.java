@@ -86,6 +86,7 @@ public class AreaPlaceHolder extends AbstractPlaceHolder {
 
     public void setActive(boolean active) {
         setStyleName("active", active);
+        areaName.setVisible(!active);
     }
 
     private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
