@@ -57,16 +57,6 @@ public class ElementProcessor {
         }
         PageEditor.model.addElement(mgnlElement, element);
 
-            if (mgnlElement.getFirstElement() == null) {
-                mgnlElement.setFirstElement(element);
-            }
-
-            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
-                mgnlElement.setLastElement(element);
-            }
-
-
-
         if (element.hasAttribute(CMS_ADD)) {
             mgnlElement.setComponentElement(element);
         }
@@ -78,6 +68,17 @@ public class ElementProcessor {
         else if (element.hasAttribute(CMS_EDIT)) {
             mgnlElement.setEditElement(element);
         }
+
+        else {
+            if (mgnlElement.getFirstElement() == null) {
+                mgnlElement.setFirstElement(element);
+            }
+
+            if (mgnlElement.getLastElement() == null || !mgnlElement.getLastElement().isOrHasChild(element)) {
+                mgnlElement.setLastElement(element);
+            }
+        }
+
     }
 
     public static void removeHover (Element element) {

@@ -127,10 +127,15 @@ public class ModelStorage {
                 addElements(mgnlElement, child);
             }
         }
-
     }
+
     public MgnlElement getMgnlElement(Element element) {
-        return mgnlElements.get(element);
+        MgnlElement mgnlElement = mgnlElements.get(element);
+        while (mgnlElement == null && element.hasParentElement()) {
+            element = element.getParentElement();
+            mgnlElement = mgnlElements.get(element);
+        }
+        return mgnlElement;
     }
 
     public List<Element> getElements(MgnlElement mgnlElement) {

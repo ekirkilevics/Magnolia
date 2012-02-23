@@ -193,7 +193,8 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";
-        } else {
+        }
+        else {
             this.availableComponents = attributes.get("availableComponents");
         }
 
@@ -201,9 +202,10 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
             throw new IllegalArgumentException();
         }
 
-        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && this.created && !getMgnlElement().getComponents().isEmpty()) {
+        if (this.type.equals(AreaDefinition.TYPE_SINGLE) && !getMgnlElement().getComponents().isEmpty()) {
             throw new IllegalArgumentException();
         }
+
 
     }
 
