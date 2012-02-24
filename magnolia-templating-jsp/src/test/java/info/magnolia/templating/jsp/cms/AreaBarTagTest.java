@@ -67,7 +67,7 @@ public class AreaBarTagTest extends AbstractTagTestCase {
         ConfiguredTemplateDefinition renderableDefinition = new ConfiguredTemplateDefinition();
         ConfiguredAreaDefinition areaDefinition = new ConfiguredAreaDefinition();
         renderableDefinition.addArea("stage", areaDefinition);
-        setRendableDefinition(renderableDefinition);
+        setRenderableDefinition(renderableDefinition);
     }
 
 

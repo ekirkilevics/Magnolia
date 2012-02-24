@@ -242,10 +242,7 @@ public abstract class AbstractTagTestCase {
         // no specific expectations here
     }
 
-    /**
-     * Set the rendable definition
-     */
-    public void setRendableDefinition(ConfiguredTemplateDefinition renderableDefinition) throws Exception {
+    public void setRenderableDefinition(ConfiguredTemplateDefinition renderableDefinition) throws Exception {
         renderingContext.push(aggState.getCurrentContent().getJCRNode(), renderableDefinition, new OutputProvider() {
 
             @Override
