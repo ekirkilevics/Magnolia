@@ -33,8 +33,7 @@
  */
 package info.magnolia.templating.jsp;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
@@ -52,7 +51,6 @@ import info.magnolia.context.WebContext;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
-import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.engine.RenderingEngine;
 import info.magnolia.rendering.template.assignment.MetaDataBasedTemplateDefinitionAssignment;
 import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
@@ -251,12 +249,12 @@ public abstract class AbstractTagTestCase {
         renderingContext.push(aggState.getCurrentContent().getJCRNode(), renderableDefinition, new OutputProvider() {
 
             @Override
-            public OutputStream getOutputStream() throws RenderException, IOException {
+            public OutputStream getOutputStream() throws IOException {
                 return null;
             }
 
             @Override
-            public Appendable getAppendable() throws RenderException, IOException {
+            public Appendable getAppendable() throws IOException {
                 return new StringWriter();
             }
         });
