@@ -34,52 +34,7 @@
     </profile>
   </profiles>
   <dependencies>
-    <!--dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-workflow</artifactId>
-      <version>${project.version}</version>
-    </dependency-->
-    <!--dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-redbot</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency-->
-<!--    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-groovy</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
     <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-tools</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-templating-samples</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-dms</artifactId>
-      <version>1.5.2</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-standard-templating-kit</artifactId>
-      <version>2.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-theme-pop</artifactId>
-      <version>2.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-demo-project</artifactId>
-      <version>2.0-SNAPSHOT</version>
-    </dependency>
--->    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-rendering</artifactId>
       <version>${project.version}</version>
