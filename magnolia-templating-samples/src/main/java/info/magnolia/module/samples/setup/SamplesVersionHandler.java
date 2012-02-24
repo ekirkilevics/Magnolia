@@ -117,9 +117,9 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
 
         //Create the JSP Configuration
         //First copy FTL configuration
-        commonTasks.add(new CopyNodeTask("sample", "Initialize the JPS template pages directory", RepositoryConstants.CONFIG, "/modules/samples/templates/pages/ftl", "/modules/samples/templates/pages/jsp", true));
-        commonTasks.add(new CopyNodeTask("sample", "Initialize the JPS template components directory", RepositoryConstants.CONFIG, "/modules/samples/templates/components/ftl", "/modules/samples/templates/components/jsp", true));
-        commonTasks.add(new CopyNodeTask("sample", "Initialize the JPS template components virtualUriMapping", RepositoryConstants.CONFIG, "/modules/samples/virtualURIMapping/ftl-products", "/modules/samples/virtualURIMapping/jsp-products", true));
+        commonTasks.add(new CopyNodeTask("sample", "Initialize the JSP template pages directory", RepositoryConstants.CONFIG, "/modules/samples/templates/pages/ftl", "/modules/samples/templates/pages/jsp", true));
+        commonTasks.add(new CopyNodeTask("sample", "Initialize the JSP template components directory", RepositoryConstants.CONFIG, "/modules/samples/templates/components/ftl", "/modules/samples/templates/components/jsp", true));
+        commonTasks.add(new CopyNodeTask("sample", "Initialize the JSP template components virtualUriMapping", RepositoryConstants.CONFIG, "/modules/samples/virtualURIMapping/ftl-products", "/modules/samples/virtualURIMapping/jsp-products", true));
 
         //Update copied FTL node conf to JSP
         commonTasks.add(new UpdateFromFtlToJspConfiguration("sample", "Set JSP properties template pages", RepositoryConstants.CONFIG, "/modules/samples/templates/pages/jsp"));
@@ -127,7 +127,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         commonTasks.add(new UpdateFromFtlToJspVirtualUriMapping("sample", "Set JSP properties virtualUriMapping", RepositoryConstants.CONFIG, "/modules/samples/virtualURIMapping/jsp-products"));
 
         // Create the JSP Site
-        commonTasks.add(new CopyNodeTask("sample", "Initialize the JPS site", RepositoryConstants.WEBSITE, "/ftl-sample-site", "/jsp-sample-site", true));
+        commonTasks.add(new CopyNodeTask("sample", "Initialize the JSP site", RepositoryConstants.WEBSITE, "/ftl-sample-site", "/jsp-sample-site", true));
         commonTasks.add(new UpdateFromFtlToJspSite("sample", "Set JSP properties for site", RepositoryConstants.WEBSITE, "/jsp-sample-site"));
 
 
