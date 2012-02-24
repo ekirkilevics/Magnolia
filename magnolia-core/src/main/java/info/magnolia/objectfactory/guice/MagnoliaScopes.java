@@ -44,7 +44,6 @@ import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
 import com.google.inject.Scopes;
-import com.mycila.inject.annotation.Jsr250Singleton;
 
 /**
  * Servlet scopes that use WebContext to get request and session.
@@ -74,7 +73,6 @@ public class MagnoliaScopes {
      * @version $Id$
      * @see info.magnolia.objectfactory.annotation.LazySingleton
      */
-    @Jsr250Singleton
     public static class LazySingletonScope implements Scope {
 
         @Override

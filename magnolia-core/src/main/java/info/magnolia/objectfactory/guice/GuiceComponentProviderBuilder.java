@@ -42,7 +42,6 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
-import com.mycila.inject.jsr250.Jsr250;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.configuration.ComponentConfigurer;
@@ -114,11 +113,7 @@ public class GuiceComponentProviderBuilder {
                 // Bind the ComponentProvider instance first so its the first thing to get member injection
                 bind(ComponentProvider.class).toInstance(componentProvider);
 
-                // requireExplicitBindings is switched off because Guice internally creates jit bindings and those are called for @PreDestroy, which fails if this is turned on
-//                binder().requireExplicitBindings();
-
-                // JSR-250 support added by Mycila
-                install(Jsr250.newJsr250Module());
+                binder().requireExplicitBindings();
 
                 install(new GuiceComponentConfigurationModule(configuration));
 

@@ -51,6 +51,7 @@ import java.util.Map;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
+import com.google.inject.util.Providers;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.AbstractModule;
@@ -159,7 +160,7 @@ public class GuiceComponentConfigurationModule extends AbstractModule {
     }
 
     private <T> ScopedBindingBuilder bindProvider(Class<T> type, Provider<T> provider) {
-        return bind(type).toProvider(GuiceUtils.guicify(provider));
+        return bind(type).toProvider(Providers.guicify(provider));
     }
 
     private <T> ScopedBindingBuilder bindProvider(Class<T> type, Class<? extends Provider<T>> provider) {

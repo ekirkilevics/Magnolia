@@ -38,8 +38,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Provider;
 
 import org.junit.After;
@@ -93,16 +91,6 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         public SimpleComponent() {
             addEvent("SimpleComponent");
         }
-
-        @PostConstruct
-        private void postConstruct() {
-            addEvent("SimpleComponent.postConstruct");
-        }
-
-        @PreDestroy
-        private void preDestroy() {
-            addEvent("SimpleComponent.preDestroy");
-        }
     }
 
     @Before
@@ -141,17 +129,14 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
         assertNotSame(simpleComponent, simpleComponent2);
 
         componentProvider.destroy();
-        // @PreDestroy is not called for non-scoped components
         assertNoMoreEvents();
     }
 
@@ -162,24 +147,20 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertNoMoreEvents();
         assertSame(simpleComponent, simpleComponent2);
-/*
+
         componentProvider.destroy();
-        assertEvent("SimpleComponent.preDestroy");
         assertNoMoreEvents();
-*/
     }
 
     @Test
     public void testEagerSingletonScopedComponent() {
         GuiceComponentProvider componentProvider = getComponentProvider("test-components-simple-eagersingleton.xml");
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
@@ -188,11 +169,9 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertNoMoreEvents();
         assertSame(simpleComponent, simpleComponent2);
-/*
+
         componentProvider.destroy();
-        assertEvent("SimpleComponent.preDestroy");
         assertNoMoreEvents();
-*/
     }
 
     public static class SimpleComponentProvider implements Provider<SimpleComponent> {
@@ -200,16 +179,6 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         @Override
         public SimpleComponent get() {
             return new SimpleComponent();
-        }
-
-        @PostConstruct
-        private void postConstruct() {
-            events.add("SimpleComponentProvider.postConstruct");
-        }
-
-        @PreDestroy
-        private void preDestroy() {
-            addEvent("SimpleComponentProvider.preDestroy");
         }
     }
 
@@ -219,12 +188,10 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentProvider.postConstruct");
         assertEvent("SimpleComponent");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentProvider.postConstruct");
         assertEvent("SimpleComponent");
         assertNoMoreEvents();
         assertNotSame(simpleComponent, simpleComponent2);
@@ -239,18 +206,15 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentProvider.postConstruct");
         assertEvent("SimpleComponent");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertNoMoreEvents();
         assertSame(simpleComponent, simpleComponent2);
-/*
+
         componentProvider.destroy();
-        assertEvent("SimpleComponent.preDestroy");
         assertNoMoreEvents();
-*/
     }
 
     public static class SimpleComponentFactory implements ComponentFactory<SimpleComponent> {
@@ -258,16 +222,6 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         @Override
         public SimpleComponent newInstance() {
             return new SimpleComponent();
-        }
-
-        @PostConstruct
-        private void postConstruct() {
-            addEvent("SimpleComponentFactory.postConstruct");
-        }
-
-        @PreDestroy
-        private void preDestroy() {
-            addEvent("SimpleComponentFactory.preDestroy");
         }
     }
 
@@ -277,15 +231,11 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentFactory.postConstruct");
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponentFactory.preDestroy");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentFactory.postConstruct");
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponentFactory.preDestroy");
         assertNoMoreEvents();
         assertNotSame(simpleComponent, simpleComponent2);
 
@@ -299,9 +249,7 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
-        assertEvent("SimpleComponentFactory.postConstruct");
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponentFactory.preDestroy");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
@@ -319,12 +267,10 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
         assertNotSame(simpleComponent, simpleComponent2);
 
@@ -339,7 +285,6 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent2 = componentProvider.getComponent(SimpleComponent.class);
@@ -354,7 +299,6 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
     public void testConfiguredEagerSingleton() {
         GuiceComponentProvider componentProvider = getComponentProvider("test-components-configured-eagersingleton.xml");
         assertEvent("SimpleComponent");
-        assertEvent("SimpleComponent.postConstruct");
         assertNoMoreEvents();
 
         SimpleComponent simpleComponent = componentProvider.getComponent(SimpleComponent.class);
@@ -388,13 +332,11 @@ public class ComponentProviderConfigurationBuilderTest extends AbstractMagnoliaT
 
         SimpleComponentWithProperty simpleComponent = componentProvider.getComponent(SimpleComponentWithProperty.class);
         assertEvent("SimpleComponent"); // There's two of these since the proxy also adds it
-        assertEvent("SimpleComponent.postConstruct");
         assertEvent("SimpleComponent");
         assertNoMoreEvents();
 
         SimpleComponentWithProperty simpleComponent2 = componentProvider.getComponent(SimpleComponentWithProperty.class);
         assertEvent("SimpleComponent"); // There's two of these since the proxy also adds it
-        assertEvent("SimpleComponent.postConstruct");
         assertEvent("SimpleComponent");
         assertNoMoreEvents();
 

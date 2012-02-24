@@ -57,10 +57,6 @@
       <artifactId>guice</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.mycila</groupId>
-      <artifactId>mycila-guice</artifactId>
-    </dependency>
-    <dependency>
       <groupId>concurrent</groupId>
       <artifactId>concurrent</artifactId>
     </dependency>

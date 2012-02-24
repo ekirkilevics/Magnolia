@@ -35,8 +35,6 @@ package info.magnolia.objectfactory.guice;
 
 import java.io.IOException;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
@@ -44,7 +42,6 @@ import javax.inject.Singleton;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -233,62 +230,6 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
         }
 
         assertNotNull(child.getComponent(OtherSingletonObject.class));
-    }
-
-    public interface SomeInterface {
-    }
-
-    @Singleton
-    public static class LifecycleSuperClass implements SomeInterface {
-        public int initialized;
-        public int destroyed;
-
-        @PostConstruct
-        public void init() {
-            initialized++;
-        }
-
-        @PreDestroy
-        public void destroy() {
-            destroyed++;
-        }
-    }
-
-    @Test
-    @Ignore
-    public void testLifecycle() {
-
-        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.registerImplementation(SomeInterface.class, LifecycleSuperClass.class);
-        GuiceComponentProvider p = createComponentProvider(configuration);
-        LifecycleSuperClass component = (LifecycleSuperClass) p.getComponent(SomeInterface.class);
-        assertEquals(1, component.initialized);
-        assertEquals(0, component.destroyed);
-        p.destroy();
-        assertEquals(1, component.initialized);
-        assertEquals(1, component.destroyed);
-    }
-
-    @Test
-    @Ignore
-    public void destroyOfChildMustNotDestroyInParent() {
-
-        ComponentProviderConfiguration configuration = new ComponentProviderConfiguration();
-        configuration.registerImplementation(LifecycleSuperClass.class);
-        GuiceComponentProvider parent = createComponentProvider(configuration);
-
-        ComponentProviderConfiguration childConfig = new ComponentProviderConfiguration();
-        GuiceComponentProvider child = createChild(parent, childConfig);
-
-        LifecycleSuperClass component = parent.getComponent(LifecycleSuperClass.class);
-        assertEquals(1, component.initialized);
-        assertEquals(0, component.destroyed);
-        child.destroy();
-        assertEquals(1, component.initialized);
-        assertEquals(0, component.destroyed);
-        parent.destroy();
-        assertEquals(1, component.initialized);
-        assertEquals(1, component.destroyed);
     }
 
     @Singleton
