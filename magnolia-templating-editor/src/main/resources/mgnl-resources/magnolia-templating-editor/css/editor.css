@@ -13,6 +13,7 @@
   margin: 0 !important;
   padding: 0 !important;
   background: transparent none no-repeat !important;
+  outline: 0 !important;
 }
 
 a.disabled:hover {
@@ -125,6 +126,7 @@ div.mgnlEditorBarPrimaryButtons {
  */
 
 div.mgnlEditorPushButton {
+  float: right !important;
   margin: 0 3px 0 0 !important;
   height: 21px !important;
   width: 21px !important;
@@ -377,10 +379,12 @@ div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
 
 /* selected drop target */
 .mgnlEditorBar.component.moveOver {
-  height: 17px !important;
   line-height: 16px !important;
-  padding: 0 1px !important;
   border: 3px solid #d0234b !important;
+}
+
+.mgnlEditorBar.component.moveOver .mgnlEditorBarLabel {
+  margin: 0 0 0 3px !important;
 }
 
 /* make component placeholder slightly less strong */
