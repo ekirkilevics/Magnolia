@@ -298,7 +298,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 area = parentNode.getNode(name);
             } else {
                 //autocreate and save area only if it's not optional
-                if(!areaDefinition.isOptional()) {
+                if(!this.optional) {
                     area = createNewAreaNode(parentNode);
                 }
             }
