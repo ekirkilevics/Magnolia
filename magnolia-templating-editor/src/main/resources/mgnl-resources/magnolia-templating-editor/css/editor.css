@@ -23,11 +23,16 @@ a.disabled:hover {
  * General appearance of edit bar.
  */
 div.mgnlEditorBar {
-  width: 100% !important;
+  /* Change the box model to include borders and paddings in the width and height set. */
+  /* Allows here for a more intuitive handling of place holder heights and widths. */
+  -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+  box-sizing: border-box !important;         /* IE 8+ */
+  width: 100 !important;
     /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
-  height: 22px !important;
+  height: 24px !important;
     /* Set height else on FF default buttons height screws up layout. */
-  line-height: 21px !important;
+  line-height: 23px !important;
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
@@ -35,11 +40,6 @@ div.mgnlEditorBar {
   border-left: 1px solid #96b158 !important;
   border-bottom: 1px solid #355500 !important;
   border-right: 1px solid #355500 !important;
-    /* Change the box model to include borders and paddings in the width and height set. */
-  /* Allows here for a more intuitive handling of place holder heights and widths. */
-  -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
-  box-sizing: border-box !important;         /* IE 8+ */
   background: transparent url("../img/bars/mgnl-bar.png") repeat !important;
   color: #f0f2e6 !important;
 }
@@ -82,7 +82,7 @@ div.mgnlEditorBar.area {
 }
 
 div.mgnlEditorBar.area.end {
-  height: 5px !important;
+  height: 7px !important;
   border-radius: 0 0 5px 5px !important;
   margin: 5px 0 !important;
   background-image: url("../img/bars/mgnl-bar.area.end.png") !important;
@@ -92,9 +92,9 @@ div.mgnlEditorBar.area.end {
  * Component edit bar.
  */
 div.mgnlEditorBar.component, .mgnlEditorBar.placeholder {
-  height: 21px !important;
+  height: 23px !important;
     /* Component edit bars are one pixel less high than other bars. */
-  line-height: 20px !important;
+  line-height: 22px !important;
     /* See .mgnlEditorBar for an explanation of this */
   border-top: 1px solid #bcd56f !important;
   border-left: 1px solid #bcd56f !important;
@@ -305,12 +305,12 @@ div.mgnlEditorBarLabel {
 
  /* General place holder definitions */
 div.mgnlEditorPlaceholder {
-  clear: both !important;
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widths. */
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
+  clear: both !important;
   color: #487000 !important;
   font-family: Verdana, sans-serif !important;
   font-size: 12px !important;
