@@ -3,6 +3,14 @@
  * ---------------------------
  */
 
+.mgnlEditor, .mgnlEditor div {
+  float: none !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent none no-repeat !important;
+}
+
 a.disabled:hover {
   cursor: default !important;
 }
@@ -13,112 +21,105 @@ a.disabled:hover {
 div.mgnlEditorBar {
   width: 100% !important;
     /* Setting width like this (without using %) ensures the bar doesn't overlap its element. */
-  height: 22px;
+  height: 22px !important;
     /* Set height else on FF default buttons height screws up layout. */
-  line-height: 21px;
+  line-height: 21px !important;
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
-  padding: 0 !important;
-  margin: 0 !important;
-  border-top: 1px solid #96b158;
-  border-left: 1px solid #96b158;
-  border-bottom: 1px solid #355500;
-  border-right: 1px solid #355500;
-  background: transparent url("../img/bars/mgnl-bar.png") repeat;
-  color: #f0f2e6;
+
+  border-top: 1px solid #96b158 !important;
+  border-left: 1px solid #96b158 !important;
+  border-bottom: 1px solid #355500 !important;
+  border-right: 1px solid #355500 !important;
+    /* Change the box model to include borders and paddings in the width and height set. */
+  /* Allows here for a more intuitive handling of place holder heights and widths. */
+  -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+  box-sizing: border-box !important;         /* IE 8+ */
+
+  background: transparent url("../img/bars/mgnl-bar.png") repeat !important;
+  color: #f0f2e6 !important;
 }
 
 /*
  * Page edit bar.
  */
 .mgnlEditorMainbar {
-  position: static;
-  z-index: 900;
-  margin: 0pt;
+  position: static !important;
+  z-index: 900 !important;
   padding-top: 2px !important; /* ... instead of proper vertical aligning the buttons. */
 }
 
 #mgnlEditorMainbarPlaceholder {
-  margin-left: 45%;
-  margin-top: 2px;
-  line-height: 18px;
-  position: absolute;
+  margin-left: 45% !important;
+  margin-top: 2px !important;
+  line-height: 18px !important;
+  position: absolute !important;
 }
 
 /*
  * Page edit bar in preview mode.
  */
 .mgnlEditorMainbarPreview {
-  position: absolute;
-  z-index: 900;
-  top: 0pt;
-  left: 0pt;
-  margin: 0pt;
-  padding: 2px 3px 0 3px;
-  margin: 0px;
-  height: 20px;
-  background-color: transparent;
+  position: absolute !important;
+  z-index: 900 !important;
+  top: 0pt !important;
+  left: 0pt !important;
+  padding: 2px 3px 0 3px !important;
+  height: 20px !important;
+  background-color: transparent !important;
 }
 
 /*
  * Area edit bar.
  */
-.mgnlEditorBar.area {
-  border-radius: 5px 5px 0 0;
+div.mgnlEditorBar.area {
+  border-radius: 5px 5px 0 0 !important;
   clear: both !important;
   margin: 0 0 5px 0 !important;
 }
 
-.mgnlEditorBar.area.end {
-  height: 5px;
-  border-radius: 0 0 5px 5px;
-  clear: both;
+div.mgnlEditorBar.area.end {
+  height: 5px !important;
+  border-radius: 0 0 5px 5px !important;
+  clear: both !important;
   margin: 5px 0 !important;
-  background-image: url("../img/bars/mgnl-bar.area.end.png");
+  background-image: url("../img/bars/mgnl-bar.area.end.png") !important;
 }
 
 /*
  * Component edit bar.
  */
-.mgnlEditorBar.component, .mgnlEditorBar.placeholder {
-  height: 21px;
+div.mgnlEditorBar.component, .mgnlEditorBar.placeholder {
+  height: 21px !important;
     /* Component edit bars are one pixel less high than other bars. */
-  line-height: 20px;
+  line-height: 20px !important;
     /* See .mgnlEditorBar for an explanation of this */
 
-  margin: 0 !important;
-  border-top: 1px solid #bcd56f;
-  border-left: 1px solid #bcd56f;
-  border-bottom: 1px solid #678b0f;
-  border-right: 1px solid #678b0f;
+  border-top: 1px solid #bcd56f !important;
+  border-left: 1px solid #bcd56f !important;
+  border-bottom: 1px solid #678b0f !important;
+  border-right: 1px solid #678b0f !important;
 
-  background-color: transparent;
-  background-image: url("../img/bars/mgnl-bar.component.png");
-  background-repeat: repeat;
-  color: #2f491b;
+  background: url("../img/bars/mgnl-bar.component.png") repeat !important;
+  color: #2f491b !important;
 }
 
 /*
  * Div carrying buttons.
  */
-.mgnlEditorBarButtons {
+ div.mgnlEditorBarButtons {
   /* Some definitions for div containing bar buttons
      required to make it work in the footer. */
   float: right !important;
-  width: auto !important;
-    /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
-  margin: 0 !important;
 }
 
-.mgnlEditorBarSecondaryButtons, .mgnlEditorBarPrimaryButtons {
-  width: auto !important;
-  margin: 0 0 0 0 !important;
+div.mgnlEditorBarSecondaryButtons, .mgnlEditorBarPrimaryButtons {
   float: left !important;
 }
 
-.mgnlEditorBarPrimaryButtons {
-  width: auto !important;
+div.mgnlEditorBarPrimaryButtons {
   margin: 0 0 0 4px !important;
   float: right !important;
 }
@@ -127,14 +128,11 @@ div.mgnlEditorBar {
  * Buttons on edit bars.
  */
 
-.mgnlEditorPushButton {
-  width: auto !important;
+div.mgnlEditorPushButton {
   margin: 0 3px 0 0 !important;
-  height: 21px;
+  height: 21px !important;
   width: 21px !important;
-  cursor: pointer;
-  float: none !important;
-
+  cursor: pointer !important;
 }
 
 /*
@@ -143,35 +141,35 @@ div.mgnlEditorBar {
 
 /* edit */
 .mgnlEditorBar.area .mgnlEditorPushButton.edit {
-  background: transparent no-repeat url("../img/bars/area.buttons/edit.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
-  background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
-  background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png") !important;
 }
 
 /* add */
 .mgnlEditorBar.area .mgnlEditorPushButton.add {
-  background: transparent no-repeat url("../img/bars/area.buttons/add.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
-  background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
-  background: transparent no-repeat url("../img/bars/area.buttons/add_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/add_click.png") !important;
 }
 
 /* remove */
 .mgnlEditorBar.area .mgnlEditorPushButton.remove {
-  background: transparent no-repeat url("../img/bars/area.buttons/delete.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
-  background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png") !important;
 }
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
-  background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png");
+  background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png") !important;
 }
 
 /*
@@ -180,35 +178,35 @@ div.mgnlEditorBar {
 
 /* edit */
 .mgnlEditorBar.component .mgnlEditorPushButton.edit {
-  background: transparent no-repeat url("../img/bars/component.buttons/edit.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
-  background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
-  background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png") !important;
 }
 
 /* move (fallback on old browsers) */
 .mgnlEditorBar.component .mgnlEditorPushButton.move {
-  background: transparent no-repeat url("../img/bars/component.buttons/move.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.move {
-  background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.move {
-  background: transparent no-repeat url("../img/bars/component.buttons/move_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/move_click.png") !important;
 }
 
 /* remove */
 .mgnlEditorBar.component .mgnlEditorPushButton.remove {
-  background: transparent no-repeat url("../img/bars/component.buttons/delete.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
-  background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png") !important;
 }
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
-  background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png");
+  background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png") !important;
 }
 
 
@@ -218,13 +216,13 @@ div.mgnlEditorBar {
 
 /* add */
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.add {
-    background: transparent no-repeat url("../img/bars/component.buttons/add.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/add.png") !important;
 }
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
-    background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png") !important;
 }
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
-    background: transparent no-repeat url("../img/bars/component.buttons/add_click.png");
+    background: transparent no-repeat url("../img/bars/component.buttons/add_click.png") !important;
 }
 
 
@@ -232,40 +230,37 @@ div.mgnlEditorBar {
  * Text buttons on page edit bar.
  */
 .mgnlEditorButton {
-  height: 19px; /* have to give the height for all browsers to properly calculate dimensions. */
+  height: 19px !important; /* have to give the height for all browsers to properly calculate dimensions. */
 
-  padding: 1px 10px;
+  padding: 1px 10px !important;
 
-  border-top: 1px solid #9dc114;
-  border-left: 1px solid #9dc114;
-  border-bottom: 1px solid #284f04;
-  border-right: 1px solid #284f04;
+  border-top: 1px solid #9dc114 !important;
+  border-left: 1px solid #9dc114 !important;
+  border-bottom: 1px solid #284f04 !important;
+  border-right: 1px solid #284f04 !important;
 
-  color: #f0f2e6;
-  background-color: #538d0b;
+  color: #f0f2e6 !important;
+  background-color: #538d0b !important;
 
-  font-family: Verdana, sans-serif;
-  font-size: 11px;
+  font-family: Verdana, sans-serif !important;
+  font-size: 11px !important;
 }
 
 .mgnlEditorMainbar .mgnlEditorBarButtons {
-  margin: 0 !important;
   float: none !important;
 }
 .mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
-  padding: 1px 8px;
+  padding: 1px 8px !important;
 }
 
 .mgnlEditorMainbarPreview .mgnlEditorBarButtons {
-  margin: 0 !important;
   float: left !important;
 }
 .mgnlEditorMainbarPreview .mgnlEditorButton {
   float: left !important;
-  margin: 0 !important;
 }
 .mgnlEditorMainbarPreview button.mgnlEditorButton {
-  padding: 1px 10px;
+  padding: 1px 10px !important;
 }
 
 
@@ -273,36 +268,32 @@ div.mgnlEditorBar {
  * Visual feedback when interacting with text buttons on bars.
  */
 button.mgnlEditorButton:hover {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 button.mgnlEditorButton:active {
-  border-top: 1px solid #284f04;
-  border-left: 1px solid #284f04;
-  border-bottom: 1px solid #9dc114;
-  border-right: 1px solid #9dc114;
+  border-top: 1px solid #284f04 !important;
+  border-left: 1px solid #284f04 !important;
+  border-bottom: 1px solid #9dc114 !important;
+  border-right: 1px solid #9dc114 !important;
 }
 
 /*
  * Label on bars showing name of component or area.
  */
-.mgnlEditorBarLabel {
+div.mgnlEditorBarLabel {
   width: auto !important;
     /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
   margin: 0 0 0 5px !important;
     /* Move label a tad further in than buttons on the right, */
     /* but ensure that all other margins defined for labels are not applied. */
 
-  font-family: Verdana, sans-serif;
-  font-size: 11px;
+  font-family: Verdana, sans-serif !important;
+  font-size: 11px !important;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.mgnlEditorOverlay {
-  position: absolute;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 /* --- End of edit bars definitions --- */
@@ -314,71 +305,72 @@ button.mgnlEditorButton:active {
  */
 
  /* General place holder definitions */
-.mgnlEditorPlaceholder {
-  clear: both;
+div.mgnlEditorPlaceholder {
+  clear: both !important;
 
   margin: 0 !important;
 
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widths. */
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-  box-sizing: border-box;         /* IE 8+ */
+  -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+  box-sizing: border-box !important;         /* IE 8+ */
 
-  color: #487000;
+  color: #487000 !important;
 
-  font-family: Verdana, sans-serif;
-  font-size: 12px;
+  font-family: Verdana, sans-serif !important;
+  font-size: 12px !important;
 }
 
 /* Area place holder, in focus. */
-.mgnlEditorPlaceholder.area.active {
-    display: none;
+div.mgnlEditorPlaceholder.area.active {
+    display: none !important;
 }
 
 /* Area place holder, not in focus. */
-.mgnlEditorPlaceholder.area {
+div.mgnlEditorPlaceholder.area {
   margin: 10px 0 !important;
-  padding: 25px 15px;
-  border-radius: 5px;
-  background-color: #eeeeee;
-  color: #aaaaaa;
-  text-align: center;
+  padding: 25px 15px !important;
+  border-radius: 5px !important;
+  background-color: #eeeeee !important;
+  color: #aaaaaa !important;
+  text-align: center !important;
 }
 
 /* Component place holder */
-.mgnlEditorPlaceholder.component {
-  width: 100%;
+div.mgnlEditorPlaceholder.component {
+  width: 100% !important;
 }
 
-.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
-  height: 45px;
-  margin: 0 !important;
+div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
+  height: 45px !important;
+    width: 100% !important;
+  border: 2px dotted #8fbb12 !important;
+  border-top: none !important;
+    /* Change the box model to include borders and paddings in the width and height set. */
+  /* Allows here for a more intuitive handling of place holder heights and widths. */
+  -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
+  box-sizing: border-box !important;         /* IE 8+ */
 
-  border: 2px dotted #8fbb12;
-  border-top: none;
 
-  background-color: white;
+  background-color: white !important;
+
 }
 
 /* Component ph following are ph should have not top margin. */
 .mgnlEditorPlaceholder.area > .mgnlEditorPlaceholder.component {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
 /* Special definitions to make sure ph work in the STK footer. */
 div#site-info .mgnlEditorPlaceholderElements {
-  width: 100%;
-}
-
-div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
-  display: inline-block !important;
-  width: auto;
+  width: 100% !important;
 }
 
 .mgnlEditorLocaleSelector {
-  margin-top: 1px;
-  margin-right: 4px;
+  margin-top: 1px !important;
+  margin-right: 4px !important;
 }
 
 /* --- End of edit place holder definitions --- */
@@ -391,50 +383,50 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
 
 /* drag source */
 .mgnlEditorBar.component.moveSource {
-  border-top: 1px solid #deeab7;
-  border-left: 1px solid #deeab7;
-  border-bottom: 1px solid #b3c587;
-  border-right: 1px solid #b3c587;
+  border-top: 1px solid #deeab7 !important;
+  border-left: 1px solid #deeab7 !important;
+  border-bottom: 1px solid #b3c587 !important;
+  border-right: 1px solid #b3c587 !important;
 
-  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png");
+  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png") !important;
 }
 
 /* possible drop targets */
 .mgnlEditorBar.component.moveTarget {
-  border: 1px solid #d0234b;
+  border: 1px solid #d0234b !important;
 }
 
 /* selected drop target */
 .mgnlEditorBar.component.moveOver {
-  height: 17px;
-  line-height: 16px;
+  height: 17px !important;
+  line-height: 16px !important;
 
-  padding: 0 1px;
+  padding: 0 1px !important;
 
-  border: 3px solid #d0234b;
+  border: 3px solid #d0234b !important;
 }
 
 /* make component placeholder slightly less strong */
 .mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorBar {
-  border-top: 1px solid #deeab7;
-  border-left: 1px solid #deeab7;
-  border-bottom: 1px solid #b3c587;
-  border-right: 1px solid #b3c587;
+  border-top: 1px solid #deeab7 !important;
+  border-left: 1px solid #deeab7 !important;
+  border-bottom: 1px solid #b3c587 !important;
+  border-right: 1px solid #b3c587 !important;
 
-  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png");
+  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png") !important;
 }
 
 .mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorPlaceholderElements {
-  border: 2px dotted #b3c587;
+  border: 2px dotted #b3c587 !important;
   border-top: none;
 }
 
 .mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorBarLabel {
-  display: none;
+  display: none !important;
 }
 
 .mgnlEditorPlaceholder.component.moveOngoing .mgnlEditorPushButton {
-  display: none;
+  display: none !important;
 }
 
 /* --- End of DnD definitions --- */
@@ -452,34 +444,30 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
   width: 95px !important; /* FIXME Pseudo-align dropdown with buttons above - this is inflexible and should be changed. */
 
   margin: -1px 0 0 0 !important;
-  padding: 0;
+  padding: 0 !important;
 
-  border-collapse: separate;
-  border-spacing: 0px;
+  border-collapse: separate !important;
+  border-spacing: 0px !important;
 
-  border-top: 0;
-  border-left: 1px solid #91BA26;
-  border-right: 1px solid #305000;
+  border-top: 0 !important;
+  border-left: 1px solid #91BA26 !important;
+  border-right: 1px solid #305000 !important;
 }
 
 .mgnlPreviewMenuPanel {
-  z-index: 800;
+  z-index: 800 !important;
 }
 
 .mgnlPreviewMenuItem {
-  height: 14px;
-  line-height: 11px;
-
-  border-bottom: 1px solid #305000;
-
+  height: 14px !important;
+  line-height: 11px !important;
+  border-bottom: 1px solid #305000 !important;
   background-color: #538d0b !important;
   color: #f0f2e6 !important;
-  text-align: right;
-
-  font-family: Verdana, sans-serif;
-  font-size: 11px;
-
-  cursor: pointer;
+  text-align: right !important;
+  font-family: Verdana, sans-serif !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
 }
 
 .mgnlPreviewMenuItem-selected {
@@ -491,87 +479,87 @@ div#site-info .mgnlEditorPlaceholder.component .gwt-Label {
   margin-right: 4px !important;
   border-left: 0px !important;
 
-  background: center no-repeat url(../img/preview/down-arrow-white.gif);
-  background-color: #538D0B;
-  text-indent: -1000px; /* Ensure that the text on the button we need for aligning the button, is invisible. */
+  background: center no-repeat url(../img/preview/down-arrow-white.gif) !important;
+  background-color: #538D0B !important;
+  text-indent: -1000px !important; /* Ensure that the text on the button we need for aligning the button, is invisible. */
 }
 
 /*
  * Smartphone and tablet previews.
  */
 .mgnlEditorPreviewBackground {
-  background-color: black;
-  opacity: 0.3;
-  filter: alpha(opacity = 30);
-  z-index: 900;
+  background-color: black !important;
+  opacity: 0.3 !important;
+  filter: alpha(opacity = 30) !important;
+  z-index: 900 !important;
 }
 
 .mobilePreview {
-  z-index: 901;
-  cursor: pointer;
+  z-index: 901 !important;
+  cursor: pointer !important;
 }
 
 .mobilePreview.tabletLandscape {
-  background: url(../img/preview/mobile/tablet/landscape.png) no-repeat;
-  width: 1300px;
-  height: 1025px;
+  background: url(../img/preview/mobile/tablet/landscape.png) no-repeat !important;
+  width: 1300px !important;
+  height: 1025px !important;
 }
 
 .mobilePreview.tabletLandscape .popupContent {
-  position: absolute;
-  top: 211px;
-  left: 128px;
-  width: 1024px;
-  height: 672px;
+  position: absolute !important;
+  top: 211px !important;
+  left: 128px !important;
+  width: 1024px !important;
+  height: 672px !important;
 }
 
 .mobilePreview.tabletPortrait {
-  background: url(../img/preview/mobile/tablet/portrait.png) no-repeat;
-  width: 1020px;
-  height: 1300px;
+  background: url(../img/preview/mobile/tablet/portrait.png) no-repeat !important;
+  width: 1020px !important;
+  height: 1300px !important;
 }
 
 .mobilePreview.tabletPortrait .popupContent {
-  position: absolute;
-  top: 224px;
-  left: 118px;
-  width: 768px;
-  height: 928px;
+  position: absolute !important;
+  top: 224px !important;
+  left: 118px !important;
+  width: 768px !important;
+  height: 928px !important;
 }
 
 .mobilePreview.smartphoneLandscape {
-  background: url(../img/preview/mobile/smartphone/landscape.png) no-repeat;
-  width: 752px;
-  height: 461px;
+  background: url(../img/preview/mobile/smartphone/landscape.png) no-repeat !important;
+  width: 752px !important;
+  height: 461px !important;
 }
 
 .mobilePreview.smartphoneLandscape .popupContent {
-  position: absolute;
-  top: 112px;
-  left: 130px;
-  width: 480px;
-  height: 210px;
+  position: absolute !important;
+  top: 112px !important;
+  left: 130px !important;
+  width: 480px !important;
+  height: 210px !important;
 }
 
 .mobilePreview.smartphonePortrait {
-  background: url(../img/preview/mobile/smartphone/portrait.png) no-repeat;
-  width: 393px;
-  height: 756px;
+  background: url(../img/preview/mobile/smartphone/portrait.png) no-repeat !important;
+  width: 393px !important;
+  height: 756px !important;
 }
 
 .mobilePreview.smartphonePortrait .popupContent {
-  position: absolute;
-  top: 213px;
-  left: 32px;
-  width: 320px;
-  height: 356px;
+  position: absolute !important;
+  top: 213px !important;
+  left: 32px !important;
+  width: 320px !important;
+  height: 356px !important;
 }
 
 .mobilePreviewIframe {
-  border: none;
-  width: 100%;
-  height: 100%;
-  background: center no-repeat url(../img/preview/mobile/loading.gif);
+  border: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: center no-repeat url(../img/preview/mobile/loading.gif) !important;
 }
 
 /* --- End of mobile preview definitions --- */

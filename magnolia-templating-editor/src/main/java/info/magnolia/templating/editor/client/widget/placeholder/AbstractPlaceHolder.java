@@ -51,7 +51,7 @@ public class AbstractPlaceHolder extends FlowPanel {
         super();
         this.setMgnlElement(mgnlElement);
 
-        setStylePrimaryName("mgnlEditorPlaceholder");
+        setStyleName("mgnlEditor mgnlEditorPlaceholder");
     }
 
     public void toggleVisible() {

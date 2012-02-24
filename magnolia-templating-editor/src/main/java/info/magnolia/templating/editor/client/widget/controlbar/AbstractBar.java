@@ -81,7 +81,7 @@ public abstract class AbstractBar extends FlowPanel {
             }
         }
 
-        setClassName("mgnlEditorBar");
+        setStyleName("mgnlEditor mgnlEditorBar");
     }
 
     protected void setId(String id){
@@ -135,10 +135,6 @@ public abstract class AbstractBar extends FlowPanel {
         button.getElement().getStyle().setFloat(cssFloat);
 
         buttonWrapper.add(button);
-    }
-
-    protected void setClassName(String className) {
-        getElement().setClassName(className);
     }
 
     /**

@@ -180,7 +180,7 @@ public class PageBar extends AbstractBar {
         });
         addButton(adminCentral, Float.LEFT);
 
-        setClassName("mgnlEditorBar mgnlEditorMainbar");
+        addStyleName("mgnlEditorMainbar");
 
     }
 
@@ -193,7 +193,7 @@ public class PageBar extends AbstractBar {
             }
         });
         addButton(preview, Float.LEFT);
-        setClassName("mgnlEditorMainbarPreview");
+        setStyleName("mgnlEditorMainbarPreview");
     }
 
     private class MobilePreviewCommand implements Command {
