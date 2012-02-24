@@ -87,6 +87,7 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         this.type = type;
     }
 
+    @Override
     public String getContentStructure() {
         return contentStructure;
     }
