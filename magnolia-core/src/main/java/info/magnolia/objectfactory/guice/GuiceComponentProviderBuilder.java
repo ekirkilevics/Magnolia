@@ -113,8 +113,6 @@ public class GuiceComponentProviderBuilder {
                 // Bind the ComponentProvider instance first so its the first thing to get member injection
                 bind(ComponentProvider.class).toInstance(componentProvider);
 
-                binder().requireExplicitBindings();
-
                 install(new GuiceComponentConfigurationModule(configuration));
 
                 for (Module extraModule : extraModules) {
