@@ -50,7 +50,7 @@ div.mgnlEditorBar {
 .mgnlEditorMainbar {
   position: static !important;
   z-index: 900 !important;
-  padding-top: 2px !important;
+  padding: 2px !important;
 }
 
 #mgnlEditorMainbarPlaceholder {
@@ -119,6 +119,10 @@ div.mgnlEditorBarSecondaryButtons, .mgnlEditorBarPrimaryButtons {
 div.mgnlEditorBarPrimaryButtons {
   margin: 0 0 0 4px !important;
   float: right !important;
+}
+div.mgnlEditorPreviewButton {
+  width: auto !important;
+  height: 24px !important;
 }
 
 /*
@@ -422,7 +426,7 @@ div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
 
 .mgnlPreviewMenuDropdown table {
   width: 95px !important; /* FIXME Pseudo-align dropdown with buttons above - this is inflexible and should be changed. */
-  margin: -1px 0 0 0 !important;
+  margin: -5px 0 0 0 !important;
   padding: 0 !important;
   border-collapse: separate !important;
   border-spacing: 0px !important;
