@@ -50,9 +50,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Stores NodeData as jcr multi-value property
  * can be used together with DialogMultiSelect.
- *
- * @author tmiyar
- *
+ * @version $Id$
  */
 public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveHandler {
 
@@ -60,7 +58,7 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveH
     protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
 
-        ArrayList l = new ArrayList();
+        ArrayList<Value> l = new ArrayList<Value>();
 
         if (values != null && values.length != 0) {
 
@@ -69,13 +67,16 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveH
                 if (StringUtils.isNotEmpty(valueStr)) {
                     Value value = getValue(valueStr, type);
                     if (value != null) {
-
                         l.add(value);
                     }
                 }
             }
             if(l.size() > 0) {
-                NodeData data = NodeDataUtil.getOrCreateAndSet(node, name, (Value[])l.toArray(new Value[l.size()]));
+                NodeDataUtil.getOrCreateAndSet(node, name, (Value[])l.toArray(new Value[l.size()]));
+            }
+        } else {
+            if(node.hasNodeData(name)) {
+                node.deleteNodeData(name);
             }
         }
     }
