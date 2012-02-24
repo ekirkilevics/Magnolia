@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
   <name>magnolia-templating-editor</name>
-  <displayName>Magnolia Templating Editor</displayName>
+  <displayName>Magnolia Templating Editor Module</displayName>
   <version>${project.version}</version>
 
   <dependencies>

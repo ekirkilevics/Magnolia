@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>templating-compatibility</name>
-  <displayName>Magnolia Templating Compatibility</displayName>
+  <displayName>Magnolia Templating Compatibility Module</displayName>
   <class>info.magnolia.module.templating.TemplatingModule</class>
   <version>${project.version}</version>
   <properties>

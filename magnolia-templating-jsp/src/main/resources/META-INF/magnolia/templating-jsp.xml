@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
   <name>templating-jsp</name>
-  <displayName>Magnolia JSP Templating Module Support</displayName>
+  <displayName>Magnolia JSP Templating Support Module</displayName>
   <description>${project.description}</description>
   <version>${project.version}</version>
 
