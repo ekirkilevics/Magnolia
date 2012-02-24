@@ -95,8 +95,8 @@ public class FreemarkerRendererTest {
         verify(renderer.getFmHelper()).render(null, null, i18nBasename, null, writer);
     }
 
-    @Test
-    public void testOnRenderDoesntBubbleUpNonIOException() throws Exception {
+    @Test // the engine is doing the exception handling, not the renderer
+    public void testOnRenderThrowsTemplateException() throws Exception {
         // GIVEN
         final RenderingContext rctx = mock(RenderingContext.class);
         final AppendableWriter writer = mock(AppendableWriter.class);
@@ -110,11 +110,11 @@ public class FreemarkerRendererTest {
         // WHEN
         try {
             renderer.onRender(null, rd, rctx, null, null);
-            // THEN
-            assertTrue("should always get there - no Exception expected", true);
         } catch (Throwable t) {
-            fail("Should never get here!");
+            // THEN: exception is thrown
+            return;
         }
+        fail("Should never get here!");
     }
 
     @Test(expected = RenderException.class)
