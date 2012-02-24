@@ -3,6 +3,10 @@
  * ---------------------------
  */
 
+/*
+ * This class should be added to all injected div elements, instead of tweaking each element individually.
+ * Makes it easier to maintain and all subsequent classes should only declare styles they actually use.
+ */
 .mgnlEditor, .mgnlEditor div {
   float: none !important;
   width: auto !important;
@@ -27,7 +31,6 @@ div.mgnlEditorBar {
     /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
     /* vertical paddings -1. "-1" to make sure that FF properly align labels in all cases; for other */
     /* browsers, this has no effect. This only works with single-line labels. */
-
   border-top: 1px solid #96b158 !important;
   border-left: 1px solid #96b158 !important;
   border-bottom: 1px solid #355500 !important;
@@ -37,7 +40,6 @@ div.mgnlEditorBar {
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
-
   background: transparent url("../img/bars/mgnl-bar.png") repeat !important;
   color: #f0f2e6 !important;
 }
@@ -48,7 +50,7 @@ div.mgnlEditorBar {
 .mgnlEditorMainbar {
   position: static !important;
   z-index: 900 !important;
-  padding-top: 2px !important; /* ... instead of proper vertical aligning the buttons. */
+  padding-top: 2px !important;
 }
 
 #mgnlEditorMainbarPlaceholder {
@@ -68,7 +70,6 @@ div.mgnlEditorBar {
   left: 0pt !important;
   padding: 2px 3px 0 3px !important;
   height: 20px !important;
-  background-color: transparent !important;
 }
 
 /*
@@ -83,7 +84,6 @@ div.mgnlEditorBar.area {
 div.mgnlEditorBar.area.end {
   height: 5px !important;
   border-radius: 0 0 5px 5px !important;
-  clear: both !important;
   margin: 5px 0 !important;
   background-image: url("../img/bars/mgnl-bar.area.end.png") !important;
 }
@@ -96,22 +96,19 @@ div.mgnlEditorBar.component, .mgnlEditorBar.placeholder {
     /* Component edit bars are one pixel less high than other bars. */
   line-height: 20px !important;
     /* See .mgnlEditorBar for an explanation of this */
-
   border-top: 1px solid #bcd56f !important;
   border-left: 1px solid #bcd56f !important;
   border-bottom: 1px solid #678b0f !important;
   border-right: 1px solid #678b0f !important;
-
   background: url("../img/bars/mgnl-bar.component.png") repeat !important;
   color: #2f491b !important;
 }
+
 
 /*
  * Div carrying buttons.
  */
  div.mgnlEditorBarButtons {
-  /* Some definitions for div containing bar buttons
-     required to make it work in the footer. */
   float: right !important;
 }
 
@@ -125,7 +122,7 @@ div.mgnlEditorBarPrimaryButtons {
 }
 
 /*
- * Buttons on edit bars.
+ * IconButtons on edit bars.
  */
 
 div.mgnlEditorPushButton {
@@ -135,6 +132,7 @@ div.mgnlEditorPushButton {
   cursor: pointer !important;
 }
 
+
 /*
  * Buttons on area edit bars.
  */
@@ -143,9 +141,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.area .mgnlEditorPushButton.edit {
   background: transparent no-repeat url("../img/bars/area.buttons/edit.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
   background: transparent no-repeat url("../img/bars/area.buttons/edit_hover.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
   background: transparent no-repeat url("../img/bars/area.buttons/edit_click.png") !important;
 }
@@ -154,9 +154,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.area .mgnlEditorPushButton.add {
   background: transparent no-repeat url("../img/bars/area.buttons/add.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
   background: transparent no-repeat url("../img/bars/area.buttons/add_hover.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
   background: transparent no-repeat url("../img/bars/area.buttons/add_click.png") !important;
 }
@@ -165,9 +167,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.area .mgnlEditorPushButton.remove {
   background: transparent no-repeat url("../img/bars/area.buttons/delete.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
   background: transparent no-repeat url("../img/bars/area.buttons/delete_hover.png") !important;
 }
+
 .mgnlEditorBar.area .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
   background: transparent no-repeat url("../img/bars/area.buttons/delete_click.png") !important;
 }
@@ -180,9 +184,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.component .mgnlEditorPushButton.edit {
   background: transparent no-repeat url("../img/bars/component.buttons/edit.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.edit {
   background: transparent no-repeat url("../img/bars/component.buttons/edit_hover.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.edit {
   background: transparent no-repeat url("../img/bars/component.buttons/edit_click.png") !important;
 }
@@ -191,9 +197,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.component .mgnlEditorPushButton.move {
   background: transparent no-repeat url("../img/bars/component.buttons/move.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.move {
   background: transparent no-repeat url("../img/bars/component.buttons/move_hover.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.move {
   background: transparent no-repeat url("../img/bars/component.buttons/move_click.png") !important;
 }
@@ -202,9 +210,11 @@ div.mgnlEditorPushButton {
 .mgnlEditorBar.component .mgnlEditorPushButton.remove {
   background: transparent no-repeat url("../img/bars/component.buttons/delete.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.remove {
   background: transparent no-repeat url("../img/bars/component.buttons/delete_hover.png") !important;
 }
+
 .mgnlEditorBar.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.remove {
   background: transparent no-repeat url("../img/bars/component.buttons/delete_click.png") !important;
 }
@@ -213,14 +223,15 @@ div.mgnlEditorPushButton {
 /*
  * Buttons on component placeholders.
  */
-
 /* add */
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add.png") !important;
 }
+
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-up-hovering.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add_hover.png") !important;
 }
+
 .mgnlEditorPlaceholder.component .mgnlEditorPushButton.mgnlEditorPushButton-down-hovering.add {
     background: transparent no-repeat url("../img/bars/component.buttons/add_click.png") !important;
 }
@@ -229,44 +240,19 @@ div.mgnlEditorPushButton {
 /*
  * Text buttons on page edit bar.
  */
-.mgnlEditorButton {
+button.mgnlEditorButton {
   height: 19px !important; /* have to give the height for all browsers to properly calculate dimensions. */
-
   padding: 1px 10px !important;
-
   border-top: 1px solid #9dc114 !important;
   border-left: 1px solid #9dc114 !important;
   border-bottom: 1px solid #284f04 !important;
   border-right: 1px solid #284f04 !important;
-
   color: #f0f2e6 !important;
   background-color: #538d0b !important;
-
   font-family: Verdana, sans-serif !important;
   font-size: 11px !important;
 }
 
-.mgnlEditorMainbar .mgnlEditorBarButtons {
-  float: none !important;
-}
-.mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
-  padding: 1px 8px !important;
-}
-
-.mgnlEditorMainbarPreview .mgnlEditorBarButtons {
-  float: left !important;
-}
-.mgnlEditorMainbarPreview .mgnlEditorButton {
-  float: left !important;
-}
-.mgnlEditorMainbarPreview button.mgnlEditorButton {
-  padding: 1px 10px !important;
-}
-
-
-/*
- * Visual feedback when interacting with text buttons on bars.
- */
 button.mgnlEditorButton:hover {
   cursor: pointer !important;
 }
@@ -278,19 +264,32 @@ button.mgnlEditorButton:active {
   border-right: 1px solid #9dc114 !important;
 }
 
+div.mgnlEditorMainbar div.mgnlEditorBarButtons {
+  float: none !important;
+}
+div.mgnlEditorMainbar button.mgnlEditorButton-previewMenuButton {
+  padding: 1px 8px !important;
+}
+
+div.mgnlEditorMainbarPreview div.mgnlEditorBarButtons {
+  float: left !important;
+}
+
+div.mgnlEditorMainbarPreview div.mgnlEditorButton {
+  float: left !important;
+}
+
+div.mgnlEditorMainbarPreview button.mgnlEditorButton {
+  padding: 1px 10px !important;
+}
+
 /*
  * Label on bars showing name of component or area.
  */
 div.mgnlEditorBarLabel {
-  width: auto !important;
-    /* Ensure that labels and buttons share the available space on the bar in all circumstances. */
   margin: 0 0 0 5px !important;
-    /* Move label a tad further in than buttons on the right, */
-    /* but ensure that all other margins defined for labels are not applied. */
-
   font-family: Verdana, sans-serif !important;
   font-size: 11px !important;
-
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
@@ -307,24 +306,14 @@ div.mgnlEditorBarLabel {
  /* General place holder definitions */
 div.mgnlEditorPlaceholder {
   clear: both !important;
-
-  margin: 0 !important;
-
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widths. */
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
-
   color: #487000 !important;
-
   font-family: Verdana, sans-serif !important;
   font-size: 12px !important;
-}
-
-/* Area place holder, in focus. */
-div.mgnlEditorPlaceholder.area.active {
-    display: none !important;
 }
 
 /* Area place holder, not in focus. */
@@ -337,6 +326,11 @@ div.mgnlEditorPlaceholder.area {
   text-align: center !important;
 }
 
+/* Area place holder, in focus. */
+div.mgnlEditorPlaceholder.area.active {
+    display: none !important;
+}
+
 /* Component place holder */
 div.mgnlEditorPlaceholder.component {
   width: 100% !important;
@@ -344,28 +338,15 @@ div.mgnlEditorPlaceholder.component {
 
 div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
   height: 45px !important;
-    width: 100% !important;
+  width: 100% !important;
   border: 2px dotted #8fbb12 !important;
   border-top: none !important;
-    /* Change the box model to include borders and paddings in the width and height set. */
+  /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widths. */
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
-
-
   background-color: white !important;
-
-}
-
-/* Component ph following are ph should have not top margin. */
-.mgnlEditorPlaceholder.area > .mgnlEditorPlaceholder.component {
-  margin-top: 0 !important;
-}
-
-/* Special definitions to make sure ph work in the STK footer. */
-div#site-info .mgnlEditorPlaceholderElements {
-  width: 100% !important;
 }
 
 .mgnlEditorLocaleSelector {
@@ -387,7 +368,6 @@ div#site-info .mgnlEditorPlaceholderElements {
   border-left: 1px solid #deeab7 !important;
   border-bottom: 1px solid #b3c587 !important;
   border-right: 1px solid #b3c587 !important;
-
   background-image: url("../img/bars/mgnl-bar.component.deemphasized.png") !important;
 }
 
@@ -400,9 +380,7 @@ div#site-info .mgnlEditorPlaceholderElements {
 .mgnlEditorBar.component.moveOver {
   height: 17px !important;
   line-height: 16px !important;
-
   padding: 0 1px !important;
-
   border: 3px solid #d0234b !important;
 }
 
@@ -412,7 +390,6 @@ div#site-info .mgnlEditorPlaceholderElements {
   border-left: 1px solid #deeab7 !important;
   border-bottom: 1px solid #b3c587 !important;
   border-right: 1px solid #b3c587 !important;
-
   background-image: url("../img/bars/mgnl-bar.component.deemphasized.png") !important;
 }
 
@@ -442,13 +419,10 @@ div#site-info .mgnlEditorPlaceholderElements {
 
 .mgnlPreviewMenuDropdown table {
   width: 95px !important; /* FIXME Pseudo-align dropdown with buttons above - this is inflexible and should be changed. */
-
   margin: -1px 0 0 0 !important;
   padding: 0 !important;
-
   border-collapse: separate !important;
   border-spacing: 0px !important;
-
   border-top: 0 !important;
   border-left: 1px solid #91BA26 !important;
   border-right: 1px solid #305000 !important;
