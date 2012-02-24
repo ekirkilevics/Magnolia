@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ItemNotFoundException;
@@ -126,6 +127,40 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
                 return "get all groups";
             }
 
+        });
+    }
+
+    public Collection<String> getAllGroups(final String name) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<String>>(getRepositoryName()) {
+
+            List<String> groups;
+
+            @Override
+            public Collection<String> doExec(Session session) throws RepositoryException {
+                Group group = getGroup(name);
+                if(group == null){
+                    return null;
+                }
+                groups = new ArrayList<String>();
+                collectGroups(group);
+
+                return groups;
+            }
+
+            private void collectGroups(Group group) throws AccessDeniedException{
+                for (Iterator iter = group.getGroups().iterator(); iter.hasNext();){
+                    Group subGroup = getGroup((String) iter.next());
+                    if(subGroup != null  && !groups.contains(subGroup.getName())){
+                        groups.add(subGroup.getName());
+                        collectGroups(subGroup);
+                    }
+                }
+            }
+
+            @Override
+            public String toString() {
+                return "get all groups";
+            }
         });
     }
 

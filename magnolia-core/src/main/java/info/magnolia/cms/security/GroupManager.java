@@ -59,6 +59,11 @@ public interface GroupManager {
      */
     public Collection<Group> getAllGroups() throws UnsupportedOperationException;
 
+    /**
+     * Get all groups related to one concrete group.
+     */
+    public Collection<String> getAllGroups(String groupName) throws UnsupportedOperationException;
+
     public Map<String, ACL> getACLs(String group);
 
     /**

@@ -128,10 +128,6 @@ public class MgnlGroup implements Group {
         return this.groups;
     }
 
-    /**
-     * FIXME: While this method could be potentially supported and can return all the groups that this group belongs to by inheritance,
-     * it doesn't seem to be great idea to pre-fill it on object creation and should be just requested on demand from manager.
-     */
     @Override
     public Collection<String> getAllGroups() {
         throw new UnsupportedOperationException("Use manager to modify this group");
