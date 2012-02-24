@@ -163,7 +163,20 @@
           <groupId>log4j</groupId>
           <artifactId>log4j</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId> org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId> org.bouncycastle</groupId>
+          <artifactId>bcmail-jdk15</artifactId>
+        </exclusion>
       </exclusions>
+    </dependency>
+    <!-- to compensate for removed java 1.5 dep from tika and to keep all BC deps at same version -->
+    <dependency>
+      <groupId> org.bouncycastle</groupId>
+      <artifactId>bcmail-jdk16</artifactId>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.openutils</groupId>
