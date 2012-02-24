@@ -196,7 +196,11 @@ public abstract class RepositoryBackedSecurityManager {
     protected String getResourceName(final String resourceId) {
         try {
             return MgnlContext.getJCRSession(getRepositoryName()).getNodeByIdentifier(resourceId).getName();
-        } catch (RepositoryException e) {
+        } catch (ItemNotFoundException e) {
+            // referenced node doesn't exist
+            return null;
+        } 
+        catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
         return null;

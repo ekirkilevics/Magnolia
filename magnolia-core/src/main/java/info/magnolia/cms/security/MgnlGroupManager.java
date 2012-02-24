@@ -135,10 +135,9 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         if (node.hasNode(NODE_GROUPS)) {
             for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
                 Property subgroup = iter.nextProperty();
-                try {
-                    groups.add(getResourceName(subgroup.getString()));
-                } catch (ItemNotFoundException e) {
-                    log.warn("assigned group " + subgroup.getString() + " doesn't exist.");
+                String resources = getResourceName(subgroup.getString());
+                if(resources != null){
+                    groups.add(resources);
                 }
             }
         }
