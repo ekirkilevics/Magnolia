@@ -36,6 +36,7 @@ package info.magnolia.templating.editor.client.dom.processor;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
 
+import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
@@ -43,10 +44,6 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
  * Processor for DOM elements.
  */
 public class ElementProcessor {
-
-    private static final String CMS_ADD = "cms:add";
-    private static final String CMS_PLACEHOLDER = "cms:placeholder";
-    private static final String CMS_EDIT = "cms:edit";
 
     public static void process(Node node, MgnlElement mgnlElement) {
 
@@ -57,15 +54,15 @@ public class ElementProcessor {
         }
         PageEditor.model.addElement(mgnlElement, element);
 
-        if (element.hasAttribute(CMS_ADD)) {
+        if (element.hasAttribute(AreaDefinition.CMS_ADD)) {
             mgnlElement.setComponentElement(element);
         }
 
-        else if (element.hasAttribute(CMS_PLACEHOLDER)) {
+        else if (element.hasAttribute(AreaDefinition.CMS_PLACEHOLDER)) {
             mgnlElement.setAreaElement(element);
         }
 
-        else if (element.hasAttribute(CMS_EDIT)) {
+        else if (element.hasAttribute(AreaDefinition.CMS_EDIT)) {
             mgnlElement.setEditElement(element);
         }
 

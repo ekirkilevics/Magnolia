@@ -51,6 +51,10 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
     static final String CONTENT_STRUCTURE_NODE = "node";
     static final String DEFAULT_TYPE = TYPE_LIST;
 
+    static final String CMS_ADD = "cms:add";
+    static final String CMS_PLACEHOLDER = "cms:placeholder";
+    static final String CMS_EDIT = "cms:edit";
+
     Map<String, ComponentAvailability> getAvailableComponents();
 
     Boolean isEnabled();

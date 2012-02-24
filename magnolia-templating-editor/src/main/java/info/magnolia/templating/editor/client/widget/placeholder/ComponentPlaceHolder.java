@@ -90,13 +90,16 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         add(controlBar);
 
-        FlowPanel elementWrapper = new FlowPanel();
-        elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
+        Element marker = getMgnlElement().getComponentElement();
+        boolean onlyBar = (marker != null && marker.getAttribute(AreaDefinition.CMS_ADD).equals("bar")) ? true: false;
+
+        if (!onlyBar) {
+            FlowPanel elementWrapper = new FlowPanel();
+            elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
+            add(elementWrapper);
+        }
 
         setVisible(false);
-
-
-        add(elementWrapper);
 
         createButtons();
         attach();
