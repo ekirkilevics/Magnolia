@@ -34,6 +34,8 @@
 package info.magnolia.cms.util;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,6 +66,11 @@ public class TextFileUtil {
         final List<String> names = new ArrayList<String>();
         BufferedReader jaasConfig = null;
         try {
+            final File file = new File(fileName);
+            if (!file.exists()) {
+                throw new FileNotFoundException(fileName);
+            }
+
             jaasConfig = new BufferedReader(new FileReader(fileName));
 
             String dataRow = jaasConfig.readLine();

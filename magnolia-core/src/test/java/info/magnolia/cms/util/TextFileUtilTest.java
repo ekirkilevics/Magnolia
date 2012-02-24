@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.Test;
@@ -60,5 +61,15 @@ public class TextFileUtilTest {
     public void testGetTrimmedLinesMatchingWhenExpressionIsNotContained() {
         final List<String> result = TextFileUtil.getTrimmedLinesMatching("src/test/resources/config/current-jaas.config", "^Jackrabbit.*");
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testGetLinesWhenFileIsNotExisiting() {
+        try {
+            TextFileUtil.getLines("no/such/file.around");
+            fail("Should have thrown an exception!");
+        } catch (Throwable t) {
+            assertTrue(t.getCause() instanceof FileNotFoundException);
+        }
     }
 }
