@@ -64,6 +64,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class InterceptFilter extends AbstractMgnlFilter {
+
     private static final Logger log = LoggerFactory.getLogger(InterceptFilter.class);
 
     /**
@@ -110,6 +111,8 @@ public class InterceptFilter extends AbstractMgnlFilter {
      * Attribute used for enabling the preview mode.
      */
     public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
+
+    private static final Channel DEFAULT_CHANNEL = new Channel();
 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
@@ -179,12 +182,12 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     } else {
                         MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                         MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
-                        aggregationState.setChannel(new Channel());
+                        aggregationState.setChannel(DEFAULT_CHANNEL);
                     }
                 } else {
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                     MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
-                    aggregationState.setChannel(new Channel());
+                    aggregationState.setChannel(DEFAULT_CHANNEL);
                 }
             } else if (ACTION_NODE_DELETE.equals(action)) {
                 // delete paragraph
