@@ -95,6 +95,7 @@ public class InterceptFilterTest {
         //GIVEN
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("PREVIEW");
         when(request.getParameter(MGNL_PREVIEW)).thenReturn("true");
+        when(request.getParameter(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER)).thenReturn("desktop");
         InterceptFilter filter = new InterceptFilter();
 
         //WHEN
@@ -102,6 +103,7 @@ public class InterceptFilterTest {
 
         //THEN
         assertNotNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
+        assertNotNull(MgnlContext.getAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE));
     }
 
     @Test
@@ -110,6 +112,7 @@ public class InterceptFilterTest {
         when(request.getParameter(InterceptFilter.INTERCEPT)).thenReturn("PREVIEW");
         when(request.getParameter(MGNL_PREVIEW)).thenReturn("false");
         ctx.setAttribute(MGNL_PREVIEW, "true", Context.SESSION_SCOPE);
+        when(request.getParameter(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER)).thenReturn("foo");
         InterceptFilter filter = new InterceptFilter();
 
         //WHEN
@@ -117,16 +120,19 @@ public class InterceptFilterTest {
 
         //THEN
         assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
+        assertNull(MgnlContext.getAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE));
 
         //GIVEN
         ctx.setAttribute(MGNL_PREVIEW, "true", Context.SESSION_SCOPE);
         when(request.getParameter(MGNL_PREVIEW)).thenReturn(null);
+        when(request.getParameter(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER)).thenReturn(null);
 
         //WHEN
         filter.intercept(request, response);
 
         //THEN
         assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
+        assertNull(MgnlContext.getAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE));
     }
 
     @Test(expected=PathNotFoundException.class)

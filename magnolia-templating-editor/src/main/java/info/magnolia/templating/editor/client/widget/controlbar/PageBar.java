@@ -160,7 +160,7 @@ public class PageBar extends AbstractBar {
         }
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
-        MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new MobilePreviewCommand("smartphone", Orientation.PORTRAIT));
+        MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new SmartphonePreviewCommand("smartphone", Orientation.PORTRAIT));
         MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new TabletPreviewCommand("tablet", Orientation.LANDSCAPE));
 
         List<MenuItem> options = new ArrayList<MenuItem>();
@@ -196,12 +196,12 @@ public class PageBar extends AbstractBar {
         setStyleName("mgnlEditorMainbarPreview");
     }
 
-    private class MobilePreviewCommand implements Command {
+    private class SmartphonePreviewCommand implements Command {
 
         private String deviceType;
         private Orientation orientation;
 
-        public MobilePreviewCommand(final String deviceType, final Orientation orientation) {
+        public SmartphonePreviewCommand(final String deviceType, final Orientation orientation) {
            this.deviceType = deviceType;
            this.orientation = orientation;
         }

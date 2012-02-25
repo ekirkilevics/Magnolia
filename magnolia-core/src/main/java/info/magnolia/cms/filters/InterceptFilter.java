@@ -34,6 +34,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Channel;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -153,6 +154,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
         String repository = request.getParameter(PARAM_REPOSITORY);
         String nodePath = request.getParameter(PARAM_PATH);
         String handle = aggregationState.getHandle();
+        String channel = aggregationState.getChannel().getName();
 
         if (repository == null) {
             repository = aggregationState.getRepository();
@@ -173,11 +175,16 @@ public class InterceptFilter extends AbstractMgnlFilter {
                 if (preview != null) {
                     if (Boolean.parseBoolean(preview)) {
                         MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
+                        MgnlContext.setAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, channel, Context.SESSION_SCOPE);
                     } else {
                         MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
+                        MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
+                        aggregationState.setChannel(new Channel());
                     }
                 } else {
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
+                    MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
+                    aggregationState.setChannel(new Channel());
                 }
             } else if (ACTION_NODE_DELETE.equals(action)) {
                 // delete paragraph
