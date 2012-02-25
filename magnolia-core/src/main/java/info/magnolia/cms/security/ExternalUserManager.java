@@ -34,6 +34,8 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.GroupList;
+import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
@@ -67,6 +69,10 @@ public class ExternalUserManager implements UserManager {
     @Override
     public User getUser(Subject subject) throws UnsupportedOperationException {
         return new ExternalUser(subject);
+    }
+
+    public User getUser(Map<String, String> properties, GroupList groupList, RoleList roleList){
+        return new ExternalUser(properties, groupList, roleList);
     }
 
     @Override

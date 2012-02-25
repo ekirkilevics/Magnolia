@@ -41,6 +41,7 @@ import info.magnolia.context.MgnlContext;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.security.auth.Subject;
@@ -62,6 +63,11 @@ public class ExternalUser extends AbstractUser implements Serializable {
     private Entity userDetails;
 
     /**
+     * User properties.
+     */
+    private Map<String, String> properties;
+
+    /**
      * User roles.
      */
     private RoleList roleList;
@@ -73,7 +79,10 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     /**
      * @param subject as created by login module
+     * @deprecated since 4.5 use ExternalUser(java.util.Map, info.magnolia.cms.security.auth.GroupList, 
+     *              info.magnolia.cms.security.auth.RoleList) instead
      */
+    @Deprecated
     protected ExternalUser(Subject subject) {
         final Set<Entity> principalDetails = subject.getPrincipals(Entity.class);
         final Iterator<Entity> entityIterator = principalDetails.iterator();
@@ -86,6 +95,12 @@ public class ExternalUser extends AbstractUser implements Serializable {
         final Set<GroupList> principalGroups = subject.getPrincipals(GroupList.class);
         final Iterator<GroupList> groupListIterator = principalGroups.iterator();
         this.groupList = groupListIterator.next();
+    }
+
+    protected ExternalUser(Map<String, String> properties, GroupList groupList, RoleList roleList) {
+        this.properties = properties;
+        this.groupList = groupList;
+        this.roleList = roleList;
     }
 
     @Override
@@ -139,7 +154,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     @Override
     public String getLanguage() {
-        String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
+        String language = (String) this.properties.get(Entity.LANGUAGE);
         if (null == language) {
             language = MgnlContext.getSystemContext().getLocale().getLanguage();
         }
@@ -148,31 +163,30 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     @Override
     public String getName() {
-        return (String) this.userDetails.getProperty(Entity.NAME);
+        return (String) this.properties.get(Entity.NAME);
     }
 
     @Override
     public String getPassword() {
-        return (String) this.userDetails.getProperty(Entity.PASSWORD);
+        return (String) this.properties.get(Entity.PASSWORD);
     }
-
+    
     public String getEmail() {
-        return (String) this.userDetails.getProperty(Entity.EMAIL);
+        return (String) this.properties.get(Entity.EMAIL);
     }
 
     @Override
     public String getProperty(String propertyName) {
-        String property = (String) this.userDetails.getProperty(propertyName);
+        String property = (String) this.properties.get(propertyName);
         if(null == property){
-            log.error("Unable to retrieve property " + propertyName + " for user " + getName());
+            log.debug("Unable to retrieve property " + propertyName + " for user " + getName());
         }
         return property;
     }
 
     @Override
     public void setProperty(String propertyName, String value) {
-        // can't set properties in userDetails
-        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+        this.properties.put(propertyName, value);
     }
 
     @Override

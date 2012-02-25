@@ -520,6 +520,7 @@ for Java Content Repositories (JCR).
         <classifier>asl</classifier>
       </dependency>
       <dependency>
+		<!-- This should be synchonized with ldap module-->
         <groupId>com.ibm.icu</groupId>
         <artifactId>icu4j</artifactId>
         <version>4.0.1</version>
