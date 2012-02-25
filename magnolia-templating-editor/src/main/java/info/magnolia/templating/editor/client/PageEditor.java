@@ -94,7 +94,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class PageEditor extends HTML implements EntryPoint {
 
     private static final String DEFAULT_PREVIEW_CHANNEL = "desktop";
-	private static final String MGNL_CHANNEL_PARAMETER = "mgnlChannel";
+    private static final String MGNL_CHANNEL_PARAMETER = "mgnlChannel";
     private static final String MGNL_PREVIEW_PARAMETER = "mgnlPreview";
     private static final String MGNL_INTERCEPT_PARAMETER = "mgnlIntercept";
 
