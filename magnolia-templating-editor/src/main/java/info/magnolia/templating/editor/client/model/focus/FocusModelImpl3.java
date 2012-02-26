@@ -33,12 +33,11 @@
  */
 package info.magnolia.templating.editor.client.model.focus;
 
-import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.user.client.Cookies;
 
 /**
  * Helper class to keep tack on selected items.
@@ -87,8 +86,13 @@ public class FocusModelImpl3 implements FocusModel {
     }
 
     private void toggleSelection(MgnlElement mgnlElement, boolean visible) {
-        String contentId = mgnlElement.getAttribute("content");
-        Cookies.setCookie(PageEditor.getEditorContentIdUniqueCookieName(), contentId);
+        if (visible) {
+            String contentId = mgnlElement.getAttribute("content");
+            JavascriptUtils.setEditorContentIdCookie(contentId);
+        }
+        else {
+            JavascriptUtils.removeEditorContentIdCookie();
+        }
 
         if (model.getEditBar(mgnlElement) != null) {
             model.getEditBar(mgnlElement).setVisible(visible);

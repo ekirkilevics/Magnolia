@@ -34,6 +34,9 @@
 package info.magnolia.templating.editor.client.jsni;
 
 
+import info.magnolia.templating.editor.client.PageEditor;
+import info.magnolia.templating.editor.client.dom.MgnlElement;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -41,6 +44,7 @@ import com.google.gwt.dom.client.MetaElement;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.Dictionary;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -51,6 +55,21 @@ import com.google.gwt.user.client.Window;
 public final class JavascriptUtils {
 
     private static Dictionary dictionary;
+
+    private static String windowLocation;
+
+    public static String getWindowLocation() {
+        return windowLocation;
+    }
+
+    public static void setWindowLocation(String windowLocation) {
+        JavascriptUtils.windowLocation = windowLocation;
+    }
+
+    private final static String EDITOR_COOKIE_PATH = "/";
+    private final static String EDITOR_COOKIE_NAMESPACE = "editor-";
+    private final static String editorPositionCookieName = EDITOR_COOKIE_NAMESPACE + "position-";
+    private final static String editorContentIdCookieName = EDITOR_COOKIE_NAMESPACE + "content-id-";
 
     static {
         //TODO move messages we need to this module?
@@ -163,5 +182,65 @@ public final class JavascriptUtils {
 
         Window.Location.replace(urlBuilder.buildString());
 
+    }
+
+
+    /**
+     * Removes all editor cookies not belonging to this page/module. Each time we navigate to a different link within the webapp
+     * the GWT module is unloaded and then reloaded, we need a clean slate when accessing cookies on a given page to avoid weird
+     * behaviour, i.e. page scrolling to last saved position when you come back to it after having been on a different page.
+     */
+    public static void resetEditorCookies() {
+        for(String cookie : Cookies.getCookieNames()) {
+            if(cookie.startsWith(EDITOR_COOKIE_NAMESPACE) && !(getEditorContentIdUniqueCookieName().equals(cookie)
+                    || getEditorPositionUniqueCookieName().equals(cookie))) {
+                Cookies.removeCookie(cookie, EDITOR_COOKIE_PATH);
+            }
+        }
+    }
+
+    public static void setEditorPositionCookie(String value) {
+        Cookies.setCookie(getEditorPositionUniqueCookieName(), value, null, null, EDITOR_COOKIE_PATH, false);
+    }
+
+    private static String getEditorPositionUniqueCookieName() {
+        return editorPositionCookieName + getWindowLocation();
+    }
+
+    public static void setEditorContentIdCookie(String value) {
+        Cookies.setCookie(getEditorContentIdUniqueCookieName(), value, null, null, EDITOR_COOKIE_PATH, false);
+    }
+
+    private static String getEditorContentIdUniqueCookieName() {
+        return editorContentIdCookieName + getWindowLocation();
+    }
+
+    public static void getCookiePosition() {
+        String position = Cookies.getCookie(getEditorPositionUniqueCookieName());
+        if(position!=null){
+            String[] tokens = position.split(":");
+            int left = Integer.parseInt(tokens[0]);
+            int top = Integer.parseInt(tokens[1]);
+            GWT.log("Scrolling to position left:" + left +", top: "+ top);
+            Window.scrollTo(left, top);
+        }
+    }
+
+    public static void getCookieContentId() {
+        String contentId = Cookies.getCookie(getEditorContentIdUniqueCookieName());
+        MgnlElement selectedMgnlElement = null;
+        if(contentId != null) {
+            selectedMgnlElement = PageEditor.model.findMgnlElementByContentId(contentId);
+        }
+        if(selectedMgnlElement != null) {
+            PageEditor.model.getFocusModel().onLoadSelect(selectedMgnlElement);
+        }
+        else {
+            PageEditor.model.getFocusModel().reset();
+        }
+    }
+
+    public static void removeEditorContentIdCookie() {
+        Cookies.removeCookie(getEditorContentIdUniqueCookieName(), EDITOR_COOKIE_PATH);
     }
 }
