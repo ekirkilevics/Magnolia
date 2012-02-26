@@ -346,6 +346,7 @@ div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
   width: 100% !important;
   border: 2px dotted #8fbb12 !important;
   border-top: none !important;
+  cursor: pointer;
   /* Change the box model to include borders and paddings in the width and height set. */
   /* Allows here for a more intuitive handling of place holder heights and widths. */
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */

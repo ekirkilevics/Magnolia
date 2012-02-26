@@ -100,28 +100,14 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         }
 
         setVisible(false);
-
+        createMouseEventsHandlers();
         createButtons();
         attach();
     }
 
-    @SuppressWarnings("unused")
     private void createMouseEventsHandlers() {
 
-        if (this.optional && !this.created) {
-            if(!this.created) {
-                addDomHandler(new MouseDownHandler() {
-
-                    @Override
-                    public void onMouseDown(MouseDownEvent event) {
-                        PageEditor.createComponent(areaWorkspace, areaPath, "mgnl:area");
-
-                    }
-                }, MouseDownEvent.getType());
-            }
-
-        }
-        else if (this.showAddButton){
+        if (this.showAddButton){
             addDomHandler(new MouseDownHandler() {
 
                 @Override
