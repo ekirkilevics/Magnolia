@@ -57,6 +57,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
@@ -147,6 +150,16 @@ public class PageEditor extends HTML implements EntryPoint {
                 event.stopPropagation();
             }
         }, MouseUpEvent.getType());
+
+        RootPanel.get().addDomHandler(new KeyDownHandler() {
+            @Override
+            public void onKeyDown(KeyDownEvent event) {
+                if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+                    PageEditor.enablePreview(!isPreview);
+                    event.preventDefault();
+                }
+            }
+        }, KeyDownEvent.getType());
 
         JavascriptUtils.resetEditorCookies();
 

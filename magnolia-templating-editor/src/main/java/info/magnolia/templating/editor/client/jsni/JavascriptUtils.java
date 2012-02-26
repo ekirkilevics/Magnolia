@@ -243,4 +243,8 @@ public final class JavascriptUtils {
     public static void removeEditorContentIdCookie() {
         Cookies.removeCookie(getEditorContentIdUniqueCookieName(), EDITOR_COOKIE_PATH);
     }
+
+    public static void removeEditorPositionCookie() {
+        Cookies.removeCookie(getEditorPositionUniqueCookieName(), EDITOR_COOKIE_PATH);
+    }
 }
