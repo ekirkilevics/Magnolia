@@ -130,6 +130,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         });
     }
 
+    @Override
     public Collection<String> getAllGroups(final String name) {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Collection<String>>(getRepositoryName()) {
 
