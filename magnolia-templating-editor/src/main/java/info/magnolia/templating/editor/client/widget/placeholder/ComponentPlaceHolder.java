@@ -91,21 +91,21 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         boolean onlyBar = (marker != null && marker.getAttribute(AreaDefinition.CMS_ADD).equals("bar")) ? true: false;
 
         if (!onlyBar) {
-            FlowPanel elementWrapper = new FlowPanel();
-            elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
-            add(elementWrapper);
+            createBoxPlaceHolder();
         }
 
         setVisible(false);
-        createMouseEventsHandlers();
         createButtons();
         attach();
     }
 
-    private void createMouseEventsHandlers() {
+    private void createBoxPlaceHolder() {
+
+        FlowPanel elementWrapper = new FlowPanel();
+        elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
 
         if (this.showAddButton){
-            addDomHandler(new MouseDownHandler() {
+            elementWrapper.addDomHandler(new MouseDownHandler() {
 
                 @Override
                 public void onMouseDown(MouseDownEvent event) {
@@ -114,6 +114,8 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
                 }
             }, MouseDownEvent.getType());
         }
+        add(elementWrapper);
+
     }
 
     private void createButtons() {
