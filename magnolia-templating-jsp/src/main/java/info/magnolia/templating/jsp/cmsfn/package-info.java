@@ -31,8 +31,7 @@
  * intact.
  *
  */
-
-@Library(version = org.tldgen.annotations.TldVersion.VERSION_21 ,uri = "http://magnolia-cms.com/taglib/templating-components/cmsfn", shortName = "cmsfn",license = NONE, description="Magnolia is an open-source enterprise class Content Management System developed by Magnolia International Ltd., based on the standard API for Java Content Repositories (JCR).", displayName= "Magnolia Templating Functions Tag Support")
+@Library(version = org.tldgen.annotations.TldVersion.VERSION_21 ,uri = "http://magnolia-cms.com/taglib/templating-components/cmsfn", shortName = "cmsfn",license = NONE, description="Templating functions (cmsfn) Tag Library exposes most of the utility methods defined in info.magnolia.templating.functions.TemplatingFunctions as JSP functions.", displayName= "Magnolia Templating Functions Tag Support")
 package info.magnolia.templating.jsp.cmsfn;
 
 import static org.tldgen.annotations.License.NONE;
