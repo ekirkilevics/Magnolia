@@ -196,7 +196,7 @@ public class VersionedNode extends PropertyWrappingNodeWrapper implements Versio
         return new DelegatePropertyWrapper(property) {
             @Override
             public String getPath() throws RepositoryException {
-                return getPath() + "/" + getName();
+                return VersionedNode.this.getPath() + "/" + getName();
             }
         };
     }
