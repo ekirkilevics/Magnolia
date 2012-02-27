@@ -38,9 +38,11 @@ import java.util.Map;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.dnd.DragAndDrop;
+import info.magnolia.templating.editor.client.widget.dnd.LegacyDragAndDrop;
 
 
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -77,17 +79,30 @@ public class ComponentBar extends AbstractBar  {
         addStyleName("component");
 
         if(DragDropEventBase.isSupported()) {
-            getStyle().setCursor(Cursor.MOVE);
-            createButtons(false);
             createDragAndDropHandlers();
-        } else {
-            createButtons(true);
+
+        }
+        if (!this.isInherited) {
+            createButtons();
             createMouseEventsHandlers();
         }
 
         setVisible(false);
         attach();
 
+    }
+
+    public void setDraggable(boolean draggable) {
+        if(DragDropEventBase.isSupported()) {
+            if (draggable) {
+                this.getElement().setDraggable(Element.DRAGGABLE_TRUE);
+                getStyle().setCursor(Cursor.MOVE);
+            }
+            else {
+                this.getElement().setDraggable(Element.DRAGGABLE_FALSE);
+                getStyle().setCursor(Cursor.DEFAULT);
+            }
+        }
     }
 
     private void checkMandatories(Map<String, String> attributes) {
@@ -132,8 +147,7 @@ public class ComponentBar extends AbstractBar  {
 
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                String parentPath = path.substring(0, path.lastIndexOf("/"));
-                PageEditor.moveComponentEnd((ComponentBar)event.getSource(), parentPath);
+                LegacyDragAndDrop.moveComponentEnd(ComponentBar.this);
             }
         }, MouseDownEvent.getType());
 
@@ -141,7 +155,7 @@ public class ComponentBar extends AbstractBar  {
 
             @Override
             public void onMouseOver(MouseOverEvent event) {
-                PageEditor.moveComponentOver((ComponentBar)event.getSource());
+                LegacyDragAndDrop.moveComponentOver(ComponentBar.this);
 
             }
         }, MouseOverEvent.getType());
@@ -150,14 +164,14 @@ public class ComponentBar extends AbstractBar  {
 
             @Override
             public void onMouseOut(MouseOutEvent event) {
-                PageEditor.moveComponentOut((ComponentBar)event.getSource());
+                LegacyDragAndDrop.moveComponentOut(ComponentBar.this);
             }
         }, MouseOutEvent.getType());
     }
 
-    private void createButtons(boolean createMoveButton) {
+    private void createButtons() {
 
-        if (dialog != null && !this.isInherited) {
+        if (dialog != null) {
             final PushButton edit = new PushButton();
             edit.addClickHandler(new ClickHandler() {
                 @Override
@@ -170,32 +184,29 @@ public class ComponentBar extends AbstractBar  {
             addPrimaryButton(edit);
         }
 
-        if(createMoveButton && !this.isInherited) {
-            final PushButton move = new PushButton();
-            move.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    toggleButtons(false);
-                    PageEditor.moveComponentStart(nodeName);
-                }
-            });
-            move.setStylePrimaryName("mgnlEditorPushButton");
-            move.addStyleName("move");
-            addPrimaryButton(move);
-        }
+        final PushButton move = new PushButton();
+        move.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                toggleButtons(false);
+                LegacyDragAndDrop.moveComponentStart(ComponentBar.this);
+            }
+        });
+        move.setStylePrimaryName("mgnlEditorPushButton");
+        move.addStyleName("move");
+        addPrimaryButton(move);
 
-        if (!this.isInherited) {
-            final PushButton remove = new PushButton();
-            remove.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    PageEditor.deleteComponent(path);
-                }
-            });
-            remove.setStylePrimaryName("mgnlEditorPushButton");
-            remove.addStyleName("remove");
 
-            addSecondaryButton(remove);
-        }
+        final PushButton remove = new PushButton();
+        remove.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                PageEditor.deleteComponent(path);
+            }
+        });
+        remove.setStylePrimaryName("mgnlEditorPushButton");
+        remove.addStyleName("remove");
+
+        addSecondaryButton(remove);
     }
 }

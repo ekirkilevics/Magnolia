@@ -39,7 +39,6 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.controlbar.ComponentBar;
 import info.magnolia.templating.editor.client.widget.placeholder.ComponentPlaceHolder;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.DragEndEvent;
 import com.google.gwt.event.dom.client.DragEndHandler;
 import com.google.gwt.event.dom.client.DragLeaveEvent;
@@ -57,6 +56,8 @@ import com.google.gwt.event.dom.client.DropHandler;
 public class DragAndDropImpl {
 
     public void dragAndDrop (final ComponentBar bar) {
+
+        bar.setDraggable(true);
         bar.addDomHandler(new DragStartHandler() {
             @Override
             public void onDragStart(DragStartEvent event) {
@@ -165,6 +166,5 @@ public class DragAndDropImpl {
             }
         }, DropEvent.getType());
 
-        bar.getElement().setDraggable(Element.DRAGGABLE_TRUE);
     }
 }

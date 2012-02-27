@@ -414,6 +414,12 @@ div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
   display: none !important;
 }
 
+div.mgnlEditorMoveDiv {
+  position: absolute !important;
+  background-image: url("../img/bars/mgnl-bar.component.deemphasized.png") !important;
+  z-index: 1000 !important;
+}
+
 /* --- End of DnD definitions --- */
 
 

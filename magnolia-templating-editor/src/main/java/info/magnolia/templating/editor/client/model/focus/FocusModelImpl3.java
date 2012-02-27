@@ -36,6 +36,7 @@ package info.magnolia.templating.editor.client.model.focus;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
+import info.magnolia.templating.editor.client.widget.dnd.LegacyDragAndDrop;
 
 import com.google.gwt.dom.client.Element;
 
@@ -57,6 +58,13 @@ public class FocusModelImpl3 implements FocusModel {
 
         MgnlElement mgnlElement = model.getMgnlElement(element);
 
+        if (LegacyDragAndDrop.isMoving()) {
+            if (!LegacyDragAndDrop.sourceBar.getMgnlElement().isRelated(mgnlElement)) {
+                LegacyDragAndDrop.moveComponentReset();
+                reset();
+            }
+            return;
+        }
         if (mgnlElement == null) {
             reset();
         }

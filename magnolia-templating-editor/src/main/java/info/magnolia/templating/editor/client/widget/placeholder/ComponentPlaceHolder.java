@@ -57,14 +57,11 @@ import com.google.gwt.user.client.ui.PushButton;
  */
 public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
-    private boolean optional = false;
-    private boolean created = false;
     private boolean showAddButton = false;
     private String availableComponents = "";
     private String type = "";
     private String areaWorkspace = "";
     private String areaPath = "";
-    private String name = "";
     private FlowPanel buttonWrapper;
 
     public ComponentPlaceHolder(MgnlElement mgnlElement) throws IllegalArgumentException {
@@ -169,11 +166,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
 
         this.showAddButton = Boolean.parseBoolean(attributes.get("showAddButton"));
-        this.optional = Boolean.parseBoolean(attributes.get("optional"));
-        this.created = Boolean.parseBoolean(attributes.get("created"));
         this.type = attributes.get("type");
-        this.name = attributes.get("name");
-
 
         String areaContent = attributes.get("content");
         int i = areaContent.indexOf(':');

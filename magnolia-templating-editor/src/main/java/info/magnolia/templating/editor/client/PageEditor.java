@@ -57,9 +57,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.http.client.Request;
@@ -160,6 +163,24 @@ public class PageEditor extends HTML implements EntryPoint {
                 }
             }
         }, KeyDownEvent.getType());
+
+
+
+        RootPanel.get().addDomHandler(new MouseMoveHandler() {
+
+            @Override
+            public void onMouseMove(MouseMoveEvent event) {
+
+                Element moveElement = Document.get().getElementById("mgnlEditorMoveDiv");
+
+                if (moveElement != null) {
+                    int x = event.getX();
+                    int y = event.getY() + 15;
+                    moveElement.getStyle().setTop(y, Unit.PX);
+                    moveElement.getStyle().setLeft(x, Unit.PX);
+                }
+            }
+        }, MouseMoveEvent.getType());
 
         JavascriptUtils.resetEditorCookies();
 
