@@ -44,7 +44,7 @@ package info.magnolia.rendering.model;
 public interface EarlyExecutionAware extends RenderingModel {
 
     /**
-     * Called before rendering of the paragraph.
+     * Called before rendering of the component.
      *
      * @param parentModel
      */

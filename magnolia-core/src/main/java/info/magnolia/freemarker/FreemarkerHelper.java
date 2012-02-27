@@ -62,7 +62,6 @@ import java.util.Set;
 
 /**
  * A generic helper to render Content instances with Freemarker templates.
- * Is used to render both paragraphs and templates.
  *
  * TODO : expose Configuration#clearTemplateCache()
  *

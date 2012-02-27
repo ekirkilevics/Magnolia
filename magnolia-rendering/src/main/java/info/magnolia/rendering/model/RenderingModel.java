@@ -74,7 +74,7 @@ public interface RenderingModel <RD extends RenderableDefinition> {
     public static final String SKIP_RENDERING = "skip-rendering";
 
     /**
-     * The model of the parent paragraph or template.
+     * The model of the parent component or template.
      */
     RenderingModel< ? > getParent();
 
@@ -90,7 +90,7 @@ public interface RenderingModel <RD extends RenderableDefinition> {
     ContentMap getContentMap();
 
     /**
-     * The renderable (paragraph/template) tied to this model.
+     * The renderable (template, area or component) tied to this model.
      */
     RD getDefinition();
 

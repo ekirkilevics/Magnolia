@@ -40,7 +40,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
 
 
 /**
- * The default concrete rendering definition used for templates and paragraphs.
+ * The default concrete rendering definition used for templates and components.
  *
  * @param <RD> - an instance of {@link RenderableDefinition}
  * @version $Id$

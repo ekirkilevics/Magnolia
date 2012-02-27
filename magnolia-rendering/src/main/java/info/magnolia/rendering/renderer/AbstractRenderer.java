@@ -64,11 +64,18 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 
 /**
- * Abstract renderer which can be used to implement paragraph or template renderers.
- * Sets up the context by providing the following objects: content, aggregationState, page, model, actionResult, mgnl
+ * Abstract renderer with support for typical functionality such as setting context attributes and executing a
+ * rendering model. Sets up the context by providing the following objects:
+ * <ul>
+ *     <li>content</li>
+ *     <li>aggregationState</li>
+ *     <li>page</li>
+ *     <li>model</li>
+ *     <li>actionResult</li>
+ *     <li>mgnl</li>
+ * </ul>
  *
  * @version $Id$
- *
  */
 public abstract class AbstractRenderer implements Renderer, RenderingModelBasedRenderer {
 
@@ -269,7 +276,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * Wraps the current content node before exposing it to the template renderer.
      * @param content the actual content being exposed to the template
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
-     * @see info.magnolia.module.templating.paragraphs.JspParagraphRenderer
      * TODO : return an Object instance instead - more flexibility for the template engine ?
      */
     protected Node wrapNodeForTemplate(Node content, Node mainContent) {
