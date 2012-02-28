@@ -58,28 +58,31 @@ public class TextFileConditionsUtilTest {
 
     @Test
     public void testAddFalseConditionIfExpressionIsContained() {
-        // GIVEN - all done in setup
+        // GIVEN
+        final String file = "src/test/resources/config/outdated-jaas.config";
 
         // WHEN
-        util.addFalseConditionIfExpressionIsContained("src/test/resources/config/outdated-jaas.config", "^Jackrabbit.*");
+        util.addFalseConditionIfExpressionIsContained(file, "^Jackrabbit.*");
 
         // THEN
         assertEquals(1, conditions.size());
         assertTrue(conditions.get(0) instanceof FalseCondition);
-        assertThat(conditions.get(0).getDescription(), Matchers.endsWith("Please remove these lines."));
+        assertThat(conditions.get(0).getDescription(), Matchers.containsString(file));
+        assertThat(conditions.get(0).getDescription(), Matchers.endsWith("Please remove it."));
     }
 
     @Test
     public void testAddFalseConditionIfExpressionIsNotContained() {
-        // GIVEN - all done in setup
+        // GIVEN
+        final String file = "src/test/resources/config/current-jaas.config";
 
         // WHEN
-        util.addFalseConditionIfExpressionIsNotContained("src/test/resources/config/current-jaas.config",
-                "^Jackrabbit.*");
+        util.addFalseConditionIfExpressionIsNotContained(file, "^Jackrabbit.*");
 
         // THEN
         assertEquals(1, conditions.size());
         assertTrue(conditions.get(0) instanceof FalseCondition);
+        assertThat(conditions.get(0).getDescription(), Matchers.containsString(file));
         assertThat(conditions.get(0).getDescription(), Matchers.endsWith("Please add it."));
     }
 }

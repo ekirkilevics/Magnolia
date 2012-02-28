@@ -52,15 +52,15 @@ public class TextFileConditionsUtil {
     public void addFalseConditionIfExpressionIsNotContained(String fileName, String regExp) {
         List<String> matches = TextFileUtil.getTrimmedLinesMatching(fileName, regExp);
         if (matches.isEmpty()) {
-            conditions.add(new FalseCondition(fileName + " is missing required entries", "It should contain a line matching " + regExp + ". Please add it."));
+            conditions.add(new FalseCondition("Missing required entries.", "The file '" + fileName + "' must contain a line matching " + regExp + ". Please add it."));
         }
     }
 
     public void addFalseConditionIfExpressionIsContained(String fileName, String regExp) {
         List<String> matches = TextFileUtil.getTrimmedLinesMatching(fileName, regExp);
         if (matches.size() > 0) {
-            conditions.add(new FalseCondition(fileName + " containes invalid entries", "The file contains "
-                    + matches.size() + " line(s) matching " + regExp + ". Please remove these lines."));
+            conditions.add(new FalseCondition("Invalid entries", "The file '" + fileName + "' contains "
+                    + matches.size() + " line(s) matching " + regExp + ". Please remove it."));
         }
     }
 }
