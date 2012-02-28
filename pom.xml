@@ -4,7 +4,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>20</version>
+    <version>21</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -24,6 +24,7 @@ for Java Content Repositories (JCR).
     <javaVersion>1.6</javaVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <scmTagPrefix>magnolia</scmTagPrefix>
   </properties>
   <issueManagement>
     <system>Jira</system>
