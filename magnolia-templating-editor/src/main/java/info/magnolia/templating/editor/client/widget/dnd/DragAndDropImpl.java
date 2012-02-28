@@ -73,7 +73,7 @@ public class DragAndDropImpl {
                             componentBar.setStyleName("moveTarget", true);
                         }
                     }
-                    ComponentPlaceHolder placeholder = (ComponentPlaceHolder) PageEditor.model.getComponentPlaceHolder(area);
+                    ComponentPlaceHolder placeholder = PageEditor.model.getComponentPlaceHolder(area);
                     if (placeholder != null) {
                         placeholder.setStyleName("moveOngoing", true);
                     }
@@ -102,7 +102,7 @@ public class DragAndDropImpl {
                             componentBar.setStyleName("moveTarget", false);
                         }
                     }
-                    ComponentPlaceHolder placeholder = (ComponentPlaceHolder) PageEditor.model.getComponentPlaceHolder(area);
+                    ComponentPlaceHolder placeholder = PageEditor.model.getComponentPlaceHolder(area);
                     if (placeholder != null) {
                         placeholder.setStyleName("moveOngoing", false);
                     }
