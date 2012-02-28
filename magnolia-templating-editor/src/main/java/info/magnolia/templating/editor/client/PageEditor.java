@@ -116,7 +116,10 @@ public class PageEditor extends HTML implements EntryPoint {
     public void onModuleLoad() {
 
         String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_PARAMETER);
-        if(mgnlChannel != null && !DEFAULT_PREVIEW_CHANNEL.equals(mgnlChannel)) {
+        String mgnlIntercept = Window.Location.getParameter(MGNL_INTERCEPT_PARAMETER);
+        //mgnlIntercept param helps telling "traditional" desktop preview from "tablet" desktop one
+        //TODO find a cleaner, configurable way to achieve this.
+        if(mgnlChannel != null && !"PREVIEW".equalsIgnoreCase(mgnlIntercept)) {
             GWT.log("Found " + mgnlChannel + " in request, post processing links...");
             postProcessLinksOnMobilePreview(Document.get().getDocumentElement(), mgnlChannel);
             return;
@@ -307,6 +310,7 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_CHANNEL_PARAMETER);
 
         urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, channelType);
+        urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, "true");
         final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, deviceType);
         //this causes the pop up to show
         previewChannelWidget.center();
@@ -362,7 +366,7 @@ public class PageEditor extends HTML implements EntryPoint {
     private void postProcessLinksOnMobilePreview(Element root, String channel) {
         NodeList<Element> anchors = root.getElementsByTagName("a");
 
-        final String mobilePreviewParams = MGNL_CHANNEL_PARAMETER+"="+channel;
+        final String mobilePreviewParams = MGNL_CHANNEL_PARAMETER+"="+channel+"&"+ MGNL_PREVIEW_PARAMETER+"=true";
 
         for (int i = 0; i < anchors.getLength(); i++) {
             AnchorElement anchor = AnchorElement.as(anchors.getItem(i));

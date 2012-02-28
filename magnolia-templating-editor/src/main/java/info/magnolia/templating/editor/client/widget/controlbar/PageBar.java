@@ -35,7 +35,6 @@ package info.magnolia.templating.editor.client.widget.controlbar;
 
 
 import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
-import info.magnolia.channel.ChannelResolver;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.CMSComment;
 import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
@@ -238,7 +237,7 @@ public class PageBar extends AbstractBar {
 
         @Override
         public void execute() {
-            PageEditor.createChannelPreview(ChannelResolver.ALL, deviceType, orientation);
+            PageEditor.createChannelPreview("desktop", deviceType, orientation);
         }
     }
 }
