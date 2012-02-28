@@ -79,7 +79,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     /**
      * @param subject as created by login module
-     * @deprecated since 4.5 use ExternalUser(java.util.Map, info.magnolia.cms.security.auth.GroupList, 
+     * @deprecated since 4.5 use ExternalUser(java.util.Map, info.magnolia.cms.security.auth.GroupList,
      *              info.magnolia.cms.security.auth.RoleList) instead
      */
     @Deprecated
@@ -154,7 +154,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     @Override
     public String getLanguage() {
-        String language = (String) this.properties.get(Entity.LANGUAGE);
+        String language = this.properties.get(Entity.LANGUAGE);
         if (null == language) {
             language = MgnlContext.getSystemContext().getLocale().getLanguage();
         }
@@ -163,21 +163,21 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     @Override
     public String getName() {
-        return (String) this.properties.get(Entity.NAME);
+        return this.properties.get(Entity.NAME);
     }
 
     @Override
     public String getPassword() {
-        return (String) this.properties.get(Entity.PASSWORD);
+        return this.properties.get(Entity.PASSWORD);
     }
-    
+
     public String getEmail() {
-        return (String) this.properties.get(Entity.EMAIL);
+        return this.properties.get(Entity.EMAIL);
     }
 
     @Override
     public String getProperty(String propertyName) {
-        String property = (String) this.properties.get(propertyName);
+        String property = this.properties.get(propertyName);
         if(null == property){
             log.debug("Unable to retrieve property " + propertyName + " for user " + getName());
         }
