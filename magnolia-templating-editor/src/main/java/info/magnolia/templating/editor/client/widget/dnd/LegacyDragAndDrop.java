@@ -157,7 +157,7 @@ public class LegacyDragAndDrop {
 
                 }
             }
-            ComponentPlaceHolder placeholder = (ComponentPlaceHolder) PageEditor.model.getComponentPlaceHolder(area);
+            ComponentPlaceHolder placeholder = PageEditor.model.getComponentPlaceHolder(area);
             if (placeholder != null) {
                 placeholder.setStyleName("moveOngoing", isMove);
             }
