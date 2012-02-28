@@ -123,6 +123,7 @@ div.mgnlEditorBarPrimaryButtons {
 div.mgnlEditorPreviewButton {
   width: auto !important;
   height: 24px !important;
+  float: left !important;
 }
 
 /*
