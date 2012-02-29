@@ -60,14 +60,11 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
         session = MgnlContext.getJCRSession("website");
 
         Node included = session.getRootNode().addNode("included");
-        included.setProperty("channels", new Value[]{
-                session.getValueFactory().createValue("mobile"),
-                session.getValueFactory().createValue("extended"),
-        });
+        included.setProperty(ChannelVisibilityContentDecorator.EXCLUDE_CHANNEL_PROPERTY_NAME, new Value[]{});
 
         Node excluded = session.getRootNode().addNode("excluded");
-        excluded.setProperty("channels", new Value[]{
-                session.getValueFactory().createValue("extended"),
+        excluded.setProperty(ChannelVisibilityContentDecorator.EXCLUDE_CHANNEL_PROPERTY_NAME, new Value[]{
+                session.getValueFactory().createValue("mobile"),
         });
         excluded.addNode("childOfExcluded");
 
@@ -89,9 +86,9 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     public void testItemExists() throws Exception {
 
         assertTrue(sessionWrapper.itemExists("/included"));
-        assertTrue(sessionWrapper.itemExists("/included/channels"));
+        assertTrue(sessionWrapper.itemExists("/included/excludeChannels"));
         assertFalse(sessionWrapper.itemExists("/excluded"));
-        assertFalse(sessionWrapper.itemExists("/excluded/channels"));
+        assertFalse(sessionWrapper.itemExists("/excluded/excludeChannels"));
         assertFalse(sessionWrapper.itemExists("/excluded/childOfExcluded"));
         assertTrue(sessionWrapper.itemExists("/unspecified"));
     }
@@ -99,8 +96,8 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     @Test
     public void testPropertyExists() throws Exception {
 
-        assertTrue(sessionWrapper.propertyExists("/included/channels"));
-        assertFalse(sessionWrapper.propertyExists("/excluded/channels"));
+        assertTrue(sessionWrapper.propertyExists("/included/excludeChannels"));
+        assertFalse(sessionWrapper.propertyExists("/excluded/excludeChannels"));
     }
 
     @Test
@@ -126,7 +123,7 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     public void testGetItem() throws Exception {
 
         sessionWrapper.getItem("/included");
-        sessionWrapper.getItem("/included/channels");
+        sessionWrapper.getItem("/included/excludeChannels");
         sessionWrapper.getItem("/unspecified");
 
         try {
@@ -136,7 +133,7 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
         }
 
         try {
-            sessionWrapper.getItem("/excluded/channels");
+            sessionWrapper.getItem("/excluded/excludeChannels");
             fail();
         } catch (PathNotFoundException expected) {
         }
@@ -145,10 +142,10 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     @Test
     public void testGetProperty() throws Exception {
 
-        sessionWrapper.getProperty("/included/channels");
+        sessionWrapper.getProperty("/included/excludeChannels");
 
         try {
-            sessionWrapper.getProperty("/excluded/channels");
+            sessionWrapper.getProperty("/excluded/excludeChannels");
             fail();
         } catch (PathNotFoundException expected) {
         }
@@ -157,7 +154,7 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
     @Test
     public void testCanRemoveVisibleItem() throws Exception {
         sessionWrapper.removeItem("/unspecified");
-        sessionWrapper.removeItem("/included/channels");
+        sessionWrapper.removeItem("/included/excludeChannels");
         sessionWrapper.removeItem("/included");
     }
 
@@ -169,7 +166,7 @@ public class ChannelVisibilitySessionWrapperTest extends RepositoryTestCase {
         } catch (PathNotFoundException expected) {
         }
         try {
-            sessionWrapper.removeItem("/excluded/channels");
+            sessionWrapper.removeItem("/excluded/excludeChannels");
             fail();
         } catch (PathNotFoundException expected) {
         }

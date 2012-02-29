@@ -237,7 +237,7 @@ public class PageBar extends AbstractBar {
 
         @Override
         public void execute() {
-            PageEditor.createChannelPreview("desktop", deviceType, orientation);
+            PageEditor.createChannelPreview("tablet", deviceType, orientation);
         }
     }
 }

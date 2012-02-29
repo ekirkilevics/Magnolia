@@ -43,13 +43,13 @@ import info.magnolia.jcr.decoration.NodePredicateContentDecorator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 
 /**
- * ContentDecorator that hides content based on a multi-value property called channels.
+ * ContentDecorator that hides content based on a multi-value property called <code>excludedChannels</code>.
  * <p/>The node is filtered out if all the these requirements are fulfilled:
  * <ul>
- * <li>it has a property named "channels"</li>
+ * <li>it has a property named "excludedChannels"</li>
  * <li>the property is a multi-value property</li>
  * <li>it has at least one value</li>
- * <li>none of the values match the current channel</li>
+ * <li>one of the values matches the current channel</li>
  * </ul>
  * <p/>
  * If the current channel is null or equal to "all" (case-insensitive) nothing is filtered out.
@@ -58,9 +58,9 @@ import info.magnolia.jcr.predicate.AbstractPredicate;
  */
 public class ChannelVisibilityContentDecorator extends NodePredicateContentDecorator {
 
-    private static class ChannelVisibilityPredicate extends AbstractPredicate<Node> {
+    public static final String EXCLUDE_CHANNEL_PROPERTY_NAME = "excludeChannels";
 
-        public static final String CHANNEL_PROPERTY_NAME = "channels";
+    private static class ChannelVisibilityPredicate extends AbstractPredicate<Node> {
 
         private final String currentChannel;
 
@@ -74,8 +74,8 @@ public class ChannelVisibilityContentDecorator extends NodePredicateContentDecor
                 if (currentChannel == null || currentChannel.equalsIgnoreCase("all")) {
                     return true;
                 }
-                if (node.hasProperty(CHANNEL_PROPERTY_NAME)) {
-                    Property channel = node.getProperty(CHANNEL_PROPERTY_NAME);
+                if (node.hasProperty(EXCLUDE_CHANNEL_PROPERTY_NAME)) {
+                    Property channel = node.getProperty(EXCLUDE_CHANNEL_PROPERTY_NAME);
                     if (channel.isMultiple()) {
                         Value[] values = channel.getValues();
                         if (values.length == 0) {
@@ -83,10 +83,10 @@ public class ChannelVisibilityContentDecorator extends NodePredicateContentDecor
                         }
                         for (Value value : values) {
                             if (value.getString().equals(currentChannel)) {
-                                return true;
+                                return false;
                             }
                         }
-                        return false;
+                        return true;
                     }
                 }
                 return true;
