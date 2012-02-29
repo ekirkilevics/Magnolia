@@ -43,10 +43,10 @@ import info.magnolia.jcr.decoration.NodePredicateContentDecorator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 
 /**
- * ContentDecorator that hides content based on a multi-value property called <code>excludedChannels</code>.
+ * ContentDecorator that hides content based on a multi-value property called <code>excludeChannels</code>.
  * <p/>The node is filtered out if all the these requirements are fulfilled:
  * <ul>
- * <li>it has a property named "excludedChannels"</li>
+ * <li>it has a property named "excludeChannels"</li>
  * <li>the property is a multi-value property</li>
  * <li>it has at least one value</li>
  * <li>one of the values matches the current channel</li>
