@@ -36,7 +36,9 @@ package info.magnolia.rendering.renderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
+import info.magnolia.jcr.wrapper.HTMLEscapingNodeWrapper;
 import info.magnolia.jcr.wrapper.I18nNodeWrapper;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.MgnlInstantiationException;
@@ -163,7 +165,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             clazz = RenderingModelImpl.class;
         }
 
-        final Node wrappedContent = wrapNodeForModel(content, getMainContentSafely(content));
+        final Node wrappedContent = wrapNode(content, getMainContentSafely(content));
 
         return newModel(clazz, wrappedContent, definition, parentModel);
     }
@@ -232,7 +234,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     protected void setupContext(final Map<String, Object> ctx, Node content, RenderableDefinition definition, RenderingModel<?> model, Object actionResult){
         final Node mainContent = getMainContentSafely(content);
 
-        setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNodeForTemplate(content, mainContent)) : null);
+        setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNode(content, mainContent)) : null);
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "model", model);
@@ -267,20 +269,15 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * @param content the actual content
      * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
-    protected Node wrapNodeForModel(Node content, Node mainContent) {
+    protected Node wrapNode(Node content, Node mainContent) {
         content = wrapWithChannelVisibilityWrapper(content);
-        return new I18nNodeWrapper(content);
-    }
-
-    /**
-     * Wraps the current content node before exposing it to the template renderer.
-     * @param content the actual content being exposed to the template
-     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
-     * TODO : return an Object instance instead - more flexibility for the template engine ?
-     */
-    protected Node wrapNodeForTemplate(Node content, Node mainContent) {
-        content = wrapWithChannelVisibilityWrapper(content);
-        return new I18nNodeWrapper(content);
+        if(!NodeUtil.isWrappedWith(content, I18nNodeWrapper.class)){
+            content = new I18nNodeWrapper(content);
+        }
+        if(!NodeUtil.isWrappedWith(content, HTMLEscapingNodeWrapper.class)){
+            content = new HTMLEscapingNodeWrapper(content, true);
+        }
+        return content;
     }
 
     private Node wrapWithChannelVisibilityWrapper(Node content) {
