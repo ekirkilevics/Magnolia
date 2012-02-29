@@ -102,6 +102,7 @@ public class PageEditor extends HTML implements EntryPoint {
     private static final String MGNL_CHANNEL_PARAMETER = "mgnlChannel";
     private static final String MGNL_PREVIEW_PARAMETER = "mgnlPreview";
     private static final String MGNL_INTERCEPT_PARAMETER = "mgnlIntercept";
+    private static final String MGNL_VERSION_PARAMETER = "mgnlVersion";
 
     private static String locale;
     public final static ModelStorage model = ModelStorage.getInstance();
@@ -115,11 +116,13 @@ public class PageEditor extends HTML implements EntryPoint {
     @Override
     public void onModuleLoad() {
 
+        String mgnlVersion = Window.Location.getParameter(MGNL_VERSION_PARAMETER);
+        if(mgnlVersion != null) {
+            return;
+        }
+
         String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_PARAMETER);
-        String mgnlIntercept = Window.Location.getParameter(MGNL_INTERCEPT_PARAMETER);
-        //mgnlIntercept param helps telling "traditional" desktop preview from "tablet" desktop one
-        //TODO find a cleaner, configurable way to achieve this.
-        if(mgnlChannel != null && !"PREVIEW".equalsIgnoreCase(mgnlIntercept)) {
+        if(mgnlChannel != null) {
             GWT.log("Found " + mgnlChannel + " in request, post processing links...");
             postProcessLinksOnMobilePreview(Document.get().getDocumentElement(), mgnlChannel);
             return;
@@ -433,10 +436,6 @@ public class PageEditor extends HTML implements EntryPoint {
 
         urlBuilder.setParameter(MGNL_INTERCEPT_PARAMETER, "PREVIEW");
         urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, String.valueOf(isPreview()));
-
-        if(isPreview()) {
-            urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, DEFAULT_PREVIEW_CHANNEL);
-        }
 
         final String newUrl = urlBuilder.buildString();
         GWT.log("New url is [" + newUrl + "]");
