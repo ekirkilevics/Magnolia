@@ -139,4 +139,17 @@ public class MgnlGroupTest {
 
         assertNull(group);
     }
+
+    @Test
+    public void testGetAllGroupsFromOneConcreteGroup(){
+        final Collection<String> groups= gman.getAllGroups("groupE");
+        assertEquals(4, groups.size());
+        assertTrue(groups.contains("groupA"));
+        assertTrue(groups.contains("groupC"));
+        assertTrue(groups.contains("groupD"));
+        assertTrue(groups.contains("groupF"));
+
+        final Collection<String> groupsD= gman.getAllGroups("groupD");
+        assertEquals(0, groupsD.size());
+    }
 }
