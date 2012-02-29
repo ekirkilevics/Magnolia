@@ -42,6 +42,7 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -111,6 +112,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         elementWrapper.setStyleName("mgnlEditorPlaceholderElements");
 
         if (this.showAddButton){
+            elementWrapper.getElement().getStyle().setCursor(Cursor.POINTER);
             elementWrapper.addDomHandler(new MouseDownHandler() {
 
                 @Override
