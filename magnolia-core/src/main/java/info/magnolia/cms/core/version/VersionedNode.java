@@ -36,7 +36,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
-import info.magnolia.jcr.wrapper.PropertyWrappingNodeWrapper;
+import info.magnolia.jcr.wrapper.PropertyAndChildWrappingNodeWrapper;
 
 import java.util.Calendar;
 
@@ -57,13 +57,13 @@ import javax.jcr.version.VersionHistory;
  *
  * @version $Id$
  */
-public class VersionedNode extends PropertyWrappingNodeWrapper implements Version {
+public class VersionedNode extends PropertyAndChildWrappingNodeWrapper implements Version {
 
 
     private final Version version;
     private final Node baseNode;
 
-    private class VersionedNodeChild extends PropertyWrappingNodeWrapper implements Node {
+    private class VersionedNodeChild extends PropertyAndChildWrappingNodeWrapper implements Node {
 
         private final DelegateNodeWrapper versionedParent;
 

@@ -43,7 +43,7 @@ import javax.jcr.Property;
  * @version $Id$
  * @see HTMLEscapingPropertyWrapper
  */
-public class HTMLEscapingNodeWrapper extends PropertyWrappingNodeWrapper {
+public class HTMLEscapingNodeWrapper extends PropertyAndChildWrappingNodeWrapper {
 
     private boolean transformLineBreaks = false;
 
