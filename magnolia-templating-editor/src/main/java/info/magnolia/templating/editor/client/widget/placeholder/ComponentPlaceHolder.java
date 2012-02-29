@@ -63,6 +63,8 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private String areaWorkspace = "";
     private String areaPath = "";
     private FlowPanel buttonWrapper;
+    private String label;
+
 
     public ComponentPlaceHolder(MgnlElement mgnlElement) throws IllegalArgumentException {
 
@@ -80,10 +82,14 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
 
         controlBar.add(buttonWrapper);
+        String labelString = "New Component";
+        if (this.label != null && !this.label.isEmpty()) {
+            labelString = "New " + label + " Component";
+        }
 
-        Label label = new Label("New Component");
-        label.setStyleName("mgnlEditorBarLabel");
-        controlBar.add(label);
+        Label labelName = new Label(labelString);
+        labelName.setStyleName("mgnlEditorBarLabel");
+        controlBar.add(labelName);
 
         add(controlBar);
 
@@ -174,6 +180,8 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         int i = areaContent.indexOf(':');
         this.areaWorkspace = areaContent.substring(0, i);
         this.areaPath = areaContent.substring(i + 1);
+
+        this.label = getMgnlElement().getAttribute("label");
 
         if(AreaDefinition.TYPE_NO_COMPONENT.equals(this.type)) {
             this.availableComponents = "";

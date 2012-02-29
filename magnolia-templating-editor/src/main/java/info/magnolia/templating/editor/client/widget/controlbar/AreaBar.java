@@ -81,6 +81,20 @@ public class AreaBar extends AbstractBar {
     private void createButtons() {
         if(this.optional) {
             if (this.created) {
+
+                if (this.dialog != null) {
+                    PushButton editButton = new PushButton();
+                    editButton.addClickHandler(new ClickHandler() {
+                        @Override
+                        public void onClick(ClickEvent event) {
+                            PageEditor.openDialog(dialog, workspace, path, null, null);
+                        }
+                    });
+                    editButton.setStylePrimaryName("mgnlEditorPushButton");
+                    editButton.addStyleName("edit");
+                    addPrimaryButton(editButton);
+                }
+
                 PushButton removeButton = new PushButton();
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override
@@ -107,18 +121,7 @@ public class AreaBar extends AbstractBar {
                 addSecondaryButton(createbutton);
             }
         }
-        if (this.dialog != null) {
-            PushButton editButton = new PushButton();
-            editButton.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    PageEditor.openDialog(dialog, workspace, path, null, null);
-                }
-            });
-            editButton.setStylePrimaryName("mgnlEditorPushButton");
-            editButton.addStyleName("edit");
-            addPrimaryButton(editButton);
-        }
+
     }
 
     private void checkMandatories(Map<String, String> attributes) throws IllegalArgumentException {
