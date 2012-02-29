@@ -40,7 +40,6 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SiblingsHelper;
-import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
@@ -576,14 +575,7 @@ public class TemplatingFunctions {
      * Removes escaping of HTML on properties.
      */
     public Node decode(Node content){
-        if (content instanceof HTMLEscapingNodeWrapper) {
-            try {
-                return ((HTMLEscapingNodeWrapper) content).getWrappedNode();
-            } catch (RepositoryException e) {
-                throw new RuntimeRepositoryException(e);
-            }
-        }
-        return content;
+        return NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
     }
 
     /**
