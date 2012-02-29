@@ -38,10 +38,12 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.freemarker.FreemarkerUtil;
+import info.magnolia.init.MagnoliaConfigurationProperties;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,8 +62,15 @@ public class FormClientCallback extends AbstractHttpClientCallback {
     private static final Logger log = LoggerFactory.getLogger(FormClientCallback.class);
 
     public static final String ERROR_STRING = "errorString";
+    public static final String SERVICE_CONTACT = "serviceContact";
 
+    private MagnoliaConfigurationProperties configurationProperties;
     private String loginForm;
+
+    @Inject
+    public FormClientCallback(MagnoliaConfigurationProperties configurationProperties) {
+        this.configurationProperties = configurationProperties;
+    }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) {
@@ -101,6 +110,10 @@ public class FormClientCallback extends AbstractHttpClientCallback {
             final Messages mm = MessagesManager.getMessages();
             final String defaultMessage = mm.get("login.defaultError");
             messages.put(ERROR_STRING, mm.getWithDefault("login." + exName, defaultMessage));
+        }
+        String serviceContact = this.configurationProperties.getProperty("magnolia.service.contact");
+        if (serviceContact != null) {
+            messages.put(SERVICE_CONTACT, serviceContact);
         }
         return messages;
     }

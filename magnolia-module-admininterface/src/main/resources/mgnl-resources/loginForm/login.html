@@ -44,16 +44,14 @@
       </div>
     </div>
     <div id="footer">
-      &copy; Copyright 2003-2011
-      <a href="http://www.magnolia-cms.com" id="externallink">Magnolia International Ltd.</a>
-       -
-      St. Johanns-Vorstadt 38, 4056 Basel, Switzerland
-       <br/>
-      Tel +41 61 228 9000 (9AM-5PM GMT+1)
-       -
-      <a href="mailto:info@magnolia-cms.com">info@magnolia-cms.com</a>
-      <br/>
+      [#if serviceContact?exists]
+        ${serviceContact?html}
+        <br/>
+      [/#if]
       Magnolia is a registered trademark of Magnolia International Ltd.
+      <br/>
+      &copy; Copyright 2003-2012
+      <a href="http://www.magnolia-cms.com" id="externallink">Magnolia International Ltd.</a>
     </div>
   </body>
 </html>
