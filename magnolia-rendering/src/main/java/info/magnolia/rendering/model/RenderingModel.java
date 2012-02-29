@@ -35,7 +35,6 @@ package info.magnolia.rendering.model;
 
 import javax.jcr.Node;
 
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 
@@ -82,12 +81,6 @@ public interface RenderingModel <RD extends RenderableDefinition> {
      * The content node tied to this model.
      */
     Node getContent();
-
-    /**
-     * The content node tied to this model exposed as a {@link ContentMap}.
-     * @return
-     */
-    ContentMap getContentMap();
 
     /**
      * The renderable (template, area or component) tied to this model.

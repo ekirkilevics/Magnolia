@@ -35,7 +35,6 @@ package info.magnolia.rendering.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -59,19 +58,6 @@ public class RenderingModelImplTest {
 
         // THEN
         assertEquals(content, result);
-    }
-
-    @Test
-    public void testGetContentMap() {
-        // GIVEN
-        MockNode content = new MockNode();
-        RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(content, null,null);
-
-        // WHEN
-        ContentMap result = model.getContentMap();
-
-        // THEN
-        assertEquals(content, result.getJCRNode());
     }
 
     @Test

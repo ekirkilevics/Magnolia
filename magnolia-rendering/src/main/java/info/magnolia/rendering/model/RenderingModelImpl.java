@@ -35,7 +35,6 @@ package info.magnolia.rendering.model;
 
 import javax.jcr.Node;
 
-import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.rendering.template.RenderableDefinition;
 
 
@@ -73,11 +72,6 @@ public class RenderingModelImpl<RD extends RenderableDefinition> implements Rend
     @Override
     public Node getContent() {
         return this.content;
-    }
-
-    @Override
-    public ContentMap getContentMap() {
-        return new ContentMap(content);
     }
 
     /**
