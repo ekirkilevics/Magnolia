@@ -36,6 +36,7 @@ package info.magnolia.rendering.template.assignment;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Node;
@@ -47,6 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.MetaDataUtil;
@@ -131,6 +134,20 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
                 availableTemplateDefinitions.add(templateDefinition);
             }
         }
+
+        Collections.sort(availableTemplateDefinitions, new Comparator<TemplateDefinition>() {
+
+            @Override
+            public int compare(TemplateDefinition lhs, TemplateDefinition rhs) {
+                return getI18nTitle(lhs).compareTo(getI18nTitle(rhs));
+            }
+
+            private String getI18nTitle(TemplateDefinition templateDefinition) {
+                Messages messages = MessagesManager.getMessages(templateDefinition.getI18nBasename());
+                return messages.getWithDefault(templateDefinition.getTitle(), templateDefinition.getTitle());
+            }
+        });
+
         return availableTemplateDefinitions;
     }
 
