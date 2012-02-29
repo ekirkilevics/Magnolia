@@ -37,6 +37,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
@@ -98,6 +99,17 @@ public class RenderingFilter extends AbstractMgnlFilter {
 
                 Node content = aggregationState.getMainContent().getJCRNode();
 
+                // if the content isn't visible output a 404
+                if (!isVisible(content, request, response, aggregationState)) {
+                    if (!response.isCommitted()) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    }
+                    else {
+                        log.info("Unable to redirect to 404 page for {}, response is already committed", request.getRequestURI());
+                    }
+                    return;
+                }
+
                 render(content, templateName, response);
 
                 try {
@@ -133,6 +145,20 @@ public class RenderingFilter extends AbstractMgnlFilter {
         // TODO don't make it a dead end
         //      currently we can't process the chain because there is no content/nop servlet
         // chain.doFilter(request, response);
+    }
+
+    protected boolean isVisible(Node content, HttpServletRequest request, HttpServletResponse response, AggregationState aggregationState) {
+
+        // if there's a channel set test if the content is excluded for the current channel
+        if (aggregationState.getChannel() != null) {
+            String currentChannel = aggregationState.getChannel().getName();
+            if (StringUtils.isNotEmpty(currentChannel) && !currentChannel.equalsIgnoreCase("all")) {
+                ChannelVisibilityContentDecorator decorator = new ChannelVisibilityContentDecorator(currentChannel);
+                return decorator.evaluateNode(content);
+            }
+        }
+
+        return true;
     }
 
     protected void render(Node content, String templateName, HttpServletResponse response) throws RenderException {

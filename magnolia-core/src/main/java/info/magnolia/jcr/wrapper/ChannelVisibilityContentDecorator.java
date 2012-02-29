@@ -38,6 +38,8 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.decoration.NodePredicateContentDecorator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
@@ -71,22 +73,21 @@ public class ChannelVisibilityContentDecorator extends NodePredicateContentDecor
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                if (currentChannel == null || currentChannel.equalsIgnoreCase("all")) {
-                    return true;
-                }
-                if (node.hasProperty(EXCLUDE_CHANNEL_PROPERTY_NAME)) {
-                    Property channel = node.getProperty(EXCLUDE_CHANNEL_PROPERTY_NAME);
-                    if (channel.isMultiple()) {
-                        Value[] values = channel.getValues();
-                        if (values.length == 0) {
+                if (StringUtils.isNotEmpty(currentChannel) && !currentChannel.equalsIgnoreCase("all")) {
+                    if (node.hasProperty(EXCLUDE_CHANNEL_PROPERTY_NAME)) {
+                        Property channel = node.getProperty(EXCLUDE_CHANNEL_PROPERTY_NAME);
+                        if (channel.isMultiple()) {
+                            Value[] values = channel.getValues();
+                            if (values.length == 0) {
+                                return true;
+                            }
+                            for (Value value : values) {
+                                if (value.getString().equals(currentChannel)) {
+                                    return false;
+                                }
+                            }
                             return true;
                         }
-                        for (Value value : values) {
-                            if (value.getString().equals(currentChannel)) {
-                                return false;
-                            }
-                        }
-                        return true;
                     }
                 }
                 return true;
