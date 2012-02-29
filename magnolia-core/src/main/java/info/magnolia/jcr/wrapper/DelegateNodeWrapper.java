@@ -33,8 +33,6 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.jcr.RuntimeRepositoryException;
-
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -87,7 +85,7 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
         setWrappedNode(node);
     }
 
-    public Node getWrappedNode() throws RepositoryException {
+    public Node getWrappedNode() {
         return this.wrapped;
     }
 
@@ -498,32 +496,17 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
 
     @Override
     public boolean isModified() {
-        try {
-            return getWrappedNode().isModified();
-        } catch (RepositoryException e) {
-            // isModified() does not throw RepositoryException but getWrappedNode() may.
-            throw new RuntimeRepositoryException(e);
-        }
+        return getWrappedNode().isModified();
     }
 
     @Override
     public boolean isNew() {
-        try {
-            return getWrappedNode().isNew();
-        } catch (RepositoryException e) {
-            // isNew() does not throw RepositoryException but getWrappedNode() may.
-            throw new RuntimeRepositoryException(e);
-        }
+        return getWrappedNode().isNew();
     }
 
     @Override
     public boolean isNode() {
-        try {
-            return getWrappedNode().isNode();
-        } catch (RepositoryException e) {
-            // isNode() does not throw RepositoryException but getWrappedNode() may.
-            throw new RuntimeRepositoryException(e);
-        }
+        return getWrappedNode().isNode();
     }
 
     @Override
@@ -550,7 +533,7 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
      * Removes a wrapper by type. The wrapper can be deep in a chain of wrappers in which case wrappers before it will
      * be cloned creating a new chain that leads to the same real node.
      */
-    public Node deepUnwrap(Class<? extends DelegateNodeWrapper> wrapper) throws RepositoryException {
+    public Node deepUnwrap(Class<? extends DelegateNodeWrapper> wrapper)  {
 
         if (this.getClass().equals(wrapper)) {
             return getWrappedNode();

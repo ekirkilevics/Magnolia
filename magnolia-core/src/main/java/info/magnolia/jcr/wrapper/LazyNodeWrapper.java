@@ -64,10 +64,15 @@ public class LazyNodeWrapper extends DelegateNodeWrapper {
     }
 
     @Override
-    public synchronized Node getWrappedNode() throws RepositoryException {
-        if (node == null || !node.getSession().isLive()) {
-            Session session = getSessionForWrappedNode(this.workspace);
-            node = session.getNodeByIdentifier(this.nodeIdentifier);
+    public synchronized Node getWrappedNode() {
+        try {
+            if (node == null || !node.getSession().isLive()) {
+                Session session = getSessionForWrappedNode(this.workspace);
+                node = session.getNodeByIdentifier(this.nodeIdentifier);
+            }
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
         return node;
     }

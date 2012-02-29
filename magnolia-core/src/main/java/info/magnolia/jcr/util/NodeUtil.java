@@ -185,12 +185,24 @@ public class NodeUtil {
      * Removes a wrapper by type. The wrapper can be deep in a chain of wrappers in which case wrappers before it will
      * be cloned creating a new chain that leads to the same real node.
      */
-    public static Node deepUnwrap(Node node, Class<? extends DelegateNodeWrapper> wrapper) throws RepositoryException {
+    public static Node deepUnwrap(Node node, Class<? extends DelegateNodeWrapper> wrapper) {
         if (node instanceof DelegateNodeWrapper) {
             return ((DelegateNodeWrapper) node).deepUnwrap(wrapper);
         }
         return node;
     }
+
+    public static boolean isWrappedWith(Node node, Class<? extends DelegateNodeWrapper> wrapper) {
+        if (wrapper.isInstance(node)){
+            return true;
+        }
+
+        if (node instanceof DelegateNodeWrapper) {
+            return isWrappedWith(((DelegateNodeWrapper)node).getWrappedNode(), wrapper);
+        }
+        return false;
+    }
+
 
     /**
      * Convenience - delegate to {@link Node#orderBefore(String, String)}.
