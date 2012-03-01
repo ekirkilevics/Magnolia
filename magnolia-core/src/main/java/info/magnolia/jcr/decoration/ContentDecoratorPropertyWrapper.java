@@ -34,6 +34,7 @@
 package info.magnolia.jcr.decoration;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -60,6 +61,16 @@ public class ContentDecoratorPropertyWrapper extends DelegatePropertyWrapper {
     @Override
     public Session getSession() throws RepositoryException {
         return wrapSession(super.getSession());
+    }
+
+    @Override
+    public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+        Item item = super.getAncestor(depth);
+        if (item.isNode()) {
+            return wrapNode((Node) item);
+        } else {
+            return wrapProperty((Property) item);
+        }
     }
 
     @Override
