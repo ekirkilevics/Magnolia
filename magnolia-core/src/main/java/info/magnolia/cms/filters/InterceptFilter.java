@@ -34,7 +34,6 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Channel;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -112,8 +111,6 @@ public class InterceptFilter extends AbstractMgnlFilter {
      */
     public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview";
 
-    private static final Channel DEFAULT_CHANNEL = new Channel();
-
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
@@ -182,12 +179,10 @@ public class InterceptFilter extends AbstractMgnlFilter {
                     } else {
                         MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                         MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
-                        aggregationState.setChannel(DEFAULT_CHANNEL);
                     }
                 } else {
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                     MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
-                    aggregationState.setChannel(DEFAULT_CHANNEL);
                 }
             } else if (ACTION_NODE_DELETE.equals(action)) {
                 // delete paragraph

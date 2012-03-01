@@ -121,7 +121,9 @@ public class PageEditor extends HTML implements EntryPoint {
         }
 
         String mgnlChannel = Window.Location.getParameter(MGNL_CHANNEL_PARAMETER);
-        if(mgnlChannel != null) {
+        boolean isMobile = "smartphone".equals(mgnlChannel) || "tablet".equals(mgnlChannel);
+
+        if(isMobile) {
             GWT.log("Found " + mgnlChannel + " in request, post processing links...");
             postProcessLinksOnMobilePreview(Document.get().getDocumentElement(), mgnlChannel);
             return;
@@ -193,18 +195,8 @@ public class PageEditor extends HTML implements EntryPoint {
         onPageEditorReady();
     }
 
-    /**
-     * TODO: rename and/or remove arguments no longer needed (collectionName, nodeName).
-     */
-    public static void openDialog(String dialog, String workspace, String path, String collectionName, String nodeName) {
-        if (collectionName == null) {
-            collectionName = "";
-        }
-        if (nodeName == null) {
-            nodeName = "";
-        }
-
-        JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, dialog, workspace, "", "", "", locale);
+    public static void openDialog(String dialog, String workspace, String path) {
+        JavascriptUtils.mgnlOpenDialog(path, "", "", dialog, workspace, "", "", "", locale);
     }
 
     public static void moveComponentStart(String id) {
@@ -301,8 +293,8 @@ public class PageEditor extends HTML implements EntryPoint {
 
     }
 
-    public static void createChannelPreview(final String channelType, final String deviceType, final Orientation orientation) {
-        GWT.log("Creating preview for channel type [" + channelType + "] ");
+    public static void createChannelPreview(final String channelName, final Orientation orientation) {
+        GWT.log("Creating preview for channel type [" + channelName + "] ");
 
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
 
@@ -311,9 +303,8 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_INTERCEPT_PARAMETER);
         urlBuilder.removeParameter(MGNL_CHANNEL_PARAMETER);
 
-        urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, channelType);
-        urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, "true");
-        final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, deviceType);
+        urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, channelName);
+        final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, channelName);
         //this causes the pop up to show
         previewChannelWidget.center();
     }
@@ -435,6 +426,12 @@ public class PageEditor extends HTML implements EntryPoint {
 
         urlBuilder.setParameter(MGNL_INTERCEPT_PARAMETER, "PREVIEW");
         urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, String.valueOf(isPreview()));
+
+        if(isPreview()) {
+            urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, "desktop");
+        } else {
+            urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, "all");
+        }
 
         final String newUrl = urlBuilder.buildString();
         GWT.log("New url is [" + newUrl + "]");

@@ -176,7 +176,7 @@ public class ComponentBar extends AbstractBar  {
             edit.addClickHandler(new ClickHandler() {
                 @Override
                 public void onClick(ClickEvent event) {
-                    PageEditor.openDialog(dialog, workspace, path, null, null);
+                    PageEditor.openDialog(dialog, workspace, path);
                 }
             });
             edit.setStylePrimaryName("mgnlEditorPushButton");

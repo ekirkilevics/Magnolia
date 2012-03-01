@@ -148,7 +148,7 @@ public class PageBar extends AbstractBar {
         properties.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
-                PageEditor.openDialog(dialog, workspace, path, null, null);
+                PageEditor.openDialog(dialog, workspace, path);
             }
         });
         addButton(properties, Float.RIGHT);
@@ -159,8 +159,8 @@ public class PageBar extends AbstractBar {
         }
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
-        MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new SmartphonePreviewCommand("smartphone", Orientation.PORTRAIT));
-        MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new TabletPreviewCommand("tablet", Orientation.LANDSCAPE));
+        MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new SmartphonePreviewCommand(Orientation.PORTRAIT));
+        MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new TabletPreviewCommand(Orientation.LANDSCAPE));
 
         List<MenuItem> options = new ArrayList<MenuItem>();
         options.add(desktop);
@@ -197,17 +197,15 @@ public class PageBar extends AbstractBar {
 
     private class SmartphonePreviewCommand implements Command {
 
-        private String deviceType;
         private Orientation orientation;
 
-        public SmartphonePreviewCommand(final String deviceType, final Orientation orientation) {
-           this.deviceType = deviceType;
+        public SmartphonePreviewCommand(final Orientation orientation) {
            this.orientation = orientation;
         }
 
         @Override
         public void execute() {
-            PageEditor.createChannelPreview("smartphone", deviceType, orientation);
+            PageEditor.createChannelPreview("smartphone", orientation);
         }
     }
 
@@ -227,17 +225,15 @@ public class PageBar extends AbstractBar {
 
     private class TabletPreviewCommand implements Command {
 
-        private String deviceType;
         private Orientation orientation;
 
-        public TabletPreviewCommand(final String deviceType, final Orientation orientation) {
-           this.deviceType = deviceType;
+        public TabletPreviewCommand(final Orientation orientation) {
            this.orientation = orientation;
         }
 
         @Override
         public void execute() {
-            PageEditor.createChannelPreview("tablet", deviceType, orientation);
+            PageEditor.createChannelPreview("tablet", orientation);
         }
     }
 }

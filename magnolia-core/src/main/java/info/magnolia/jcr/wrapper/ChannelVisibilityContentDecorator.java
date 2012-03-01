@@ -40,6 +40,7 @@ import javax.jcr.Value;
 
 import org.apache.commons.lang.StringUtils;
 
+import info.magnolia.channel.ChannelResolver;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.decoration.NodePredicateContentDecorator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
@@ -73,7 +74,7 @@ public class ChannelVisibilityContentDecorator extends NodePredicateContentDecor
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                if (StringUtils.isNotEmpty(currentChannel) && !currentChannel.equalsIgnoreCase("all")) {
+                if (StringUtils.isNotEmpty(currentChannel) && !currentChannel.equalsIgnoreCase(ChannelResolver.ALL)) {
                     if (node.hasProperty(EXCLUDE_CHANNEL_PROPERTY_NAME)) {
                         Property channel = node.getProperty(EXCLUDE_CHANNEL_PROPERTY_NAME);
                         if (channel.isMultiple()) {

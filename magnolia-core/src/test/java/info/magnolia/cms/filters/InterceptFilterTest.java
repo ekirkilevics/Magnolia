@@ -120,7 +120,6 @@ public class InterceptFilterTest {
 
         //THEN
         assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
-        assertNull(MgnlContext.getAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE));
 
         //GIVEN
         ctx.setAttribute(MGNL_PREVIEW, "true", Context.SESSION_SCOPE);
@@ -132,7 +131,6 @@ public class InterceptFilterTest {
 
         //THEN
         assertNull(MgnlContext.getAttribute(MGNL_PREVIEW, Context.SESSION_SCOPE));
-        assertNull(MgnlContext.getAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE));
     }
 
     @Test(expected=PathNotFoundException.class)

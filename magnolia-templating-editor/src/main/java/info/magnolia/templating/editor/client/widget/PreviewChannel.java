@@ -58,7 +58,7 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
 
     private String landscapeCssStyleSuffix = "Landscape";
     private String portraitCssStyleSuffix = "Portrait";
-    private String deviceType = "smartphone";
+    private String channel = "";
 
     /**
      * Orientation modes for this widget.
@@ -69,13 +69,13 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
 
     private Orientation currentOrientation = Orientation.LANDSCAPE;
 
-    public PreviewChannel(final String url, final Orientation orientation, final String deviceType) {
-        this.deviceType = deviceType;
+    public PreviewChannel(final String url, final Orientation orientation, final String channel) {
+        this.channel = channel;
         this.currentOrientation = orientation;
 
         setStylePrimaryName("mobilePreview");
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
-        addStyleName(orientation == Orientation.LANDSCAPE ? deviceType + landscapeCssStyleSuffix : deviceType + portraitCssStyleSuffix);
+        addStyleName(orientation == Orientation.LANDSCAPE ? channel + landscapeCssStyleSuffix : channel + portraitCssStyleSuffix);
 
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
@@ -106,7 +106,7 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
     }
 
     public String getDeviceType() {
-        return deviceType;
+        return channel;
     }
 
     public String getLandscapeCssStyleSuffix() {
