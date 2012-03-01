@@ -28,7 +28,7 @@
             [#-- ****** page content ****** --]
             <h1>${content.title!content.@name}</h1>
             [#if content.text?has_content]
-                <p>${content.text}</p>
+                <p>${cmsfn.decode(content).text}</p>
             [/#if]
 
             <div id="wrapper-2">

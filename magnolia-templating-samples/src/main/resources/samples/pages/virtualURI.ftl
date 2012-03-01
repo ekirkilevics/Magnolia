@@ -22,7 +22,7 @@
 
 
             <h1>${content.title!content.@name}</h1><br />
-            <p>${content.text!""}</p><br />
+            <p>${cmsfn.decode(content).text!""}</p><br />
 
             <div id="main">
                 <p>Select a product:

@@ -3,7 +3,7 @@
 
 <h3>${content.title!content.@name}</h3>
 
-Text: ${content.text!("No text defined yet")}
+Text: ${cmsfn.decode(content).text!"No text defined yet"}
 
 <p>
     [#if content.image?has_content]

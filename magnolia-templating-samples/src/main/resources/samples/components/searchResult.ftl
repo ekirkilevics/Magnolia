@@ -3,7 +3,7 @@
 
 <h3>${content.title!content.@name}</h3>
 [#if content.text?has_content]
-    <p>${content.text}</p>
+    <p>${cmsfn.decode(content).text}</p>
 [/#if]
 
 

@@ -19,7 +19,7 @@
 Text:
   <c:choose>
     <c:when test="${not empty content.text}">
-      ${content.text}
+      ${cmsfn.decode(content).text}
     </c:when>
     <c:otherwise>
       No text defined yet

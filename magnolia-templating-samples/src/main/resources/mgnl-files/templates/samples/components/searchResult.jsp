@@ -20,7 +20,7 @@
 
 <c:if test="${not empty content.text}">
     <p>
-       ${content.text}
+       ${cmsfn.decode(content).text}
     </p>
 </c:if>
 
