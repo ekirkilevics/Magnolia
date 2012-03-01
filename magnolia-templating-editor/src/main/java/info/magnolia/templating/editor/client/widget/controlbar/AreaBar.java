@@ -79,22 +79,24 @@ public class AreaBar extends AbstractBar {
     }
 
     private void createButtons() {
+
+        if (this.dialog != null) {
+            // do not show edit-icon if the area has not been created
+            if (!this.optional || (this.optional && this.created)) {
+                PushButton editButton = new PushButton();
+                editButton.addClickHandler(new ClickHandler() {
+                    @Override
+                    public void onClick(ClickEvent event) {
+                        PageEditor.openDialog(dialog, workspace, path);
+                    }
+                });
+                editButton.setStylePrimaryName("mgnlEditorPushButton");
+                editButton.addStyleName("edit");
+                addPrimaryButton(editButton);
+            }
+        }
         if(this.optional) {
             if (this.created) {
-
-                if (this.dialog != null) {
-                    PushButton editButton = new PushButton();
-                    editButton.addClickHandler(new ClickHandler() {
-                        @Override
-                        public void onClick(ClickEvent event) {
-                            PageEditor.openDialog(dialog, workspace, path);
-                        }
-                    });
-                    editButton.setStylePrimaryName("mgnlEditorPushButton");
-                    editButton.addStyleName("edit");
-                    addPrimaryButton(editButton);
-                }
-
                 PushButton removeButton = new PushButton();
                 removeButton.addClickHandler(new ClickHandler() {
                     @Override

@@ -171,18 +171,17 @@ public class ComponentBar extends AbstractBar  {
 
     private void createButtons() {
 
-        if (dialog != null) {
-            final PushButton edit = new PushButton();
-            edit.addClickHandler(new ClickHandler() {
-                @Override
-                public void onClick(ClickEvent event) {
-                    PageEditor.openDialog(dialog, workspace, path);
-                }
-            });
-            edit.setStylePrimaryName("mgnlEditorPushButton");
-            edit.addStyleName("edit");
-            addPrimaryButton(edit);
-        }
+        final PushButton remove = new PushButton();
+        remove.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                PageEditor.deleteComponent(path);
+            }
+        });
+        remove.setStylePrimaryName("mgnlEditorPushButton");
+        remove.addStyleName("remove");
+
+        addSecondaryButton(remove);
 
         final PushButton move = new PushButton();
         move.addClickHandler(new ClickHandler() {
@@ -196,17 +195,17 @@ public class ComponentBar extends AbstractBar  {
         move.addStyleName("move");
         addPrimaryButton(move);
 
-
-        final PushButton remove = new PushButton();
-        remove.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent event) {
-                PageEditor.deleteComponent(path);
-            }
-        });
-        remove.setStylePrimaryName("mgnlEditorPushButton");
-        remove.addStyleName("remove");
-
-        addSecondaryButton(remove);
+        if (dialog != null) {
+            final PushButton edit = new PushButton();
+            edit.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    PageEditor.openDialog(dialog, workspace, path);
+                }
+            });
+            edit.setStylePrimaryName("mgnlEditorPushButton");
+            edit.addStyleName("edit");
+            addPrimaryButton(edit);
+        }
     }
 }

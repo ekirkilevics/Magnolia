@@ -29,7 +29,6 @@ div.mgnlEditorBar {
   -webkit-box-sizing: border-box !important; /* Safari/Chrome, other WebKit */
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
-  width: 100% !important;
   height: 24px !important;
     /* Set height else on FF default buttons height screws up layout. */
   line-height: 21px !important;
@@ -117,7 +116,7 @@ div.mgnlEditorBarSecondaryButtons, .mgnlEditorBarPrimaryButtons {
 
 div.mgnlEditorBarPrimaryButtons {
   margin: 0 0 0 4px !important;
-  float: right !important;
+  float: left !important;
 }
 div.mgnlEditorPreviewButton {
   width: auto !important;
@@ -130,7 +129,7 @@ div.mgnlEditorPreviewButton {
  */
 
 div.mgnlEditorPushButton {
-  float: right !important;
+  float: left !important;
   margin: 0 3px 0 0 !important;
   height: 21px !important;
   width: 21px !important;
@@ -338,12 +337,10 @@ div.mgnlEditorPlaceholder.area.active {
 
 /* Component place holder */
 div.mgnlEditorPlaceholder.component {
-  width: 100% !important;
 }
 
 div.mgnlEditorPlaceholder.component .mgnlEditorPlaceholderElements {
   height: 45px !important;
-  width: 100% !important;
   border: 2px dotted #8fbb12 !important;
   border-top: none !important;
   /* Change the box model to include borders and paddings in the width and height set. */
