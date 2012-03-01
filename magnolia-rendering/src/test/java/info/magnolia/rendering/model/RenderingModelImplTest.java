@@ -48,13 +48,13 @@ import org.junit.Test;
 public class RenderingModelImplTest {
 
     @Test
-    public void testGetContent() {
+    public void testGetNode() {
         // GIVEN
         MockNode content = new MockNode();
         RenderingModelImpl<ConfiguredRenderableDefinition> model = new RenderingModelImpl<ConfiguredRenderableDefinition>(content, null,null);
 
         // WHEN
-        Node result = model.getContent();
+        Node result = model.getNode();
 
         // THEN
         assertEquals(content, result);

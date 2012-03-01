@@ -84,6 +84,7 @@ public class DefaultRenderingEngineTest extends AbstractMagnoliaTestCase {
     @After
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
+        super.tearDown();
     }
 
     @Test(expected = RenderException.class)

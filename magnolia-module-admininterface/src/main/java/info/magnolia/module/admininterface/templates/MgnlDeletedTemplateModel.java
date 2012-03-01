@@ -66,8 +66,8 @@ public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefin
         Collection<Version> allVersions = null;
 
         Iterator<Version> iterator = null;
-        Content maybeVersion = ContentUtil.asContent(getContent());
-        Content content = ContentUtil.asContent(getContent());
+        Content maybeVersion = ContentUtil.asContent(getNode());
+        Content content = ContentUtil.asContent(getNode());
         try {
             try {
                 allVersions = VersionUtil.getSortedNotDeletedVersions(content);
@@ -97,14 +97,14 @@ public class MgnlDeletedTemplateModel extends RenderingModelImpl<RenderableDefin
     }
 
     public boolean hasChildren() throws RepositoryException {
-        return getContent().hasNode(ItemType.CONTENT.getSystemName());
+        return getNode().hasNode(ItemType.CONTENT.getSystemName());
     }
 
     public String getDeletionAuthor() throws RepositoryException {
-        return getContent().getProperty("mgnl:deletedBy").getString();
+        return getNode().getProperty("mgnl:deletedBy").getString();
     }
 
     public String getDeletionDate() throws RepositoryException {
-        return getContent().getProperty("mgnl:deletedOn").getString();
+        return getNode().getProperty("mgnl:deletedOn").getString();
     }
 }
