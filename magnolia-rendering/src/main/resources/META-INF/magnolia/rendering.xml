@@ -50,7 +50,7 @@
     </component>
     <type-mapping>
       <type>info.magnolia.rendering.template.RenderableDefinition</type>
-      <implementation>info.magnolia.rendering.template.configured.ConfiguredRenderableDefinition</implementation>
+      <implementation>info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition</implementation>
     </type-mapping>
     <type-mapping>
       <type>info.magnolia.rendering.template.TemplateDefinition</type>

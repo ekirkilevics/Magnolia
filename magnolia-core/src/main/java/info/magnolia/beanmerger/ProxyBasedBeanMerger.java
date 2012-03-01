@@ -110,7 +110,13 @@ public class ProxyBasedBeanMerger extends BeanMergerBase {
         public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
             // only merge calls to property getters
             if (arguments.length > 0) {
-                return method.invoke(sources.get(0), arguments);
+                // invoke the method on the first possibility
+                for (Object source : sources) {
+                    if(method.getDeclaringClass().isInstance(source)){
+                        return method.invoke(source, arguments);
+                    }
+                }
+                throw new IllegalStateException("Can't call method " + method.getName() + " on any of the sources.");
             }
 
             List values = new ArrayList();
