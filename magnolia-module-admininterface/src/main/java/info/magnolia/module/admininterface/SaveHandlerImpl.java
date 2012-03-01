@@ -265,6 +265,7 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * Update recursively the node Metadata until the parent node is of type
      * mgnl:content or mgnl:file or deph=1.
+     * If it's not the 'website' workspace, do not perform recursivity.
      */
     private void updateMetaData(Content currentNode) throws AccessDeniedException, RepositoryException {
         if(currentNode.isNodeType(MgnlNodeType.NT_FOLDER)) {
@@ -273,7 +274,7 @@ public class SaveHandlerImpl implements SaveHandler {
         // Update
         currentNode.updateMetaData();
         // Break or perform a recursive call
-        if(currentNode.isNodeType(MgnlNodeType.NT_CONTENT) || currentNode.isNodeType(MgnlNodeType.NT_FOLDER) || currentNode.getLevel()<2) {
+        if(!RepositoryConstants.WEBSITE.equals(currentNode.getWorkspace().getName()) || currentNode.isNodeType(MgnlNodeType.NT_CONTENT) || currentNode.isNodeType(MgnlNodeType.NT_FOLDER) || currentNode.getLevel()<2) {
             return;
         } else {
             updateMetaData(currentNode.getParent());
