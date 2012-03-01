@@ -39,6 +39,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ControlImpl;
@@ -240,7 +241,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 log.debug("Saving {}", path); //$NON-NLS-1$
 
                 // update meta data (e.g. last modified) of this paragraph and the page
-                node.updateMetaData();
+                updateMetaData(node);
 
                 // FIX for MAGNOLIA-1814
                 // mark page as changed also for nested paragraph changes
@@ -259,6 +260,24 @@ public class SaveHandlerImpl implements SaveHandler {
             }
         }
         return true;
+    }
+
+    /**
+     * Update recursively the node Metadata until the parent node is of type
+     * mgnl:content or mgnl:file or deph=1.
+     */
+    private void updateMetaData(Content currentNode) throws AccessDeniedException, RepositoryException {
+        if(currentNode.isNodeType(MgnlNodeType.NT_FOLDER)) {
+            return;
+        }
+        // Update
+        currentNode.updateMetaData();
+        // Break or perform a recursive call
+        if(currentNode.isNodeType(MgnlNodeType.NT_CONTENT) || currentNode.isNodeType(MgnlNodeType.NT_FOLDER) || currentNode.getLevel()<2) {
+            return;
+        } else {
+            updateMetaData(currentNode.getParent());
+        }
     }
 
     /**
