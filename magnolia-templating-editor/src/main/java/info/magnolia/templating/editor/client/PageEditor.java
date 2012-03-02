@@ -44,7 +44,6 @@ import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
-import info.magnolia.templating.editor.client.widget.controlbar.AbstractBar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -197,22 +196,6 @@ public class PageEditor extends HTML implements EntryPoint {
 
     public static void openDialog(String dialog, String workspace, String path) {
         JavascriptUtils.mgnlOpenDialog(path, "", "", dialog, workspace, "", "", "", locale);
-    }
-
-    public static void moveComponentStart(String id) {
-        JavascriptUtils.mgnlMoveNodeStart(id);
-    }
-
-    public static void moveComponentEnd(AbstractBar source, String path) {
-        JavascriptUtils.mgnlMoveNodeEnd(source.getElement(), path);
-    }
-
-    public static void moveComponentOver(AbstractBar source) {
-        JavascriptUtils.mgnlMoveNodeHigh(source.getElement());
-    }
-
-    public static void moveComponentOut(AbstractBar source) {
-        JavascriptUtils.mgnlMoveNodeReset(source.getElement());
     }
 
     public static void deleteComponent(String path) {
