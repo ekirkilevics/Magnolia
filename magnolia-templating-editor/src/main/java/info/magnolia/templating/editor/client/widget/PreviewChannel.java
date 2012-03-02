@@ -41,8 +41,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -51,14 +49,13 @@ import com.google.gwt.user.client.ui.PopupPanel;
 
 /**
  * PreviewChannelWidget.
- * TODO javadoc bien sure!
  * TODO extract base class with common functionality. Make this a MobilePreviewChannelWidget extending an AbstractPreviewChannelWidget.
  */
 public class PreviewChannel extends PopupPanel implements ClickHandler, HasClickHandlers {
 
     private String landscapeCssStyleSuffix = "Landscape";
     private String portraitCssStyleSuffix = "Portrait";
-    private String channel = "";
+    private String channelName = "";
 
     /**
      * Orientation modes for this widget.
@@ -69,13 +66,13 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
 
     private Orientation currentOrientation = Orientation.LANDSCAPE;
 
-    public PreviewChannel(final String url, final Orientation orientation, final String channel) {
-        this.channel = channel;
+    public PreviewChannel(final String url, final Orientation orientation, final String channelName) {
+        this.channelName = channelName;
         this.currentOrientation = orientation;
 
         setStylePrimaryName("mobilePreview");
         //TODO have a look at GWT add dependent style mechanism instead of doing it yourself.
-        addStyleName(orientation == Orientation.LANDSCAPE ? channel + landscapeCssStyleSuffix : channel + portraitCssStyleSuffix);
+        addStyleName(orientation == Orientation.LANDSCAPE ? channelName + landscapeCssStyleSuffix : channelName + portraitCssStyleSuffix);
 
         setAnimationEnabled(true);
         setAutoHideEnabled(true);
@@ -89,6 +86,7 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
 
         final Frame iframe = new Frame(url);
         iframe.setStylePrimaryName("mobilePreviewIframe");
+        /*
         iframe.addLoadHandler(new LoadHandler() {
 
             @Override
@@ -97,7 +95,7 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
                 //Window.alert("iframe onload");
             }
         });
-
+        */
         add(iframe);
     }
 
@@ -105,8 +103,8 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
         return currentOrientation;
     }
 
-    public String getDeviceType() {
-        return channel;
+    public String getChannelName() {
+        return channelName;
     }
 
     public String getLandscapeCssStyleSuffix() {
@@ -124,12 +122,12 @@ public class PreviewChannel extends PopupPanel implements ClickHandler, HasClick
 
         if(currentOrientation == Orientation.LANDSCAPE) {
             currentOrientation = Orientation.PORTRAIT;
-            removeStyleName(getDeviceType() + landscapeCssStyleSuffix);
-            addStyleName(getDeviceType() + portraitCssStyleSuffix);
+            removeStyleName(getChannelName() + landscapeCssStyleSuffix);
+            addStyleName(getChannelName() + portraitCssStyleSuffix);
         } else {
             currentOrientation = Orientation.LANDSCAPE;
-            removeStyleName(getDeviceType() + portraitCssStyleSuffix);
-            addStyleName(getDeviceType() + landscapeCssStyleSuffix);
+            removeStyleName(getChannelName() + portraitCssStyleSuffix);
+            addStyleName(getChannelName() + landscapeCssStyleSuffix);
         }
         center();
     }
