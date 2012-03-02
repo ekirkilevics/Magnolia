@@ -130,6 +130,10 @@
           <groupId> org.bouncycastle</groupId>
           <artifactId>bcmail-jdk15</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>rome</groupId>
+          <artifactId>rome</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <!-- to compensate for removed java 1.5 dep from tika and to keep all BC deps at same version -->
@@ -140,6 +144,18 @@
     <dependency>
       <groupId>net.sourceforge.openutils</groupId>
       <artifactId>openutils-log4j</artifactId>
+    </dependency>
+    <!-- tika brings in rome-0.9 that doesn't work with rome-fetcher-1.0 required for rss-aggregator-moudle. Hence we enforce rome-1.0 already here. -->
+    <dependency>
+      <groupId>rome</groupId>
+      <artifactId>rome</artifactId>
+      <version>1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>jdom</groupId>
+          <artifactId>jdom</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
