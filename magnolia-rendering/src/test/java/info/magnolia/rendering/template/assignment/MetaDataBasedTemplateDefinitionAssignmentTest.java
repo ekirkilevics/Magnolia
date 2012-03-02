@@ -34,6 +34,9 @@
 package info.magnolia.rendering.template.assignment;
 
 import java.util.Collection;
+import java.util.Locale;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.junit.After;
 import org.junit.Test;
@@ -44,6 +47,8 @@ import static org.mockito.Mockito.when;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.i18n.DefaultMessagesManager;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
@@ -51,6 +56,7 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -120,9 +126,6 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
     @Test
     public void testGetAvailableTemplatesForDeletedNode() {
 
-        MockNode mockNode = new MockNode();
-        mockNode.addMixin(MgnlNodeType.MIX_DELETED);
-
         // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
@@ -130,6 +133,9 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         TemplateDefinition deletedTemplate = mock(TemplateDefinition.class);
         registry.register(new SimpleTemplateDefinitionProvider("adminInterface:mgnlDeleted", deletedTemplate));
         registry.register(new SimpleTemplateDefinitionProvider("some:other/template/that/wont/be/returned", mock(TemplateDefinition.class)));
+
+        MockNode mockNode = new MockNode();
+        mockNode.addMixin(MgnlNodeType.MIX_DELETED);
 
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);
@@ -142,11 +148,11 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
     @Test
     public void testGetAvailableTemplatesReturnsOnlyVisibleTemplates() {
 
+        // GIVEN
         MockUtil.initMockContext();
         MockSession session = new MockSession(new MockWorkspace("website"));
         MockUtil.setSessionAndHierarchyManager(session);
 
-        // GIVEN
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
@@ -168,5 +174,71 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // TEST
         assertEquals(1, availableTemplates.size());
         assertSame(visibleTemplate, availableTemplates.iterator().next());
+    }
+
+    @Test
+    public void testGetDefaultTemplateUsesTemplateFromParent() throws RepositoryException {
+
+        // GIVEN
+        MockUtil.initMockContext();
+        MockSession session = new MockSession(new MockWorkspace("website"));
+        MockUtil.setSessionAndHierarchyManager(session);
+
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+        MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
+
+        MockNode parentNode = new MockNode(session);
+        parentNode.addNode("MetaData", MgnlNodeType.NT_METADATA).setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, "module:pages/template1");
+        Node mockNode = parentNode.addNode("child");
+
+        TemplateDefinition template1 = mock(TemplateDefinition.class);
+        when(template1.getVisible()).thenReturn(Boolean.TRUE);
+        when(template1.getId()).thenReturn("module:pages/template1");
+        registry.register(new SimpleTemplateDefinitionProvider("module:pages/template1", template1));
+
+        TemplateDefinition template2 = mock(TemplateDefinition.class);
+        when(template2.getVisible()).thenReturn(Boolean.TRUE);
+        when(template2.getId()).thenReturn("module:pages/template2");
+        registry.register(new SimpleTemplateDefinitionProvider("module:pages/template2", template2));
+
+        // WHEN + THEN
+        assertSame(template1, assignment.getDefaultTemplate(mockNode));
+
+        // change template on the parent
+        mockNode.getParent().getNode("MetaData").setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, "module:pages/template2");
+
+        // test that it changes the returned template
+        assertSame(template2, assignment.getDefaultTemplate(mockNode));
+    }
+
+    @Test
+    public void testGetDefaultTemplateReturnsFirstAvailableTemplate() throws RepositoryException {
+
+        // GIVEN
+        MockContext mockContext = MockUtil.initMockContext();
+        mockContext.setLocale(new Locale("en")); // Template titles goes through i18n using MessagesManager and that requires a locale to be set
+        MockSession session = new MockSession(new MockWorkspace("website"));
+        MockUtil.setSessionAndHierarchyManager(session);
+        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
+
+        TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
+        MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
+
+        Node node = new MockNode(session).addNode("child");
+
+        TemplateDefinition template1 = mock(TemplateDefinition.class);
+        when(template1.getVisible()).thenReturn(Boolean.TRUE);
+        when(template1.getId()).thenReturn("module:pages/template1");
+        when(template1.getTitle()).thenReturn("ZZZ");
+        registry.register(new SimpleTemplateDefinitionProvider("module:pages/template1", template1));
+
+        TemplateDefinition template2 = mock(TemplateDefinition.class);
+        when(template2.getVisible()).thenReturn(Boolean.TRUE);
+        when(template2.getId()).thenReturn("module:pages/template2");
+        when(template2.getTitle()).thenReturn("AAA");
+        registry.register(new SimpleTemplateDefinitionProvider("module:pages/template2", template2));
+
+        // WHEN
+        assertSame(assignment.getDefaultTemplate(node), assignment.getAvailableTemplates(node).iterator().next());
     }
 }
