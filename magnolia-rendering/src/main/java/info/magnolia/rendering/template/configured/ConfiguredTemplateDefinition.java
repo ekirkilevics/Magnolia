@@ -39,6 +39,10 @@ import info.magnolia.rendering.template.TemplateDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A {@link TemplateDefinition} configured in the configuration workspace.
@@ -52,6 +56,22 @@ public class ConfiguredTemplateDefinition extends ConfiguredRenderableDefinition
     private Map<String, AreaDefinition> areaDefinitions = new HashMap<String, AreaDefinition>();
     private Boolean editable;
     private TemplateAvailability templateAvailability;
+
+    public ConfiguredTemplateDefinition() {
+        this.templateAvailability = new TemplateAvailability() {
+
+            @Override
+            public boolean isAvailable(Node content, TemplateDefinition templateDefinition) {
+                // by default a template is available only in the website workspace
+                try {
+                    return content.getSession().getWorkspace().getName().equals("website") &&
+                            StringUtils.substringAfter(templateDefinition.getId(), ":").startsWith("pages/");
+                } catch (RepositoryException e) {
+                    return false;
+                }
+            }
+        };
+    }
 
     @Override
     public Boolean getVisible() {

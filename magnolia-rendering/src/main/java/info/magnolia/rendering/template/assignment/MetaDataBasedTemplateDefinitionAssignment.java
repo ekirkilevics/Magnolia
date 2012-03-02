@@ -43,7 +43,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,18 +153,7 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
     protected boolean isTemplateAvailable(Node content, TemplateDefinition templateDefinition) {
         return hasReadAccess(content) &&
                 isVisible(templateDefinition) &&
-                isPageTemplate(content, templateDefinition) &&
                 isAvailable(content, templateDefinition);
-    }
-
-    protected boolean isPageTemplate(Node content, TemplateDefinition templateDefinition) {
-        // TODO temporary fix for limiting only website to <moduleName>:pages/*
-        try {
-            return content.getSession().getWorkspace().getName().equals("website") &&
-                    StringUtils.substringAfter(templateDefinition.getId(), ":").startsWith("pages/");
-        } catch (RepositoryException e) {
-            return false;
-        }
     }
 
     protected boolean isVisible(TemplateDefinition templateDefinition) {

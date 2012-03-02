@@ -36,14 +36,16 @@ package info.magnolia.module.templating;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.rendering.template.TemplateAvailability;
+import info.magnolia.rendering.template.TemplateDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
+import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Represents a template definition.
@@ -146,11 +148,14 @@ public class Template extends AbstractRenderable {
 
     private Map<String, Template> subTemplates = new HashMap<String, Template>();
 
-    /**
-     * Used internally for SubTemplates.
-     */
     public Template() {
-
+        // bridge to legacy isAvailable() method
+        setTemplateAvailability(new TemplateAvailability() {
+            @Override
+            public boolean isAvailable(Node content, TemplateDefinition templateDefinition) {
+                return Template.this.isAvailable(ContentUtil.asContent(content));
+            }
+        });
     }
 
     public String getI18NTitle() {
@@ -188,12 +193,8 @@ public class Template extends AbstractRenderable {
     }
 
     public boolean isAvailable(Content node) {
-        // was: TODO is called quite often and should be faster
-        try {
-            return PermissionUtil.isGranted(MgnlContext.getJCRSession(getContent().getWorkspace().getName()), getContent().getHandle(), Session.ACTION_READ);
-        } catch (RepositoryException e) {
-            return false;
-        }
+        return node.getHierarchyManager().getName().equals("website") &&
+                StringUtils.substringAfter(getId(), ":").startsWith("pages/");
     }
 
     public Content getContent() {
