@@ -31,6 +31,11 @@
       <artifactId>magnolia-rendering</artifactId>
       <version>4.5-SNAPSHOT</version>
     </dependency>
+     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-templating-compatibility</artifactId>
+      <version>4.5-SNAPSHOT</version>
+    </dependency>
     <!-- this dependency should be removed when templating/adminInterface are properly split -->
     <dependency>
       <groupId>info.magnolia</groupId>
