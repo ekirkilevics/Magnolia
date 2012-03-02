@@ -19,14 +19,16 @@
       <version>4.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
- 	<!-- Comment to be removed once  magnolia-templating-jsp will be available from Hudson -->
-
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-templating-jsp</artifactId>
       <version>4.5-SNAPSHOT</version>
     </dependency>
-
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-templating</artifactId>
+      <version>4.5-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
