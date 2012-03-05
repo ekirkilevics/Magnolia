@@ -165,7 +165,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             clazz = RenderingModelImpl.class;
         }
 
-        final Node wrappedContent = wrapNode(content, getMainContentSafely(content));
+        final Node wrappedContent = wrapNodeForModel(content);
 
         return newModel(clazz, wrappedContent, definition, parentModel);
     }
@@ -234,7 +234,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     protected void setupContext(final Map<String, Object> ctx, Node content, RenderableDefinition definition, RenderingModel<?> model, Object actionResult){
         final Node mainContent = getMainContentSafely(content);
 
-        setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNode(content, mainContent)) : null);
+        setContextAttribute(ctx, "content", content != null ? new ContentMap(wrapNodeForTemplate(content)) : null);
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", getAggregationStateSafely());
         setContextAttribute(ctx, "model", model);
@@ -267,15 +267,31 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     /**
      * Wraps the current content node before passing it to the model.
      * @param content the actual content
-     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
      */
-    protected Node wrapNode(Node content, Node mainContent) {
+    protected Node wrapNodeForModel(Node content) {
         content = wrapWithChannelVisibilityWrapper(content);
-        if(!NodeUtil.isWrappedWith(content, I18nNodeWrapper.class)){
-            content = new I18nNodeWrapper(content);
-        }
+        content = wrapWithI18NWrapper(content);
+        NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
+        return content;
+    }
+
+    protected Node wrapNodeForTemplate(Node content) {
+        content = wrapWithChannelVisibilityWrapper(content);
+        content = wrapWithI18NWrapper(content);
+        content = wrapWithHTMLEscapingWrapper(content);
+        return content;
+    }
+
+    private Node wrapWithHTMLEscapingWrapper(Node content) {
         if(!NodeUtil.isWrappedWith(content, HTMLEscapingNodeWrapper.class)){
             content = new HTMLEscapingNodeWrapper(content, true);
+        }
+        return content;
+    }
+
+    private Node wrapWithI18NWrapper(Node content) {
+        if(!NodeUtil.isWrappedWith(content, I18nNodeWrapper.class)){
+            content = new I18nNodeWrapper(content);
         }
         return content;
     }
