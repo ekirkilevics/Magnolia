@@ -36,12 +36,14 @@ package info.magnolia.templating.module.setup;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.templating.freemarker.RenderableDefinitionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,14 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                     "Register Context ",
                     "Add plaintext renderer Attribute",
                     "/mgnl-bootstrap/templating/config.modules.templating.renderers.plaintext.xml"))
+                .addTask(new CheckAndModifyPropertyValueTask(
+                        "Update implementation for accessing template definition parameters",
+                        "Change class for RenderableDefinitionModel",
+                        RepositoryConstants.CONFIG,
+                        "/server/rendering/freemarker/modelFactories/renderable",
+                        "class",
+                        "info.magnolia.module.templating.freemarker.RenderableDefinitionModel$Factory",
+                        RenderableDefinitionModel.Factory.class.getName()))
         );
     }
 

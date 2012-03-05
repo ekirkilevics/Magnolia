@@ -37,6 +37,7 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.ModuleVersionHandlerTestCase;
 import info.magnolia.module.model.Version;
+import info.magnolia.templating.freemarker.RenderableDefinitionModel;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +72,8 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
         setupConfigNode("/modules/templating/template-renderers");
         setupConfigNode("/modules/templating/paragraph-renderers");
         setupConfigNode("/modules/test/templates/myTemplate");
+        setupConfigNode("/server/rendering/freemarker/modelFactories/renderable");
+        setupConfigProperty("/server/rendering/freemarker/modelFactories/renderable", "class", "info.magnolia.module.templating.freemarker.RenderableDefinitionModel$Factory");
 
         final String tplPath = "/modules/test/templates/myTemplate";
         setupConfigProperty(tplPath, "templatePath","/some/path.ftl");
@@ -80,6 +83,7 @@ public class TemplatingModuleVersionHandlerTest extends ModuleVersionHandlerTest
 
         // THEN
         assertConfig("/some/path.ftl", tplPath + "/templateScript");
+        assertConfig(RenderableDefinitionModel.Factory.class.getName(), "/server/rendering/freemarker/modelFactories/renderable/class");
         assertNoMessages(ctx);
     }
 }

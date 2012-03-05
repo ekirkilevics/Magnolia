@@ -31,13 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.freemarker;
+package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
-import info.magnolia.module.templating.AbstractRenderable;
-import info.magnolia.module.templating.Paragraph;
-import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.rendering.template.TemplateDefinition;
+import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -66,11 +65,11 @@ public class RenderableDefinitionModelTest {
         final Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("foo", "bar");
 
-        final Paragraph def = new Paragraph();
+        final ConfiguredTemplateDefinition def = new ConfiguredTemplateDefinition();
         def.setName("myname");
         def.setParameters(parameters);
 
-        Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
+        Map<String, ConfiguredTemplateDefinition> root = new HashMap<String, ConfiguredTemplateDefinition>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":myname:bar:", ":${def.name}:${def.foo}:", root);
@@ -82,11 +81,11 @@ public class RenderableDefinitionModelTest {
         parameters.put("foo", "bar");
         parameters.put("name", "should not appear");
 
-        final AbstractRenderable def = new Paragraph();
+        final ConfiguredTemplateDefinition def = new ConfiguredTemplateDefinition();
         def.setName("real name");
         def.setParameters(parameters);
 
-        final Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
+        final Map<String, ConfiguredTemplateDefinition> root = new HashMap<String, ConfiguredTemplateDefinition>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":real name:bar:", ":${def.name}:${def.foo}:", root);
@@ -98,22 +97,22 @@ public class RenderableDefinitionModelTest {
         parameters.put("foo", "bar");
         parameters.put("name", "other name");
 
-        final AbstractRenderable def = new Paragraph();
+        final ConfiguredTemplateDefinition def = new ConfiguredTemplateDefinition();
         def.setName("real name");
         def.setParameters(parameters);
 
-        final Map<String, AbstractRenderable> root = new HashMap<String, AbstractRenderable>();
+        final Map<String, ConfiguredTemplateDefinition> root = new HashMap<String, ConfiguredTemplateDefinition>();
         root.put("def", def);
 
         doTestFreemarkerRendering(":real name:other name:", ":${def.name}:${def.parameters.name}:", root);
     }
 
     // TODO -- this could be moved elsewhere for reuse, if we let the model factory be a parameter of the test method for instance
-    public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map<String, AbstractRenderable> root) throws TemplateException, IOException {
+    public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map<String, ConfiguredTemplateDefinition> root) throws TemplateException, IOException {
         final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(null /* not needed in the context of this test*/) {
             @Override
             protected ModelFactory getModelFactory(Class clazz) {
-                if (RenderableDefinition.class.isAssignableFrom(clazz)) {
+                if (TemplateDefinition.class.isAssignableFrom(clazz)) {
                     return new RenderableDefinitionModel.Factory();
                 }
                 return super.getModelFactory(clazz);
