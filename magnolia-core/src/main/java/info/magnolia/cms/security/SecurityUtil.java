@@ -324,17 +324,9 @@ public class SecurityUtil {
      * @return
      */
     public static String stripPasswordFromCacheLog(String log){
-        if(StringUtils.isBlank(log)){
-            return null;
-        }
-        String value = null;
-        value = StringUtils.substringBefore(log, "mgnlUserPSWD");
-        String afterString = StringUtils.substringAfter(log, "mgnlUserPSWD");
-        if(StringUtils.indexOf(afterString, " ") < StringUtils.indexOf(afterString, "}")){
-            value = value + StringUtils.substringAfter(afterString, " ");
-        }else{
-            value = value + "}" + StringUtils.substringAfter(afterString, "}");
-        }
+        String value = stripParameterFromCacheLog(log, "mgnlUserPSWD");
+        value = stripParameterFromCacheLog(value, "passwordConfirmation");
+        value = stripParameterFromCacheLog(value, "password");
         return value;
     }
 
@@ -346,5 +338,22 @@ public class SecurityUtil {
         value = StringUtils.substringBefore(url, "mgnlUserPSWD");
         value = value + StringUtils.substringAfter(StringUtils.substringAfter(url, "mgnlUserPSWD"), "&");
         return StringUtils.removeEnd(value, "&");
+    }
+    
+    public static String stripParameterFromCacheLog(String log, String parameter){
+        if(StringUtils.isBlank(log)){
+            return null;
+        }else if(!StringUtils.contains(log, parameter)){
+            return log;
+        }
+        String value = null;
+        value = StringUtils.substringBefore(log, parameter);
+        String afterString = StringUtils.substringAfter(log, parameter);
+        if(StringUtils.indexOf(afterString, " ") < StringUtils.indexOf(afterString, "}")){
+            value = value + StringUtils.substringAfter(afterString, " ");
+        }else{
+            value = value + "}" + StringUtils.substringAfter(afterString, "}");
+        }
+        return value;
     }
 }

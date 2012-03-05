@@ -232,6 +232,12 @@ public class SecurityUtilTest {
         assertEquals(SecurityUtil.stripPasswordFromUrl(url2), "http://something.com/path.html?parameter1=bla?mgnlUserId=superuser");
     }
 
+    @Test
+    public void testRemoveAllPasswordPamametersFromCacheLog(){
+        String log = "The following URL took longer than 10 seconds (455812 ms) to render. This might cause timeout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/demo-project/members-area/registration.html], [key=DefaultCacheKey{uri='/demo-project/members-area/registration.html', serverName='localhost', locale='en', channel='desktop', params={field=, passwordConfirmation=a, username=nekdo5, email=milan.divilek@magnolia-cms.com, mgnlModelExecutionUUID=8417fe0e-8f61-4d21-bdf1-c9c23b13ba14, fullName=Nekdo 5, password=a}', secure='false'}}]";
+        assertEquals(SecurityUtil.stripPasswordFromCacheLog(log), "The following URL took longer than 10 seconds (455812 ms) to render. This might cause timeout exceptions on other requests to the same URI. [url=http://localhost:8080/magnoliaPublic/demo-project/members-area/registration.html], [key=DefaultCacheKey{uri='/demo-project/members-area/registration.html', serverName='localhost', locale='en', channel='desktop', params={field=, username=nekdo5, email=milan.divilek@magnolia-cms.com, mgnlModelExecutionUUID=8417fe0e-8f61-4d21-bdf1-c9c23b13ba14, fullName=Nekdo 5, }', secure='false'}}]");
+    }
+
     @After
     public void tearDown() {
         ComponentsTestUtil.clear();
