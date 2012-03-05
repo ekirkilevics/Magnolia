@@ -52,7 +52,7 @@
     </h1>
 
     <c:if test="${not empty content.text}">
-      <p>${cmsfn.decode(content).text}</p>
+      <p>${cmsfn:decode(content).text}</p>
     </c:if>
 
     <div id="wrapper-2">
