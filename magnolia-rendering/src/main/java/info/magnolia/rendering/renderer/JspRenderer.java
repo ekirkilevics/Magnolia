@@ -36,6 +36,7 @@ package info.magnolia.rendering.renderer;
 import info.magnolia.cms.util.ServletUtils;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.RenderableDefinition;
@@ -58,10 +59,9 @@ public class JspRenderer extends AbstractRenderer {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
         try {
-            if (response.isCommitted() || (ServletUtils.isForward(request) || ServletUtils.isInclude(request))) {
+            if (response.isCommitted() || (ServletUtils.isForward(request) || ServletUtils.isInclude(request)) || !NodeUtil.isSame(content, renderingCtx.getMainContent()) ) {
                 ((WebContext) ctx).include(templateScript, renderingCtx.getAppendable());
             } else {
-
                 // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
                 request.getRequestDispatcher(templateScript).forward(request, response);
             }
