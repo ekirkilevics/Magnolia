@@ -180,8 +180,8 @@ public class PageEditor extends HTML implements EntryPoint {
                 Element moveElement = Document.get().getElementById("mgnlEditorMoveDiv");
 
                 if (moveElement != null) {
-                    int x = event.getX();
-                    int y = event.getY() + 15;
+                    int x = event.getClientX() + Window.getScrollLeft();
+                    int y = event.getClientY() + 15 + Window.getScrollTop();
                     moveElement.getStyle().setTop(y, Unit.PX);
                     moveElement.getStyle().setLeft(x, Unit.PX);
                 }
