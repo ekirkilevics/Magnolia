@@ -84,6 +84,8 @@ public class WorkflowModule implements ModuleLifecycle {
 
     @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
+        // MAGNOLIA-3491: this is used to ensure that the attributes in workflow items are encoded/decoded correctly
+        System.setProperty("openwfe.xml.encoding", "UTF-8");
         instance = this;
         startEngine();
         initializeWorkItemStore();
