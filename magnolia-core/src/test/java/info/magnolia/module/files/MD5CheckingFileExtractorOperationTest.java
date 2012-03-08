@@ -55,7 +55,13 @@ public class MD5CheckingFileExtractorOperationTest {
         final String fileInfoNodePath = "/server/install" + resourcePath;
 
         assertNotNull(getClass().getResourceAsStream(resourcePath));
-        final File testOut = new File(System.getProperty("java.io.tmpdir"), "MD5CheckingFileExtractorOperationTest-testAbsentFilesAreRecreated.tmp");
+
+        // we need a random file name to make sure, this test can be run in parallel
+        final File randomFile = File.createTempFile("MD5-temp", null);
+        // don't need this file - just wanted to get a random name
+        randomFile.delete();
+
+        final File testOut = new File(randomFile.getAbsolutePath());
         testOut.deleteOnExit();
 
         // make sure the test file is not already on the file system
