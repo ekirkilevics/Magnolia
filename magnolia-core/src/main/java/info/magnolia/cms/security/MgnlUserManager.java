@@ -130,13 +130,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     public User setProperty(final User user, final String propertyName, final Value propertyValue) {
-        MgnlContext.doInSystemContext(new SilentSessionOp<Void>(getRepositoryName()) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<User>(getRepositoryName()) {
 
             @Override
-            public Void doExec(Session session) throws RepositoryException {
+            public User doExec(Session session) throws RepositoryException {
                 String path = ((MgnlUser) user).getPath();
+                Node userNode;
                 try {
-                    Node userNode = session.getNode(path);
+                    userNode = session.getNode(path);
                     if(propertyValue == null && PropertyUtil.getProperty(userNode, propertyName) != null){
                         userNode.getProperty(propertyName).remove();
                     }else if(propertyValue != null){
@@ -146,11 +147,11 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 }
                 catch (RepositoryException e) {
                     session.refresh(false);
+                    return user;
                 }
-                return null;
+                return newUserInstance(userNode);
             }
         });
-        return user;
     }
 
     /**
