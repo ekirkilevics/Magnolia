@@ -176,7 +176,7 @@ public class DefaultInheritanceContentDecorator extends InheritanceContentDecora
             }
         }
         Collections.sort(nodes, componentComparator);
-        return super.wrapNodeIterator(new NodeIteratorImpl(nodes));
+        return new NodeIteratorImpl(nodes);
     }
 
     private static class NodeIteratorImpl extends RangeIteratorImpl<Node> implements NodeIterator {
