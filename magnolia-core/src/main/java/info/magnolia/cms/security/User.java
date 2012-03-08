@@ -93,6 +93,10 @@ public interface User extends Principal, Serializable {
      */
     boolean isEnabled();
 
+    /**
+     * @deprecated since 4.5, use {@link UserManager} instead
+     */
+    @Deprecated
     void setEnabled(boolean enabled);
 
     String getLanguage();
@@ -110,7 +114,9 @@ public interface User extends Principal, Serializable {
     /**
      * Sets an arbitrary property for this user.
      * Values are currently Strings; we'd need some kind of abstract encoding mechanism to allow other types if needed.
+     * @deprecated since 4.5, use {@link UserManager} instead
      */
+    @Deprecated
     void setProperty(String propertyName, String value);
 
     /**
