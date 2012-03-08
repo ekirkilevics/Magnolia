@@ -106,6 +106,16 @@ public class DelegatingUserManager implements UserManager {
     }
 
     @Override
+    public User getUserById(final Object id) throws UnsupportedOperationException {
+        return delegateUntilNotNull(new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.getUserById(id);
+            }
+        });
+    }
+
+    @Override
     public User getUser(final Subject subject) throws UnsupportedOperationException {
         return delegateUntilNotNull(new Op<User>() {
             @Override

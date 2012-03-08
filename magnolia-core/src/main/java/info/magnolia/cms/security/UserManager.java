@@ -71,6 +71,13 @@ public interface UserManager {
     public User getUser(String name) throws UnsupportedOperationException;
 
     /**
+     * Find a specific user. Not all implementations will support this method.
+     * @param id user identifier
+     * @return the user object
+     */
+    public User getUserById(Object id) throws UnsupportedOperationException;
+
+    /**
      * Initialize new user using JAAS authenticated/authorized subject.
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation
      * @deprecated jaas login module should just request the user, not pass the subject around to the user manager

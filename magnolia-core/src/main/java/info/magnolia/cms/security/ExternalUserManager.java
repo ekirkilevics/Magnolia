@@ -61,6 +61,11 @@ public class ExternalUserManager implements UserManager {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    @Override
+    public User getUserById(final Object id) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
     /**
      * Initialize new user using JAAS authenticated/authorized subject.
      * @param subject

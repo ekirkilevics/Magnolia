@@ -204,6 +204,35 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         return null;
     }
 
+    /**
+     * Get the user object. Uses a search
+     * @param id user identifier
+     * @return the user object
+     */
+    @Override
+    public User getUserById(final Object id){
+        if(id instanceof String){   
+            try {
+                return MgnlContext.doInSystemContext(new JCRSessionOp<User>(getRepositoryName()) {
+                    @Override
+                    public User exec(Session session) throws RepositoryException {
+                        Node priviledgedUserNode = session.getNodeByIdentifier((String)id);
+                        return newUserInstance(priviledgedUserNode);
+                    }
+                    @Override
+                    public String toString() {
+                        return "retrieve user with id " + id;
+                    }
+                });
+            } catch (RepositoryException e) {
+            e.printStackTrace();
+            }
+        }else{
+            log.error("id must be instance of String");
+        }
+        return null;
+    }
+
     @Override
     public User getUser(Subject subject) throws UnsupportedOperationException {
         // this could be the case if no one is logged in yet
