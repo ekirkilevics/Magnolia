@@ -43,6 +43,7 @@ import info.magnolia.module.delta.AddPermissionTask;
 import info.magnolia.module.delta.AddRoleToGroupTask;
 import info.magnolia.module.delta.AddUserToGroupTask;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
 import info.magnolia.module.delta.Task;
@@ -83,6 +84,10 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                     "info.magnolia.module.dms.DMSAdminTreeConfig",
                     "info.magnolia.module.dms.WorkflowDMSAdminTreeConfig"
             ));
+
+    public WorkflowModuleVersionHandler() {
+        register(DeltaBuilder.checkPrecondition("4.4.6", "4.5"));
+    }
 
     @Override
     protected List<Task> getExtraInstallTasks(InstallContext ctx) {

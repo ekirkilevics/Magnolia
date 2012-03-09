@@ -69,6 +69,8 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
     public ExchangeSimpleModuleVersionHandler() {
         super();
 
+        register(DeltaBuilder.checkPrecondition("4.4.6", "4.5"));
+
         register(DeltaBuilder.update("4.5", "URL of activation filter is no longer password protected but uses encryption instead.")
                 .addTask(new BootstrapSingleModuleResource("Configure ActivationPage", "Register class to be used.", "config.modules.exchange-simple.pages.activationPage.xml"))
                 .addTask(new BootstrapSingleModuleResource("ActivationPage Menu", "Configure menu in AdminInterface.", "config.modules.adminInterface.config.menu.tools.activationPage.xml"))
