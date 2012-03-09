@@ -47,7 +47,6 @@ import info.magnolia.module.delta.ChildrenExistsDelegateTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.FalseCondition;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
@@ -93,8 +92,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public CoreModuleVersionHandler() {
         super();
 
-        register(DeltaBuilder.update("4.4.6", "minimal version required for updating to 4.5")
-                .addCondition(new FalseCondition("checkPrerequisite", "Updating to 4.5 is only supported from 4.4.6 or higher. Please udate to 4.4.6 or higher 4.4.x first.")));
+        register(DeltaBuilder.checkPrecondition("4.4.6", "4.5"));
 
         register(DeltaBuilder.update("4.5", "")
                 .addCondition(new SystemTmpDirCondition())

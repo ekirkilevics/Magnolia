@@ -70,6 +70,12 @@ public class DeltaBuilder implements Delta {
         return startup(moduleDef.getVersion(), description).addTasks(tasks);
     }
 
+    public static DeltaBuilder checkPrecondition(String minimalVersion, String newVersion) {
+        return update(minimalVersion, "minimal version required for updating to " + newVersion).addCondition(
+                new FalseCondition("checkPrerequisite", "Updating to " + newVersion + " is only supported from "
+                        + minimalVersion + " or higher."));
+    }
+
     /**
      * TODO : it seems irrelevant to have a Version in startup tasks. These should probably be moved to ModuleLifecycle.
      */
