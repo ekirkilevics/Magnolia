@@ -307,6 +307,7 @@ public class PropertiesInitializer {
      * @return Property file configuration string with everything replaced.
      *
      * @deprecated since 4.5, this is done by {@link info.magnolia.init.DefaultMagnoliaPropertiesResolver#DefaultMagnoliaPropertiesResolver}.
+     * Note: when remove this class and method, this code will need to be cleaned up and moved to info.magnolia.init.DefaultMagnoliaPropertiesResolver
      */
     public static String processPropertyFilesString(ServletContext context, String servername, String webapp,
         String propertiesFilesString) {
