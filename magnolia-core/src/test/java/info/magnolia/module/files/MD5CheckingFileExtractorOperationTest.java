@@ -51,21 +51,19 @@ import org.junit.Test;
 public class MD5CheckingFileExtractorOperationTest {
     @Test
     public void testAbsentFilesAreRecreated() throws Exception {
+        // GIVEN
         final String resourcePath = "/info/magnolia/test/mock/testcontent.properties";
         final String fileInfoNodePath = "/server/install" + resourcePath;
 
         assertNotNull(getClass().getResourceAsStream(resourcePath));
 
-        // we need a random file name to make sure, this test can be run in parallel
-        final File randomFile = File.createTempFile("MD5-temp", null);
-        // don't need this file - just wanted to get a random name
-        randomFile.delete();
+        // We need a randomly named (to enable test to be run in parallel), not yet physically existing file
+        final File testOut = File.createTempFile("MD5-temp", null);
+        // remove the file but keep the reference - file will be (re-)created by the class under test
+        testOut.delete();
 
-        final File testOut = new File(randomFile.getAbsolutePath());
+        // no need to keep file after test so delete when VM exits
         testOut.deleteOnExit();
-
-        // make sure the test file is not already on the file system
-        assertEquals("test file already present when starting test, can't continue", false, testOut.exists());
 
         final HierarchyManager hm = createStrictMock(HierarchyManager.class);
         final Content fileInfoNode = createStrictMock(Content.class);
@@ -86,10 +84,12 @@ public class MD5CheckingFileExtractorOperationTest {
 
         replay(hm, fileInfoNode, md5);
 
+        // WHEN
         op.extract();
 
         verify(hm, fileInfoNode, md5);
 
+        // THEN
         assertEquals("File should have been re-extracted", true, testOut.exists());
         assertEquals(IOUtils.toString(new FileInputStream(testOut)), IOUtils.toString(getClass().getResourceAsStream(resourcePath)));
     }
