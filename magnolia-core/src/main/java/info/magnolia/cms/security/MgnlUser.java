@@ -149,7 +149,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
     /**
      * This methods sets flag just on the bean. It does not update persisted user data. Use manager to update user data.
-     * @deprecated since 4.5, use {@link UserManager} instead
+     * @deprecated since 4.5, use {@link UserManager#setProperty(User, String, Value)} instead
      */
     @Override
     @Deprecated

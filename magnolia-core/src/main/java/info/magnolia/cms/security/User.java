@@ -94,7 +94,7 @@ public interface User extends Principal, Serializable {
     boolean isEnabled();
 
     /**
-     * @deprecated since 4.5, use {@link UserManager} instead
+     * @deprecated since 4.5, use {@link UserManager#setProperty(User, String, Value)} instead
      */
     @Deprecated
     void setEnabled(boolean enabled);
@@ -114,7 +114,7 @@ public interface User extends Principal, Serializable {
     /**
      * Sets an arbitrary property for this user.
      * Values are currently Strings; we'd need some kind of abstract encoding mechanism to allow other types if needed.
-     * @deprecated since 4.5, use {@link UserManager} instead
+     * @deprecated since 4.5, use {@link UserManager#setProperty(User, String, Value)} instead
      */
     @Deprecated
     void setProperty(String propertyName, String value);
