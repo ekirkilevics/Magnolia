@@ -147,6 +147,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 }
                 catch (RepositoryException e) {
                     session.refresh(false);
+                    log.error("Property {} can't be changed. " + e.getMessage(), propertyName);
                     return user;
                 }
                 return newUserInstance(userNode);
