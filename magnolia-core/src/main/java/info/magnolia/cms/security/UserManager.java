@@ -75,7 +75,7 @@ public interface UserManager {
      * @param id user identifier
      * @return the user object
      */
-    public User getUserById(Object id) throws UnsupportedOperationException;
+    public User getUserById(String id) throws UnsupportedOperationException;
 
     /**
      * Initialize new user using JAAS authenticated/authorized subject.

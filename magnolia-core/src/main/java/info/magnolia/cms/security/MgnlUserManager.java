@@ -211,25 +211,21 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      * @return the user object
      */
     @Override
-    public User getUserById(final Object id){
-        if(id instanceof String){   
-            try {
-                return MgnlContext.doInSystemContext(new JCRSessionOp<User>(getRepositoryName()) {
-                    @Override
-                    public User exec(Session session) throws RepositoryException {
-                        Node priviledgedUserNode = session.getNodeByIdentifier((String)id);
-                        return newUserInstance(priviledgedUserNode);
-                    }
-                    @Override
-                    public String toString() {
-                        return "retrieve user with id " + id;
-                    }
-                });
-            } catch (RepositoryException e) {
+    public User getUserById(final String id){  
+        try {
+            return MgnlContext.doInSystemContext(new JCRSessionOp<User>(getRepositoryName()) {
+                @Override
+                public User exec(Session session) throws RepositoryException {
+                    Node priviledgedUserNode = session.getNodeByIdentifier(id);
+                    return newUserInstance(priviledgedUserNode);
+                }
+                @Override
+                public String toString() {
+                    return "retrieve user with id " + id;
+                }
+            });
+        } catch (RepositoryException e) {
             e.printStackTrace();
-            }
-        }else{
-            log.error("id must be instance of String");
         }
         return null;
     }

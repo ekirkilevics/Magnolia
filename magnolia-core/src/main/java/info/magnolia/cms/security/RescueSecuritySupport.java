@@ -240,6 +240,11 @@ public class RescueSecuritySupport extends SecuritySupportBase {
         }
 
         @Override
+        public String getIdentifier() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public Collection<String> getGroups() {
             return Collections.unmodifiableCollection(groups);
         }

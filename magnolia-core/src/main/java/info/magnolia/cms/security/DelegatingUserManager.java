@@ -106,7 +106,7 @@ public class DelegatingUserManager implements UserManager {
     }
 
     @Override
-    public User getUserById(final Object id) throws UnsupportedOperationException {
+    public User getUserById(final String id) throws UnsupportedOperationException {
         return delegateUntilNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {

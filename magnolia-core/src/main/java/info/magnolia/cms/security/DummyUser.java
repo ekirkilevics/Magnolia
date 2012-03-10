@@ -140,6 +140,11 @@ public class DummyUser extends AbstractUser {
     }
 
     @Override
+    public String getIdentifier() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Collection<String> getGroups() {
         return Collections.emptyList();
     }

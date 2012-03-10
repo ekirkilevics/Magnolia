@@ -62,7 +62,7 @@ public class ExternalUserManager implements UserManager {
     }
 
     @Override
-    public User getUserById(final Object id) throws UnsupportedOperationException {
+    public User getUserById(final String id) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }
 

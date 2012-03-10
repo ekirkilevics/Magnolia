@@ -190,6 +190,11 @@ public class ExternalUser extends AbstractUser implements Serializable {
     }
 
     @Override
+    public String getIdentifier() {
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+    }
+
+    @Override
     public Collection<String> getGroups() {
         return this.groupList.getList();
     }

@@ -421,7 +421,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         throw new UnsupportedOperationException("Use manager to modify properties of the user.");
     }
 
-    public String getUuid() {
+    public String getIdentifier() {
         return uuid;
     }
 

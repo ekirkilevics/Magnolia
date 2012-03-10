@@ -120,6 +120,11 @@ public interface User extends Principal, Serializable {
     void setProperty(String propertyName, String value);
 
     /**
+     * Gets user identifier.
+     */
+    String getIdentifier();
+
+    /**
      * Get groups that are directly assigned to the user.
      */
     Collection<String> getGroups();
