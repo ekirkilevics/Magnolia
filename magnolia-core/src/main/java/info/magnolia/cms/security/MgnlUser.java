@@ -421,7 +421,16 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         throw new UnsupportedOperationException("Use manager to modify properties of the user.");
     }
 
+    @Override
     public String getIdentifier() {
+        return uuid;
+    }
+    
+    /**
+     * @deprecated since 4.5.1, use {@link MgnlUser#getIdentifier()} instead
+     */
+    @Deprecated
+    public String getUuid() {
         return uuid;
     }
 
