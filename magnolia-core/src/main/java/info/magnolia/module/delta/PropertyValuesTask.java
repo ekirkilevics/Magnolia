@@ -39,7 +39,12 @@ import info.magnolia.module.InstallContext;
 
 import java.text.MessageFormat;
 
+import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * A tasks that offers helper methods to check on certain properties.
@@ -65,6 +70,22 @@ public abstract class PropertyValuesTask extends AbstractTask {
             final String msg = format("Property \"{0}\" was expected to exist at {1} with value \"{2}\" but {3,choice,0#does not exist|1#has the value \"{4}\" instead}.",
                             propertyName, node.getHandle(), expectedCurrentValue,
                             Integer.valueOf(prop.isExist() ? 1 : 0), currentvalue);
+            ctx.warn(msg);
+        }
+    }
+
+    /**
+     * Checks if property contains concrete string. If contains then change this part of string, logs otherwise.
+     */
+    protected void checkAndModifyPartOfPropertyValue(InstallContext ctx, Node node, String propertyName, String expectedValue, String newValue) throws RepositoryException {
+        final Property prop = node.getProperty(propertyName);
+        final String currentvalue = prop.getString();
+        if (prop != null && currentvalue.contains(expectedValue)) { 
+            prop.setValue(StringUtils.replace(currentvalue, expectedValue, newValue));
+        } else {
+            final String msg = format("Property \"{0}\" was expected to exist at {1} with part string \"{2}\" but {3,choice,0#does not exist|1#does not contain string}.",
+                            propertyName, node.getPath(), expectedValue,
+                            prop == null ? 1 : 0, currentvalue);
             ctx.warn(msg);
         }
     }
