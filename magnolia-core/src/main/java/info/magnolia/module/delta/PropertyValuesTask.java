@@ -78,14 +78,19 @@ public abstract class PropertyValuesTask extends AbstractTask {
      * Checks if property contains concrete string. If contains then change this part of string, logs otherwise.
      */
     protected void checkAndModifyPartOfPropertyValue(InstallContext ctx, Node node, String propertyName, String expectedValue, String newValue) throws RepositoryException {
-        final Property prop = node.getProperty(propertyName);
-        final String currentvalue = prop.getString();
-        if (prop != null && currentvalue.contains(expectedValue)) { 
-            prop.setValue(StringUtils.replace(currentvalue, expectedValue, newValue));
+        if(node.hasProperty(propertyName)){
+            final Property prop = node.getProperty(propertyName);
+            final String currentvalue = prop.getString();
+            if(currentvalue.contains(expectedValue)) { 
+                prop.setValue(StringUtils.replace(currentvalue, expectedValue, newValue));
+            } else {
+                final String msg = format("Property \"{0}\" was expected to exist at {1} with part string \"{2}\" but does not contain this string.",
+                            propertyName, node.getPath(), expectedValue);
+                ctx.warn(msg);
+            }
         } else {
-            final String msg = format("Property \"{0}\" was expected to exist at {1} with part string \"{2}\" but {3,choice,0#does not exist|1#does not contain string}.",
-                            propertyName, node.getPath(), expectedValue,
-                            prop == null ? 1 : 0, currentvalue);
+            final String msg = format("Property \"{0}\" was expected to exist at {1} with part string \"{2}\" but does not exist.",
+                    propertyName, node.getPath(), expectedValue);
             ctx.warn(msg);
         }
     }
