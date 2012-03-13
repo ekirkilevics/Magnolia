@@ -49,10 +49,47 @@ import java.util.List;
 import static info.magnolia.cms.beans.config.PropertiesInitializer.processPropertyFilesString;
 
 /**
- * Resolves the paths of the properties file to load by using the {@value #MAGNOLIA_INITIALIZATION_FILE} context init parameter.
+ * Resolves the paths of the properties files to load. The name of the file can be defined as a context parameter in 
+ * web.xml. Multiple paths, comma separated, are supported (the first existing file in the list will be used), and the
+ * following variables will be used:
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * <ul>
+ * <li><b><code>${servername}</code></b>: name of the server where the webapp is running, lowercase</li>
+ * <li><b><code>${webapp}</code></b>: the last token in the webapp path (e.g. <code>magnoliaPublic</code> for a webapp
+ * deployed at <code>tomcat/webapps/magnoliaPublic</code>)</li>
+ * </ul>
+ * <p>
+ * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
+ * </p>
+ *
+ * <pre>
+ * &lt;context-param>
+ *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
+ *   &lt;param-value>
+ *      WEB-INF/config/${servername}/${webapp}/magnolia.properties,
+ *      WEB-INF/config/${servername}/magnolia.properties,
+ *      WEB-INF/config/${webapp}/magnolia.properties,
+ *      WEB-INF/config/default/magnolia.properties,
+ *      WEB-INF/config/magnolia.properties
+ *   &lt;/param-value>
+ * &lt;/context-param>
+ * </pre>
+ *
+ * <h3>Advanced usage: deployment service</h3>
+ *
+ * <p>
+ * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same webapp
+ * different set of configurations which are automatically applied dependending on the server name (useful for switching
+ * between development, test and production instances where the repository configuration need to be different) or the
+ * webapp name (useful to bundle both the public and admin log4j/jndi/bootstrap configuration in the same war). By
+ * default the initializer will try to search for the file in different location with different combination of
+ * <code>servername</code> and <code>webapp</code>: the <code>default</code> fallback directory will be used if no other
+ * environment-specific directory has been added.
+ * </p>
+ *
+ * <p>The variables are provided by {@link MagnoliaInitPaths}.</p>
+ * 
+ * @version $Id$
  */
 @Singleton
 public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesResolver {
@@ -104,7 +141,6 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
 
     /**
      * Used in tests, potentially in subclasses.
-     * @return
      */
     protected List<String> getLocations() {
         return locations;

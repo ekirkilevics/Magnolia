@@ -58,90 +58,54 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProvider;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 
-
 /**
- * <p>
- * Magnolia main listener: reads initialization parameter from a properties file. The name of the file can be defined as
- * a context parameter in web.xml. Multiple path, comma separated, are supported (the first existing file in the list
- * will be used), and the following variables will be used:
- * </p>
- * <ul>
- * <li><b><code>${servername}</code></b>: name of the server where the webapp is running, lowercase</li>
- * <li><b><code>${webapp}</code></b>: the latest token in the webapp path (e.g. <code>magnoliaPublic</code> for a webapp
- * deployed ad <code>tomcat/webapps/magnoliaPublic</code>)</li>
- * </ul>
- * <p>
- * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
- * </p>
+ * Point of entry for Magnolia CMS, initializes the component providers, starts logging, triggers loading of
+ * properties and finally delegates to {@link ConfigLoader} for completing initialization.
  *
+ * <h3>Component providers</h3>
+ * <p>
+ * When Magnolia starts up the first thing that happens is the creation of the <i>platform</i> component provider. It
+ * contains the essential singletons that constitutes the platform on which the rest of the system builds. These
+ * components are defined in a file called <code>platform-components.xml</code>, it's on the classpath in package
+ * /info/magnolia/init.
+ * </p>
+ * <p>
+ * The location can be customized using a servlet context parameter called
+ * <code>magnolia.platform.components.config.location</code>. It's specified as a list of comma-separated files on the
+ * classpath. The files are loaded in the specified order allowing definitions to override definitions from earlier
+ * files.
+ * </p>
  * <pre>
- * &lt;context-param>
- *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
- *   &lt;param-value>
- *      WEB-INF/config/${servername}/${webapp}/magnolia.properties,
- *      WEB-INF/config/${servername}/magnolia.properties,
- *      WEB-INF/config/${webapp}/magnolia.properties,
- *      WEB-INF/config/default/magnolia.properties,
- *      WEB-INF/config/magnolia.properties
- *   &lt;/param-value>
- * &lt;/context-param>
+ * &lt;context-param&gt;
+ *   &lt;param-name&gt;magnolia.platform.components.config.location&lt;/param-name&gt;
+ *   &lt;param-value&gt;/info/magnolia/init/platform-components.xml,/com/mycompany/custom-platform-components.xml&lt;/param-value&gt;
+ * &lt;/context-param&gt;
  * </pre>
  * <p>
- * The ${servername} variable will be resolved to the full name obtained by using
- * InetAddress.getLocalHost().getHostName(), which may also contain the server domain, depending on your server
- * configuration/operating system. You can set the optional context parameter "magnolia.unqualified.server.name" to true
- * if you prefer using the unqualified name (the server "server.domain.com" will be simply resolved as "server")
+ * The platform components include the {@link ModuleManager} which is called by this listener to load the descriptors of
+ * all the modules present. Modules define additional components that are loaded into a second component provider called
+ * <i>system</i>.
  * </p>
- *
- * <pre>
- * &lt;context-param>
- *   &lt;param-name>magnolia.unqualified.server.name&lt;/param-name>
- *   &lt;param-value>true&lt;/param-value>
- * &lt;/context-param>
- * </pre>
- *
- * The following parameters are needed in the properties file:
- * <ul>
- * <li><b>magnolia.cache.startdir</b>:<br/>
- * directory used for cached pages</li>
- * <li><b>magnolia.upload.tmpdir</b>:<br/>
- * tmp directory for uploaded files</li>
- * <li><b>magnolia.exchange.history</b>:<br/>
- * history directory used for activation</li>
- * <li><b>magnolia.repositories.config</b>:<br/>
- * repositories configuration</li>
- * <li><b>log4j.config</b>:<br/>
- * Name of a log4j config file. Can be a .properties or .xml file. The value can be:
- * <ul>
- * <li>a full path</li>
- * <li>a path relative to the webapp root</li>
- * <li>a file name which will be loaded from the classpath</li>
- * </ul>
- * </li>
- * <li><b>magnolia.root.sysproperty</b>:<br/>
- * Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
- * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>.
- * <strong>Important</strong>: if you drop multiple magnolia wars in a container which doesn't isolate system properties
- * (e.g. tomcat) you will need to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and
- * in log4j configuration files.</li>
- * <li><b>magnolia.bootstrap.dir</b>:<br/>
- * Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
- * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
- * automatically initialize repositories simply remove this parameter.</li>
- * </ul>
- * <h3>Advance use: deployment service</h3>
  * <p>
- * Using the <code>${servername}</code> and <code>${webapp}</code> properties you can easily bundle in the same webapp
- * different set of configurations which are automatically applied dependending on the server name (useful for switching
- * between development, test and production instances where the repository configuration need to be different) or the
- * webapp name (useful to bundle both the public and admin log4j/jndi/bootstrap configuration in the same war). By
- * default the initializer will try to search for the file in different location with different combination of
- * <code>servername</code> and <code>webapp</code>: the <code>default</code> fallback directory will be used if no other
- * environment-specific directory has been added.
+ * When {@link ConfigLoader} takes over the initialization procedure it will create a third component provider called
+ * <i>main</i> which contain components defined in modules as belonging to the main component provider.
  * </p>
- * @author Fabrizio Giustina
+ * <h3>Property loading</h3>
+ * <p>
+ * Properties are loaded by an implementation of {@link MagnoliaConfigurationProperties}. It's configured as a platform
+ * component and is called by this class to do initialization. See {@link DefaultMagnoliaPropertiesResolver} and
+ * {@link DefaultMagnoliaInitPaths} for details on how to customize the default behavior.
+ * </p>
  *
- * TODO : javadoc - update javadoc to reflect current code and point to references instead of duplicating.
+ * @version $Id$
+ * @see ModuleManager
+ * @see MagnoliaInitPaths
+ * @see MagnoliaPropertiesResolver
+ * @see DefaultMagnoliaPropertiesResolver
+ * @see DefaultMagnoliaConfigurationProperties
+ * @see DefaultMagnoliaInitPaths
+ * @see ConfigLoader
+ * @see Log4jConfigurer
  */
 @Singleton
 public class MagnoliaServletContextListener implements ServletContextListener {

@@ -34,15 +34,44 @@
 package info.magnolia.init;
 
 /**
- * MagnoliaConfigurationProperties instances are providing access to system-wide
- * configuration properties. They are essentially a wrapper around all the <tt>magnolia.properties</tt> files that are used in the system,
- * as well as properties configured in module descriptors, etc.
- * Implementations of this interface are responsible for locating relevant {@link PropertySource}, and provide them in a sensible order.
+ * MagnoliaConfigurationProperties instances provides access to system-wide configuration properties. They are
+ * essentially a wrapper around all the <tt>magnolia.properties</tt> files that are used in the system, as well as
+ * properties configured in module descriptors, etc.
  *
+ * <p>Implementations of this interface are responsible for locating relevant {@link PropertySource}, and provide them in a sensible order.</p>
+ *
+ * The following properties are required:
+ * <ul>
+ * <li><b>magnolia.cache.startdir</b>:<br/>
+ * directory used for cached pages</li>
+ * <li><b>magnolia.upload.tmpdir</b>:<br/>
+ * tmp directory for uploaded files</li>
+ * <li><b>magnolia.exchange.history</b>:<br/>
+ * history directory used for activation</li>
+ * <li><b>magnolia.repositories.config</b>:<br/>
+ * repositories configuration</li>
+ * <li><b>log4j.config</b>:<br/>
+ * Name of a log4j config file. Can be a .properties or .xml file. The value can be:
+ * <ul>
+ * <li>a full path</li>
+ * <li>a path relative to the webapp root</li>
+ * <li>a file name which will be loaded from the classpath</li>
+ * </ul>
+ * </li>
+ * <li><b>magnolia.root.sysproperty</b>:<br/>
+ * Name of a system variable which will be set to the webapp root. You can use this property in log4j configuration
+ * files to handle relative paths, such as <code>${magnolia.root}logs/magnolia-debug.log</code>.
+ * <strong>Important</strong>: if you drop multiple magnolia wars in a container which doesn't isolate system properties
+ * (e.g. tomcat) you will need to change the name of the <code>magnolia.root.sysproperty</code> variable in web.xml and
+ * in log4j configuration files.</li>
+ * <li><b>magnolia.bootstrap.dir</b>:<br/>
+ * Directory containing xml files for initialization of a blank magnolia instance. If no content is found in any of
+ * the repository, they are initialized importing xml files found in this folder. If you don't want to let magnolia
+ * automatically initialize repositories simply remove this parameter.</li>
+ * </ul>
+ *
+ * @version $Id$
  * @since 4.5
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
 public interface MagnoliaConfigurationProperties extends PropertySource {
 

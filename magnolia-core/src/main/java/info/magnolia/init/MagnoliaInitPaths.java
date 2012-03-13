@@ -37,14 +37,21 @@ package info.magnolia.init;
  * Provides a minimal set of paths required to setup Magnolia.
  * Implementations can choose to expose more properties, if their dependent components need them.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public interface MagnoliaInitPaths {
+
+    /**
+     * Returns the name of the server where the webapp is running, lowercase.
+     */
     String getServerName();
 
     String getRootPath();
 
+    /**
+     * Returns the last token in the webapp path (e.g. <code>magnoliaPublic</code> for a webapp deployed at
+     * <code>tomcat/webapps/magnoliaPublic</code>).
+     */
     String getWebappFolderName();
 
     String getContextPath();

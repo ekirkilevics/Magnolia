@@ -149,6 +149,19 @@ public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
         }
     }
 
+    /**
+     * The server name  is resolved to the full name obtained by using InetAddress.getLocalHost().getHostName(), which
+     * may also contain the server domain, depending on your server configuration/operating system. You can set the
+     * optional context parameter "magnolia.unqualified.server.name" to true if you prefer using the unqualified name
+     * (the server "server.domain.com" will be simply resolved as "server").
+     *
+     * <pre>
+     * &lt;context-param>
+     *   &lt;param-name>magnolia.unqualified.server.name&lt;/param-name>
+     *   &lt;param-value>true&lt;/param-value>
+     * &lt;/context-param>
+     * </pre>
+     */
     @Override
     public String getServerName() {
         return serverName;
