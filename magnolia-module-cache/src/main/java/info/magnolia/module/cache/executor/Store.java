@@ -73,6 +73,7 @@ public class Store extends AbstractExecutor {
         final Object key = cachePolicyResult.getCacheKey();
 
         final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, CacheResponseWrapper.DEFAULT_THRESHOLD, false);
+        responseWrapper.setResponseExpirationDetectionEnabled();
 
         // setting Last-Modified to when this resource was stored in the cache. This value might get overridden by further filters or servlets.
         final long cacheStorageDate = System.currentTimeMillis();

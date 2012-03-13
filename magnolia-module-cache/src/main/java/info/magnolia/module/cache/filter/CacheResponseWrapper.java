@@ -67,7 +67,8 @@ import org.apache.commons.io.output.ThresholdingOutputStream;
  * {@link #getBufferedContent()}. Once the threshold is reached either a tmp file is created which
  * can be retrieved with {@link #getContentFile()} or the content/headers are made transparent to
  * the original response if {@link #serveIfThresholdReached} is true.
- * @version $Revision: 14052 $ ($Author: gjoseph $)
+ *
+ * @version $Id$
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
@@ -83,7 +84,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private ByteArrayOutputStream inMemoryBuffer;
     private File contentFile;
     private long contentLength = -1;
-    private ResponseExpirationCalculator responseExpirationCalculator = new ResponseExpirationCalculator();
+    private ResponseExpirationCalculator responseExpirationCalculator;
 
     private ThresholdingOutputStream thresholdingOutputStream;
     private boolean serveIfThresholdReached;
@@ -210,11 +211,24 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     /**
+     * Enables expiration detection, response headers are then intercepted and suppressed from the response and used
+     * internally to calculate when the response expires (its time to live value). Use {@link #getTimeToLiveInSeconds()}
+     * to get the calculated value. See {@link ResponseExpirationCalculator} for more details on how the calculation
+     * is performed.
+     */
+    public void setResponseExpirationDetectionEnabled() {
+        this.responseExpirationCalculator = new ResponseExpirationCalculator();
+    }
+
+    /**
      * Returns the number of seconds the response can be cached, where 0 means that it must not be cached and -1 means
-     * that it there is no indication on how long it can be cached for.
+     * that it there is no indication on how long it can be cached for. Will also return -1 if expiration calculation is
+     * disabled.
+     *
+     * @see #setResponseExpirationDetectionEnabled()
      */
     public int getTimeToLiveInSeconds() {
-        return responseExpirationCalculator.getMaxAgeInSeconds();
+        return responseExpirationCalculator != null ? responseExpirationCalculator.getMaxAgeInSeconds() : -1;
     }
 
     public String getRedirectionLocation() {
@@ -257,14 +271,14 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     private void replaceHeader(String name, Object value) {
-        if (!responseExpirationCalculator.addHeader(name, value)) {
+        if (responseExpirationCalculator == null || !responseExpirationCalculator.addHeader(name, value)) {
             headers.remove(name);
             headers.put(name, value);
         }
     }
 
     private void appendHeader(String name, Object value) {
-        if (!responseExpirationCalculator.addHeader(name, value)) {
+        if (responseExpirationCalculator == null || !responseExpirationCalculator.addHeader(name, value)) {
             headers.put(name, value);
         }
     }
