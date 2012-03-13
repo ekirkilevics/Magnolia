@@ -71,7 +71,7 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveH
                 }
             }
             if(l.size() > 0) {
-                NodeDataUtil.getOrCreateAndSet(node, name, (Value[])l.toArray(new Value[l.size()]));
+                NodeDataUtil.getOrCreateAndSet(node, name, l.toArray(new Value[l.size()]));
             }
         } else {
             if(node.hasNodeData(name)) {
