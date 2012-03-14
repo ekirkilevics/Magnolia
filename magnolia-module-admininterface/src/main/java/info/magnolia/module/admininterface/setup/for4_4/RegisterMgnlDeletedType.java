@@ -47,13 +47,13 @@ import info.magnolia.repository.RepositoryConstants;
 
 /**
  * Task for registration of new mixin - mgnl:deleted.
- * @author had
- * @version $Id: $
+ *
+ * @version $Id$
  */
 public class RegisterMgnlDeletedType extends AbstractTask {
 
     public RegisterMgnlDeletedType() {
-        super("", "");
+        super("Register mgnl:deleted", "Register additional mixin mgnl:deleted.");
     }
 
     @Override
