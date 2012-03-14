@@ -164,10 +164,9 @@ public class CoreModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
         executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.4.6"));
 
         // THEN
-        // check userManagers
         final Session configSession = MgnlContext.getJCRSession(RepositoryConstants.CONFIG);
-        String systemUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/system").getProperty("realName").getString();
-        String adminUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/admin").getProperty("realName").getString();
+        final String systemUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/system").getProperty("realmName").getString();
+        final String adminUserManagerRealNameValue = configSession.getNode("/server/security/userManagers/admin").getProperty("realmName").getString();
 
         assertEquals("system", systemUserManagerRealNameValue);
         assertEquals("admin", adminUserManagerRealNameValue);

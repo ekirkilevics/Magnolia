@@ -47,6 +47,7 @@ import info.magnolia.module.delta.ChildrenExistsDelegateTask;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
@@ -129,6 +130,11 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                     new OrderNodeBeforeTask("Order clientCallbacks", "Order 'form' clientCallback before 'public'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/form", "public"),null))
                 .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))
                 .addTask(new OrderNodeBeforeTask("Order i18n", "Put i18n subnodes in proper order.", RepositoryConstants.CONFIG, "/server/i18n/content", "system"))
+        );
+
+        register(DeltaBuilder.update("4.5.2", "")
+                .addTask(new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/system", "realName", "/server/security/userManagers/system", "realmName"))
+                .addTask(new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/admin", "realName", "/server/security/userManagers/admin", "realmName"))
         );
     }
 
