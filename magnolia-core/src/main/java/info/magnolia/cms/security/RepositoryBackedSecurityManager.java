@@ -45,6 +45,7 @@ import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -252,6 +253,9 @@ public abstract class RepositoryBackedSecurityManager {
             @Override
             public Map<String, ACL> doExec(Session session) throws Throwable {
                 Node node = findPrincipalNode(principalName, session);
+                if(node == null){
+                    return Collections.emptyMap();
+                }
                 return getACLs(node);
             }});
     }
