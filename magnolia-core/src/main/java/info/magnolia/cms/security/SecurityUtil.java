@@ -359,18 +359,12 @@ public class SecurityUtil {
 
     private static void checkPrivateKeyStoreExistence(final String path) throws SecurityException {
         if(StringUtils.isBlank(path)) {
-            throw new SecurityException("Private key store path is either null or empty");
+            throw new SecurityException("Private key store path is either null or empty. Please, check [" + KEY_LOCATION_PROPERTY + "] value in magnolia.properties");
         }
-        File keypair = null;
-        if(Path.isAbsolute(path)) {
-            keypair = new File(path);
-        } else {
-            //try with path relative to the webapp
-            String absPath = Path.getAbsoluteFileSystemPath(path);
-            keypair = new File(absPath);
-        }
+        String absPath = Path.getAbsoluteFileSystemPath(path);
+        File keypair = new File(absPath);
         if(!keypair.exists()) {
-            throw new SecurityException("Private key store doesn't exist at " + keypair.getAbsolutePath());
+            throw new SecurityException("Private key store doesn't exist at [" + keypair.getAbsolutePath() + "]. Please, ensure that [" + KEY_LOCATION_PROPERTY + "] actually points to the correct location");
         }
     }
 }
