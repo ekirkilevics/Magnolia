@@ -128,7 +128,6 @@ public class PathTest {
 
     @Test
     public void testGetAbsoluteFileSystemPathPrependsApplicationRootDirIfPathIsRelative() throws Exception {
-        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "/path/to/magnolia-webapp");
         String relPath = "WEB-INF/config";
         String returnedPath = Path.getAbsoluteFileSystemPath(relPath);
         assertEquals(Path.getAppRootDir().getAbsolutePath() + "/" + relPath, returnedPath);
@@ -136,7 +135,6 @@ public class PathTest {
 
     @Test
     public void testGetAbsoluteFileSystemPathReturnsArgumentIfPathIsAbsolute() throws Exception {
-        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "/path/to/magnolia-webapp");
         String absPath = "/foo/bar";
         String returnedPath = Path.getAbsoluteFileSystemPath(absPath);
         assertEquals(absPath, returnedPath);
