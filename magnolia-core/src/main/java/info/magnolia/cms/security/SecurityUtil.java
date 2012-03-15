@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.context.MgnlContext;
@@ -71,7 +72,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * Utility functions required in the context of Security.
- * 
+ *
  * @version $Id$
  */
 public class SecurityUtil {
@@ -236,12 +237,10 @@ public class SecurityUtil {
 
 
     public static String getPrivateKey() {
-        String path = SystemProperty.getProperty("magnolia.author.key.location");
+        String path = SystemProperty.getProperty(KEY_LOCATION_PROPERTY);
+        checkPrivateKeyStoreExistence(path);
         try {
             Properties defaultProps = new Properties();
-            if (path == null || !new File(path).exists()) {
-                throw new SecurityException("Private key store doesn't exist");
-            }
             FileInputStream in = new FileInputStream(path);
             defaultProps.load(in);
             in.close();
@@ -339,7 +338,7 @@ public class SecurityUtil {
         value = value + StringUtils.substringAfter(StringUtils.substringAfter(url, "mgnlUserPSWD"), "&");
         return StringUtils.removeEnd(value, "&");
     }
-    
+
     public static String stripParameterFromCacheLog(String log, String parameter){
         if(StringUtils.isBlank(log)){
             return null;
@@ -355,5 +354,23 @@ public class SecurityUtil {
             value = value + "}" + StringUtils.substringAfter(afterString, "}");
         }
         return value;
+    }
+
+
+    private static void checkPrivateKeyStoreExistence(final String path) throws SecurityException {
+        if(StringUtils.isBlank(path)) {
+            throw new SecurityException("Private key store path is either null or empty");
+        }
+        File keypair = null;
+        if(Path.isAbsolute(path)) {
+            keypair = new File(path);
+        } else {
+            //try with path relative to the webapp
+            String absPath = Path.getAbsoluteFileSystemPath(path);
+            keypair = new File(absPath);
+        }
+        if(!keypair.exists()) {
+            throw new SecurityException("Private key store doesn't exist at " + keypair.getAbsolutePath());
+        }
     }
 }
