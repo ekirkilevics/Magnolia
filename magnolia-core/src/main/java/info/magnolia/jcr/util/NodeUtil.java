@@ -192,6 +192,22 @@ public class NodeUtil {
         return node;
     }
 
+    /**
+     * Removes all wrappers of a given type. Other wrappers are cloned creating a new chain that leads to the same real
+     * node.
+     */
+    public static Node deepUnwrapAll(Node node, Class<? extends DelegateNodeWrapper> wrapperClass) {
+        while (node instanceof DelegateNodeWrapper) {
+            Node unwrapped = ((DelegateNodeWrapper) node).deepUnwrap(wrapperClass);
+            // If the unwrapping had no effect we're done
+            if (unwrapped == node) {
+                break;
+            }
+            node = unwrapped;
+        }
+        return node;
+    }
+
     public static boolean isWrappedWith(Node node, Class<? extends DelegateNodeWrapper> wrapper) {
         if (wrapper.isInstance(node)){
             return true;

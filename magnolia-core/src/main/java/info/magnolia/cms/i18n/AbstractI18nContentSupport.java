@@ -46,6 +46,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -247,6 +248,32 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
         // return the node data
         return node.getNodeData(name);
+    }
+
+    @Override
+    public Node getNode(Node node, String name) throws RepositoryException {
+        if (isEnabled()) {
+
+            try {
+                // test for the current language
+                Locale locale = getLocale();
+                Set<Locale> checkedLocales = new HashSet<Locale>();
+
+                // getNextContentLocale() returns null once the end of the locale chain is reached
+                while(locale != null){
+                    String localeSpecificChildName = name + "_" + locale;
+                    if (node.hasNode(localeSpecificChildName))
+                        return node.getNode(localeSpecificChildName);
+                    checkedLocales.add(locale);
+                    locale = getNextContentLocale(locale, checkedLocales);
+                }
+            }
+            catch (RepositoryException e) {
+                log.error("can't read i18n node " + name + " from node " + node, e);
+            }
+        }
+
+        return node.getNode(name);
     }
 
     /**

@@ -34,7 +34,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.I18nNodeWrapper;
 
 import java.io.InputStream;
@@ -89,6 +89,7 @@ public class BinaryNodeData extends AbstractNodeData {
     protected Node getBinaryNode(boolean createIfNotExisting) {
         if(binaryNode == null){
             Node parentJCRNode = getParent().getJCRNode();
+
             try {
                 if(parentJCRNode.hasNode(name)){
                     binaryNode = parentJCRNode.getNode(name);
@@ -96,16 +97,14 @@ public class BinaryNodeData extends AbstractNodeData {
                 else if(createIfNotExisting){
                     binaryNode = parentJCRNode.addNode(name, ItemType.NT_RESOURCE);
                 }
+
+                binaryNode = NodeUtil.deepUnwrapAll(binaryNode, I18nNodeWrapper.class);
+
             }
             catch (RepositoryException e) {
                 throw new RuntimeException(e);
             }
         }
-        // In case of wrapped node like I18NWrapped content, we have to UnWrapp to get access to jcr:data property.
-        if (binaryNode instanceof DelegateNodeWrapper) {
-           binaryNode = ((DelegateNodeWrapper) binaryNode).deepUnwrap(I18nNodeWrapper.class);
-        }
-
         return binaryNode;
     }
 

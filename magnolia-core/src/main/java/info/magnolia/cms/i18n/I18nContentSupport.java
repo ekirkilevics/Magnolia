@@ -39,6 +39,7 @@ import java.util.Locale;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 
@@ -87,6 +88,8 @@ public interface I18nContentSupport {
      * Returns the NodeData object based on the current language.
      */
     public NodeData getNodeData(Content node, String name);
+
+    public Node getNode(Node node, String name) throws RepositoryException;
 
     /**
      * Returns the available locales.

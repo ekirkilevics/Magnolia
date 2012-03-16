@@ -33,20 +33,20 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.cms.util.ContentUtil;
-
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.util.ContentUtil;
+
 /**
- * A NodeWrapper implementation which knows about i18n support.
+ * A Node wrapper implementation which knows about i18n support and uses it to select child nodes and properties.
  *
  * @version $Id$
- *
+ * @see info.magnolia.cms.i18n.I18nContentSupport
  */
 public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
@@ -56,7 +56,7 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Node wrapNode(Node node) {
-        if(node == null) {
+        if (node == null) {
             return null;
         }
         return new I18nNodeWrapper(node);
@@ -68,4 +68,9 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
         return i18nSupport.getNodeData(ContentUtil.asContent(getWrappedNode()), relPath).getJCRProperty();
     }
 
+    @Override
+    public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
+        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+        return wrapNode(i18nSupport.getNode(getWrappedNode(), relPath));
+    }
 }
