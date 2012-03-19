@@ -449,4 +449,30 @@ public class NodeUtilTest {
         List<Node> resAsList = NodeUtil.asList(res);
         assertEquals("Should have 2 nodes  ", 2, resAsList.size());
     }
+
+    @Test
+    public void testAreSiblingsTrue() throws RepositoryException {
+        // GIVEN
+        Node subFirst1 = first.addNode("subFirst1");
+        Node subFirst2 = first.addNode("subFirst1");
+
+        // WHEN
+        boolean areSiblings  = NodeUtil.areSiblings(subFirst1, subFirst2);
+
+        // THEN
+        assertEquals("Should be Siblings  ", true, areSiblings);
+    }
+
+    @Test
+    public void testAreSiblingsFalse() throws RepositoryException {
+        // GIVEN
+        Node subFirst1 = first.addNode("subFirst1");
+        Node subFirst2 = first.addNode("subFirst2");
+
+        // WHEN
+        boolean areSiblings  = NodeUtil.areSiblings(subFirst1, subFirst2);
+
+        // THEN
+        assertEquals("Should not be Siblings  ", false, areSiblings);
+    }
 }

@@ -472,6 +472,114 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
     }
 
 
+    @Test
+    public void testRenameAndMergeNodesCleanDestination() throws IOException, RepositoryException{
+        // GIVEN
+        String nodeProperties =
+            "/source.@type=mgnl:content\n" +
+            "/source.propertyString=hello\n" +
+            "/source/chield1.@type=mgnl:content\n" +
+            "/source/chield1.propertyString=chield1\n" +
+            "/source/chield2.@type=mgnl:content\n" +
+            "/source/chield2.propertyString=chield2\n" +
+            "/source/chield1/subchield1.@type=mgnl:content\n" +
+            "/source/chield1/subchield1.propertyString=subchield1\n" +
+            "/dest.@type=mgnl:content\n" +
+            "/dest.propertyString=dest\n";
+        Node rootNode = addNodeToRoot(nodeProperties);
+        Node source = rootNode.getNode("source");
+
+        // WHEN
+        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, false);
+
+        // THEN
+        assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
+        assertNodeExistWithProperty(rootNode, "dest", "propertyString", "dest");
+        assertNodeExistWithProperty(rootNode, "dest/chield2", "propertyString", "chield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield1", "propertyString", "subchield1");
+    }
+
+    @Test
+    public void testRenameAndMergeNodesDestinationConflictOnSubChildrenNoOverride() throws IOException, RepositoryException{
+        // GIVEN
+        String nodeProperties =
+            "/source.@type=mgnl:content\n" +
+            "/source.propertyString=hello\n" +
+            "/source/chield1.@type=mgnl:content\n" +
+            "/source/chield1.propertyString=chield1\n" +
+            "/source/chield2.@type=mgnl:content\n" +
+            "/source/chield2.propertyString=chield2\n" +
+            "/source/chield1/subchield1.@type=mgnl:content\n" +
+            "/source/chield1/subchield1.propertyString=subchield1\n" +
+            "/source/chield1/subchield2.@type=mgnl:content\n" +
+            "/source/chield1/subchield2.propertyString=subchield2\n" +
+            "/dest.@type=mgnl:content\n" +
+            "/dest.propertyString=dest\n" +
+            "/dest/chield3.@type=mgnl:content\n" +
+            "/dest/chield3.propertyString=chield3\n"+
+            "/dest/chield1.@type=mgnl:content\n" +
+            "/dest/chield1.propertyString=DestChield1\n"+
+            "/dest/chield1/subchield1.@type=mgnl:content\n" +
+            "/dest/chield1/subchield1.propertyString=DestSubchield2\n";
+
+        Node rootNode = addNodeToRoot(nodeProperties);
+        Node source = rootNode.getNode("source");
+
+        // WHEN
+        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, false);
+
+        // THEN
+        assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
+        assertNodeExistWithProperty(rootNode, "dest", "propertyString", "dest");
+        assertNodeExistWithProperty(rootNode, "dest/chield1", "propertyString", "DestChield1");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield1", "propertyString", "DestSubchield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield2", "propertyString", "subchield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield2", "propertyString", "chield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield3", "propertyString", "chield3");
+    }
+
+    @Test
+    public void testRenameAndMergeNodesDestinationConflictOnSubChildrenOverride() throws IOException, RepositoryException{
+        // GIVEN
+        String nodeProperties =
+            "/source.@type=mgnl:content\n" +
+            "/source.propertyString=hello\n" +
+            "/source/chield1.@type=mgnl:content\n" +
+            "/source/chield1.propertyString=chield1\n" +
+            "/source/chield2.@type=mgnl:content\n" +
+            "/source/chield2.propertyString=chield2\n" +
+            "/source/chield1/subchield1.@type=mgnl:content\n" +
+            "/source/chield1/subchield1.propertyString=subchield1\n" +
+            "/source/chield1/subchield2.@type=mgnl:content\n" +
+            "/source/chield1/subchield2.propertyString=subchield2\n" +
+            "/dest.@type=mgnl:content\n" +
+            "/dest.propertyString=dest\n" +
+            "/dest/chield3.@type=mgnl:content\n" +
+            "/dest/chield3.propertyString=chield3\n"+
+            "/dest/chield1.@type=mgnl:content\n" +
+            "/dest/chield1.propertyString=DestChield1\n"+
+            "/dest/chield1/subchield1.@type=mgnl:content\n" +
+            "/dest/chield1/subchield1.propertyString=DestSubchield2\n" +
+            "/dest/chield1/subchield3.@type=mgnl:content\n" +
+            "/dest/chield1/subchield3.propertyString=DestSubchield3\n";
+
+        Node rootNode = addNodeToRoot(nodeProperties);
+        Node source = rootNode.getNode("source");
+
+        // WHEN
+        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, true);
+
+        // THEN
+        assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
+        assertNodeExistWithProperty(rootNode, "dest", "propertyString", "dest");
+        assertNodeExistWithProperty(rootNode, "dest/chield1", "propertyString", "DestChield1");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield1", "propertyString", "subchield1");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield2", "propertyString", "subchield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield1/subchield3", "propertyString", "DestSubchield3");
+        assertNodeExistWithProperty(rootNode, "dest/chield2", "propertyString", "chield2");
+        assertNodeExistWithProperty(rootNode, "dest/chield3", "propertyString", "chield3");
+    }
+
 
     /**
      * Common check.

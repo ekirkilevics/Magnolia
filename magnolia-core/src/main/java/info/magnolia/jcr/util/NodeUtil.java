@@ -342,6 +342,15 @@ public class NodeUtil {
         return isSame(nodes.nextNode(), node);
     }
 
+    /**
+     * Check if node1 and node2 are siblings.
+     */
+    public static boolean areSiblings(Node node1, Node node2) throws RepositoryException {
+        Node parent1 = node1.getParent();
+        Node parent2 = node2.getParent();
+        return isSame(parent1, parent2) && node1.getName().equals(node2.getName());
+    }
+
     public static boolean isLastSibling(Node node) throws RepositoryException {
         Node parent = node.getParent();
         NodeIterator nodes = parent.getNodes();
@@ -359,6 +368,32 @@ public class NodeUtil {
     }
 
     /**
+     * Rename and Merge a Node.
+     * First rename the Node. 
+     * In case of destinationPath still has a node with the newName
+     *    Move the newly renamed Node and merge with the oldest one.
+     */
+    public static void renameAndMergeNodes(String sourcePath, String newName,  String workspace, boolean overrideDestination, Predicate predicate) throws RepositoryException {
+        // Init
+        Node sourceNode = SessionUtil.getNode(workspace, sourcePath);
+        String destinationPath = combinePathAndName(sourceNode.getParent().getPath(), newName);
+        Node destinationNode = SessionUtil.getNode(workspace, destinationPath);
+
+        // Rename
+        renameNode(sourceNode, newName);
+
+        // Merge in case of
+        if(destinationNode != null) {
+            moveAndMergeNodes(sourceNode.getPath(), destinationNode.getPath(), workspace, overrideDestination, predicate);
+        }
+    }
+
+    public static void renameAndMergeNodes(String sourcePath, String newName,  String workspace, boolean overrideDestination) throws RepositoryException {
+        renameAndMergeNodes(sourcePath, newName, workspace, overrideDestination, EXCLUDE_META_DATA_FILTER);
+    }
+
+
+    /**
      * Move a Node and Nodes child from sourcePath to a Node defined by destinationPath.
      * In addition of the Move, a subNode merge is performed.
      * If a child node of sourcePath is found in destinationPath, destinationPath will be overrides if overrideDestination = true.
@@ -374,14 +409,15 @@ public class NodeUtil {
         }
 
         Session session = sourceNode.getSession();
+        boolean isSibling = areSiblings(sourceNode, destinationNode);
 
         // Check if destination has source as child
-        if (destinationNode.hasNode(sourceNode.getName())) {
+        if (destinationNode.hasNode(sourceNode.getName()) || isSibling) {
             Iterator<Node> allChildren = getNodes(sourceNode, predicate).iterator();
             if (allChildren.hasNext()) {
                 // Iterate source Node children
                 while (allChildren.hasNext()) {
-                    String destinationPathTmp = destinationPath + "/" + sourceNode.getName();
+                    String destinationPathTmp = destinationPath + (isSibling ? "":"/" + sourceNode.getName());
                     String sourcePathTmp = sourcePath + "/" + allChildren.next().getName();
                     moveAndMergeNodes(sourcePathTmp, destinationPathTmp, workspace, overrideDestination, predicate);
                 }
