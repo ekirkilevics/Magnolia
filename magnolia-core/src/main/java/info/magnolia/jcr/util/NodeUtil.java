@@ -359,6 +359,53 @@ public class NodeUtil {
     }
 
     /**
+     * Move a Node and Nodes child from sourcePath to a Node defined by destinationPath.
+     * In addition of the Move, a subNode merge is performed.
+     * If a child node of sourcePath is found in destinationPath, destinationPath will be overrides if overrideDestination = true.
+     * No merge of properties are done.
+     */
+    public static void moveAndMergeNodes(String sourcePath, String destinationPath, String workspace, boolean overrideDestination, Predicate predicate) throws RepositoryException {
+        // Init
+        Node sourceNode = SessionUtil.getNode(workspace, sourcePath);
+        Node destinationNode = SessionUtil.getNode(workspace, destinationPath);
+        // Check if Nodes exist
+        if (sourceNode == null || destinationNode == null) {
+            return;
+        }
+
+        Session session = sourceNode.getSession();
+
+        // Check if destination has source as child
+        if (destinationNode.hasNode(sourceNode.getName())) {
+            Iterator<Node> allChildren = getNodes(sourceNode, predicate).iterator();
+            if (allChildren.hasNext()) {
+                // Iterate source Node children
+                while (allChildren.hasNext()) {
+                    String destinationPathTmp = destinationPath + "/" + sourceNode.getName();
+                    String sourcePathTmp = sourcePath + "/" + allChildren.next().getName();
+                    moveAndMergeNodes(sourcePathTmp, destinationPathTmp, workspace, overrideDestination, predicate);
+                }
+            }
+            else if (overrideDestination) {
+                // Replace destination node by the source node.
+                session.removeItem(destinationNode.getPath() + "/" + sourceNode.getName());
+                session.move(sourceNode.getPath(), destinationPath + "/" + sourceNode.getName());
+            }
+        }
+        else {
+            session.move(sourceNode.getPath(), destinationPath + "/" + sourceNode.getName());
+        }
+        // Clean the source if needed
+        if (session.nodeExists(sourcePath)) {
+            session.removeItem(sourcePath);
+        }
+    }
+
+    public static void moveAndMergeNodes(String sourcePath, String destinationPath, String workspace, boolean overrideDestination) throws RepositoryException {
+        moveAndMergeNodes(sourcePath, destinationPath, workspace, overrideDestination, EXCLUDE_META_DATA_FILTER);
+    }
+
+    /**
      * @return Whether the provided node as the provided permission or not.
      * @throws RuntimeException
      *             in case of RepositoryException.
