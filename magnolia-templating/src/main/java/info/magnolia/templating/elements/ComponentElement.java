@@ -86,7 +86,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
         content = getPassedContent();
 
         if(content == null) {
-            throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to rendre a component.");
+            throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to render a component.");
         }
 
         if(isAdmin()){
