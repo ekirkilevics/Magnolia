@@ -34,11 +34,12 @@
 package info.magnolia.templating.editor.client.widget.placeholder;
 
 
-import java.util.Map;
-
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
+
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Node;
@@ -65,6 +66,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
     private String areaPath = "";
     private FlowPanel buttonWrapper;
     private String label;
+    private String labelString;
 
 
     public ComponentPlaceHolder(MgnlElement mgnlElement) throws IllegalArgumentException {
@@ -83,9 +85,9 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
         buttonWrapper.setStylePrimaryName("mgnlEditorBarButtons");
 
         controlBar.add(buttonWrapper);
-        String labelString = "New Component";
+        labelString = getI18nMessage("buttons.component.new.js");
         if (this.label != null && !this.label.isEmpty()) {
-            labelString = "New " + label + " Component";
+            labelString = getI18nMessage("buttons.new.js") + " " + label + " " +getI18nMessage("buttons.component.js");
         }
 
         Label labelName = new Label(labelString);
@@ -130,6 +132,7 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
         if (this.showAddButton){
             PushButton button = new PushButton();
+            button.setTitle(getI18nMessage("buttons.add.js") + " " + labelString);
             button.setStylePrimaryName("mgnlEditorPushButton");
             button.addStyleName("add");
 

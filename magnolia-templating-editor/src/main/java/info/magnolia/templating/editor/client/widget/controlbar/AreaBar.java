@@ -34,16 +34,16 @@
 package info.magnolia.templating.editor.client.widget.controlbar;
 
 
-import java.util.Map;
-
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 import info.magnolia.rendering.template.AreaDefinition;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.user.client.ui.PushButton;
 
 
@@ -90,6 +90,7 @@ public class AreaBar extends AbstractBar {
                         PageEditor.openDialog(dialog, workspace, path);
                     }
                 });
+                editButton.setTitle(getI18nMessage("buttons.area.edit.js"));
                 editButton.setStylePrimaryName("mgnlEditorPushButton");
                 editButton.addStyleName("edit");
                 addPrimaryButton(editButton);
@@ -104,6 +105,7 @@ public class AreaBar extends AbstractBar {
                         PageEditor.deleteComponent(path);
                     }
                 });
+                removeButton.setTitle(getI18nMessage("buttons.area.delete.js"));
                 removeButton.setStylePrimaryName("mgnlEditorPushButton");
                 removeButton.addStyleName("remove");
                 addSecondaryButton(removeButton);
@@ -118,6 +120,7 @@ public class AreaBar extends AbstractBar {
                         PageEditor.createComponent(workspace, path, "mgnl:area");
                     }
                 });
+                createbutton.setTitle(getI18nMessage("buttons.area.add.js"));
                 createbutton.setStylePrimaryName("mgnlEditorPushButton");
                 createbutton.addStyleName("add");
                 addSecondaryButton(createbutton);

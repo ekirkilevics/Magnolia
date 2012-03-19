@@ -33,20 +33,18 @@
  */
 package info.magnolia.templating.editor.client.widget.controlbar;
 
-import java.util.Map;
-
+import static info.magnolia.templating.editor.client.jsni.JavascriptUtils.getI18nMessage;
 import info.magnolia.templating.editor.client.PageEditor;
 import info.magnolia.templating.editor.client.dom.MgnlElement;
 import info.magnolia.templating.editor.client.widget.dnd.DragAndDrop;
 import info.magnolia.templating.editor.client.widget.dnd.LegacyDragAndDrop;
 
-
+import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-
 import com.google.gwt.event.dom.client.DragDropEventBase;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -178,6 +176,7 @@ public class ComponentBar extends AbstractBar  {
                 PageEditor.deleteComponent(path);
             }
         });
+        remove.setTitle(getI18nMessage("buttons.component.delete.js"));
         remove.setStylePrimaryName("mgnlEditorPushButton");
         remove.addStyleName("remove");
 
@@ -191,6 +190,7 @@ public class ComponentBar extends AbstractBar  {
                 LegacyDragAndDrop.moveComponentStart(ComponentBar.this);
             }
         });
+        move.setTitle(getI18nMessage("buttons.component.move.js"));
         move.setStylePrimaryName("mgnlEditorPushButton");
         move.addStyleName("move");
         addPrimaryButton(move);
@@ -203,6 +203,7 @@ public class ComponentBar extends AbstractBar  {
                     PageEditor.openDialog(dialog, workspace, path);
                 }
             });
+            edit.setTitle(getI18nMessage("buttons.component.edit.js"));
             edit.setStylePrimaryName("mgnlEditorPushButton");
             edit.addStyleName("edit");
             addPrimaryButton(edit);
