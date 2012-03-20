@@ -33,8 +33,6 @@
  */
 package info.magnolia.voting.voters;
 
-
-
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.util.SimpleUrlPattern;
@@ -45,18 +43,18 @@ import info.magnolia.cms.util.SimpleUrlPattern;
  * <p>
  * Parameters (as Magnolia's configuration nodes):
  * <ul>
- * <li>pattern: a pattern complaint to {@link SimpleUrlPattern}
+ * <li>pattern: a pattern compliant to {@link SimpleUrlPattern}
  * </ul>
- * @author philipp
  * @version $Id$
  */
 public class URIPatternVoter extends BasePatternVoter {
+
     private SimpleUrlPattern pattern;
 
     @Override
     protected boolean boolVote(Object value) {
         String uri = resolveURIFromValue(value);
-        if(StringUtils.isEmpty(uri)){
+        if (pattern == null || StringUtils.isEmpty(uri)) {
             return false;
         }
 
