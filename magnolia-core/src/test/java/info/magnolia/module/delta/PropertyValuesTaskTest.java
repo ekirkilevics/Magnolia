@@ -38,7 +38,9 @@ import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.jcr.MockNode;
 
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.junit.Before;
@@ -103,6 +105,53 @@ public class PropertyValuesTaskTest {
 
         final NodeData nodeData = node.getNodeData("bar");
         assertEquals("wrong-value", nodeData.getString());
+    }
+
+    @Test
+    public void testExistingPropertyWithPartOfStringIsReplaced() throws RepositoryException {
+        final MockNode node = new MockNode("foo");
+        node.setProperty("bar", "some-old-value");
+
+        final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
+
+        replay(ctx);
+        pvd.checkAndModifyPartOfPropertyValue(ctx, node, "bar", "old", "new");
+        verify(ctx);
+
+        final Property nodeData = node.getProperty("bar");
+        assertEquals("some-new-value", nodeData.getString());
+    }
+
+    @Test
+    public void testPropertyThatNotContainPartOfStringIsNotReplacedButLogged() throws RepositoryException {
+        ctx.warn("Property \"bar\" was expected to exist at /foo with part string \"old\" but does not contain this string.");
+
+        final MockNode node = new MockNode("foo");
+        node.setProperty("bar", "some-wrong-value");
+
+        final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
+
+        replay(ctx);
+        pvd.checkAndModifyPartOfPropertyValue(ctx, node, "bar", "old", "new");
+        verify(ctx);
+
+        final Property nodeData = node.getProperty("bar");
+        assertEquals("some-wrong-value", nodeData.getString());
+    }
+
+    @Test
+    public void testNonExistingPropertyIsNotReplacedButLogged2() throws RepositoryException {
+        ctx.warn("Property \"bar\" was expected to exist at /foo with part string \"old\" but does not exist.");
+
+        final MockNode node = new MockNode("foo");
+
+        final PropertyValuesTask pvd = new DummyPropertyValuesDelta();
+
+        replay(ctx);
+        pvd.checkAndModifyPartOfPropertyValue(ctx, node, "bar", "old", "new");
+        verify(ctx);
+
+        assertEquals(false, node.hasProperty("bar"));
     }
 
     @Test
