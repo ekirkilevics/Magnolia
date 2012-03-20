@@ -28,8 +28,12 @@
   <context-param>
     <param-name>magnolia.initialization.file</param-name>
     <param-value>
-      WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
-      WEB-INF/config/${webapp}/magnolia.properties, WEB-INF/config/default/magnolia.properties,
+      WEB-INF/config/${servername}/${contextPath}/magnolia.properties,
+      WEB-INF/config/${servername}/${webapp}/magnolia.properties,
+      WEB-INF/config/${servername}/magnolia.properties,
+      WEB-INF/config/${contextPath}/magnolia.properties,
+      WEB-INF/config/${webapp}/magnolia.properties,
+      WEB-INF/config/default/magnolia.properties,
       WEB-INF/config/magnolia.properties
     </param-value>
   </context-param>

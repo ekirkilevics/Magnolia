@@ -105,8 +105,10 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
      * Default value for the MAGNOLIA_INITIALIZATION_FILE parameter.
      */
     protected static final String DEFAULT_INITIALIZATION_PARAMETER =
-            "WEB-INF/config/${servername}/${webapp}/magnolia.properties,"
+                      "WEB-INF/config/${servername}/${contextPath}/magnolia.properties,"
+                    + "WEB-INF/config/${servername}/${webapp}/magnolia.properties,"
                     + "WEB-INF/config/${servername}/magnolia.properties,"
+                    + "WEB-INF/config/${contextPath}/magnolia.properties,"
                     + "WEB-INF/config/${webapp}/magnolia.properties,"
                     + "WEB-INF/config/default/magnolia.properties,"
                     + "WEB-INF/config/magnolia.properties";
@@ -119,7 +121,14 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
         this.context = context;
         String propertiesFilesString = getInitParameter(context, MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
 
-        final String propertiesLocationString = processPropertyFilesString(context, initPaths.getServerName(), initPaths.getWebappFolderName(), propertiesFilesString);
+        // Trim leading and trailing slashes and default to ROOT for the default (root) context
+        String contextPath = initPaths.getContextPath();
+        contextPath = StringUtils.strip(contextPath, "/");
+        if (StringUtils.isEmpty(contextPath)) {
+            contextPath = "ROOT";
+        }
+
+        final String propertiesLocationString = processPropertyFilesString(context, initPaths.getServerName(), initPaths.getWebappFolderName(), propertiesFilesString, contextPath);
         final String[] propertiesLocation = propertiesLocationString.trim().split("[,]+",0);
         this.locations = new ArrayList<String>(propertiesLocation.length);
         // TODO - order ?

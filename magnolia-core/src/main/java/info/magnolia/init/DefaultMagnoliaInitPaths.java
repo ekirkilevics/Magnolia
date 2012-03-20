@@ -40,8 +40,6 @@ import org.apache.commons.lang.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.ServletContext;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -135,18 +133,7 @@ public class DefaultMagnoliaInitPaths implements MagnoliaInitPaths {
     }
 
     protected String determineContextPath(ServletContext context) {
-        // Getting the contextPath via reflection, until we can depend on servlet 2.5 : See MAGNOLIA-3094
-        try {
-            final Method getContextPath = context.getClass().getMethod("getContextPath", null);
-            return (String) getContextPath.invoke(context);
-        } catch (NoSuchMethodException e) {
-            log.info("Magnolia appears to be running on a server using a Servlet API version older than 2.5, so we can not know the contextPath at startup.");
-            return null;
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        }
+        return context.getContextPath();
     }
 
     /**
