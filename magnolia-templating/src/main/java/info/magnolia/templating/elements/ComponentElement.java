@@ -54,8 +54,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Renders a piece of content.
@@ -63,6 +67,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class ComponentElement extends AbstractContentTemplatingElement {
+
+    private static final Logger log = LoggerFactory.getLogger(ComponentElement.class);
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
     private final RenderingEngine renderingEngine;
@@ -89,7 +95,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
             throw new RenderException("The 'content' or 'workspace' and 'path' attribute have to be set to render a component.");
         }
 
-        if(isAdmin()){
+        if(isAdmin() && hasPermission(content)){
             MarkupHelper helper = new MarkupHelper(out);
 
             helper.openComment("cms:component");
@@ -147,6 +153,15 @@ public class ComponentElement extends AbstractContentTemplatingElement {
             webContext.setPageContext(null);
             restoreAttributesInWebContext(contextAttributes, WebContext.LOCAL_SCOPE);
         }
+    }
+
+    private boolean hasPermission(Node node) {
+        try {
+            return node.getSession().hasPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
+        } catch (RepositoryException e) {
+            log.error("Could not determine permission for node {}", node);
+        }
+        return false;
     }
 
     private Boolean resolveEditable() {

@@ -66,6 +66,7 @@ import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -147,7 +148,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if(this.areaNode != null){
             this.areaPath = getNodePath(areaNode);
         }
-        else{
+        else {
             // will be null if no area has been created (for instance for optional areas)
             // current content is the parent node
             Node parentNode = currentContent();
@@ -155,7 +156,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
             this.areaPath = getNodePath(parentNode) + "/" + name;
         }
 
-        if (isAdmin()) {
+        if (isAdmin() && hasPermission(this.areaNode)) {
             MarkupHelper helper = new MarkupHelper(out);
 
             helper.openComment(CMS_AREA).attribute(AbstractDirective.CONTENT_ATTRIBUTE, this.areaPath);
@@ -180,6 +181,18 @@ public class AreaElement extends AbstractContentTemplatingElement {
             helper.append(" -->\n");
 
         }
+    }
+
+    private boolean hasPermission(Node node) {
+        if (node == null) {
+            node = currentContent();
+        }
+        try {
+            return node.getSession().hasPermission(node.getPath(), Session.ACTION_SET_PROPERTY);
+        } catch (RepositoryException e) {
+            log.error("Could not determine permission for node {}", node);
+        }
+        return false;
     }
 
     private Node createNewAreaNode(Node parentNode) throws RepositoryException {
