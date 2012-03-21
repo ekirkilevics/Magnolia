@@ -418,7 +418,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     protected String resolveAvailableComponents() {
         if (StringUtils.isNotEmpty(availableComponents)) {
-            return availableComponents;
+            return StringUtils.remove(availableComponents, " ");
         }
         if (areaDefinition != null && areaDefinition.getAvailableComponents().size() > 0) {
             Iterator<ComponentAvailability> iterator = areaDefinition.getAvailableComponents().values().iterator();
