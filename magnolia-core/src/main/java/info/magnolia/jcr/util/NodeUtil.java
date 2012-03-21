@@ -345,7 +345,7 @@ public class NodeUtil {
     /**
      * Check if node1 and node2 are siblings.
      */
-    public static boolean areSiblings(Node node1, Node node2) throws RepositoryException {
+    public static boolean isSameNameSiblings(Node node1, Node node2) throws RepositoryException {
         Node parent1 = node1.getParent();
         Node parent2 = node2.getParent();
         return isSame(parent1, parent2) && node1.getName().equals(node2.getName());
@@ -369,27 +369,33 @@ public class NodeUtil {
 
     /**
      * Rename and Merge a Node.
-     * First rename the Node. 
+     * First rename the Node.
      * In case of destinationPath still has a node with the newName
      *    Move the newly renamed Node and merge with the oldest one.
      */
-    public static void renameAndMergeNodes(String sourcePath, String newName,  String workspace, boolean overrideDestination, Predicate predicate) throws RepositoryException {
+    public static Node renameAndMergeNodes(Node nodeToRename, String newName, boolean overrideDestination, Predicate predicate) throws RepositoryException {
         // Init
-        Node sourceNode = SessionUtil.getNode(workspace, sourcePath);
-        String destinationPath = combinePathAndName(sourceNode.getParent().getPath(), newName);
-        Node destinationNode = SessionUtil.getNode(workspace, destinationPath);
+        String destinationPath = combinePathAndName(nodeToRename.getParent().getPath(), newName);
+        Session session = nodeToRename.getSession();
+
+        Node destinationNode = null;
+        if(session.nodeExists(destinationPath)) {
+            destinationNode = session.getNode(destinationPath);
+        }
 
         // Rename
-        renameNode(sourceNode, newName);
+        renameNode(nodeToRename, newName);
 
         // Merge in case of
         if(destinationNode != null) {
-            moveAndMergeNodes(sourceNode.getPath(), destinationNode.getPath(), workspace, overrideDestination, predicate);
+            moveAndMergeNodes(nodeToRename, destinationNode.getPath(), overrideDestination, predicate);
         }
+
+        return session.getNode(destinationPath);
     }
 
-    public static void renameAndMergeNodes(String sourcePath, String newName,  String workspace, boolean overrideDestination) throws RepositoryException {
-        renameAndMergeNodes(sourcePath, newName, workspace, overrideDestination, EXCLUDE_META_DATA_FILTER);
+    public static Node renameAndMergeNodes(Node nodeToRename, String newName,  boolean overrideDestination) throws RepositoryException {
+        return renameAndMergeNodes(nodeToRename, newName, overrideDestination, EXCLUDE_META_DATA_FILTER);
     }
 
 
@@ -399,46 +405,55 @@ public class NodeUtil {
      * If a child node of sourcePath is found in destinationPath, destinationPath will be overrides if overrideDestination = true.
      * No merge of properties are done.
      */
-    public static void moveAndMergeNodes(String sourcePath, String destinationPath, String workspace, boolean overrideDestination, Predicate predicate) throws RepositoryException {
-        // Init
-        Node sourceNode = SessionUtil.getNode(workspace, sourcePath);
-        Node destinationNode = SessionUtil.getNode(workspace, destinationPath);
+    public static Node moveAndMergeNodes(Node nodeToMove, String destinationPath, boolean overrideDestination, Predicate predicate) throws RepositoryException {
+
         // Check if Nodes exist
-        if (sourceNode == null || destinationNode == null) {
-            return;
+        if (nodeToMove == null) {
+            return null;
         }
 
-        Session session = sourceNode.getSession();
-        boolean isSibling = areSiblings(sourceNode, destinationNode);
+        Session session = nodeToMove.getSession();
+        String destinationPathName = destinationPath + "/" + nodeToMove.getName();
+        String initialSourcePath = nodeToMove.getPath();
 
-        // Check if destination has source as child
-        if (destinationNode.hasNode(sourceNode.getName()) || isSibling) {
-            Iterator<Node> allChildren = getNodes(sourceNode, predicate).iterator();
-            if (allChildren.hasNext()) {
-                // Iterate source Node children
-                while (allChildren.hasNext()) {
-                    String destinationPathTmp = destinationPath + (isSibling ? "":"/" + sourceNode.getName());
-                    String sourcePathTmp = sourcePath + "/" + allChildren.next().getName();
-                    moveAndMergeNodes(sourcePathTmp, destinationPathTmp, workspace, overrideDestination, predicate);
+        // Check if destination exist, and  (has source as child or are siblings)
+        if (session.nodeExists(destinationPath)) {
+            Node destinationNode = session.getNode(destinationPath);
+            boolean isSibling = isSameNameSiblings(nodeToMove, destinationNode);
+            if (destinationNode.hasNode(nodeToMove.getName()) ||  isSibling) {
+                Iterator<Node> allChildren = getNodes(nodeToMove, predicate).iterator();
+                if (allChildren.hasNext()) {
+                    // Iterate source Node children
+                    while (allChildren.hasNext()) {
+                        String destinationPathTmp = destinationPath + (isSibling ? "":"/" + nodeToMove.getName());
+                        Node sourceNodeTmp = session.getNode(nodeToMove.getPath() + "/" + allChildren.next().getName());
+                        moveAndMergeNodes(sourceNodeTmp, destinationPathTmp,  overrideDestination, predicate);
+                    }
+                }
+                else if (overrideDestination) {
+                    // Replace destination node by the source node.
+                    session.removeItem(destinationNode.getPath() + "/" + nodeToMove.getName());
+                    session.move(nodeToMove.getPath(), destinationPathName);
                 }
             }
-            else if (overrideDestination) {
-                // Replace destination node by the source node.
-                session.removeItem(destinationNode.getPath() + "/" + sourceNode.getName());
-                session.move(sourceNode.getPath(), destinationPath + "/" + sourceNode.getName());
+            else {
+                session.move(nodeToMove.getPath(), destinationPathName);
             }
         }
         else {
-            session.move(sourceNode.getPath(), destinationPath + "/" + sourceNode.getName());
+            throw new RepositoryException("Destination Path do not exist "+destinationPath);
         }
+
         // Clean the source if needed
-        if (session.nodeExists(sourcePath)) {
-            session.removeItem(sourcePath);
+        if (session.nodeExists(initialSourcePath)) {
+            session.removeItem(initialSourcePath);
         }
+
+        return session.getNode(destinationPath);
     }
 
-    public static void moveAndMergeNodes(String sourcePath, String destinationPath, String workspace, boolean overrideDestination) throws RepositoryException {
-        moveAndMergeNodes(sourcePath, destinationPath, workspace, overrideDestination, EXCLUDE_META_DATA_FILTER);
+    public static Node moveAndMergeNodes(Node nodeToMove,  String destinationPath, boolean overrideDestination) throws RepositoryException {
+        return moveAndMergeNodes(nodeToMove, destinationPath, overrideDestination, EXCLUDE_META_DATA_FILTER);
     }
 
     /**

@@ -457,7 +457,7 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst1");
 
         // WHEN
-        boolean areSiblings  = NodeUtil.areSiblings(subFirst1, subFirst2);
+        boolean areSiblings  = NodeUtil.isSameNameSiblings(subFirst1, subFirst2);
 
         // THEN
         assertEquals("Should be Siblings  ", true, areSiblings);
@@ -470,7 +470,7 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2");
 
         // WHEN
-        boolean areSiblings  = NodeUtil.areSiblings(subFirst1, subFirst2);
+        boolean areSiblings  = NodeUtil.isSameNameSiblings(subFirst1, subFirst2);
 
         // THEN
         assertEquals("Should not be Siblings  ", false, areSiblings);

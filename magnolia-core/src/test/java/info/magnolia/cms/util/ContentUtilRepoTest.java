@@ -100,4 +100,16 @@ public class ContentUtilRepoTest extends RepositoryTestCase {
         assertEquals(ItemType.CONTENTNODE.getSystemName(), hm.getContent("/test/bar").getNodeTypeName());
     }
 
+
+    @Test
+    public void testMoveInSession() throws RepositoryException{
+        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        Content src = hm.getRoot().createContent("test");
+        src.createContent("subnode1");
+        src.createContent("subnode2");
+        Content source = src.getContent("subnode1");
+        ContentUtil.moveInSession(source, "/test/subnode2/subnode1");
+        assertTrue(hm.isExist("/test/subnode2"));
+        assertTrue(hm.isExist("/test/subnode2/subnode1"));
+    }
 }

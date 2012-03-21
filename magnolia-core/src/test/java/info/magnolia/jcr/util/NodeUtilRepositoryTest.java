@@ -74,13 +74,39 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
         assertNodeExistWithProperty(rootNode, "dest/source", "propertyString", "hello");
         assertNodeExistWithProperty(rootNode, "dest/source/chield1", "propertyString", "chield1");
         assertEquals("Should be moved ",rootNode.hasNode("dest/source/chield2"), true);
+    }
+
+
+    @Test(expected= RepositoryException.class)
+    public void testMoveAndMergeNodesToSubPathCleanDestination() throws IOException, RepositoryException{
+        // GIVEN
+        String nodeProperties =
+            "/source.@type=mgnl:content\n" +
+            "/source.propertyString=hello\n" +
+            "/source/chield1.@type=mgnl:content\n" +
+            "/source/chield1.propertyString=chield1\n" +
+            "/source/chield2.@type=mgnl:content\n" +
+            "/source/chield2.propertyString=chield2\n" +
+            "/source/chield1/subchield1.@type=mgnl:content\n" +
+            "/source/chield1/subchield1.propertyString=subchield1\n" +
+            "/dest.@type=mgnl:content\n" +
+            "/dest.propertyString=dest\n";
+        Node rootNode = addNodeToRoot(nodeProperties);
+        Node source = rootNode.getNode("source");
+        Node dest = rootNode.getNode("dest");
+
+        // WHEN
+        NodeUtil.moveAndMergeNodes(source, dest.getPath()+"/temp", false);
+
+        // THEN
+
     }
 
     @Test
@@ -104,7 +130,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -138,7 +164,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -176,7 +202,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -217,7 +243,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -258,7 +284,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, true);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), true);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -302,7 +328,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, true);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), true);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -346,7 +372,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node dest = rootNode.getNode("dest");
 
         // WHEN
-        NodeUtil.moveAndMergeNodes(source.getPath(), dest.getPath(), RepositoryConstants.WEBSITE, false);
+        NodeUtil.moveAndMergeNodes(source, dest.getPath(), false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -490,7 +516,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node source = rootNode.getNode("source");
 
         // WHEN
-        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, false);
+        NodeUtil.renameAndMergeNodes(source, "dest", false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -526,7 +552,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node source = rootNode.getNode("source");
 
         // WHEN
-        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, false);
+        NodeUtil.renameAndMergeNodes(source, "dest",false);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
@@ -567,7 +593,7 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         Node source = rootNode.getNode("source");
 
         // WHEN
-        NodeUtil.renameAndMergeNodes(source.getPath(), "dest", RepositoryConstants.WEBSITE, true);
+        NodeUtil.renameAndMergeNodes(source, "dest",  true);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("source"), false);
