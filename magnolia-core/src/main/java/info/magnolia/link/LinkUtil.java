@@ -61,7 +61,7 @@ public class LinkUtil {
     /**
      * Pattern that matches external and mailto: links.
      */
-    public static final Pattern EXTERNAL_LINK_PATTERN = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
+    public static final Pattern EXTERNAL_LINK_PATTERN = Pattern.compile("^(\\w*://|mailto:|javascript:|tel:).*");
 
     public static final String DEFAULT_EXTENSION = "html";
 
