@@ -72,7 +72,7 @@ public class SetExpirationHeadersTest {
 
         // THEN
         verify(response).setHeader("Pragma", "");
-        verify(response).setHeader(eq("Cache-Control"), startsWith("max-age="));
+        verify(response).setHeader(eq("Cache-Control"), matches("max-age=\\d{4}, public"));
         verify(response).setDateHeader(eq("Expires"), anyLong());
     }
 
