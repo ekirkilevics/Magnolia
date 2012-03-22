@@ -64,8 +64,11 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
+ * Superclass for Tests requiring access to a real jcr repo.
+ * Caution: since Magnolia 4.5 this is a JUnit-4 style test.
+ *
  * @author ashapochka
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public abstract class RepositoryTestCase extends MgnlTestCase {
 
@@ -85,8 +88,6 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     @Override
     @Before
     public void setUp() throws Exception {
-        //        ComponentsTestUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
-        //        ComponentsTestUtil.setInstance(PropertiesInitializer.class, new PropertiesInitializer(Components.getComponentProvider().getComponent(ModuleRegistry.class)));
         super.setUp();
 
         workaroundJCR1778();
