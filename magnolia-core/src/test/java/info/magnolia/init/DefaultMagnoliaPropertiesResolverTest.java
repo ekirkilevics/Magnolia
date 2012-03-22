@@ -204,30 +204,4 @@ public class DefaultMagnoliaPropertiesResolverTest {
         assertEquals(1, locations.size());
         assertEquals("WEB-INF/ROOT/magnolia.properties", locations.get(0));
     }
-
-    @Test
-    public void testFileResolutionWithRootContextPathIncorrectlySetToSingleSlash() {
-
-        expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/${contextPath}/magnolia.properties");
-
-        TestMagnoliaInitPaths magnoliaInitPaths = new TestMagnoliaInitPaths("test-host-name", "/tmp/magnoliaTests", "magnoliaTests", "/");
-
-        replay(ctx);
-        final List<String> locations = new DefaultMagnoliaPropertiesResolver(ctx, magnoliaInitPaths).getLocations();
-        assertEquals(1, locations.size());
-        assertEquals("WEB-INF/ROOT/magnolia.properties", locations.get(0));
-    }
-
-    @Test
-    public void testFileResolutionWithContextPathIncorrectlyEndingInSlash() {
-
-        expect(ctx.getInitParameter("magnolia.initialization.file")).andReturn("WEB-INF/${contextPath}/magnolia.properties");
-
-        TestMagnoliaInitPaths magnoliaInitPaths = new TestMagnoliaInitPaths("test-host-name", "/tmp/magnoliaTests", "magnoliaTests", "/foo/bar/");
-
-        replay(ctx);
-        final List<String> locations = new DefaultMagnoliaPropertiesResolver(ctx, magnoliaInitPaths).getLocations();
-        assertEquals(1, locations.size());
-        assertEquals("WEB-INF/foo/bar/magnolia.properties", locations.get(0));
-    }
 }

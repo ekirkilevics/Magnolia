@@ -121,11 +121,12 @@ public class DefaultMagnoliaPropertiesResolver implements MagnoliaPropertiesReso
         this.context = context;
         String propertiesFilesString = getInitParameter(context, MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
 
-        // Trim leading and trailing slashes and default to ROOT for the default (root) context
+        // Use ROOT for the default (root) context, otherwise trim the leading slash to prevent double slashes
         String contextPath = initPaths.getContextPath();
-        contextPath = StringUtils.strip(contextPath, "/");
-        if (StringUtils.isEmpty(contextPath)) {
+        if (contextPath.length() == 0) {
             contextPath = "ROOT";
+        } else {
+            contextPath = contextPath.substring(1);
         }
 
         final String propertiesLocationString = processPropertyFilesString(context, initPaths.getServerName(), initPaths.getWebappFolderName(), propertiesFilesString, contextPath);
