@@ -33,6 +33,8 @@
  */
 package info.magnolia.rendering.model;
 
+import info.magnolia.rendering.template.RenderableDefinition;
+
 /**
  * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
  * model. It is called after early execution and before rendering.
@@ -41,7 +43,7 @@ package info.magnolia.rendering.model;
  * @see RenderingModel
  * @see ModelExecutionFilter
  */
-public interface EarlyExecutionAware extends RenderingModel {
+public interface EarlyExecutionAware<RD extends RenderableDefinition> extends RenderingModel<RD> {
 
     /**
      * Called before rendering of the component.
