@@ -109,8 +109,9 @@ h4 {
 }
 
 #main {
-    width: 900px;
+    width: 850px;
     float: left;
+    margin-left: 5px;
 }
 
 #main ul {
@@ -118,7 +119,7 @@ h4 {
 }
 
 #extras {
-    width: 280px;
+    width: auto;
     float: left;
 }
 
