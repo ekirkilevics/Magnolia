@@ -50,6 +50,7 @@ div.mgnlEditorBar {
   position: static !important;
   z-index: 900 !important;
   padding: 2px !important;
+  font: 62.5% arial, helvetica, sans-serif;
 }
 
 #mgnlEditorMainbarPlaceholder {
@@ -452,6 +453,7 @@ div.mgnlEditorMoveDiv {
   font-family: Verdana, sans-serif !important;
   font-size: 11px !important;
   cursor: pointer !important;
+  padding: 5px !important;
 }
 
 .mgnlPreviewMenuItem-selected {
