@@ -1445,7 +1445,7 @@
         <sv:value>&lt;p&gt;This is a single area which is also configured to be optional.&lt;/p&gt; &lt;p&gt;This means that an author can decide explicitly whether the area is to be used or not.&lt;/p&gt;</sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
-        <sv:value>This is the stage area - which is a single area</sv:value>
+        <sv:value>This is a stage single area </sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
