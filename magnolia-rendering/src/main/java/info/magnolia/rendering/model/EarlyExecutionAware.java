@@ -39,6 +39,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
  * Implemented by models that want to handle early execution in a separate callback. Also adds a setter for the parent
  * model. It is called after early execution and before rendering.
  *
+ * @param <RD> a type implementing {@link RenderableDefinition}
  * @version $Id$
  * @see RenderingModel
  * @see ModelExecutionFilter
