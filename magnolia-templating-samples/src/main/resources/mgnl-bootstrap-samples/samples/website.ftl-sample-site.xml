@@ -1442,7 +1442,7 @@
         <sv:value>admin</sv:value>
       </sv:property>
       <sv:property sv:name="text" sv:type="String">
-        <sv:value>&lt;p&gt;This stage area is a single area, and additional its configured to be an optional area.&lt;/p&gt; &lt;p&gt;Meaning that the author can decide explicid, whether the area is used or not.&lt;/p&gt;</sv:value>
+        <sv:value>&lt;p&gt;This is a single area which is also configured to be optional.&lt;/p&gt; &lt;p&gt;This means that an author can decide explicitly whether the area is to be used or not.&lt;/p&gt;</sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
         <sv:value>This is the stage area - which is a single area</sv:value>
