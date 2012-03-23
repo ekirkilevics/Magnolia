@@ -231,6 +231,8 @@ public class LinkUtilTest extends BaseLinkTest {
         assertTrue(LinkUtil.isExternalLinkOrAnchor("ftp://user:pass@server.com/foo/bar"));
 
         assertTrue(LinkUtil.isExternalLinkOrAnchor("mailto:murdock@a-team.org"));
+        assertTrue(LinkUtil.isExternalLinkOrAnchor("tel:12345"));
+        assertTrue(LinkUtil.isExternalLinkOrAnchor("tel:+41 0800 80 80"));
 
         assertTrue(LinkUtil.isExternalLinkOrAnchor("#anchor"));
         assertTrue(LinkUtil.isExternalLinkOrAnchor("#another-anchor"));
