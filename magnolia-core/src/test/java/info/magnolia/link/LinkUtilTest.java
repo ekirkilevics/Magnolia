@@ -203,6 +203,9 @@ public class LinkUtilTest extends BaseLinkTest {
 
         assertFalse(LinkUtil.isInternalRelativeLink("mailto:murdock@a-team.org"));
 
+        assertFalse(LinkUtil.isInternalRelativeLink("tel:12345"));
+        assertFalse(LinkUtil.isInternalRelativeLink("tel:+41 0800 80 80"));
+
         assertFalse(LinkUtil.isInternalRelativeLink("#anchor"));
         assertFalse(LinkUtil.isInternalRelativeLink("#another-anchor"));
 
