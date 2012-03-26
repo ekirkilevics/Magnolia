@@ -159,8 +159,11 @@ public class PageBar extends AbstractBar {
         }
 
         MenuItem desktop = new MenuItem(getI18nMessage("buttons.preview.desktop.js"), true, new DesktopPreviewCommand());
+        desktop.addStyleName("desktop");
         MenuItem smartphone = new MenuItem(getI18nMessage("buttons.preview.smartphone.js"), true, new SmartphonePreviewCommand(Orientation.PORTRAIT));
+        smartphone.addStyleName("smartphone");
         MenuItem tablet = new MenuItem(getI18nMessage("buttons.preview.tablet.js"), true, new TabletPreviewCommand(Orientation.LANDSCAPE));
+        tablet.addStyleName("tablet");
 
         List<MenuItem> options = new ArrayList<MenuItem>();
         options.add(desktop);
