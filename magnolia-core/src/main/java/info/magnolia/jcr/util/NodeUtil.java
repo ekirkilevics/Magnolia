@@ -367,94 +367,6 @@ public class NodeUtil {
         node.getSession().move(node.getPath(), newPath);
     }
 
-    /**
-     * Rename and Merge a Node.
-     * First rename the Node.
-     * In case of destinationPath still has a node with the newName
-     *    Move the newly renamed Node and merge with the oldest one.
-     */
-    public static Node renameAndMergeNodes(Node nodeToRename, String newName, boolean overrideDestination, Predicate predicate) throws RepositoryException {
-        // Init
-        String destinationPath = combinePathAndName(nodeToRename.getParent().getPath(), newName);
-        Session session = nodeToRename.getSession();
-
-        Node destinationNode = null;
-        if(session.nodeExists(destinationPath)) {
-            destinationNode = session.getNode(destinationPath);
-        }
-
-        // Rename
-        renameNode(nodeToRename, newName);
-
-        // Merge in case of
-        if(destinationNode != null) {
-            moveAndMergeNodes(nodeToRename, destinationNode.getPath(), overrideDestination, predicate);
-        }
-
-        return session.getNode(destinationPath);
-    }
-
-    public static Node renameAndMergeNodes(Node nodeToRename, String newName,  boolean overrideDestination) throws RepositoryException {
-        return renameAndMergeNodes(nodeToRename, newName, overrideDestination, EXCLUDE_META_DATA_FILTER);
-    }
-
-
-    /**
-     * Move a Node and Nodes child from sourcePath to a Node defined by destinationPath.
-     * In addition of the Move, a subNode merge is performed.
-     * If a child node of sourcePath is found in destinationPath, destinationPath will be overrides if overrideDestination = true.
-     * No merge of properties are done.
-     */
-    public static Node moveAndMergeNodes(Node nodeToMove, String destinationPath, boolean overrideDestination, Predicate predicate) throws RepositoryException {
-
-        // Check if Nodes exist
-        if (nodeToMove == null) {
-            return null;
-        }
-
-        Session session = nodeToMove.getSession();
-        String destinationPathName = destinationPath + "/" + nodeToMove.getName();
-        String initialSourcePath = nodeToMove.getPath();
-
-        // Check if destination exist, and  (has source as child or are siblings)
-        if (session.nodeExists(destinationPath)) {
-            Node destinationNode = session.getNode(destinationPath);
-            boolean isSibling = isSameNameSiblings(nodeToMove, destinationNode);
-            if (destinationNode.hasNode(nodeToMove.getName()) ||  isSibling) {
-                Iterator<Node> allChildren = getNodes(nodeToMove, predicate).iterator();
-                if (allChildren.hasNext()) {
-                    // Iterate source Node children
-                    while (allChildren.hasNext()) {
-                        String destinationPathTmp = destinationPath + (isSibling ? "":"/" + nodeToMove.getName());
-                        Node sourceNodeTmp = session.getNode(nodeToMove.getPath() + "/" + allChildren.next().getName());
-                        moveAndMergeNodes(sourceNodeTmp, destinationPathTmp,  overrideDestination, predicate);
-                    }
-                }
-                else if (overrideDestination) {
-                    // Replace destination node by the source node.
-                    session.removeItem(destinationNode.getPath() + "/" + nodeToMove.getName());
-                    session.move(nodeToMove.getPath(), destinationPathName);
-                }
-            }
-            else {
-                session.move(nodeToMove.getPath(), destinationPathName);
-            }
-        }
-        else {
-            throw new RepositoryException("Destination Path do not exist "+destinationPath);
-        }
-
-        // Clean the source if needed
-        if (session.nodeExists(initialSourcePath)) {
-            session.removeItem(initialSourcePath);
-        }
-
-        return session.getNode(destinationPath);
-    }
-
-    public static Node moveAndMergeNodes(Node nodeToMove,  String destinationPath, boolean overrideDestination) throws RepositoryException {
-        return moveAndMergeNodes(nodeToMove, destinationPath, overrideDestination, EXCLUDE_META_DATA_FILTER);
-    }
 
     /**
      * @return Whether the provided node as the provided permission or not.
@@ -478,7 +390,7 @@ public class NodeUtil {
         return unwrap(lhs).isSame(unwrap(rhs));
     }
 
-    private static String combinePathAndName(String path, String name) {
+    public static String combinePathAndName(String path, String name) {
         if ("/".equals(path)) {
             return "/" + name;
         }
