@@ -317,6 +317,10 @@
 
                 try{
                   var rules=styleSheet[rulesKey];
+                  //MAGNOLIA-4039: in webkit browsers adblock injects a stylesheet into the page with null rules, skip it
+                  if(rules == null) {
+                	  continue;
+                  }
                 }
                 catch(e){
                     // in some cases we might not be able to access the style sheets
