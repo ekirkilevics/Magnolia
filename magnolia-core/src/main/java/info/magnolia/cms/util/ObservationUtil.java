@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.context.LifeTimeJCRSessionUtil;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -47,6 +47,7 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 
+import org.apache.jackrabbit.core.observation.ObservationManagerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,25 @@ public class ObservationUtil {
     private final static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
 
     private static final int ALL_EVENT_TYPES_MASK = Event.NODE_ADDED | Event.NODE_REMOVED | Event.NODE_MOVED | Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED;
+
+
+    /**
+     * Unregisters all EventListeners for the given workspace.
+     */
+    public static void dispose(String workspace) {
+        try {
+            ObservationManager om = getObservationManager(workspace);
+
+            if(om instanceof ObservationManagerImpl) {
+                ((ObservationManagerImpl)om).dispose();
+            } else {
+                log.warn("Observation can not be disposed ");
+            }
+        } catch (RepositoryException e) {
+            log.error("Unable to Unregisters all EventListeners for the following workspace "+workspace, e);
+        }
+    }
+
 
     /**
      * Registers an EventListener for any node type.
