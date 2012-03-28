@@ -36,6 +36,7 @@ package info.magnolia.module.mail.setup;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.RemoveNodeTask;
 
 /**
  * Module's version handler.
@@ -47,6 +48,10 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
     public MailModuleVersionHandler() {
         register(DeltaBuilder.update("4.5", "")
             .addTask(new BootstrapSingleModuleResource("Templates configuration","Reconfigure the templates configuration.","config.modules.mail.config.templatesConfiguration.xml"))
+        );
+        register(DeltaBuilder.update("4.5.2", "")
+            .addTask(new RemoveNodeTask("Remove template", "Remove mail template test-magnolia-no-parameters", "config", "/modules/mail/config/templatesConfiguration/test-magnolia-no-parameters"))
+            .addTask(new RemoveNodeTask("Remove template", "Remove mail template test-magnolia-with-parameters", "config", "/modules/mail/config/templatesConfiguration/test-magnolia-with-parameters"))
         );
     }
 }
