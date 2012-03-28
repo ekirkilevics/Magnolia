@@ -93,6 +93,10 @@
       <artifactId>commons-httpclient</artifactId>
     </dependency>
     <dependency>
+      <groupId>net.sf.jtidy</groupId>
+      <artifactId>jtidy</artifactId>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
       <scope>test</scope>

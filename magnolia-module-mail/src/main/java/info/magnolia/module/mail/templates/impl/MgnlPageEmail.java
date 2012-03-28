@@ -53,6 +53,7 @@ import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.w3c.tidy.Tidy;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -146,6 +147,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         URL url = new URL(resourceFile);
         // retrieve the html content
         String _content = retrieveContentFromMagnolia(resourceFile);
+        _content = validateHtmlCode(_content);
         StringReader reader = new StringReader(_content);
 
         // filter the images
@@ -154,6 +156,20 @@ public class MgnlPageEmail extends FreemarkerEmail {
 
         tmp = StringUtils.remove(tmp, "&#xD;");
         super.setBody(tmp);
+    }
+
+    private String validateHtmlCode(String content) {
+        content = StringUtils.replace(content, "<div class=\"rack-design\" cms:edit>", "<div class=\"rack-design\">");
+        Tidy tidy = new Tidy();
+        tidy.setTidyMark(false);
+        tidy.setIndentContent(true);
+        tidy.setXmlTags(true);
+
+        StringWriter writer = new StringWriter();
+
+        tidy.parse(new StringReader(content), writer);
+
+        return writer.toString();
     }
 
     // TODO : this is not used !
