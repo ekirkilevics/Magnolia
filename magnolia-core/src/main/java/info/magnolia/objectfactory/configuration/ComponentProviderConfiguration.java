@@ -100,6 +100,8 @@ public class ComponentProviderConfiguration implements Cloneable {
             for (Map.Entry<Class, ComponentConfiguration> entry : components.entrySet()) {
                 clone.components.put(entry.getKey(), entry.getValue().clone());
             }
+            clone.typeMapping = new HashMap<Class<?>, Class<?>>(typeMapping);
+            clone.configurers = new ArrayList<ComponentConfigurer>(configurers);
             return clone;
         } catch (CloneNotSupportedException e) {
             // should never happen
