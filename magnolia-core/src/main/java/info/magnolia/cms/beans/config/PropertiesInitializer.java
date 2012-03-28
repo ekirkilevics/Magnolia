@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
@@ -129,6 +130,7 @@ public class PropertiesInitializer {
 
     private final ModuleRegistry moduleRegistry;
 
+    @Inject
     public PropertiesInitializer(ModuleRegistry moduleRegistry) {
         this.moduleRegistry = moduleRegistry;
     }
