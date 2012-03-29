@@ -85,15 +85,16 @@ public class GuiceComponentProviderBuilder {
         this.extraModules.add(module);
     }
 
-    public GuiceComponentProvider build() {
+    public GuiceComponentProvider build(ComponentConfigurer... configurers) {
 
         if (configuration == null) {
             configuration = new ComponentProviderConfiguration();
         }
 
         // Add implicit configurers
-        configuration.addConfigurer(new GuiceContextAndScopesConfigurer());
-        configuration.addConfigurer(new GuicePropertyConfigurer());
+        for (ComponentConfigurer configurer: configurers) {
+            configuration.addConfigurer(configurer);
+        }
 
         // Allow configurers to customize the configuration before we use it
         for (ComponentConfigurer configurer : configuration.getConfigurers()) {
@@ -129,6 +130,10 @@ public class GuiceComponentProviderBuilder {
         Injector injector = Guice.createInjector(resolveStageToUse(), module);
 
         return (GuiceComponentProvider) injector.getInstance(ComponentProvider.class);
+    }
+
+    public GuiceComponentProvider build() {
+        return build(new GuiceContextAndScopesConfigurer(), new GuicePropertyConfigurer());
     }
 
     private Stage resolveStageToUse() {
