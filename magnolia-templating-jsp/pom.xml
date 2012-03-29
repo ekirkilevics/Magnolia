@@ -31,7 +31,6 @@
             <artifactId>jsp-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <!-- TLDGEN -->
         <dependency>
             <groupId>org.extrema-sistemas</groupId>
@@ -50,7 +49,7 @@
                 <exclusion>
                     <groupId>commons-beanutils-core</groupId>
                     <artifactId>commons-beanutils-core</artifactId>
-                </exclusion>                               
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -87,21 +86,6 @@
 
     <build>
         <plugins>
-            <!-- Overrid the CheckStyle in order to exclude the package-info.java -->
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>**/package-info.java</excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <!-- TLDGEN PlugIn -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
