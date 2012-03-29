@@ -35,6 +35,7 @@ package info.magnolia.cms.core.version;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
@@ -66,6 +67,12 @@ import org.junit.Test;
  * @version $Id$
  */
 public class BaseVersionManagerTest extends RepositoryTestCase {
+
+    private static String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
+    + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
+    + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + ItemType.DELETED_NODE_MIXIN
+    + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
+    + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
 
     @Override
     @Before
@@ -108,11 +115,6 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
     @Test
     public void testCreateAndRestoreDeletedVersion() throws RepositoryException {
         Provider repoProvider = ContentRepository.getRepositoryProvider(RepositoryConstants.WEBSITE);
-        String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
-        + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
-        + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + ItemType.DELETED_NODE_MIXIN
-        + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
-        + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
 
         repoProvider.registerNodeTypes(new ByteArrayInputStream(mgnlMixDeleted.getBytes()));
 
@@ -139,6 +141,13 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         nodeInVersionWS = versionMan.getVersionedNode(node);
 
         assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
+    }
+
+    @Test
+    public void testUseSystemSessionToRetrieveVersions() throws RepositoryException {
+        Session session = MgnlContext.getSystemContext().getJCRSession(RepositoryConstants.VERSION_STORE);
+        VersionManager versionMan = VersionManager.getInstance();
+        assertSame(session, versionMan.getSession());
     }
 
     @Test
