@@ -67,6 +67,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -332,7 +333,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         getHttpClient(url).executeMethod(redirect);
 
         URL _url = new URL(url);
-        String file = _url.getFile();
+        String file = URLDecoder.decode(_url.getFile(), "ISO-8859-1");
 
         // create file in temp dir, with just the file name.
         File tempFile = new File(Path.getTempDirectoryPath()
