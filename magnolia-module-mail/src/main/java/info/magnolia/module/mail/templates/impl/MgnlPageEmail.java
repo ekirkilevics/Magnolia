@@ -148,7 +148,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         URL url = new URL(resourceFile);
         // retrieve the html content
         String _content = retrieveContentFromMagnolia(resourceFile);
-        _content = validateHtmlCode(_content);
+        _content = cleanupHtmlCode(_content);
         StringReader reader = new StringReader(_content);
 
         // filter the images
@@ -159,8 +159,9 @@ public class MgnlPageEmail extends FreemarkerEmail {
         super.setBody(tmp);
     }
 
-    private String validateHtmlCode(String content) {
-        content = StringUtils.replace(content, "<div class=\"rack-design\" cms:edit>", "<div class=\"rack-design\">");
+    protected String cleanupHtmlCode(String content) {
+        log.info("Cleaning html code");
+        content = content.replaceAll("<div ([.[^<>]]*)cms:edit([.[^<>]]*)>", "<div $1$2>");
         Tidy tidy = new Tidy();
         tidy.setTidyMark(false);
         tidy.setIndentContent(true);
