@@ -111,7 +111,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
                 .addTask(new UpdateSecurityFilterClientCallbacksConfiguration("uriSecurity", "securityCallback"))
                 .addTask(new UpdateUserManagers())
-                .addCondition(new CheckKeyProperty())
                 .addTask(new HashUsersPasswords())
                 .addTask(bootstrapChannelManagement)
                 .addTask(bootstrapChannelFilter)
@@ -176,7 +175,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u2.textFilterClassesAreNotSet();
 
         conditions.add(new SystemTmpDirCondition());
-        conditions.add(new CheckKeyProperty());
 
         return conditions;
     }
