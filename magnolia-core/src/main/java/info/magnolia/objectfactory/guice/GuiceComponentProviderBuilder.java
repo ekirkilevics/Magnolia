@@ -33,19 +33,24 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.objectfactory.configuration.ComponentConfigurer;
+import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.AbstractModule;
+import com.google.inject.CreationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Stage;
 import com.google.inject.util.Modules;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
-import info.magnolia.objectfactory.configuration.ComponentConfigurer;
-import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 
 
 /**
@@ -55,10 +60,11 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
  */
 public class GuiceComponentProviderBuilder {
 
+    private static final Logger log = LoggerFactory.getLogger(GuiceComponentProviderBuilder.class);
     private ComponentProviderConfiguration configuration;
     private boolean exposeGlobally;
     private GuiceComponentProvider parent;
-    private List<Module> extraModules = new ArrayList<Module>();
+    private final List<Module> extraModules = new ArrayList<Module>();
     private Stage stage;
 
     public GuiceComponentProviderBuilder exposeGlobally() {
@@ -127,9 +133,14 @@ public class GuiceComponentProviderBuilder {
             module = Modules.override(parentBindingsModule).with(module);
         }
 
-        Injector injector = Guice.createInjector(resolveStageToUse(), module);
+        try {
+            Injector injector = Guice.createInjector(resolveStageToUse(), module);
+            return (GuiceComponentProvider) injector.getInstance(ComponentProvider.class);
+        } catch (CreationException e) {
+            log.error("Magnolia failed to load module configuration. Please ensure you don't have any legacy modules present in your web application.", e);
+            throw e;
+        }
 
-        return (GuiceComponentProvider) injector.getInstance(ComponentProvider.class);
     }
 
     public GuiceComponentProvider build() {
