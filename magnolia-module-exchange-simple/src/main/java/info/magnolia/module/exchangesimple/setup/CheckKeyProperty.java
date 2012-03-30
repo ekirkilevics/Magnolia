@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,7 +31,6 @@
  * intact.
  *
  */
-
 package info.magnolia.module.exchangesimple.setup;
 
 import info.magnolia.cms.core.SystemProperty;

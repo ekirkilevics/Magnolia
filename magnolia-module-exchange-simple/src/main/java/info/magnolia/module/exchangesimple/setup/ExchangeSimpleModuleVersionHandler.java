@@ -49,10 +49,10 @@ import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.module.delta.WebXmlConditionsUtil;
-import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
+//import info.magnolia.module.delta.WebXmlConditionsUtil;
+//import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.setup.SystemTmpDirCondition;
+//import info.magnolia.setup.SystemTmpDirCondition;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
