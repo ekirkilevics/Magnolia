@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -41,6 +41,7 @@ import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
@@ -48,7 +49,10 @@ import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.setup.SystemTmpDirCondition;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -117,6 +121,13 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
 
         return tasks;
     }
+    
+    @Override
+    protected List<Condition> getInstallConditions() {
+        final ArrayList<Condition> conditions = new ArrayList<Condition>();
 
+        conditions.add(new CheckKeyProperty());
 
+        return conditions;
+    }
 }
