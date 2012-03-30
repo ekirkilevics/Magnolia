@@ -123,6 +123,10 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent sce) {
+        contextInitialized(sce, true);
+    }
+
+    public void contextInitialized(final ServletContextEvent sce, boolean startServer) {
         try {
             servletContext = sce.getServletContext();
 
@@ -161,7 +165,9 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
             // Delegate to ConfigLoader to complete initialization
             loader = system.getComponent(ConfigLoader.class);
-            startServer();
+            if (startServer) {
+                startServer();
+            }
 
         } catch (Throwable t) {
             log.error("Oops, Magnolia could not be started", t);
