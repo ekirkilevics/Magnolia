@@ -334,7 +334,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         getHttpClient(url).executeMethod(redirect);
 
         URL _url = new URL(url);
-        String file = URLDecoder.decode(_url.getFile(), "ISO-8859-1");
+        String file = URLDecoder.decode(_url.getFile(), "UTF-8");
 
         // create file in temp dir, with just the file name.
         File tempFile = new File(Path.getTempDirectoryPath()
