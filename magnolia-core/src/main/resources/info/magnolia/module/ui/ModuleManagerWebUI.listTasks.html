@@ -17,14 +17,12 @@
     [#if delta.description?has_content]<p class="deltaDescription">${delta.description?cap_first?html}</p>[/#if]
     <ul class="conditions">
       [#list delta.conditions as condition]
-        <li class="condition">${condition.name?cap_first?html} <span class="conditionDescription">${condition.description?cap_first?html}</span></li>
+        <li class="condition">${condition.name!""?cap_first?html} <span class="conditionDescription">${condition.description!""?cap_first?html}</span></li>
       [/#list]
     </ul>
     <ul class="tasks">
       [#list delta.tasks as task]
-        [#if task?has_content]
-          <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>
-        [/#if]
+        <li class="task">${task.name!""?cap_first?html} <span class="taskDescription">${task.description!""?cap_first?html}</span></li>
       [/#list]
     </ul>
     </div>
