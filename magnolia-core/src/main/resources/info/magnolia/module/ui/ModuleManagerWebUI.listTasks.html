@@ -22,7 +22,9 @@
     </ul>
     <ul class="tasks">
       [#list delta.tasks as task]
-        <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>
+        [#if task?has_content]
+          <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>
+        [/#if]
       [/#list]
     </ul>
     </div>

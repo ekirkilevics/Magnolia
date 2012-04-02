@@ -47,13 +47,12 @@ public class CheckKeyProperty  extends AbstractCondition {
     private static final String KEY_PROP = "magnolia.author.key.location";
 
     public CheckKeyProperty(){
-        super("Check the key property", "Ensure that the key property is present in the magnolia configuration");
+        super("Check the key property", "Ensure that the key property '" + KEY_PROP + "' is present in the Magnolia properties file.");
     }
 
     @Override
     public boolean check(InstallContext installContext) {
         if(SystemProperty.getProperty(KEY_PROP)==null){
-            installContext.error("The mandatory property 'magnolia.author.key.location' is missing. Please update your configuration.", new Exception());
             return false;
         }
         return true;
