@@ -36,7 +36,6 @@
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.MySqlPersistenceManager">
       <param name="dataSourceName" value="magnoliaAuthor"/>
       <param name="schemaObjectPrefix" value="${wsp.name}_" />
-      <param name="externalBLOBs" value="false" />
     </PersistenceManager>
     <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
       <param name="path" value="${wsp.home}/index" />
@@ -71,7 +70,6 @@
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.MySqlPersistenceManager">
       <param name="dataSourceName" value="magnoliaAuthor"/>
       <param name="schemaObjectPrefix" value="version_" />
-      <param name="externalBLOBs" value="false" />
     </PersistenceManager>
   </Versioning>
 </Repository>
