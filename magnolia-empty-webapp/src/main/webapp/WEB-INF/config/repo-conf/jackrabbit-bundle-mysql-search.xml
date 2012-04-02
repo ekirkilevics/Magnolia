@@ -23,19 +23,19 @@
     <LoginModule class="info.magnolia.jaas.sp.jcr.JackrabbitAuthenticationModule">
     </LoginModule>
   </Security>
-  <DataStore class="org.apache.jackrabbit.core.data.db.DbDataStore">
-    <param name="dataSourceName" value="magnoliaAuthor" />
-    <param name="schemaObjectPrefix" value="ds_" />
+  <DataStore class="org.apache.jackrabbit.core.data.FileDataStore">
+    <param name="path" value="${rep.home}/repository/datastore"/>
+    <param name="minRecordLength" value="1024"/>
   </DataStore>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
     <FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
       <param name="dataSourceName" value="magnoliaAuthor"/>
-      <param name="schemaObjectPrefix" value="fs_" />
+      <param name="schemaObjectPrefix" value="fsws_${wsp.name}_" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.MySqlPersistenceManager">
       <param name="dataSourceName" value="magnoliaAuthor"/>
-      <param name="schemaObjectPrefix" value="${wsp.name}_" />
+      <param name="schemaObjectPrefix" value="pm_${wsp.name}_" />
     </PersistenceManager>
     <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
       <param name="path" value="${wsp.home}/index" />
@@ -65,7 +65,7 @@
   <Versioning rootPath="${rep.home}/version">
     <FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
         <param name="dataSourceName" value="magnoliaAuthor"/>
-        <param name="schemaObjectPrefix" value="fs_" />
+        <param name="schemaObjectPrefix" value="fsver_" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.MySqlPersistenceManager">
       <param name="dataSourceName" value="magnoliaAuthor"/>
