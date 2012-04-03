@@ -2,7 +2,7 @@
 <!DOCTYPE Repository PUBLIC "-//The Apache Software Foundation//DTD Jackrabbit 2.0//EN" "http://jackrabbit.apache.org/dtd/repository-2.0.dtd">
 <Repository>
   <DataSources>
-    <DataSource name="magnoliaAuthor">
+    <DataSource name="magnolia">
       <param name="driver" value="com.ingres.jdbc.IngresDriver" />
       <param name="url" value="jdbc:ingres://localhost:II7/magnolia;AUTO=multi" />
       <!-- no user is needed if the db is installed locally
@@ -12,9 +12,8 @@
       <param name="databaseType" value="ingres"/>
     </DataSource>
   </DataSources>
-  <FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
-    <param name="dataSourceName" value="magnoliaAuthor"/>
-    <param name="schemaObjectPrefix" value="fs_" />
+  <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+    <param name="path" value="${rep.home}/repository" />
   </FileSystem>
   <Security appName="magnolia">
     <SecurityManager class="org.apache.jackrabbit.core.DefaultSecurityManager"/>
@@ -30,12 +29,11 @@
   </DataStore>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
-    <FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
-      <param name="dataSourceName" value="magnoliaAuthor"/>
-      <param name="schemaObjectPrefix" value="fsws_${wsp.name}_" />
+    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+      <param name="path" value="${wsp.home}/default" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.BundleDbPersistenceManager">
-      <param name="dataSourceName" value="magnoliaAuthor"/>
+      <param name="dataSourceName" value="magnolia"/>
       <param name="schemaObjectPrefix" value="pm_${wsp.name}_" />
     </PersistenceManager>
     <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
@@ -64,12 +62,11 @@
     </WorkspaceSecurity>
   </Workspace>
   <Versioning rootPath="${rep.home}/version">
-    <FileSystem class="org.apache.jackrabbit.core.fs.db.DbFileSystem">
-        <param name="dataSourceName" value="magnoliaAuthor"/>
-        <param name="schemaObjectPrefix" value="fsver_" />
+    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+      <param name="path" value="${rep.home}/workspaces/version" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.persistence.pool.BundleDbPersistenceManager">
-      <param name="dataSourceName" value="magnoliaAuthor"/>
+      <param name="dataSourceName" value="magnolia"/>
       <param name="schemaObjectPrefix" value="version_" />
     </PersistenceManager>
   </Versioning>
