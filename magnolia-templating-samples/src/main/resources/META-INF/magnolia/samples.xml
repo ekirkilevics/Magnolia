@@ -15,7 +15,7 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>4.5/*</version>
+      <version>4.5.2/*</version>
     </dependency>
     <dependency>
       <name>dms</name>
@@ -24,11 +24,11 @@
     </dependency>
     <dependency>
       <name>templating</name>
-      <version>4.5/*</version>
+      <version>4.5.2/*</version>
     </dependency>
     <dependency>
       <name>templating-jsp</name>
-      <version>4.5/*</version>
+      <version>4.5.2/*</version>
     </dependency>   
   </dependencies>
   <servlets>
