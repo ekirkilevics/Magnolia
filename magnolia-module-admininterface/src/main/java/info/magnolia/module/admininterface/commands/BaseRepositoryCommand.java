@@ -62,7 +62,7 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
         } else {
             node = hm.getContent(getPath());
         }
-        PermissionUtil.isGranted(MgnlContext.getJCRSession(getRepository()), node.getHandle(), Session.ACTION_READ);
+        PermissionUtil.isGranted(node.getJCRNode().getSession(), node.getHandle(), Session.ACTION_READ);
         return node;
     }
 
