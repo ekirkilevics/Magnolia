@@ -171,6 +171,8 @@ public class PageBar extends AbstractBar {
         options.add(tablet);
 
         PreviewButton preview = new PreviewButton(getI18nMessage("buttons.preview.js"), new DesktopPreviewCommand(), options);
+        preview.setTitle(getI18nMessage("buttons.preview.switchToPreview.js"));
+
         addButton(preview, Float.LEFT, "mgnlEditorPreviewButton");
 
         Button adminCentral = new Button(getI18nMessage("buttons.admincentral.js"));
@@ -188,6 +190,8 @@ public class PageBar extends AbstractBar {
 
     private void createPreviewModeBar() {
         Button preview = new Button(getI18nMessage("buttons.preview.hidden.js"));
+        preview.setTitle(getI18nMessage("buttons.preview.switchToEdit.js"));
+
         preview.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
