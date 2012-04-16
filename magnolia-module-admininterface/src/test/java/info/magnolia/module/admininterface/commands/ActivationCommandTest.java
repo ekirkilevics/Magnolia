@@ -108,7 +108,8 @@ public class ActivationCommandTest {
         MgnlContext.setInstance(ctx);
         expect(sysCtx.getHierarchyManager("some-repo")).andReturn(hm);
         expect(hm.getContent(PARENT_PATH)).andReturn(state);
-        expect(ctx.getJCRSession("some-repo")).andReturn(session);
+        expect(state.getJCRNode()).andReturn(stateJCRNode);
+        expect(stateJCRNode.getSession()).andReturn(session);
         expect(session.hasPermission("/foo/bar", Session.ACTION_READ)).andReturn(true);
         expect(state.getHandle()).andReturn(PARENT_PATH);
         expect(state.getHandle()).andReturn(PARENT_PATH);
