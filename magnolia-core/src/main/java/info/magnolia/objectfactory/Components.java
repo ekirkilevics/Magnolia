@@ -45,6 +45,7 @@ package info.magnolia.objectfactory;
 public class Components {
 
     private static volatile ComponentProvider componentProvider = new NullComponentProvider();
+    private static ThreadLocal<ComponentProvider> threadLocalHierarchy = new ThreadLocal<ComponentProvider>();
 
     /**
      * Sets the current {@link ComponentProvider}.
@@ -57,7 +58,22 @@ public class Components {
      * Returns the currently set {@link ComponentProvider}.
      */
     public static ComponentProvider getComponentProvider() {
+        ComponentProvider scoped = threadLocalHierarchy.get();
+        if (scoped != null) {
+            return scoped;
+        }
         return componentProvider;
+    }
+
+    public static void pushProvider(ComponentProvider provider) {
+        if (threadLocalHierarchy.get() != null) {
+            throw new IllegalStateException("Only one additional scope is supported");
+        }
+        threadLocalHierarchy.set(provider);
+    }
+
+    public static void popProvider() {
+        threadLocalHierarchy.remove();
     }
 
     /**
