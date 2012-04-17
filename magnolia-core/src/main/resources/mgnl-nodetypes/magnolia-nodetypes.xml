@@ -199,6 +199,17 @@
             <supertype>mgnl:content</supertype>
         </supertypes>
     </nodeType>
+    
+    <!--
+    magnolia deleted node type
+    -->
+    <nodeType name="mgnl:deleted" isMixin="true" hasOrderableChildNodes="true" primaryItemName="">
+    	<supertypes>
+    		<supertype>nt:base</supertype>
+    	</supertypes>
+    </nodeType>
+    
+    
 
 
 </nodeTypes>
