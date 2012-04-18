@@ -44,6 +44,7 @@ import info.magnolia.templating.editor.client.jsni.JavascriptUtils;
 import info.magnolia.templating.editor.client.model.ModelStorage;
 import info.magnolia.templating.editor.client.widget.PreviewChannel;
 import info.magnolia.templating.editor.client.widget.PreviewChannel.Orientation;
+import info.magnolia.templating.editor.client.widget.dnd.LegacyDragAndDrop;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -164,7 +165,12 @@ public class PageEditor extends HTML implements EntryPoint {
             @Override
             public void onKeyDown(KeyDownEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-                    PageEditor.enablePreview(!isPreview);
+                    //if we're moving an element abort move
+                    if(LegacyDragAndDrop.isMoving()) {
+                        LegacyDragAndDrop.moveComponentReset();
+                    } else {
+                        PageEditor.enablePreview(!isPreview);
+                    }
                     event.preventDefault();
                 }
             }

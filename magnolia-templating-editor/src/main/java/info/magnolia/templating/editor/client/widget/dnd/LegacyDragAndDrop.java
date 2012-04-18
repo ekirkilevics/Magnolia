@@ -165,6 +165,6 @@ public class LegacyDragAndDrop {
     }
 
     public static boolean isMoving() {
-        return (sourceBar != null) ? true : false;
+        return sourceBar != null;
     }
 }
