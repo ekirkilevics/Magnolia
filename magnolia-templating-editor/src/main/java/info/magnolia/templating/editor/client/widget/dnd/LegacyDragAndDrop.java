@@ -152,7 +152,10 @@ public class LegacyDragAndDrop {
                 ComponentBar componentBar = (ComponentBar) PageEditor.model.getEditBar(component);
                 if (componentBar != null && componentBar != bar) {
                     componentBar.setStyleName("moveTarget", isMove);
-
+                    //moveOver style can be removed en bloc
+                    if(!isMove) {
+                        componentBar.setStyleName("moveOver", isMove);
+                    }
                     componentBar.getElement().setDraggable(Element.DRAGGABLE_TRUE);
 
                 }
