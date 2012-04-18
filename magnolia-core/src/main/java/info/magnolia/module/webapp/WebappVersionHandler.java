@@ -33,15 +33,20 @@
  */
 package info.magnolia.module.webapp;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleVersionHandler;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.repository.RepositoryManager;
 
 import javax.jcr.RepositoryException;
+
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,7 +63,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
     @Override
     public Version getCurrentlyInstalled(InstallContext ctx) {
         try {
-            final boolean anyContent = ContentRepository.checkIfInitialized();
+            final boolean anyContent = checkIfInitialized();
             log.info("Content was {}found in the repository, will {}bootstrap web-app.", (anyContent ? "" : "not "), (anyContent ? "not " : ""));
             if (anyContent) {
                 return Version.UNDEFINED_TO;
@@ -87,5 +92,19 @@ public class WebappVersionHandler implements ModuleVersionHandler {
     @Override
     public Delta getStartupDelta(InstallContext ctx) {
         return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.<Task>emptyList());
+    }
+
+    /**
+     * Check if repositories has any content, exclude mgnlVersion repository.
+     */
+    private boolean checkIfInitialized() throws AccessDeniedException, RepositoryException {
+        RepositoryManager repoManager = Components.getComponent(RepositoryManager.class);
+        Collection<String> workspaceNames = repoManager.getWorkspaceNames();
+        for (String workspace : workspaceNames) {
+            if (!workspace.equals(RepositoryConstants.VERSION_STORE) && repoManager.checkIfInitialized(workspace)) {
+                return true;
+            }
+        }
+        return false; 
     }
 }
