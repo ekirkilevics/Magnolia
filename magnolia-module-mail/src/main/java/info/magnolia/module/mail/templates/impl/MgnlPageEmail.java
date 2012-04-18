@@ -35,7 +35,10 @@ package info.magnolia.module.mail.templates.impl;
 
 import freemarker.template.Template;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.User;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.Security;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.mail.MailTemplate;
 import info.magnolia.module.mail.templates.MailAttachment;
@@ -72,7 +75,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 
 /**
  * MgnlPageEmail.
@@ -162,6 +164,8 @@ public class MgnlPageEmail extends FreemarkerEmail {
     protected String cleanupHtmlCode(String content) {
         log.info("Cleaning html code");
         content = content.replaceAll("<div ([.[^<>]]*)cms:edit([.[^<>]]*)>", "<div $1$2>");
+        content = cleanupHtmlCodeFromPageEditorCode(content);
+
         Tidy tidy = new Tidy();
         tidy.setTidyMark(false);
         tidy.setIndentContent(true);
@@ -172,6 +176,13 @@ public class MgnlPageEmail extends FreemarkerEmail {
         tidy.parse(new StringReader(content), writer);
 
         return writer.toString();
+    }
+
+    private String cleanupHtmlCodeFromPageEditorCode(String content) {
+        String cleanContent = StringUtils.substringBefore(content, "<!-- begin js and css added by @cms.init -->");
+        cleanContent += StringUtils.substringAfter(content, "<!-- end js and css added by @cms.init -->");
+        cleanContent = cleanContent.replaceAll("<!-- (/?)cms:(component|area|page) (.*)-->", "");
+        return cleanContent;
     }
 
     // TODO : this is not used !
@@ -374,19 +385,18 @@ public class MgnlPageEmail extends FreemarkerEmail {
     private HttpClient getHttpClient(String baseURL) throws Exception {
         if (this.client == null) {
             URL location = new URL(baseURL);
-            User user = MgnlContext.getUser();
-            this.client = getHttpClientForUser(location, user);
+            this.client = getHttpClientForUser(location);
         }
         return this.client;
     }
 
 
-    private HttpClient getHttpClientForUser(URL location, User _user) throws IOException {
+    private HttpClient getHttpClientForUser(URL location) throws IOException {
         HttpClient _client = new HttpClient();
         _client.getHostConfiguration().setHost(location.getHost(), location.getPort(), location.getProtocol());
         _client.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-        String user = _user.getName();
-        String pass = _user.getPassword();
+        String user = getTemplate().getUsername();
+        String pass = getTemplate().getPassword();
         log.info("Creating http client for user:" + user);
         // login using the id and password of the current user
         PostMethod authpost = new PostMethod(location.getPath());
@@ -403,7 +413,11 @@ public class MgnlPageEmail extends FreemarkerEmail {
     private String retrieveContentFromMagnolia(String _url) throws Exception {
         log.info("Retrieving content from magnolia:" + _url);
         GetMethod redirect = new GetMethod(_url + SUFFIX);
-        getHttpClient(_url).executeMethod(redirect);
+        int code = getHttpClient(_url).executeMethod(redirect);
+        if(code == 403){
+            String user = getTemplate().getUsername().isEmpty() ? Security.getAnonymousUser().getName() : getTemplate().getUsername();
+            throw new AccessDeniedException(getMessages().get("page.form.page.message.accessdenied", new String[]{user, _url}));
+        }
         String response = redirect.getResponseBodyAsString();
         redirect.releaseConnection();
         return response;
@@ -430,6 +444,10 @@ public class MgnlPageEmail extends FreemarkerEmail {
             return false;
 
         }
+    }
+
+    public Messages getMessages() {
+        return MessagesManager.getMessages("info.magnolia.module.mail.messages");
     }
 }
 

@@ -83,6 +83,10 @@ public class MailTemplate {
 
     private static final String MAIL_BCC = "bcc";
 
+    private static final String MAIL_USERNAME = "username";
+
+    private static final String MAIL_PASSWORD = "password";
+
     private Map<String, Object> parameters = new HashMap<String, Object>();
 
     private List<MailAttachment> attachments = new ArrayList<MailAttachment>();
@@ -108,6 +112,10 @@ public class MailTemplate {
     private String bcc;
 
     private String replyTo;
+    
+    private String username;
+    
+    private String password;
 
     public MailTemplate() {
 
@@ -206,6 +214,22 @@ public class MailTemplate {
         this.cc = cc;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void setValues(Map<String, Object> params, List<MailAttachment> attachments) {
 
         if(params.containsKey(MAIL_TEMPLATE_FILE)) {
@@ -249,6 +273,14 @@ public class MailTemplate {
 
         if(params.containsKey(MAIL_BCC)) {
             this.bcc = (String) params.get(MAIL_BCC);
+        }
+
+        if(params.containsKey(MAIL_USERNAME)) {
+            this.username = (String) params.get(MAIL_USERNAME);
+        }
+
+        if(params.containsKey(MAIL_PASSWORD)) {
+            this.password = (String) params.get(MAIL_PASSWORD);
         }
 
         // instance of this class will be re-used. Do not let references to internal variables escape the instance

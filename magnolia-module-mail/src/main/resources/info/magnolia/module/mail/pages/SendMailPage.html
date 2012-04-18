@@ -165,6 +165,7 @@
         <td valign="top">
         <h3>${this.messages.get("page.form.page.message.page")}</h3>
         <p>${this.messages.get("page.form.page.message.note")}</p>
+        <p>${this.messages.get("page.form.page.message.note.access")}</p>
         <div class="formelement">
           <label for="page">Select Page</label>
           <input type="text" name="templateFile" id="templateFile" />
@@ -173,8 +174,16 @@
 
         </div>
         <div class="formelement" >
+          <label for="username">${this.messages.get("page.form.page.message.username")}</label>
+          <input type="text" name="username" />
+        </div>
+        <div class="formelement" >
+          <label for="password">${this.messages.get("page.form.page.message.password")}</label>
+          <input type="password" name="password" />
+        </div>
+        <div class="formelement" >
           <label for="parameters">${this.messages.get("page.form.page.message.parameters")}</label>
-          <textarea name="parameters" rows="6" style="width:380px;height:80px" ></textarea>
+          <textarea name="parameters" rows="6" style="width:380px;height:60px" ></textarea>
         </div>
         </td>
         </tr>
