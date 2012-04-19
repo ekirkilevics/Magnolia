@@ -65,6 +65,10 @@ public class ContentDecoratorNodeWrapper extends DelegateNodeWrapper {
         this.contentDecorator = contentDecorator;
     }
 
+    public ContentDecorator getContentDecorator() {
+        return contentDecorator;
+    }
+
     @Override
     public Session getSession() throws RepositoryException {
         return wrapSession(super.getSession());

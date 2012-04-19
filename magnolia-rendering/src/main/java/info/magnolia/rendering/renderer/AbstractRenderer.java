@@ -35,6 +35,7 @@ package info.magnolia.rendering.renderer;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.decoration.ContentDecoratorUtil;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
@@ -133,7 +134,13 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         setupContext(ctx, content, definition, model, actionResult);
         ctx.putAll(contextObjects);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
-        onRender(content, definition, renderingCtx, ctx, templatePath);
+        content = wrapNodeForContext(content);
+        renderingCtx.push(content, definition);
+        try {
+            onRender(content, definition, renderingCtx, ctx, templatePath);
+        } finally {
+            renderingCtx.pop();
+        }
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
         restoreContext(ctx, savedContextState);
@@ -267,14 +274,33 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     /**
      * Wraps the current content node before passing it to the model.
      * @param content the actual content
+     * @return the wrapped content
      */
     protected Node wrapNodeForModel(Node content) {
+        NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
         content = wrapWithChannelVisibilityWrapper(content);
         content = wrapWithI18NWrapper(content);
-        NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
         return content;
     }
 
+    /**
+     * Wraps the current content node for being exposed in {@link RenderingContext} and @{AggregationState}.
+     * @param content the actual content
+     * @return the wrapped content
+     */
+    protected Node wrapNodeForContext(Node content) {
+        NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
+        content = wrapWithChannelVisibilityWrapper(content);
+        content = wrapWithI18NWrapper(content);
+        return content;
+    }
+
+    /**
+     * Wraps the current content node for exposing it to the template script as a context attribute.
+     *
+     * @param content the actual content
+     * @return the wrapped content
+     */
     protected Node wrapNodeForTemplate(Node content) {
         content = wrapWithChannelVisibilityWrapper(content);
         content = wrapWithI18NWrapper(content);
@@ -297,6 +323,10 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
     }
 
     private Node wrapWithChannelVisibilityWrapper(Node content) {
+        // If it's already wrapped then we don't need to add a new one
+        if (ContentDecoratorUtil.isDecoratedWith(content, ChannelVisibilityContentDecorator.class)) {
+            return content;
+        }
         AggregationState aggregationState = getAggregationStateSafely();
         if (aggregationState == null) {
             return content;
