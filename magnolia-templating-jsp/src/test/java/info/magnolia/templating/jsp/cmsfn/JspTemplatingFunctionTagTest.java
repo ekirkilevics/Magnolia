@@ -478,4 +478,18 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
         assertThat(responseStr, containsString("<div id=\"1\">\n    res=info.magnolia.cms.util.SiblingsHelper"));
     }
 
+    @Test
+    public void testMetadatProperty() throws Exception {
+        // GIVEN
+        WebRequest request = initTestCase("MetadataProperty",null);
+
+        // WHEN
+        response = runner.getResponse(request);
+
+
+        // THEN
+        String responseStr = response.getText();
+        assertThat(responseStr, containsString("<div id=\"1\">\n    res=testParagraph1"));
+    }
+
 }
