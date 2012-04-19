@@ -35,6 +35,7 @@ package info.magnolia.templating.functions;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
@@ -67,7 +68,7 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * This is an object exposing a couple of methods useful for templates; it's exposed in templates as "cmsfn".
+ * An object exposing several methods useful for templates. It is exposed in templates as <code>cmsfn</code>.
  *
  * @version $Id$
  */
@@ -589,5 +590,28 @@ public class TemplatingFunctions {
         ConfiguredInheritance inheritanceConfiguration = new ConfiguredInheritance();
         inheritanceConfiguration.setEnabled(true);
         return new DefaultInheritanceContentDecorator(destination, inheritanceConfiguration).wrapNode(destination);
+    }
+
+    /**
+     * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
+     */
+    public String metaDataProperty(Node content, String property){
+        try {
+            if(content.hasNode(MetaData.DEFAULT_META_NODE)){
+                Node node = content.getNode(MetaData.DEFAULT_META_NODE);
+                if(node.hasProperty(property)) {
+                    return PropertyUtil.getProperty(node, property).getString();
+                } else if(node.hasProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + property)) {
+                    return PropertyUtil.getProperty(node, RepositoryConstants.NAMESPACE_PREFIX + ":" + property).getString();
+                }
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public String metaDataProperty(ContentMap content, String property){
+        return metaDataProperty(content.getJCRNode(), property);
     }
 }

@@ -40,6 +40,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -47,6 +48,7 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.rendering.template.configured.ConfiguredInheritance;
@@ -323,7 +325,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromPageNodeDepth3() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.root(childPageSubPage, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -333,7 +335,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromComponentNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.root(topPageComponent, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -343,7 +345,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.root(childPageComponent, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -353,7 +355,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(topPageContentMap);
 
         // THEN
@@ -363,7 +365,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageContentMap);
 
         // THEN
@@ -373,7 +375,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageSubPageContentMap);
 
         // THEN
@@ -383,7 +385,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootFromComponentContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(topPageComponentContentMap);
 
         // THEN
@@ -393,7 +395,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageComponentContentMap);
 
         // THEN
@@ -403,7 +405,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(topPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -413,7 +415,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -423,7 +425,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageSubPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -433,7 +435,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromComponentContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(topPageComponentContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -443,7 +445,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testRootPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.root(childPageComponentContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -453,7 +455,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromRootNodeShouldBeNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(root);
 
         // THEN
@@ -463,7 +465,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(topPage);
 
         // THEN
@@ -473,7 +475,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(childPage);
 
         // THEN
@@ -483,7 +485,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromRootContentMapShouldBeNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(root);
 
         // THEN
@@ -493,7 +495,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.parent(topPageContentMap);
 
         // THEN
@@ -503,7 +505,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentFromContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.parent(childPageContentMap);
 
         // THEN
@@ -513,7 +515,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromPageNode() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(childPage, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -523,7 +525,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentComponentFromPageNode() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(childPage, MgnlNodeType.NT_COMPONENT);
 
         // THEN
@@ -533,7 +535,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(topPage, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -543,7 +545,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(topPageComponent, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -553,7 +555,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.parent(childPageComponent, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -575,7 +577,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromPageContentMap() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.parent(childPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -585,7 +587,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentComponentFromPageContentMap() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultNode = functions.parent(childPageContentMap, MgnlNodeType.NT_COMPONENT);
 
         // THEN
@@ -595,7 +597,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultNode = functions.parent(topPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -605,7 +607,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.parent(topPageComponentContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -615,7 +617,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.parent(childPageComponentContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -637,7 +639,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromRootShouldBeNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.page(root);
 
         // THEN
@@ -659,7 +661,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.page(topPage);
 
         // THEN
@@ -669,7 +671,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.page(childPage);
 
         // THEN
@@ -679,7 +681,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node resultNode = functions.page(childPageComponent);
 
         // THEN
@@ -701,7 +703,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageContentMapFromRootShouldBeNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultNode = functions.page(rootContentMap);
 
         // THEN
@@ -723,7 +725,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.page(topPageContentMap);
 
         // THEN
@@ -733,7 +735,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.page(childPageContentMap);
 
         // THEN
@@ -743,7 +745,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.page(childPageComponentContentMap);
 
         // THEN
@@ -765,7 +767,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<Node> resultList = functions.ancestors(topPage);
 
         // THEN
@@ -775,7 +777,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorPagesFromNodeDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<Node> resultList = functions.ancestors(topPage, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -785,7 +787,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<Node> resultList = functions.ancestors(topPageComponent);
 
         // THEN
@@ -855,7 +857,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<ContentMap> resultList = functions.ancestors(topPageContentMap);
 
         // THEN
@@ -865,7 +867,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorPagesFromContentMapDepth1() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<ContentMap> resultList = functions.ancestors(topPageContentMap, MgnlNodeType.NT_PAGE);
 
         // THEN
@@ -875,7 +877,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         List<ContentMap> resultList = functions.ancestors(topPageComponentContentMap);
 
         // THEN
@@ -945,7 +947,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testNodeIsInherited() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPageSubPage);
 
         // THEN
@@ -957,7 +959,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testNodeIsFromCurrentPage() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPage);
 
         // THEN
@@ -967,7 +969,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testContentMapIsInherited() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPageSubPage);
 
         // THEN
@@ -979,7 +981,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testContentMapIsFromCurrentPage() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         InheritanceNodeWrapper inheritedNode = wrapNodeForInheritance(childPage);
 
         // THEN
@@ -989,7 +991,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testInheritFromNode() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node node = functions.inherit(childPage, "comp-L3-1");
 
         // THEN
@@ -1011,7 +1013,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testInheritFromNodeOnlyContent() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node node = functions.inherit(childPage);
 
         // THEN
@@ -1022,7 +1024,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testInheritedNodeIsUnwrapped() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Node node = functions.inherit(childPage, "comp-L3-1");
 
         // THEN
@@ -1032,7 +1034,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testInheritFromContentMap() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap contentMap = functions.inherit(childPageContentMap, "comp-L3-1");
 
         // THEN
@@ -1042,7 +1044,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testInheritFromContentMapOnlyContentMap() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap contentMap = functions.inherit(childPageContentMap);
 
         // THEN
@@ -1054,7 +1056,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testNonExistingInheritedRelPathShouldReturnNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         ContentMap resultContentMap = functions.inherit(childPageContentMap, "iMaybeExistSomewhereElseButNotHere");
         Node node = functions.inherit(childPage, "iMaybeExistSomewhereElseButNotHere");
 
@@ -1066,7 +1068,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testNonExistingInheritedPropertyShouldReturnNull() throws RepositoryException {
         // GIVEN
-                // WHEN
+        // WHEN
         Property property = functions.inheritProperty(topPage, "iMaybeExistSomewhereElseButNotHere");
         Property property2 = functions.inheritProperty(topPageComponent, "iMaybeExistSomewhereElseButNotHere");
 
@@ -1221,7 +1223,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkFromNodeNoProtocol() {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
-                // WHEN
+        // WHEN
         String link = functions.externalLink(topPage, "link");
 
         // THEN
@@ -1232,7 +1234,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkFromNodeWithProtocol() {
         // GIVEN
         topPage.setProperty("link", "http://www.external.ch");
-                // WHEN
+        // WHEN
         String link = functions.externalLink(topPage, "link");
 
         // THEN
@@ -1244,7 +1246,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
         topPage.setProperty("linkTitle", "Link Title");
-                // WHEN
+        // WHEN
         String linkTitle = functions.externalLinkTitle(topPage, "link", "linkTitle");
 
         // THEN
@@ -1255,7 +1257,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkTitleFromNodeNoTitleSet() {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
-                // WHEN
+        // WHEN
         String linkTitle = functions.externalLinkTitle(topPage, "link", "linkTitle");
 
         // THEN
@@ -1266,7 +1268,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkFromContentMapNoProtocol() {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
-                // WHEN
+        // WHEN
         String link = functions.externalLink(new ContentMap(topPage), "link");
 
         // THEN
@@ -1277,7 +1279,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkFromContentMapWithProtocol() {
         // GIVEN
         topPage.setProperty("link", "http://www.external.ch");
-                // WHEN
+        // WHEN
         String link = functions.externalLink(new ContentMap(topPage), "link");
 
         // THEN
@@ -1289,7 +1291,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
         topPage.setProperty("linkTitle", "Link Title");
-                // WHEN
+        // WHEN
         String linkTitle = functions.externalLinkTitle(new ContentMap(topPage), "link", "linkTitle");
 
         // THEN
@@ -1300,7 +1302,7 @@ public class TemplatingFunctionsTest {
     public void testExternalLinkTitleFromContentMapNoTitleSet() {
         // GIVEN
         topPage.setProperty("link", "www.external.ch");
-                // WHEN
+        // WHEN
         String linkTitle = functions.externalLinkTitle(new ContentMap(topPage), "link", "linkTitle");
 
         // THEN
@@ -1406,7 +1408,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
         boolean res = false;
         setEditMode(true);
-                // WHEN
+        // WHEN
         res = functions.isPreviewMode();
 
         // THEN
@@ -1521,6 +1523,19 @@ public class TemplatingFunctionsTest {
         s.next();
         s.next();
         assertEquals("Should have skipped nodes of different type.",2, s.getIndex());
+    }
+
+    @Test
+    public void testMetaDataProperty() throws RepositoryException{
+        // GIVEN
+        Node myNode = new MockNode();
+        myNode.addNode(MetaData.DEFAULT_META_NODE);
+        MetaData md = MetaDataUtil.getMetaData(myNode);
+        md.setProperty("foo", "bar");
+        // WHEN
+        String property = functions.metaDataProperty(myNode, "foo");
+        //THEN
+        assertEquals("bar", property);
     }
 
 
