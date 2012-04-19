@@ -610,8 +610,9 @@ public class TemplatingFunctions {
         }
         return null;
     }
+
     /**
-     * @see TemplatingFunctions#metaDataProperty(Node, String).
+     * @see {@link TemplatingFunctions#metaDataProperty(Node, String)}.
      */
     public String metaDataProperty(ContentMap content, String property){
         return metaDataProperty(content.getJCRNode(), property);
