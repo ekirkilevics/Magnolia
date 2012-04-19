@@ -479,7 +479,7 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
     }
 
     @Test
-    public void testMetadatProperty() throws Exception {
+    public void testMetadataProperty() throws Exception {
         // GIVEN
         WebRequest request = initTestCase("MetadataProperty",null);
 
