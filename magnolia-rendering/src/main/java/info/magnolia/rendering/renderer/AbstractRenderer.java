@@ -134,7 +134,7 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
         setupContext(ctx, content, definition, model, actionResult);
         ctx.putAll(contextObjects);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
-        content = wrapNodeForContext(content);
+        content = wrapNodeForModel(content);
         renderingCtx.push(content, definition);
         try {
             onRender(content, definition, renderingCtx, ctx, templatePath);
@@ -277,18 +277,6 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
      * @return the wrapped content
      */
     protected Node wrapNodeForModel(Node content) {
-        NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
-        content = wrapWithChannelVisibilityWrapper(content);
-        content = wrapWithI18NWrapper(content);
-        return content;
-    }
-
-    /**
-     * Wraps the current content node for being exposed in {@link RenderingContext} and @{AggregationState}.
-     * @param content the actual content
-     * @return the wrapped content
-     */
-    protected Node wrapNodeForContext(Node content) {
         NodeUtil.deepUnwrap(content, HTMLEscapingNodeWrapper.class);
         content = wrapWithChannelVisibilityWrapper(content);
         content = wrapWithI18NWrapper(content);
