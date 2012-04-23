@@ -145,8 +145,8 @@
                         -tldFolder
                         ${project.build.directory}/generated-resources/taglibs/META-INF
                         -license NONE
-        			</additionalparam>
-                    <useStandardDocletOptions>true</useStandardDocletOptions>
+                    </additionalparam>
+                    <useStandardDocletOptions>false</useStandardDocletOptions>
                     <author>false</author>
                     <encoding>utf-8</encoding>
                 </configuration>
