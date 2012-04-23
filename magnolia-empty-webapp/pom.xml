@@ -23,7 +23,7 @@
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-dms</artifactId>
-          <version>1.4</version>
+          <version>1.6.1</version>
         </dependency>
         <dependency>
           <groupId>info.magnolia</groupId>
