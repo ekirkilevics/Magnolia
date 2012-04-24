@@ -595,7 +595,7 @@ public class TemplatingFunctions {
     /**
      * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
      */
-    public String metaDataProperty(Node content, String property){
+    public String metaData(Node content, String property){
         try {
             if(content.hasNode(MetaData.DEFAULT_META_NODE)){
                 Node node = content.getNode(MetaData.DEFAULT_META_NODE);
@@ -612,9 +612,9 @@ public class TemplatingFunctions {
     }
 
     /**
-     * @see {@link TemplatingFunctions#metaDataProperty(Node, String)}.
+     * @see {@link TemplatingFunctions#metaData(Node, String)}.
      */
     public String metaDataProperty(ContentMap content, String property){
-        return metaDataProperty(content.getJCRNode(), property);
+        return metaData(content.getJCRNode(), property);
     }
 }

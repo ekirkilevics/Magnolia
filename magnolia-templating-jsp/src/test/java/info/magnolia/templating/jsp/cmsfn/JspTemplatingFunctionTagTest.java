@@ -479,9 +479,9 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
     }
 
     @Test
-    public void testMetadataProperty() throws Exception {
+    public void testMetadata() throws Exception {
         // GIVEN
-        WebRequest request = initTestCase("MetadataProperty",null);
+        WebRequest request = initTestCase("Metadata",null);
 
         // WHEN
         response = runner.getResponse(request);

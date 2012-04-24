@@ -6,7 +6,7 @@
 
 <body>
 <div id="1">
-    res=${(cmsfn:metaDataProperty(content, 'mgnl:template'))}
+    res=${(cmsfn:metaData(content, 'mgnl:template'))}
 </div>
 
 

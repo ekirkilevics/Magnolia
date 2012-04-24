@@ -1533,7 +1533,7 @@ public class TemplatingFunctionsTest {
         MetaData md = MetaDataUtil.getMetaData(myNode);
         md.setProperty("foo", "bar");
         // WHEN
-        String property = functions.metaDataProperty(myNode, "foo");
+        String property = functions.metaData(myNode, "foo");
         //THEN
         assertEquals("bar", property);
     }

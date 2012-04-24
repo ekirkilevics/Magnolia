@@ -292,8 +292,8 @@ public class JspTemplatingFunction {
      * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
      */
     @Function
-    public static String metaDataProperty(ContentMap content, String property){
-        return getTemplatingFunctions().metaDataProperty(content, property);
+    public static String metaData(ContentMap content, String property){
+        return getTemplatingFunctions().metaData(content, property);
     }
 
 }
