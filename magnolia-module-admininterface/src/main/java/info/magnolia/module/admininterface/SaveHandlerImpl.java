@@ -489,7 +489,8 @@ public class SaveHandlerImpl implements SaveHandler {
             // process the tmporary uploaded files
             Matcher tmpFileMatcher = tmpFilePattern.matcher(src);
 
-            if (tmpFileMatcher.find()) {
+            Boolean tmpFileFound = tmpFileMatcher.find();
+            if (tmpFileFound) {
                 String uuid = tmpFileMatcher.group(1);
 
                 Document doc = FCKEditorTmpFiles.getDocument(uuid);
@@ -508,9 +509,18 @@ public class SaveHandlerImpl implements SaveHandler {
             // internal uuid links have a leading $
             link = StringUtils.replace(link, "$", "\\$");
 
-            imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
+            if(!tmpFileFound || this.repository.equals(RepositoryConstants.WEBSITE)){
+                imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
+            }else{
+                imageOrDowloadMatcher.appendReplacement(res, "$1" + "/" + this.repository + link + "$5");
+            }
+
             if (link.startsWith(filesNode.getHandle())) {
                 String fileNodeName = StringUtils.removeStart(link, filesNode.getHandle() + "/");
+                fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
+                usedFiles.add(fileNodeName);
+            }else if (link.startsWith("/" + this.repository + filesNode.getHandle())) {
+                String fileNodeName = StringUtils.removeStart(link, "/" + this.repository + filesNode.getHandle() + "/");
                 fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
                 usedFiles.add(fileNodeName);
             }
