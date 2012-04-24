@@ -42,6 +42,7 @@ import info.magnolia.templating.editor.client.dom.MgnlElement;
 import java.util.Map;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -119,8 +120,10 @@ public class ComponentPlaceHolder extends AbstractPlaceHolder {
 
                 @Override
                 public void onMouseDown(MouseDownEvent event) {
+                    if(event.getNativeButton() == NativeEvent.BUTTON_RIGHT)  {
+                        return;
+                    }
                     PageEditor.addComponent(areaWorkspace, areaPath, null, availableComponents);
-
                 }
             }, MouseDownEvent.getType());
         }
