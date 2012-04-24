@@ -614,7 +614,7 @@ public class TemplatingFunctions {
     /**
      * @see {@link TemplatingFunctions#metaData(Node, String)}.
      */
-    public String metaDataProperty(ContentMap content, String property){
+    public String metaData(ContentMap content, String property){
         return metaData(content.getJCRNode(), property);
     }
 }
