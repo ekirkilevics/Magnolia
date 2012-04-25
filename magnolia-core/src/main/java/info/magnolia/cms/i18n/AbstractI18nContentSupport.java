@@ -85,7 +85,10 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     @Override
     public Locale getLocale() {
-        final Locale locale = MgnlContext.getAggregationState().getLocale();
+        Locale locale = null;
+        if(MgnlContext.getWebContextOrNull() != null){
+            locale = MgnlContext.getAggregationState().getLocale();
+        }
         if (locale == null) {
             return fallbackLocale;
         }
