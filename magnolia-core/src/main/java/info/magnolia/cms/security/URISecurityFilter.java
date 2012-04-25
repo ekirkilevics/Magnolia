@@ -47,7 +47,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This Filter protects URI as defined by ROLE(s)/GROUP(s) ACL.
- * @author Sameer Charles
+ *
+ * @version $Id$
  */
 public class URISecurityFilter extends BaseSecurityFilter {
 
@@ -81,14 +82,15 @@ public class URISecurityFilter extends BaseSecurityFilter {
 
         final boolean authorized = isAuthorized(request);
         if (!authorized) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            final int statusCode = SecurityUtil.isAnonymous() ? HttpServletResponse.SC_UNAUTHORIZED : HttpServletResponse.SC_FORBIDDEN;
+            response.setStatus(statusCode);
         }
         return authorized;
     }
 
     /**
      * Validates user permissions on URI.
-     * 
+     *
      * @deprecated since 4.5 use {@link #isAuthorized(HttpServletRequest)} instead.
      */
     @Deprecated
