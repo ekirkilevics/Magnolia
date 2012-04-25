@@ -101,7 +101,7 @@ public class SaveHandlerImplTest {
         save.setRepository("data");
 
         final String value = "<p><img width=\"300\" height=\"100\" src=\"/magnoliaAuthor/tmp/fckeditor/7a645ab5-8df0-11e1-ac08-6b09862c6153/test1.jpg\" alt=\"\" /><img src=\"/magnoliaAuthor/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"/magnoliaAuthor/tmp/fckeditor/a225f776-8df0-11e1-ac08-6b09862c6153/test2.jpg\" alt=\"\" /></p>";
-        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"/data/contactA/richedit_files/file/test1.jpg\" alt=\"\" /><img src=\"/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"/data/contactA/richedit_files/file0/test2.jpg\" alt=\"\" /></p>";
+        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"/data/contactA/richedit_files/file/document/test1.jpg\" alt=\"\" /><img src=\"/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"/data/contactA/richedit_files/file0/document/test2.jpg\" alt=\"\" /></p>";
         Content node = MgnlContext.getHierarchyManager("data").getContentByUUID("73f8656e-ce5a-4e4c-a15d-3e205e9d706d");
 
         assertEquals(expectedValue, save.updateLinks(node, "richedit", value));

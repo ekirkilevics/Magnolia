@@ -495,8 +495,9 @@ public class SaveHandlerImpl implements SaveHandler {
 
                 Document doc = FCKEditorTmpFiles.getDocument(uuid);
                 String fileNodeName = Path.getUniqueLabel(hm, filesNode.getHandle(), "file");
-                SaveHandlerImpl.saveDocument(filesNode, doc, fileNodeName, "", "");
-                link = filesNode.getHandle() + "/" + fileNodeName + "/" + doc.getFileNameWithExtension();
+                Content fileNode = ContentUtil.getOrCreateContent(filesNode, fileNodeName, ItemType.CONTENTNODE);
+                SaveHandlerImpl.saveDocument(fileNode, doc, "document", "", "");
+                link = filesNode.getHandle() + "/" + fileNodeName + "/document/" + doc.getFileNameWithExtension();
                 doc.delete();
                 try {
                     FileUtils.deleteDirectory(new java.io.File(Path.getTempDirectory() + "/fckeditor/" + uuid));
@@ -527,8 +528,8 @@ public class SaveHandlerImpl implements SaveHandler {
         }
 
         // delete not used files
-        for (Iterator iter = filesNode.getNodeDataCollection().iterator(); iter.hasNext();) {
-            NodeData fileNodeData = (NodeData) iter.next();
+        for (Iterator iter = filesNode.getChildren().iterator(); iter.hasNext();) {
+            Content fileNodeData = (Content) iter.next();
             if (!usedFiles.contains(fileNodeData.getName())) {
                 fileNodeData.delete();
             }
