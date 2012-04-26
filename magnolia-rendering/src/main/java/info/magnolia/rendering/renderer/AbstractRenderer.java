@@ -71,11 +71,10 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * rendering model. Sets up the context by providing the following objects:
  * <ul>
  *     <li>content</li>
- *     <li>aggregationState</li>
- *     <li>page</li>
+ *     <li>def</li>
+ *     <li>state</li>
  *     <li>model</li>
  *     <li>actionResult</li>
- *     <li>mgnl</li>
  * </ul>
  *
  * @version $Id$
