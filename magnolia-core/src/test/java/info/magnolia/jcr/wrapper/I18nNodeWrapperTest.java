@@ -126,6 +126,54 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
     }
 
     @Test
+    public void testHasPropertyReturnsTrueWhenOnlyLocaleVariantIsAvailable() throws Exception {
+        //GIVEN
+        final I18nContentSupport defSupport = Components.getComponent(I18nContentSupport.class);
+        defSupport.setLocale(new Locale("de"));
+        final MockNode node = new MockNode("boo");
+        final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(node);
+
+        // no default property (the one without _de appended) only German variation
+        node.setProperty("foo_de", "deutsches Foo");
+        //WHEN
+        boolean propertyExists = wrappedNode.hasProperty("foo");
+
+        //THEN
+        assertTrue(propertyExists);
+    }
+
+    @Test
+    public void testHasPropertyReturnsTrueWhenOnlyDefaultIsAvailable() throws Exception {
+        //GIVEN
+        final I18nContentSupport defSupport = Components.getComponent(I18nContentSupport.class);
+        defSupport.setLocale(new Locale("de"));
+        final MockNode node = new MockNode("boo");
+        final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(node);
+
+        // only default property
+        node.setProperty("foo", "english foo");
+        //WHEN
+        boolean propertyExists = wrappedNode.hasProperty("foo");
+
+        //THEN
+        assertTrue(propertyExists);
+    }
+
+    @Test
+    public void testHasPropertyReturnsFalseWhenNoSuchPropertyExists() throws Exception {
+        //GIVEN
+        final I18nContentSupport defSupport = Components.getComponent(I18nContentSupport.class);
+        defSupport.setLocale(new Locale("de"));
+        final MockNode node = new MockNode("boo");
+        final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(node);
+        //WHEN
+        boolean propertyExists = wrappedNode.hasProperty("foo");
+
+        //THEN
+        assertFalse(propertyExists);
+    }
+
+    @Test
     public void testWrapNode() throws Exception {
         //GIVEN
         final Node root = new MockNode();

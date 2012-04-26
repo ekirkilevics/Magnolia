@@ -55,6 +55,12 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     @Override
+    public boolean hasProperty(String relPath) throws RepositoryException {
+        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+        return i18nSupport.getNodeData(ContentUtil.asContent(getWrappedNode()), relPath).isExist();
+    }
+
+    @Override
     public Node wrapNode(Node node) {
         if (node == null) {
             return null;
