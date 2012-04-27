@@ -49,6 +49,7 @@ import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.Locale;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.Property;
 
@@ -184,6 +185,34 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
 
         //THEN
         assertTrue(wrappedRoot.getNode("bar") instanceof I18nNodeWrapper);
+
+    }
+
+    @Test
+    public void testGetParentReturnsWrappedNode() throws Exception {
+        //GIVEN
+        final Node root = new MockNode();
+        root.addNode("bar").addNode("foo");
+
+        //WHEN
+        final I18nNodeWrapper wrappedRoot = new I18nNodeWrapper(root);
+        final Node parent = wrappedRoot.getNode("bar/foo").getParent();
+
+        //THEN
+        assertTrue(parent instanceof I18nNodeWrapper);
+
+    }
+
+    @Test(expected=ItemNotFoundException.class)
+    public void testGetRootParentThrowsItemNotFoundException() throws Exception {
+        //GIVEN
+        final Node root = new MockNode();
+
+        //WHEN
+        final I18nNodeWrapper wrappedRoot = new I18nNodeWrapper(root);
+
+        //THEN BOOOOM!
+        wrappedRoot.getParent();
 
     }
 

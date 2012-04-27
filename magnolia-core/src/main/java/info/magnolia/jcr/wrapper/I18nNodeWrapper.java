@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -78,5 +80,13 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
         final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         return wrapNode(i18nSupport.getNode(getWrappedNode(), relPath));
+    }
+
+    @Override
+    public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+         if(super.getDepth() == 0) {
+             return super.getParent();
+         }
+         return wrapNode(super.getParent());
     }
 }
