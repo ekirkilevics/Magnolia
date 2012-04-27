@@ -33,16 +33,16 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.util.ContentUtil;
+
 import javax.jcr.AccessDeniedException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.cms.util.ContentUtil;
 
 /**
  * A Node wrapper implementation which knows about i18n support and uses it to select child nodes and properties.
@@ -84,9 +84,6 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-         if(super.getDepth() == 0) {
-             return super.getParent();
-         }
          return wrapNode(super.getParent());
     }
 }
