@@ -43,19 +43,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Used to check if the user can read the requested content. This filter normally resides behind the cache filter.
- * @author Sameer Charles
- * $Id: ContentSecurityFilter.java 9391 2007-05-11 15:48:02Z scharles $
+ * Used to check if the user can read the requested content. Also sets appropriate status on the response in case of unallowed access.
+ * This filter normally resides behind the cache filter.
+ *
+ * @version $Id$
  */
 public class ContentSecurityFilter extends BaseSecurityFilter {
 
     @Override
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String repositoryName = MgnlContext.getAggregationState().getRepository();
-        String handle = MgnlContext.getAggregationState().getHandle();
+        final String repositoryName = MgnlContext.getAggregationState().getRepository();
+        final String handle = MgnlContext.getAggregationState().getHandle();
         final boolean granted = PermissionUtil.isGranted(repositoryName, handle, Session.ACTION_READ);
         if (!granted) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            final int statusCode = SecurityUtil.isAnonymous() ? HttpServletResponse.SC_UNAUTHORIZED : HttpServletResponse.SC_FORBIDDEN;
+            response.setStatus(statusCode);
         }
         return granted;
     }
