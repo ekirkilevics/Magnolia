@@ -53,17 +53,16 @@ public class EditorLinkTransformer extends AbsolutePathTransformer {
 
     @Override
     public String transform(Link uuidLink) {
-        uuidLink.setEditorBinaryLink(false);
-        if(uuidLink.getNodeData()!=null){
-            uuidLink.setEditorBinaryLink(true);
-        }
+        Link editorLink = uuidLink;
+        editorLink.setEditorBinaryLink(editorLink.getNodeData()!=null);
         String linkStr;
         if(useURI2RepositoryMapping){
-            linkStr = getURI2RepositoryManager().getURI(uuidLink);
-        }else{
-            linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink);
+            linkStr = getURI2RepositoryManager().getURI(editorLink);
         }
-        linkStr += getURISuffix(uuidLink);
+        else{
+            linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(editorLink);
+        }
+        linkStr += getURISuffix(editorLink);
         if(useI18N){
             linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);
         }
