@@ -43,6 +43,7 @@ import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -159,7 +160,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
 
         boolean match = false;
         if (Base64.isArrayByteBase64(serverPassword.getBytes())) {
-            match = Base64.decodeBase64(serverPassword).equals(new String(this.pswd));
+            match = Arrays.equals(Base64.decodeBase64(serverPassword), new String(this.pswd).getBytes());
         } else {
             match = Digester.matchBCrypted(new String(this.pswd), serverPassword);
         }
