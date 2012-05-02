@@ -33,6 +33,8 @@
  */
 package info.magnolia.link;
 
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
+
 /**
  * Modifies links to the format suitable for the Editor. <br/>
  * <ul>
@@ -43,20 +45,29 @@ package info.magnolia.link;
  * @author had
  * @version $Id: EditorLinkTransformer.java 21024 2009-01-06 20:58:05Z gjoseph $
  */
-public class EditorLinkTransformer implements LinkTransformer {
+public class EditorLinkTransformer extends AbsolutePathTransformer {
 
-    protected LinkTransformer binaryTransformer = new AbsolutePathTransformer(true,true,false);
-
-    protected LinkTransformer linkTransformer = new AbsolutePathTransformer(true,true,false);
+    public EditorLinkTransformer(){
+        super(true,true,false);
+    }
 
     @Override
     public String transform(Link uuidLink) {
-        // TODO use a better way to determine if this is a binary
-        // this should actually not even be here because totally related to the fck editor
+        uuidLink.setEditorBinaryLink(false);
         if(uuidLink.getNodeData()!=null){
-            return binaryTransformer.transform(uuidLink);
+            uuidLink.setEditorBinaryLink(true);
         }
-        return linkTransformer.transform(uuidLink);
+        String linkStr;
+        if(useURI2RepositoryMapping){
+            linkStr = getURI2RepositoryManager().getURI(uuidLink);
+        }else{
+            linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink);
+        }
+        linkStr += getURISuffix(uuidLink);
+        if(useI18N){
+            linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);
+        }
+        linkStr = prefixLink(linkStr);
+        return linkStr;
     }
 }
-
