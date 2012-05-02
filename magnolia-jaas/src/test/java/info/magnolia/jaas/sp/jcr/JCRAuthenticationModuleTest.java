@@ -60,7 +60,7 @@ import org.junit.Test;
  */
 public class JCRAuthenticationModuleTest {
 
-    protected static final String FOO_USER = "foo";
+    protected static final String FOO_USERNAME = "foo";
     protected static final String BASE64_ENCODED_SUPERUSER_PSWD = new String(Base64.encodeBase64(UserManager.SYSTEM_PSWD.getBytes()));
     protected static final String PLAIN_TXT_FOO_PSWD = "bar";
     protected static final String BASE64_ENCODED_FOO_PSWD = new String(Base64.encodeBase64(PLAIN_TXT_FOO_PSWD.getBytes()));
@@ -75,13 +75,13 @@ public class JCRAuthenticationModuleTest {
         when(superuser.isEnabled()).thenReturn(true);
 
         final User foo = mock(User.class);
-        when(foo.getName()).thenReturn(FOO_USER);
+        when(foo.getName()).thenReturn(FOO_USERNAME);
         when(foo.getPassword()).thenReturn(BASE64_ENCODED_FOO_PSWD);
         when(foo.isEnabled()).thenReturn(true);
 
         UserManager uman = mock(UserManager.class);
         when(uman.getUser(UserManager.SYSTEM_USER)).thenReturn(superuser);
-        when(uman.getUser(FOO_USER)).thenReturn(foo);
+        when(uman.getUser(FOO_USERNAME)).thenReturn(foo);
 
         sec.addUserManager(Realm.REALM_SYSTEM.getName(), uman);
         sec.setRoleManager(new MgnlRoleManager());
@@ -98,7 +98,7 @@ public class JCRAuthenticationModuleTest {
     @Test
     public void testValidateUserPassesIfPasswordsMatch() throws Exception {
         JCRAuthenticationModule authenticationModule = new JCRAuthenticationModule();
-        authenticationModule.name = FOO_USER;
+        authenticationModule.name = FOO_USERNAME;
         authenticationModule.pswd = PLAIN_TXT_FOO_PSWD.toCharArray();
         authenticationModule.validateUser();
 
@@ -110,7 +110,7 @@ public class JCRAuthenticationModuleTest {
     @Test(expected=FailedLoginException.class)
     public void testValidateUserFailsIfPasswordsDoNotMatch() throws Exception {
         JCRAuthenticationModule authenticationModule = new JCRAuthenticationModule();
-        authenticationModule.name = FOO_USER;
+        authenticationModule.name = FOO_USERNAME;
         authenticationModule.pswd = "hghgh".toCharArray();
         authenticationModule.validateUser();
 
