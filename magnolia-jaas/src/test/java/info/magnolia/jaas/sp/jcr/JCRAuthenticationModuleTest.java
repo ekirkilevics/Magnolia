@@ -1,4 +1,3 @@
-package info.magnolia.jaas.sp.jcr;
 /**
  * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
@@ -32,6 +31,8 @@ package info.magnolia.jaas.sp.jcr;
  * intact.
  *
  */
+package info.magnolia.jaas.sp.jcr;
+
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
