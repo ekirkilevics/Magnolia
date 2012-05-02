@@ -124,7 +124,7 @@ public class URI2RepositoryManager {
 
     public String getURI(Link uuidLink) {
         for (URI2RepositoryMapping mapping : mappings) {
-            if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && uuidLink.getHandle().startsWith(mapping.getHandlePrefix())) {
+            if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && (uuidLink.getHandle().startsWith(mapping.getHandlePrefix()) || uuidLink.isEditorBinaryLink())) {
                 return mapping.getURI(uuidLink);
             }
         }

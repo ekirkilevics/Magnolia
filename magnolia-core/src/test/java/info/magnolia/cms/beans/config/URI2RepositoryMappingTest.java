@@ -120,6 +120,8 @@ public class URI2RepositoryMappingTest {
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
         ServerConfiguration.getInstance().setDefaultExtension("ext");
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, new URI2RepositoryManager());
+        HierarchyManager hman = mock(HierarchyManager.class);
+        when(context.getHierarchyManager("website")).thenReturn(hman);
         Object[] objs = new Object[] {context, hm};
         String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
         assertEquals("/blah", handle);
@@ -127,5 +129,36 @@ public class URI2RepositoryMappingTest {
         assertEquals("/b.l/ah", handle);
         handle = URI2RepositoryManager.getInstance().getHandle("/bl.ah.ext");
         assertEquals("/bl.ah", handle);
+    }
+
+    @Test
+    public void testGetHandleWhenLinkWithPrefixHandleExistInRepo(){
+        WebContext context = mock(WebContext.class);
+        HierarchyManager hm = mock(HierarchyManager.class);
+        MgnlContext.setInstance(context);
+        URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
+        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/demo-project", "website", "/demoproject/year2010"));
+        ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
+        when(context.getHierarchyManager("website")).thenReturn(hm);
+        when(hm.isExist("/demoproject/year2010/blah")).thenReturn(true);
+
+        String handle = URI2RepositoryManager.getInstance().getHandle("/demo-project/blah.ext");
+        assertEquals("/demoproject/year2010/blah", handle); 
+    }
+
+    @Test
+    public void testGetHandleWhenLinkWithPrefixHandleDoesNotExistInRepo(){
+        WebContext context = mock(WebContext.class);
+        HierarchyManager hm = mock(HierarchyManager.class);
+        MgnlContext.setInstance(context);
+        URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
+        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("", "website", "/blabla"));
+        ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
+        when(context.getHierarchyManager("website")).thenReturn(hm);
+        when(hm.isExist("/demoproject/year2010/blah")).thenReturn(true);
+        when(hm.isExist("/blah")).thenReturn(true);
+        
+        String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
+        assertEquals("/blah", handle); 
     }
 }

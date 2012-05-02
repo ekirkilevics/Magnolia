@@ -34,9 +34,11 @@
 package info.magnolia.module.admininterface;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -44,7 +46,9 @@ import javax.jcr.RepositoryException;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -78,8 +82,8 @@ public class SaveHandlerImplTest {
     public void testUpdateLink() throws LoginException, RepositoryException, IOException {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
-        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", "/data"));
-        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/dms", "dms", "/dms"));
+        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", ""));
+        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/dms", "dms", ""));
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
 
         MockUtil.initMockContext();
@@ -101,10 +105,22 @@ public class SaveHandlerImplTest {
         save.setRepository("data");
 
         final String value = "<p><img width=\"300\" height=\"100\" src=\"/magnoliaAuthor/tmp/fckeditor/7a645ab5-8df0-11e1-ac08-6b09862c6153/test1.jpg\" alt=\"\" /><img src=\"/magnoliaAuthor/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"/magnoliaAuthor/tmp/fckeditor/a225f776-8df0-11e1-ac08-6b09862c6153/test2.jpg\" alt=\"\" /></p>";
-        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"/data/contactA/richedit_files/file/document/test1.jpg\" alt=\"\" /><img src=\"/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"/data/contactA/richedit_files/file0/document/test2.jpg\" alt=\"\" /></p>";
         Content node = MgnlContext.getHierarchyManager("data").getContentByUUID("73f8656e-ce5a-4e4c-a15d-3e205e9d706d");
 
-        assertEquals(expectedValue, save.updateLinks(node, "richedit", value));
+        final String updatedValue = save.updateLinks(node, "richedit", value);
+
+        node = MgnlContext.getHierarchyManager("data").getContent("/contactA/richedit_files", false, ItemType.CONTENTNODE);
+        Iterator<Content> iterFilesNode = node.getChildren().iterator();
+        Content fileTest1 = iterFilesNode.next();
+        Content fileTest2 = iterFilesNode.next();
+
+        assertFalse(iterFilesNode.hasNext());
+        assertEquals("test1", fileTest1.getNodeData("document").getAttribute(FileProperties.PROPERTY_FILENAME));
+        assertEquals("test2", fileTest2.getNodeData("document").getAttribute(FileProperties.PROPERTY_FILENAME));
+
+        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"${link:{uuid:{"+ fileTest1.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file},nodeData:{document},extension:{jpg}}}\" alt=\"\" /><img src=\"/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"${link:{uuid:{" + fileTest2.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file0},nodeData:{document},extension:{jpg}}}\" alt=\"\" /></p>";
+
+        assertEquals(expectedValue, updatedValue);
     }
 
     /**

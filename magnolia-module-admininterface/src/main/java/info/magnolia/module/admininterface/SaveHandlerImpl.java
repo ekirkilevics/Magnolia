@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.beans.runtime.MultipartForm;
@@ -64,6 +66,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
@@ -489,8 +492,7 @@ public class SaveHandlerImpl implements SaveHandler {
             // process the tmporary uploaded files
             Matcher tmpFileMatcher = tmpFilePattern.matcher(src);
 
-            Boolean tmpFileFound = tmpFileMatcher.find();
-            if (tmpFileFound) {
+            if (tmpFileMatcher.find()) {
                 String uuid = tmpFileMatcher.group(1);
 
                 Document doc = FCKEditorTmpFiles.getDocument(uuid);
@@ -507,21 +509,40 @@ public class SaveHandlerImpl implements SaveHandler {
                 }
             }
 
+            String prefixRepo = "";
+            String mappedUri = "";
+            URI2RepositoryManager uri2RepositoryManager = URI2RepositoryManager.getInstance();
+            if (this.repository.equals(uri2RepositoryManager.getDefaultMapping().getRepository())) {
+                prefixRepo = uri2RepositoryManager.getDefaultMapping().getURIPrefix();
+            } else {
+                Collection<URI2RepositoryMapping> mappings = uri2RepositoryManager.getMappings();
+                for (URI2RepositoryMapping mapping : mappings) {
+                    if (mapping.getRepository().equals(this.repository)) {
+                        prefixRepo = mapping.getURIPrefix();
+                        if(!StringUtils.isEmpty(mapping.getHandlePrefix()) && link.startsWith(prefixRepo)){
+                            mappedUri = mapping.getURI(filesNode.getHandle());
+                            mappedUri = StringUtils.substringBeforeLast(mappedUri, ".");
+                        }
+                        break;
+                    }
+                }
+            }
+
+            prefixRepo = StringUtils.removeEnd(prefixRepo, "/");
+
+            link = cleanupLinkPrefix(filesNode, link, prefixRepo);
+
             // internal uuid links have a leading $
             link = StringUtils.replace(link, "$", "\\$");
 
-            if(!tmpFileFound || this.repository.equals(RepositoryConstants.WEBSITE)){
-                imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
-            }else{
-                imageOrDowloadMatcher.appendReplacement(res, "$1" + "/" + this.repository + link + "$5");
-            }
+            imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
 
-            if (link.startsWith(filesNode.getHandle())) {
-                String fileNodeName = StringUtils.removeStart(link, filesNode.getHandle() + "/");
+            if (link.startsWith(prefixRepo + filesNode.getHandle())) {
+                String fileNodeName = StringUtils.removeStart(link, prefixRepo + filesNode.getHandle() + "/");
                 fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
                 usedFiles.add(fileNodeName);
-            }else if (link.startsWith("/" + this.repository + filesNode.getHandle())) {
-                String fileNodeName = StringUtils.removeStart(link, "/" + this.repository + filesNode.getHandle() + "/");
+            }else if (!StringUtils.isEmpty(mappedUri) && link.startsWith(mappedUri)){
+                String fileNodeName = StringUtils.removeStart(link, mappedUri + "/");
                 fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
                 usedFiles.add(fileNodeName);
             }
@@ -542,6 +563,13 @@ public class SaveHandlerImpl implements SaveHandler {
         valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(valueStr);
 
         return valueStr;
+    }
+
+    protected String cleanupLinkPrefix(Content filesNode, String link, String prefixRepo) {
+        if (link.contains(filesNode.getHandle()) && !link.startsWith(prefixRepo + "/")) {
+            link = prefixRepo + link;
+        }
+        return link;
     }
 
     /**

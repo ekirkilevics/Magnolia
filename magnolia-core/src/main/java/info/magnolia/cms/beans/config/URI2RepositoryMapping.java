@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.link.Link;
 import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
@@ -96,7 +98,17 @@ public class URI2RepositoryMapping {
         String fileName = StringUtils.substringAfterLast(handle, "/");
         String extension = StringUtils.substringAfterLast(fileName, ".");
         handle = StringUtils.removeEnd(handle, "." + extension);
-        return cleanHandle(handle);
+        handle = cleanHandle(handle);
+
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(this.repository);
+        if (!hm.isExist(handle)) {
+            String maybeHandle = (this.handlePrefix.endsWith("/") ? "/" : "") + StringUtils.removeStart(handle, this.handlePrefix);
+            // prefix might have been prepended incorrectly. Second part of the condition is there to match links to binary nodes
+            if (hm.isExist(maybeHandle) || (maybeHandle.lastIndexOf("/") > 0 && hm.isExist(StringUtils.substringBeforeLast(maybeHandle, "/")))) {
+                return maybeHandle;
+            }
+        }
+        return handle;
     }
 
     /**
