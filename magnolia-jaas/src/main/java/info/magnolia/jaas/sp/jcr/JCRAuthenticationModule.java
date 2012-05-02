@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Authentication module implementation using JCR to retrieve the users.
- * @author Sameer Charles $Id$
+ * @version $Id$
  */
 public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule, Serializable {
 
@@ -184,7 +184,6 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
                     userManager.setProperty(mgnlUser, "releaseTime", ValueFactoryImpl.getInstance().createValue(calendar));
                     log.warn("Account " + this.name + " was locked for " + getTimeLock() + " minute(s) due to high number of failed login attempts.");
                 }
-                throw new FailedLoginException("passwords do not match");
             }
             if(user instanceof MgnlUser){
                 MgnlUser mgnlUser = (MgnlUser) user;
@@ -193,6 +192,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
                     userManager.setProperty(mgnlUser, "failedLoginAttempts", ValueFactoryImpl.getInstance().createValue(0));
                 }
             }
+            throw new FailedLoginException("Passwords do not match");
         }
     }
 
