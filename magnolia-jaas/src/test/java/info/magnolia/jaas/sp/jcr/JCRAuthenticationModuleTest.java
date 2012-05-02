@@ -47,7 +47,7 @@ import info.magnolia.cms.security.UserManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
-import openwfe.org.misc.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import org.junit.After;
 import org.junit.Before;
@@ -60,9 +60,9 @@ import org.junit.Test;
 public class JCRAuthenticationModuleTest {
 
     protected static final String FOO_USER = "foo";
-    protected static final String BASE64_ENCODED_SUPERUSER_PSWD = new String(Base64.encode(UserManager.SYSTEM_PSWD.getBytes()));
+    protected static final String BASE64_ENCODED_SUPERUSER_PSWD = new String(Base64.encodeBase64(UserManager.SYSTEM_PSWD.getBytes()));
     protected static final String PLAIN_TXT_FOO_PSWD = "bar";
-    protected static final String BASE64_ENCODED_FOO_PSWD = new String(Base64.encode(PLAIN_TXT_FOO_PSWD.getBytes()));
+    protected static final String BASE64_ENCODED_FOO_PSWD = new String(Base64.encodeBase64(PLAIN_TXT_FOO_PSWD.getBytes()));
 
     @Before
     public void setUp() throws Exception {
