@@ -33,7 +33,9 @@
  */
 package info.magnolia.cms.beans.config;
 
+import static org.mockito.Mockito.mock;
 import junit.framework.TestCase;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.link.Link;
 import info.magnolia.test.ComponentsTestUtil;
 
@@ -42,7 +44,9 @@ import info.magnolia.test.ComponentsTestUtil;
 * @version $Id:$
 */
 public class URI2RepositoryManagerTest extends TestCase{
-    
+
+    private NodeData nodeData = mock(NodeData.class);
+
     public void testGetURIWhenLinkIsEditorBinaryLinkAndPrefixHandleIsSet(){
         Link link = new Link();
         link.setHandle("contact/pepa/image_file");
@@ -50,7 +54,7 @@ public class URI2RepositoryManagerTest extends TestCase{
         link.setFileName("fileName");
         link.setExtension("ext");
         link.setRepository("data");
-        link.setEditorBinaryLink(true);
+        link.setNodeData(nodeData);
         
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", "/blabla"));
@@ -58,7 +62,7 @@ public class URI2RepositoryManagerTest extends TestCase{
         
         assertEquals("/data/contact/pepa/image_file/file/fileName.ext", URI2RepositoryManager.getInstance().getURI(link));
     }
-    
+
     public void testGetURIWhenLinkIsNotEditorBinaryLinkAndPrefixHandleIsSet(){
         Link link = new Link();
         link.setHandle("contact/pepa/image_file");
@@ -66,7 +70,6 @@ public class URI2RepositoryManagerTest extends TestCase{
         link.setFileName("fileName");
         link.setExtension("ext");
         link.setRepository("data");
-        link.setEditorBinaryLink(false);
         
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", "/blabla"));
