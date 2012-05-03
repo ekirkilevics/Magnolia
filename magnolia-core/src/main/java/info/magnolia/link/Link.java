@@ -66,7 +66,6 @@ public class Link {
     private String fallbackHandle;
     private String anchor;
     private String parameters;
-    private boolean editorBinaryLink;
 
     /**
      * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
@@ -145,11 +144,7 @@ public class Link {
     }
 
     public boolean isEditorBinaryLink(){
-        return this.editorBinaryLink;
-    }
-
-    public void setEditorBinaryLink(boolean editorBinaryLink){
-        this.editorBinaryLink = editorBinaryLink;
+        return getNodeData() != null;
     }
 
     public String getNodeDataName() {
