@@ -1,0 +1,358 @@
+
+# /
+/target
+/*.iml
+/*.ipr
+/*.iws
+/*.log
+/.idea
+/.project
+/.classpath
+/.settings
+/.checkstyle
+
+# /magnolia-core/
+/magnolia-core/target
+/magnolia-core/*.iml
+/magnolia-core/*.ipr
+/magnolia-core/*.iws
+/magnolia-core/*.log
+/magnolia-core/.idea
+/magnolia-core/.project
+/magnolia-core/.classpath
+/magnolia-core/.settings
+/magnolia-core/.checkstyle
+
+# /magnolia-core/src/main/java/
+/magnolia-core/src/main/java/META-INF
+
+# /magnolia-core/src/main/java/info/magnolia/jcr/
+/magnolia-core/src/main/java/info/magnolia/jcr/util
+
+# /magnolia-empty-webapp/
+/magnolia-empty-webapp/target
+/magnolia-empty-webapp/*.iml
+/magnolia-empty-webapp/*.ipr
+/magnolia-empty-webapp/*.iws
+/magnolia-empty-webapp/*.log
+/magnolia-empty-webapp/.idea
+/magnolia-empty-webapp/.project
+/magnolia-empty-webapp/.classpath
+/magnolia-empty-webapp/.settings
+/magnolia-empty-webapp/.checkstyle
+/magnolia-empty-webapp/repositories
+
+# /magnolia-empty-webapp/src/main/webapp/
+/magnolia-empty-webapp/src/main/webapp/repositories
+/magnolia-empty-webapp/src/main/webapp/cache
+/magnolia-empty-webapp/src/main/webapp/tmp
+/magnolia-empty-webapp/src/main/webapp/logs
+/magnolia-empty-webapp/src/main/webapp/admintemplates
+/magnolia-empty-webapp/src/main/webapp/META-INF
+/magnolia-empty-webapp/src/main/webapp/templates
+
+# /magnolia-empty-webapp/src/main/webapp/WEB-INF/
+/magnolia-empty-webapp/src/main/webapp/WEB-INF/classes
+
+# /magnolia-empty-webapp/src/main/webapp/WEB-INF/config/
+/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/*.tmp
+/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/centrino
+/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/kentrino
+
+# /magnolia-empty-webapp/src/main/webapp/docroot/
+/magnolia-empty-webapp/src/main/webapp/docroot/samples
+/magnolia-empty-webapp/src/main/webapp/docroot/rssaggregator
+
+# /magnolia-gui/
+/magnolia-gui/target
+/magnolia-gui/*.iml
+/magnolia-gui/*.ipr
+/magnolia-gui/*.iws
+/magnolia-gui/*.log
+/magnolia-gui/.idea
+/magnolia-gui/.project
+/magnolia-gui/.classpath
+/magnolia-gui/.settings
+/magnolia-gui/.checkstyle
+
+# /magnolia-gui/src/main/java/
+/magnolia-gui/src/main/java/META-INF
+
+# /magnolia-jaas/
+/magnolia-jaas/target
+/magnolia-jaas/*.iml
+/magnolia-jaas/*.ipr
+/magnolia-jaas/*.iws
+/magnolia-jaas/*.log
+/magnolia-jaas/.idea
+/magnolia-jaas/.project
+/magnolia-jaas/.classpath
+/magnolia-jaas/.settings
+/magnolia-jaas/.checkstyle
+
+# /magnolia-jaas/src/main/java/
+/magnolia-jaas/src/main/java/META-INF
+
+# /magnolia-maven-site/
+/magnolia-maven-site/target
+/magnolia-maven-site/bin
+/magnolia-maven-site/.settings
+/magnolia-maven-site/.classpath
+/magnolia-maven-site/.project
+/magnolia-maven-site/.wtpmodules
+/magnolia-maven-site/bin
+/magnolia-maven-site/*.iml
+/magnolia-maven-site/*.ipr
+/magnolia-maven-site/*.iws
+
+# /magnolia-module-admininterface/
+/magnolia-module-admininterface/target
+/magnolia-module-admininterface/*.iml
+/magnolia-module-admininterface/*.ipr
+/magnolia-module-admininterface/*.iws
+/magnolia-module-admininterface/*.log
+/magnolia-module-admininterface/.idea
+/magnolia-module-admininterface/.project
+/magnolia-module-admininterface/.classpath
+/magnolia-module-admininterface/.settings
+/magnolia-module-admininterface/.checkstyle
+/magnolia-module-admininterface/build
+
+# /magnolia-module-admininterface/src/
+/magnolia-module-admininterface/src/META-INF
+
+# /magnolia-module-admininterface/src/main/java/
+/magnolia-module-admininterface/src/main/java/META-INF
+
+# /magnolia-module-cache/
+/magnolia-module-cache/target
+/magnolia-module-cache/*.iml
+/magnolia-module-cache/*.ipr
+/magnolia-module-cache/*.iws
+/magnolia-module-cache/*.log
+/magnolia-module-cache/.idea
+/magnolia-module-cache/.project
+/magnolia-module-cache/.classpath
+/magnolia-module-cache/.settings
+/magnolia-module-cache/.checkstyle
+/magnolia-module-cache/build
+/magnolia-module-cache/cacheTest
+
+# /magnolia-module-cache/src/
+/magnolia-module-cache/src/site
+/magnolia-module-cache/src/META-INF
+
+# /magnolia-module-cache/src/main/java/
+/magnolia-module-cache/src/main/java/META-INF
+
+# /magnolia-module-exchange-simple/
+/magnolia-module-exchange-simple/target
+/magnolia-module-exchange-simple/*.iml
+/magnolia-module-exchange-simple/*.ipr
+/magnolia-module-exchange-simple/*.iws
+/magnolia-module-exchange-simple/*.log
+/magnolia-module-exchange-simple/.idea
+/magnolia-module-exchange-simple/.project
+/magnolia-module-exchange-simple/.classpath
+/magnolia-module-exchange-simple/.settings
+/magnolia-module-exchange-simple/.checkstyle
+/magnolia-module-exchange-simple/build
+
+# /magnolia-module-exchange-simple/src/
+/magnolia-module-exchange-simple/src/META-INF
+
+# /magnolia-module-exchange-simple/src/main/java/
+/magnolia-module-exchange-simple/src/main/java/META-INF
+
+# /magnolia-module-fckeditor/
+/magnolia-module-fckeditor/target
+/magnolia-module-fckeditor/*.iml
+/magnolia-module-fckeditor/*.ipr
+/magnolia-module-fckeditor/*.iws
+/magnolia-module-fckeditor/*.log
+/magnolia-module-fckeditor/.idea
+/magnolia-module-fckeditor/.project
+/magnolia-module-fckeditor/.classpath
+/magnolia-module-fckeditor/.settings
+/magnolia-module-fckeditor/.checkstyle
+/magnolia-module-fckeditor/build
+
+# /magnolia-module-fckeditor/src/
+/magnolia-module-fckeditor/src/site
+/magnolia-module-fckeditor/src/temp
+/magnolia-module-fckeditor/src/META-INF
+
+# /magnolia-module-fckeditor/src/main/java/
+/magnolia-module-fckeditor/src/main/java/META-INF
+
+# /magnolia-module-mail/
+/magnolia-module-mail/target
+/magnolia-module-mail/*.iml
+/magnolia-module-mail/*.ipr
+/magnolia-module-mail/*.iws
+/magnolia-module-mail/*.log
+/magnolia-module-mail/.idea
+/magnolia-module-mail/.project
+/magnolia-module-mail/.classpath
+/magnolia-module-mail/.settings
+/magnolia-module-mail/.checkstyle
+/magnolia-module-mail/build
+
+# /magnolia-module-mail/src/
+/magnolia-module-mail/src/site
+/magnolia-module-mail/src/META-INF
+
+# /magnolia-module-mail/src/main/java/
+/magnolia-module-mail/src/main/java/META-INF
+
+# /magnolia-module-store-client/
+/magnolia-module-store-client/target
+/magnolia-module-store-client/*.iml
+/magnolia-module-store-client/*.ipr
+/magnolia-module-store-client/*.iws
+/magnolia-module-store-client/*.log
+/magnolia-module-store-client/.idea
+/magnolia-module-store-client/.project
+/magnolia-module-store-client/.classpath
+/magnolia-module-store-client/.settings
+/magnolia-module-store-client/.checkstyle
+
+# /magnolia-module-workflow/
+/magnolia-module-workflow/target
+/magnolia-module-workflow/*.iml
+/magnolia-module-workflow/*.ipr
+/magnolia-module-workflow/*.iws
+/magnolia-module-workflow/*.log
+/magnolia-module-workflow/.idea
+/magnolia-module-workflow/.project
+/magnolia-module-workflow/.classpath
+/magnolia-module-workflow/.settings
+/magnolia-module-workflow/.checkstyle
+/magnolia-module-workflow/build
+
+# /magnolia-module-workflow/src/
+/magnolia-module-workflow/src/META-INF
+
+# /magnolia-module-workflow/src/main/java/
+/magnolia-module-workflow/src/main/java/META-INF
+
+# /magnolia-rendering/
+/magnolia-rendering/target
+/magnolia-rendering/*.iml
+/magnolia-rendering/*.ipr
+/magnolia-rendering/*.iws
+/magnolia-rendering/*.log
+/magnolia-rendering/.idea
+/magnolia-rendering/.project
+/magnolia-rendering/.classpath
+/magnolia-rendering/.settings
+/magnolia-rendering/.checkstyle
+
+# /magnolia-rendering/src/main/java/
+/magnolia-rendering/src/main/java/META-INF
+
+# /magnolia-templating/
+/magnolia-templating/target
+/magnolia-templating/*.iml
+/magnolia-templating/*.ipr
+/magnolia-templating/*.iws
+/magnolia-templating/*.log
+/magnolia-templating/.idea
+/magnolia-templating/.project
+/magnolia-templating/.classpath
+/magnolia-templating/.settings
+/magnolia-templating/.checkstyle
+
+# /magnolia-templating-compatibility/
+/magnolia-templating-compatibility/target
+/magnolia-templating-compatibility/*.iml
+/magnolia-templating-compatibility/*.ipr
+/magnolia-templating-compatibility/*.iws
+/magnolia-templating-compatibility/*.log
+/magnolia-templating-compatibility/.idea
+/magnolia-templating-compatibility/.project
+/magnolia-templating-compatibility/.classpath
+/magnolia-templating-compatibility/.settings
+/magnolia-templating-compatibility/.checkstyle
+
+# /magnolia-templating-compatibility/src/main/java/
+/magnolia-templating-compatibility/src/main/java/META-INF
+
+# /magnolia-templating-compatibility-taglib-cms/
+/magnolia-templating-compatibility-taglib-cms/target
+/magnolia-templating-compatibility-taglib-cms/*.iml
+/magnolia-templating-compatibility-taglib-cms/*.ipr
+/magnolia-templating-compatibility-taglib-cms/*.iws
+/magnolia-templating-compatibility-taglib-cms/*.log
+/magnolia-templating-compatibility-taglib-cms/.idea
+/magnolia-templating-compatibility-taglib-cms/.project
+/magnolia-templating-compatibility-taglib-cms/.classpath
+/magnolia-templating-compatibility-taglib-cms/.settings
+/magnolia-templating-compatibility-taglib-cms/.checkstyle
+
+# /magnolia-templating-compatibility-taglib-cms/src/main/java/
+/magnolia-templating-compatibility-taglib-cms/src/main/java/META-INF
+
+# /magnolia-templating-compatibility-taglib-utility/
+/magnolia-templating-compatibility-taglib-utility/target
+/magnolia-templating-compatibility-taglib-utility/*.iml
+/magnolia-templating-compatibility-taglib-utility/*.ipr
+/magnolia-templating-compatibility-taglib-utility/*.iws
+/magnolia-templating-compatibility-taglib-utility/*.log
+/magnolia-templating-compatibility-taglib-utility/.idea
+/magnolia-templating-compatibility-taglib-utility/.project
+/magnolia-templating-compatibility-taglib-utility/.classpath
+/magnolia-templating-compatibility-taglib-utility/.settings
+/magnolia-templating-compatibility-taglib-utility/.checkstyle
+
+# /magnolia-templating-compatibility-taglib-utility/src/main/java/
+/magnolia-templating-compatibility-taglib-utility/src/main/java/META-INF
+
+# /magnolia-templating-editor/
+/magnolia-templating-editor/target
+/magnolia-templating-editor/*.iml
+/magnolia-templating-editor/*.ipr
+/magnolia-templating-editor/*.iws
+/magnolia-templating-editor/*.log
+/magnolia-templating-editor/.idea
+/magnolia-templating-editor/.project
+/magnolia-templating-editor/.classpath
+/magnolia-templating-editor/.settings
+/magnolia-templating-editor/.checkstyle
+/magnolia-templating-editor/.gwt-tmp
+
+# /magnolia-templating-editor/src/main/java/
+/magnolia-templating-editor/src/main/java/META-INF
+
+# /magnolia-templating-editor/src/main/resources/mgnl-resources/
+/magnolia-templating-editor/src/main/resources/mgnl-resources/editor
+
+# /magnolia-templating-jsp/
+/magnolia-templating-jsp/target
+/magnolia-templating-jsp/*.iml
+/magnolia-templating-jsp/*.ipr
+/magnolia-templating-jsp/*.iws
+/magnolia-templating-jsp/*.log
+/magnolia-templating-jsp/.idea
+/magnolia-templating-jsp/.project
+/magnolia-templating-jsp/.classpath
+/magnolia-templating-jsp/.settings
+/magnolia-templating-jsp/.checkstyle
+
+# /magnolia-templating-samples/
+/magnolia-templating-samples/target
+/magnolia-templating-samples/*.iml
+/magnolia-templating-samples/*.ipr
+/magnolia-templating-samples/*.iws
+/magnolia-templating-samples/*.log
+/magnolia-templating-samples/.idea
+/magnolia-templating-samples/.project
+/magnolia-templating-samples/.classpath
+/magnolia-templating-samples/.settings
+/magnolia-templating-samples/.checkstyle
+
+# /magnolia-templating-samples/src/
+/magnolia-templating-samples/src/META-INF
+
+# /magnolia-templating-samples/src/main/java/
+/magnolia-templating-samples/src/main/java/META-INF
