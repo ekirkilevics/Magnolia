@@ -45,18 +45,15 @@ package info.magnolia.link;
  */
 public class EditorLinkTransformer implements LinkTransformer {
 
+    @Deprecated
     protected LinkTransformer binaryTransformer = new AbsolutePathTransformer(true,true,false);
 
+    @Deprecated
     protected LinkTransformer linkTransformer = new AbsolutePathTransformer(true,true,false);
 
     @Override
     public String transform(Link uuidLink) {
-        // TODO use a better way to determine if this is a binary
-        // this should actually not even be here because totally related to the fck editor
-        if(uuidLink.getNodeData()!=null){
-            return binaryTransformer.transform(uuidLink);
-        }
-        return linkTransformer.transform(uuidLink);
+        return new AbsolutePathTransformer(true,true,false).transform(uuidLink);
     }
 }
 
