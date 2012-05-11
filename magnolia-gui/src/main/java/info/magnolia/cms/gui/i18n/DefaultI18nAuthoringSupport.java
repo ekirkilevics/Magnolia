@@ -113,7 +113,7 @@ public class DefaultI18nAuthoringSupport implements I18nAuthoringSupport {
         Locale locale = LocaleUtils.toLocale(dialog.getConfigValue("locale", null));
         boolean isFallbackLanguage = i18nContentSupport.getFallbackLocale().equals(locale);
 
-        if (isEnabled() && i18nContentSupport.isEnabled() && locale != null && dialog.getStorageNode() != null) {
+        if (isEnabled() && i18nContentSupport.isEnabled() && locale != null) {
             List<DialogControlImpl> tabs = dialog.getSubs();
             for (DialogControlImpl tab : tabs) {
                 List<DialogControlImpl> controls = tab.getSubs();
