@@ -39,6 +39,7 @@ import info.magnolia.test.ComponentsTestUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,7 +56,7 @@ public class ContentTypeFilterTest {
     public void setUp() throws Exception {
         ComponentsTestUtil.setImplementation(WebContainerResources.class, WebContainerResourcesImpl.class);
 
-        filter = new ContentTypeFilterForTest();
+        filter = new ContentTypeFilter();
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
     }
@@ -63,9 +64,15 @@ public class ContentTypeFilterTest {
     @Test
     public void testFilterWithEmptyDefaultExtension() {
         filter.setupContentTypeAndCharacterEncoding("", request, response);
-        verify(response).setContentType("text/html");
+        verify(response).setCharacterEncoding("UTF-8");
+        //TODO In current state we are unable to use MIMEMapping for this test, should be IOC.
+        //For now just test that with empty MIMEMapping.cachedContent contentType is set to null.
+        verify(response).setContentType(null);
     }
-
-    private class ContentTypeFilterForTest extends ContentTypeFilter {
+    
+    @After
+    public void tearDown(){
+        ComponentsTestUtil.clear();
     }
 }
+

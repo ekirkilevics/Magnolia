@@ -44,7 +44,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.ServletUtils;
 import info.magnolia.context.MgnlContext;
@@ -60,7 +59,7 @@ import info.magnolia.context.MgnlContext;
  *
  * FIXME: the original uri should not be reset, MAGNOLIA-3204
  *
- * @version $Id$
+ * @version $Id: ContentTypeFilter.java 53336 2012-01-12 09:42:40Z ochytil $
  * @see MIMEMapping
  * @see AggregationState
  */
@@ -111,7 +110,6 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
     protected String setupContentTypeAndCharacterEncoding(String extension, HttpServletRequest request, HttpServletResponse response) {
         final String mimeType = MIMEMapping.getMIMETypeOrDefault(extension);
         final String characterEncoding = MIMEMapping.getContentEncodingOrDefault(mimeType);
-        final String defaultExtension = ServerConfiguration.getInstance().getDefaultExtension();
 
         try {
             // let's not override the request encoding if set by the servlet container or the requesting browser
@@ -124,14 +122,8 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
 
         response.setCharacterEncoding(characterEncoding);
 
-        // do not send empty ContentType
-        if (StringUtils.isEmpty(defaultExtension) && StringUtils.isEmpty(extension)) {
-            response.setContentType("text/html");
-        } else {
-            response.setContentType(mimeType);
-        }
+        response.setContentType(mimeType);
 
         return characterEncoding;
     }
-
 }
