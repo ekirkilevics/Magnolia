@@ -51,6 +51,7 @@ import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.OrderFilterBeforeTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RemoveDuplicatePermissionTask;
 import info.magnolia.module.delta.RemoveNodeTask;
@@ -132,8 +133,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("4.5.2", "")
-                .addTask(new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/system", "realName", "/server/security/userManagers/system", "realmName"))
-                .addTask(new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/admin", "realName", "/server/security/userManagers/admin", "realmName"))
+                .addTask(new PropertyExistsDelegateTask("Fix property name", "", RepositoryConstants.CONFIG, "/server/security/userManagers/system", "realName", new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/system", "realName", "/server/security/userManagers/system", "realmName")))
+                .addTask(new PropertyExistsDelegateTask("Fix property name", "", RepositoryConstants.CONFIG, "/server/security/userManagers/admin", "realName", new MoveAndRenamePropertyTask("Fix propertyName", "/server/security/userManagers/admin", "realName", "/server/security/userManagers/admin", "realmName")))
         );
     }
 
