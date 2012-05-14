@@ -50,6 +50,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -59,6 +60,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.MenuItem;
 
@@ -82,6 +84,7 @@ public class PageBar extends AbstractBar {
     private String dialog;
     private String currentURI;
     private Map<String,String> availableLocales = new HashMap<String, String>();
+    private FlowPanel mainBarWrapper;
 
     public PageBar(final CMSComment comment) {
         super(null);
@@ -186,6 +189,10 @@ public class PageBar extends AbstractBar {
 
         addStyleName("mgnlEditorMainbar");
 
+        mainBarWrapper = new FlowPanel();
+        mainBarWrapper.setStylePrimaryName("mgnlEditorMainbarWrapper");
+        mainBarWrapper.add(this);
+
     }
 
     private void createPreviewModeBar() {
@@ -226,7 +233,8 @@ public class PageBar extends AbstractBar {
 
     @Override
     public void attach() {
-        Document.get().getBody().insertFirst(getElement());
+        final Element bar = mainBarWrapper != null ? mainBarWrapper.getElement(): getElement();
+        Document.get().getBody().insertFirst(bar);
         onAttach();
     }
 
