@@ -187,7 +187,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         finally {
-            cleanUp(request);
+            cleanUp(request, status);
             setResponseHeaders(response, statusMessage, status, result);
         }
     }
@@ -515,7 +515,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         // TODO: handle same name siblings!
         String path = parentPath + (parentPath.endsWith("/") ? "" : "/") + topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         if (hierarchyManager.isExist(path)) {
-            log.warn("Replacing {} due to name collision (but different UUIDs.)", path);
+            log.warn("Replacing {} due to name collision (but different UUIDs.). This operation could not be rolled back in case of failure and you need to reactivate the page manually.", path);
             hierarchyManager.delete(path);
         }
         try {
@@ -667,10 +667,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
     /**
      * cleans temporary store and removes any locks set.
+     *
      * @param request
+     * @param status
      */
-    protected void cleanUp(HttpServletRequest request) {
-        if (BaseSyndicatorImpl.ACTIVATE.equalsIgnoreCase(request.getHeader(BaseSyndicatorImpl.ACTION))) {
+    protected void cleanUp(HttpServletRequest request, String status) {
+        if (!BaseSyndicatorImpl.DEACTIVATE.equalsIgnoreCase(request.getHeader(BaseSyndicatorImpl.ACTION))) {
             MultipartForm data = MgnlContext.getPostedForm();
             if (null != data) {
                 Iterator keys = data.getDocuments().keySet().iterator();
@@ -682,9 +684,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             try {
                 final String parentPath = getParentPath(request);
                 if (StringUtils.isEmpty(parentPath) || this.getHierarchyManager(request).isExist(parentPath)) {
-                    Content content = this.getNode(request);
-                    if (content.isLocked()) {
-                        content.unlock();
+                    try {
+                        Content content = this.getNode(request);
+                        if (content.isLocked()) {
+                            content.unlock();
+                        }
+                    }catch (ItemNotFoundException e) {
+                        // ignore - commit of deactivation
                     }
                 }
             } catch (LockException le) {
@@ -717,25 +723,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      */
     protected void applyLock(HttpServletRequest request) throws ExchangeException {
         try {
-            int retries = getUnlockRetries();
-            long retryWait = getRetryWait() * 1000;
-            Content content = this.getNode(request);
-            while (content.isLocked() && retries > 0) {
-                log.info("Content " + content.getHandle() + " is locked. Will retry " + retries + " more times.");
-                try {
-                    Thread.sleep(retryWait);
-                } catch (InterruptedException e) {
-                    // Restore the interrupted status
-                    Thread.currentThread().interrupt();
-                }
-                retries--;
-                content = this.getNode(request);
-            }
-            if (content.isLocked()) {
-                throw new ExchangeException("Operation not permitted, " + content.getHandle() + " is locked");
-            }
+            Content parent = waitForLock(request);
             // get a new deep lock
-            content.lock(true, true);
+            parent.lock(true, true);
         } catch (LockException le) {
             // either repository does not support locking OR this node never locked
             log.debug(le.getMessage());
@@ -749,6 +739,27 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             // will blow fully at later stage
             log.warn("Exception caught", re);
         }
+    }
+
+    protected Content waitForLock(HttpServletRequest request) throws ExchangeException, RepositoryException {
+        int retries = getUnlockRetries();
+        long retryWait = getRetryWait() * 1000;
+        Content content = this.getNode(request);
+        while (content.isLocked() && retries > 0) {
+            log.info("Content " + content.getHandle() + " is locked. Will retry " + retries + " more times.");
+            try {
+                Thread.sleep(retryWait);
+            } catch (InterruptedException e) {
+                // Restore the interrupted status
+                Thread.currentThread().interrupt();
+            }
+            retries--;
+            content = this.getNode(request);
+        }
+        if (content.isLocked()) {
+            throw new ExchangeException("Operation not permitted, " + content.getHandle() + " is locked while activating " + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
+        }
+        return content;
     }
 
     protected Content getNode(HttpServletRequest request) throws ExchangeException, RepositoryException {

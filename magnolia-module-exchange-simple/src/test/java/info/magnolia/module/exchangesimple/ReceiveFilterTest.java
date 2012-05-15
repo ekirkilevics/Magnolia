@@ -416,7 +416,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         final Content existingNode = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         replay(existingNode, tempNode);
-        doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked", new AbstractTestCallBack() {
+        doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked while activating some-uuid", new AbstractTestCallBack() {
 
             @Override
             public Content getParentNode() {
@@ -507,6 +507,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(request.getHeader("mgnlUTF8Status")).andReturn("true").anyTimes();
         expect(request.getHeader("mgnlExchangeAction")).andReturn(action).anyTimes();
         expect(request.getHeader("mgnlExchangeParentPath")).andReturn(PARENT_PATH).anyTimes();
+        expect(request.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("some-uuid").anyTimes();
         expect(request.getHeader("mgnlExchangeRepositoryName")).andReturn("some-repo").anyTimes();
         expect(request.getHeader("mgnlExchangeWorkspaceName")).andReturn("some-workspace").anyTimes();
         expect(request.getHeader("mgnlExchangeResourceMappingFile")).andReturn("blah.xml").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
