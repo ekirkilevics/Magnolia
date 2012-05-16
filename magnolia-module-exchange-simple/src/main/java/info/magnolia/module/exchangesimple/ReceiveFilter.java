@@ -154,12 +154,23 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             // verify the author ... if not trusted yet, but no exception thrown, then we attempt to establish trust
             if (!isAuthorAuthenticated(request, response)) {
                 status = BaseSyndicatorImpl.ACTIVATION_HANDSHAKE;
-            } else {
-                // we do not lock the content on handshake requests
-                applyLock(request);
-                result = receive(request);
-                status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;
+                setResponseHeaders(response, statusMessage, status, result);
+                return;
             }
+            // we do not lock the content on handshake requests
+            applyLock(request);
+        }catch (Throwable e) {
+            log.error(e.getMessage(), e);
+            // we can only rely on the exception's actual message to give something back to the user here.
+            statusMessage = StringUtils.defaultIfEmpty(e.getMessage(), e.getClass().getSimpleName());
+            status = BaseSyndicatorImpl.ACTIVATION_FAILED;
+            setResponseHeaders(response, statusMessage, status, result);
+            return;
+        }
+
+        try{
+            result = receive(request);
+            status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;
         }
         catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
@@ -757,7 +768,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             content = this.getNode(request);
         }
         if (content.isLocked()) {
-            throw new ExchangeException("Operation not permitted, " + content.getHandle() + " is locked while activating " + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
+            throw new ExchangeException("Failed to lock content with 'Operation not permitted, " + content.getHandle() + " is locked while activating " + request.getHeader(BaseSyndicatorImpl.NODE_UUID) + "'");
         }
         return content;
     }

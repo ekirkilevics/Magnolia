@@ -122,7 +122,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
 
         void checkNode(HierarchyManager hm) throws Exception;
 
-        void checkParent(HierarchyManager hm) throws Exception;
+        void checkParent(HierarchyManager hm, boolean wasLocked) throws Exception;
 
         void importNode(HierarchyManager hm, Session session) throws Exception;
 
@@ -175,7 +175,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                     }
                 });
             }
-        });
+        }, true);
     }
 
     @Test
@@ -253,7 +253,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // save after deleting the temp node
                 hm.save();
             }
-        });
+        }, true);
         verify(mocks);
     }
 
@@ -331,7 +331,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // save after deleting the temp node
                 hm.save();
             }
-        });
+        }, true);
         verify(mocks);
     }
 
@@ -405,7 +405,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // save after deleting the temp node
                 hm.save();
             }
-        });
+        }, true);
         verify(mocks);
     }
 
@@ -416,7 +416,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         final Content existingNode = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         replay(existingNode, tempNode);
-        doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked while activating some-uuid", new AbstractTestCallBack() {
+        doTest("activate", "sa_failed", "Failed to lock content with 'Operation not permitted, /foo/bar is locked while activating some-uuid'", new AbstractTestCallBack() {
 
             @Override
             public Content getParentNode() {
@@ -424,7 +424,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
             }
 
             @Override
-            public void checkParent(HierarchyManager hm) throws Exception {
+            public void checkParent(HierarchyManager hm, boolean wasLocked) throws Exception {
                 expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
                 expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
                 // check the lock
@@ -432,10 +432,12 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // create exception message
                 expect(parentNode.getHandle()).andReturn(PARENT_PATH).anyTimes();
 
-                // clean up ... check the lock again
-                //expect(parentNode.isLocked()).andReturn(true).times(2);
-                // try to unlock ... TODO: is that a right thing to do ... we are not the ones who locked it here
-                parentNode.unlock();
+                if (wasLocked) {
+                    // clean up ... check the lock again
+                    //expect(parentNode.isLocked()).andReturn(true).times(2);
+                    // try to unlock ... TODO: is that a right thing to do ... we are not the ones who locked it here
+                    parentNode.unlock();
+                }
             }
 
             @Override
@@ -453,7 +455,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
                 // won't be called as parent is locked
             }
 
-        });
+        }, false);
         verify(existingNode, tempNode);
     }
     /*
@@ -462,8 +464,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
     }
      */
 
-    private void doTest(final String action, final String expectedStatus, final String expectedMessage, TestCallBack testCallBack) throws Exception {
-        final HttpServletRequest request = createMock(HttpServletRequest.class); // not strict: we don't want to check method call order
+    private void doTest(final String action, final String expectedStatus, final String expectedMessage, TestCallBack testCallBack, boolean wasLocked) throws Exception {        final HttpServletRequest request = createMock(HttpServletRequest.class); // not strict: we don't want to check method call order
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain filterChain = createStrictMock(FilterChain.class);
         final SystemContext sysCtx = createStrictMock(SystemContext.class);
@@ -519,7 +520,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
         // checking parent node
-        testCallBack.checkParent(hm);
+        testCallBack.checkParent(hm, wasLocked);
 
         expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
         expect(sysCtx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
@@ -542,9 +543,11 @@ public class ReceiveFilterTest extends MgnlTestCase {
         response.setHeader("sa_attribute_status", expectedStatus);
         response.setHeader("sa_attribute_message", expectedMessage);
 
-        //cleanup()
-        expect(hm.isExist("/foo/bar")).andReturn(true);
-        expect(request.getSession(false)).andReturn(null);
+        if (wasLocked) {
+            //cleanup()
+            expect(hm.isExist("/foo/bar")).andReturn(true);
+            expect(request.getSession(false)).andReturn(null);
+        }
 
         final ReceiveFilter filter = new ReceiveFilter(new ExchangeSimpleModule());
         filter.setUnlockRetries(1);
@@ -617,7 +620,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         private final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
 
         @Override
-        public void checkParent(HierarchyManager hm) throws Exception {
+        public void checkParent(HierarchyManager hm, boolean wasLocked) throws Exception {
             expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
             expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
             // order last child
