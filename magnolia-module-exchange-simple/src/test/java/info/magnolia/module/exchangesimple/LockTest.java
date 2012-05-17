@@ -242,10 +242,12 @@ public class LockTest extends RepositoryTestCase {
         // first check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
         expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
+        expect(request2.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("some-uuid").anyTimes();
 
         //first check retry 2
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
         expect (request2.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn(RepositoryConstants.WEBSITE);
+        expect(request2.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("some-uuid").anyTimes();
 
         //second check retry 1
         expect (request2.getHeader(BaseSyndicatorImpl.PARENT_PATH)).andReturn("/page").times(2);
@@ -269,7 +271,7 @@ public class LockTest extends RepositoryTestCase {
         Thread.sleep(1000);
         assertTrue(threadSimulatingSecondRequestComingIn.isLocked());
         log.debug("lock in session2!");
-        receiveFilter.cleanUp(request);
+        receiveFilter.cleanUp(request, "activate");
         log.debug("unlocked in session1!");
         assertFalse(hm.getContent("/page").isLocked());
         log.debug("verified unlocked in session1!");

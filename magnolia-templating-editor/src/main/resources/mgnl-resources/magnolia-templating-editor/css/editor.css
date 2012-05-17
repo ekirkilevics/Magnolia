@@ -47,10 +47,18 @@ div.mgnlEditorBar {
  * Page edit bar.
  */
 .mgnlEditorMainbar {
-  position: static !important;
+  position: fixed !important;
   z-index: 900 !important;
   padding: 2px !important;
   font: 62.5% arial, helvetica, sans-serif;
+  width: 100% !important;
+}
+
+/**
+* This is used to push down the content so that the fixed-position main bar does not cover the top of the page.
+*/
+.mgnlEditorMainbarWrapper {
+  padding-bottom: 24px; /*must have the same height as div.mgnlEditorBar*/
 }
 
 #mgnlEditorMainbarPlaceholder {
@@ -286,6 +294,7 @@ div.mgnlEditorMainbarPreview div.mgnlEditorButton {
 
 div.mgnlEditorMainbarPreview button.mgnlEditorButton {
   padding: 1px 10px !important;
+  position: fixed;
 }
 
 /*
@@ -440,7 +449,7 @@ div.mgnlEditorMoveDiv {
 }
 
 .mgnlPreviewMenuPanel {
-  z-index: 800 !important;
+  z-index: 900 !important;
 }
 
 .mgnlPreviewMenuItem {
@@ -549,4 +558,3 @@ div.mgnlEditorMoveDiv {
 }
 
 /* --- End of mobile preview definitions --- */
-

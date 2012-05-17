@@ -38,6 +38,9 @@ import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
@@ -84,6 +87,13 @@ public class DropdownButton extends Button {
         dropdownPanel.setStylePrimaryName("mgnlPreviewMenuPanel");
         //TODO add an onMouseOut event to the menu? This however will make it disappear also when hovering back on the button itself.
         dropdownPanel.add(dropdownMenuBar);
+
+        Window.addWindowScrollHandler(new ScrollHandler() {
+
+            public void onWindowScroll(ScrollEvent event) {
+                hideDropdown();
+            }
+        });
 
         addClickHandler(new ClickHandler() {
             @Override
