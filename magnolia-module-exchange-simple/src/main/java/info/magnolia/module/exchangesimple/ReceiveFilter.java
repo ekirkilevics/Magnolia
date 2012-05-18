@@ -735,40 +735,53 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     protected void applyLock(HttpServletRequest request) throws ExchangeException {
         try {
             Content parent = waitForLock(request);
-            // get a new deep lock
-            parent.lock(true, true);
+            if (parent != null) {
+                // get a new deep lock
+                parent.lock(true, true);
+            }
         } catch (LockException le) {
             // either repository does not support locking OR this node never locked
             log.debug(le.getMessage());
-        } catch (ItemNotFoundException e) {
-            // - when deleting new piece of content on the author and mgnl tries to deactivate it on public automatically
-            log.warn("Attempt to lock non existing content {} during (de)activation.",getUUID(request));
-        } catch (PathNotFoundException e) {
-            // - when attempting to activate the content for which parent content have not been yet activated
-            log.debug("Attempt to lock non existing content {}:{} during (de)activation.",getHierarchyManager(request).getName(), getParentPath(request));
         } catch (RepositoryException re) {
             // will blow fully at later stage
             log.warn("Exception caught", re);
         }
     }
 
+    /**
+     * Will wait for predefined amount of time and attempt predefined number of times to obtain unlocked content.
+     * 
+     * @param request
+     * @return unlocked content specified by the request or null in case such content doesnt exist
+     * @throws ExchangeException
+     * @throws RepositoryException
+     */
     protected Content waitForLock(HttpServletRequest request) throws ExchangeException, RepositoryException {
         int retries = getUnlockRetries();
         long retryWait = getRetryWait() * 1000;
-        Content content = this.getNode(request);
-        while (content.isLocked() && retries > 0) {
-            log.info("Content " + content.getHandle() + " is locked. Will retry " + retries + " more times.");
-            try {
-                Thread.sleep(retryWait);
-            } catch (InterruptedException e) {
-                // Restore the interrupted status
-                Thread.currentThread().interrupt();
-            }
-            retries--;
+        Content content = null;
+        try {
             content = this.getNode(request);
-        }
-        if (content.isLocked()) {
-            throw new ExchangeException("Failed to lock content with 'Operation not permitted, " + content.getHandle() + " is locked while activating " + request.getHeader(BaseSyndicatorImpl.NODE_UUID) + "'");
+            while (content.isLocked() && retries > 0) {
+                log.info("Content " + content.getHandle() + " is locked. Will retry " + retries + " more times.");
+                try {
+                    Thread.sleep(retryWait);
+                } catch (InterruptedException e) {
+                    // Restore the interrupted status
+                    Thread.currentThread().interrupt();
+                }
+                retries--;
+                content = this.getNode(request);
+            }
+            if (content.isLocked()) {
+                throw new ExchangeException("Content " + content.getHandle() + " was locked while activating " + request.getHeader(BaseSyndicatorImpl.NODE_UUID) + ". This most likely means that content have been at the same time activated by some other user. Please try again and if problem persists contact administrator.");
+            }
+        } catch (ItemNotFoundException e) {
+            // - when deleting new piece of content on the author and mgnl tries to deactivate it on public automatically
+            log.debug("Attempt to lock non existing content {} during (de)activation.", getUUID(request));
+        } catch (PathNotFoundException e) {
+            // - when attempting to activate the content for which parent content have not been yet activated
+            log.debug("Attempt to lock non existing content {}:{} during (de)activation.",getHierarchyManager(request).getName(), getParentPath(request));
         }
         return content;
     }

@@ -416,7 +416,7 @@ public class ReceiveFilterTest extends MgnlTestCase {
         final Content existingNode = createStrictMock(Content.class);
         final Content tempNode = createStrictMock(Content.class);
         replay(existingNode, tempNode);
-        doTest("activate", "sa_failed", "Failed to lock content with 'Operation not permitted, /foo/bar is locked while activating some-uuid'", new AbstractTestCallBack() {
+        doTest("activate", "sa_failed", "Content /foo/bar was locked while activating some-uuid. This most likely means that content have been at the same time activated by some other user. Please try again and if problem persists contact administrator.", new AbstractTestCallBack() {
 
             @Override
             public Content getParentNode() {
@@ -465,96 +465,96 @@ public class ReceiveFilterTest extends MgnlTestCase {
      */
 
     private void doTest(final String action, final String expectedStatus, final String expectedMessage, TestCallBack testCallBack, boolean wasLocked) throws Exception {        final HttpServletRequest request = createMock(HttpServletRequest.class); // not strict: we don't want to check method call order
-        final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
-        final FilterChain filterChain = createStrictMock(FilterChain.class);
-        final SystemContext sysCtx = createStrictMock(SystemContext.class);
-        final WebContext ctx = createMock(WebContext.class);
-        final HierarchyManager hm = createMock(HierarchyManager.class);
-        final Workspace workspace = createStrictMock(Workspace.class);
-        final Session session = createStrictMock(Session.class);
+    final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
+    final FilterChain filterChain = createStrictMock(FilterChain.class);
+    final SystemContext sysCtx = createStrictMock(SystemContext.class);
+    final WebContext ctx = createMock(WebContext.class);
+    final HierarchyManager hm = createMock(HierarchyManager.class);
+    final Workspace workspace = createStrictMock(Workspace.class);
+    final Session session = createStrictMock(Session.class);
 
-        Node keyNode = mock(Node.class);
-        PropertyIterator propIter = mock(PropertyIterator.class);
-        NodeIterator nodeIter = mock(NodeIterator.class);
-        Property keyProp = mock(Property.class);
-        when(keyNode.getProperties()).thenReturn(propIter);
-        when(propIter.hasNext()).thenReturn(true).thenReturn(false);
-        when(propIter.next()).thenReturn(keyProp);
-        when(keyProp.getName()).thenReturn("publicKey");
-        when(keyNode.getNodes()).thenReturn(nodeIter);
-        ObservationManager obsMan = mock(ObservationManager.class);
+    Node keyNode = mock(Node.class);
+    PropertyIterator propIter = mock(PropertyIterator.class);
+    NodeIterator nodeIter = mock(NodeIterator.class);
+    Property keyProp = mock(Property.class);
+    when(keyNode.getProperties()).thenReturn(propIter);
+    when(propIter.hasNext()).thenReturn(true).thenReturn(false);
+    when(propIter.next()).thenReturn(keyProp);
+    when(keyProp.getName()).thenReturn("publicKey");
+    when(keyNode.getNodes()).thenReturn(nodeIter);
+    ObservationManager obsMan = mock(ObservationManager.class);
 
-        final InputStream xmlStream = getClass().getResourceAsStream("/resources4189.xml");
-        final InputStream nodeStream = getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz");
-        assertNotNull(xmlStream);
-        assertNotNull(nodeStream);
-        final MultipartForm form = new MultipartForm();
-        // the file name (documents key) is only used here as the key of the map, is unrelated to actual name.
-        form.getDocuments().put("blah.xml", new StreamOnlyDocument(xmlStream));
-        form.getDocuments().put("node-to-activate.xml.gz", new StreamOnlyDocument(nodeStream));
+    final InputStream xmlStream = getClass().getResourceAsStream("/resources4189.xml");
+    final InputStream nodeStream = getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz");
+    assertNotNull(xmlStream);
+    assertNotNull(nodeStream);
+    final MultipartForm form = new MultipartForm();
+    // the file name (documents key) is only used here as the key of the map, is unrelated to actual name.
+    form.getDocuments().put("blah.xml", new StreamOnlyDocument(xmlStream));
+    form.getDocuments().put("node-to-activate.xml.gz", new StreamOnlyDocument(nodeStream));
 
-        expect(session.hasPermission(isA(String.class), eq(Session.ACTION_ADD_NODE))).andReturn(true).anyTimes();
+    expect(session.hasPermission(isA(String.class), eq(Session.ACTION_ADD_NODE))).andReturn(true).anyTimes();
 
-        ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
-        MgnlContext.setInstance(ctx);
+    ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
+    MgnlContext.setInstance(ctx);
 
-        // we verify timestamp is not too old so we need to have fresh one for test as well
-        String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;14D600CAB64A608D5D2780E00A4A6CA2", PRIVATE_KEY);
-        // RF will fail silently on empty message since it might be just random hit to given uri.
-        assertFalse(message.isEmpty());
-        expect(request.getHeader("X-magnolia-act-auth")).andReturn(message).anyTimes();
+    // we verify timestamp is not too old so we need to have fresh one for test as well
+    String message = SecurityUtil.encrypt(System.currentTimeMillis() + ";johndoe;14D600CAB64A608D5D2780E00A4A6CA2", PRIVATE_KEY);
+    // RF will fail silently on empty message since it might be just random hit to given uri.
+    assertFalse(message.isEmpty());
+    expect(request.getHeader("X-magnolia-act-auth")).andReturn(message).anyTimes();
 
-        // checking headers
-        expect(request.getHeader("mgnlUTF8Status")).andReturn("true").anyTimes();
-        expect(request.getHeader("mgnlExchangeAction")).andReturn(action).anyTimes();
-        expect(request.getHeader("mgnlExchangeParentPath")).andReturn(PARENT_PATH).anyTimes();
-        expect(request.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("some-uuid").anyTimes();
-        expect(request.getHeader("mgnlExchangeRepositoryName")).andReturn("some-repo").anyTimes();
-        expect(request.getHeader("mgnlExchangeWorkspaceName")).andReturn("some-workspace").anyTimes();
-        expect(request.getHeader("mgnlExchangeResourceMappingFile")).andReturn("blah.xml").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
-        // TODO : check if different rules are passed in different cases ?
-        expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:page,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
-        expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
-        expect(request.getSession()).andReturn(null).anyTimes();
-        expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
-        expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
+    // checking headers
+    expect(request.getHeader("mgnlUTF8Status")).andReturn("true").anyTimes();
+    expect(request.getHeader("mgnlExchangeAction")).andReturn(action).anyTimes();
+    expect(request.getHeader("mgnlExchangeParentPath")).andReturn(PARENT_PATH).anyTimes();
+    expect(request.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("some-uuid").anyTimes();
+    expect(request.getHeader("mgnlExchangeRepositoryName")).andReturn("some-repo").anyTimes();
+    expect(request.getHeader("mgnlExchangeWorkspaceName")).andReturn("some-workspace").anyTimes();
+    expect(request.getHeader("mgnlExchangeResourceMappingFile")).andReturn("blah.xml").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
+    // TODO : check if different rules are passed in different cases ?
+    expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:page,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
+    expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
+    expect(request.getSession()).andReturn(null).anyTimes();
+    expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
+    expect(request.getAttribute(EasyMock.<String>anyObject())).andReturn(null).anyTimes();
 
-        // checking parent node
-        testCallBack.checkParent(hm, wasLocked);
+    // checking parent node
+    testCallBack.checkParent(hm, wasLocked);
 
-        expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
-        expect(sysCtx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
-        expect(ctx.getPostedForm()).andReturn(form).anyTimes();
+    expect(ctx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
+    expect(sysCtx.getHierarchyManager("some-workspace")).andReturn(hm).anyTimes();
+    expect(ctx.getPostedForm()).andReturn(form).anyTimes();
 
-        // copying temp node
-        // in reality it will be a different hm, but for a sake of the test we use the same one
-        testCallBack.createTemp(sysCtx, hm);
+    // copying temp node
+    // in reality it will be a different hm, but for a sake of the test we use the same one
+    testCallBack.createTemp(sysCtx, hm);
 
-        testCallBack.checkPermissions(hm);
-        testCallBack.checkNode(hm);
+    testCallBack.checkPermissions(hm);
+    testCallBack.checkNode(hm);
 
-        // importing node
-        expect(hm.getWorkspace()).andReturn(workspace).anyTimes();
-        expect(workspace.getSession()).andReturn(session).anyTimes();
-        testCallBack.importNode(hm, session);
-        testCallBack.saveSession(hm);
+    // importing node
+    expect(hm.getWorkspace()).andReturn(workspace).anyTimes();
+    expect(workspace.getSession()).andReturn(session).anyTimes();
+    testCallBack.importNode(hm, session);
+    testCallBack.saveSession(hm);
 
-        // response
-        response.setHeader("sa_attribute_status", expectedStatus);
-        response.setHeader("sa_attribute_message", expectedMessage);
+    // response
+    response.setHeader("sa_attribute_status", expectedStatus);
+    response.setHeader("sa_attribute_message", expectedMessage);
 
-        if (wasLocked) {
-            //cleanup()
-            expect(hm.isExist("/foo/bar")).andReturn(true);
-            expect(request.getSession(false)).andReturn(null);
-        }
+    if (wasLocked) {
+        //cleanup()
+        expect(hm.isExist("/foo/bar")).andReturn(true);
+        expect(request.getSession(false)).andReturn(null);
+    }
 
-        final ReceiveFilter filter = new ReceiveFilter(new ExchangeSimpleModule());
-        filter.setUnlockRetries(1);
-        Object[] mocks = new Object[] {request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode()};
-        replay(mocks);
-        filter.doFilter(request, response, filterChain);
-        verify(mocks);
+    final ReceiveFilter filter = new ReceiveFilter(new ExchangeSimpleModule());
+    filter.setUnlockRetries(1);
+    Object[] mocks = new Object[] {request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode()};
+    replay(mocks);
+    filter.doFilter(request, response, filterChain);
+    verify(mocks);
     }
 
 

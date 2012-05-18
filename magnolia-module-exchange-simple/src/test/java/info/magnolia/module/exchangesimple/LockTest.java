@@ -32,12 +32,14 @@
  *
  */
 package info.magnolia.module.exchangesimple;
+import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -282,5 +284,16 @@ public class LockTest extends RepositoryTestCase {
 
         verify(objs);
         t2.interrupt();
+    }
+    public void testAttemptToLockNonexistentContent() throws Exception {
+        ReceiveFilter filter = new ReceiveFilter(null);
+        HttpServletRequest request = createNiceMock(HttpServletRequest.class);
+        expect(request.getHeader(BaseSyndicatorImpl.NODE_UUID)).andReturn("8b7d0df5-c218-4592-b584-badcaffeebad").anyTimes();
+        expect(request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME)).andReturn("magnolia").anyTimes();
+        expect(request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME)).andReturn("website").anyTimes();
+        Object[] mocks = new Object[] { request };
+        replay(mocks);
+        assertNull(filter.waitForLock(request));
+        verify(mocks);
     }
 }
