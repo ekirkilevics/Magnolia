@@ -30,11 +30,8 @@ div.mgnlEditorBar {
   -moz-box-sizing: border-box !important;    /* Firefox, other Gecko */
   box-sizing: border-box !important;         /* IE 8+ */
   height: 24px !important;
-    /* Set height else on FF default buttons height screws up layout. */
-  line-height: 21px !important;
-    /* Set line-height ensures that labels are vertically centered. Must be equal to height minus */
-    /* vertical paddings minus borders -1. "-1" to make sure that FF properly align labels in all cases; for other */
-    /* browsers, this has no effect. This only works with single-line labels. */
+  /* vertical paddings minus borders -1. "-1" to make sure that FF properly align labels in all cases; for other */
+  /* browsers, this has no effect. This only works with single-line labels. */
   border-top: 1px solid #96b158 !important;
   border-left: 1px solid #96b158 !important;
   border-bottom: 1px solid #355500 !important;
@@ -307,6 +304,7 @@ div.mgnlEditorBarLabel {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
+  line-height: 21px !important;
 }
 
 /* --- End of edit bars definitions --- */
@@ -441,8 +439,7 @@ div.mgnlEditorMoveDiv {
   width: 95px !important; /* FIXME Pseudo-align dropdown with buttons above - this is inflexible and should be changed. */
   margin: -5px 0 0 0 !important;
   padding: 0 !important;
-  border-collapse: separate !important;
-  border-spacing: 0px !important;
+  border-collapse: collapse !important;
   border-top: 0 !important;
   border-left: 1px solid #91BA26 !important;
   border-right: 1px solid #305000 !important;
