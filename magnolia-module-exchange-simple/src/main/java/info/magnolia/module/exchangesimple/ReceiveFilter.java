@@ -101,6 +101,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
 
+    public static final String SYSTEM_REPO = "mgnlSystem";
+
     private int unlockRetries = 10;
 
     private int retryWait = 2;
@@ -561,7 +563,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         final String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
         final String handle = existingContent.getHandle();
         // Can't execute in system context here just get hm from SC and use it for temp node handling
-        final HierarchyManager systemHM = MgnlContext.getSystemContext().getHierarchyManager("mgnlSystem");
+        final HierarchyManager systemHM = MgnlContext.getSystemContext().getHierarchyManager(SYSTEM_REPO);
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
