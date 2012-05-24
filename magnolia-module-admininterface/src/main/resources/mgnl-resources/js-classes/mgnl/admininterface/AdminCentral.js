@@ -184,8 +184,16 @@ MgnlAdminCentral.openInNewWindow = function(onOpenedInNewWindow){
 MgnlAdminCentral.showTree = function(name, path, usePathAsRoot){
     mgnlAdminCentral = MgnlDHTMLUtil.findVariable("mgnlAdminCentral")
     if(mgnlAdminCentral){
-        mgnlAdminCentral.showTree(name, path, usePathAsRoot);
-        mgnlAdminCentral.window.focus();
+        try {
+            mgnlAdminCentral.showTree(name, path, usePathAsRoot);
+            mgnlAdminCentral.window.focus();
+        }catch(e){
+            this.openInNewWindow(function(mgnlAdminCentral){
+                mgnlAdminCentral.showTree(name, path, usePathAsRoot);
+                // remove the handler again
+                MgnlAdminCentral.onOpenedInNewWindow = null;
+            });
+        }
     }
     else{
         this.openInNewWindow(function(mgnlAdminCentral){
