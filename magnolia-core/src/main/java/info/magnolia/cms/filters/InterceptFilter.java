@@ -89,12 +89,12 @@ public class InterceptFilter extends AbstractMgnlFilter {
     /**
      * request parameter: repository name.
      */
-    private static final String PARAM_REPOSITORY = "mgnlRepository";
+    public static final String PARAM_REPOSITORY = "mgnlRepository";
 
     /**
      * request parameter: node path, used for paragraph deletion.
      */
-    private static final String PARAM_PATH = "mgnlPath";
+    public static final String PARAM_PATH = "mgnlPath";
 
     /**
      * request parameter: sort-above paragraph.
