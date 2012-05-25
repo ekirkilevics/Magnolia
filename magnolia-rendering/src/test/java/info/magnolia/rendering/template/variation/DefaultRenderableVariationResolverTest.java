@@ -52,7 +52,7 @@ import static org.junit.Assert.assertNull;
 /**
  * @version $Id$
  */
-public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCase {
+public class DefaultRenderableVariationResolverTest extends AbstractMagnoliaTestCase {
 
     private static final String CHANNEL = "smartphone";
 
@@ -106,7 +106,7 @@ public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCas
         channel.setName(CHANNEL);
         mockContext.getAggregationState().setChannel(channel);
         mockContext.getAggregationState().setExtension(EXTENSION);
-        final RenderableVariationResolverImpl resolver = new RenderableVariationResolverImpl();
+        final DefaultRenderableVariationResolver resolver = new DefaultRenderableVariationResolver();
 
         // WHEN
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
@@ -122,7 +122,7 @@ public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCas
         // GIVEN
         final MockWebContext mockContext = (MockWebContext) MockUtil.initMockContext();
         mockContext.getAggregationState().setExtension(EXTENSION);
-        final RenderableVariationResolverImpl resolver = new RenderableVariationResolverImpl();
+        final DefaultRenderableVariationResolver resolver = new DefaultRenderableVariationResolver();
 
         // WHEN
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
@@ -140,7 +140,7 @@ public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCas
         final Channel channel = new Channel();
         channel.setName(CHANNEL);
         mockContext.getAggregationState().setChannel(channel);
-        final RenderableVariationResolverImpl resolver = new RenderableVariationResolverImpl();
+        final DefaultRenderableVariationResolver resolver = new DefaultRenderableVariationResolver();
 
         // WHEN
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
@@ -159,7 +159,7 @@ public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCas
         channel.setName("channelDoesNotExist");
         mockContext.getAggregationState().setChannel(channel);
         mockContext.getAggregationState().setExtension("extensionDoesNotExist");
-        final RenderableVariationResolverImpl resolver = new RenderableVariationResolverImpl();
+        final DefaultRenderableVariationResolver resolver = new DefaultRenderableVariationResolver();
 
         // WHEN
         RenderableDefinition result = resolver.resolveVariation(templateDefinition);
@@ -171,7 +171,7 @@ public class RenderableVariationResolverImplTest extends AbstractMagnoliaTestCas
     @Test
     public void testDoesNothingWhenAggregationStateNotAvailable() throws Exception {
         // GIVEN
-        final RenderableVariationResolverImpl resolver = new RenderableVariationResolverImpl();
+        final DefaultRenderableVariationResolver resolver = new DefaultRenderableVariationResolver();
 
         // WHEN
         final RenderableDefinition result = resolver.resolveVariation(templateDefinition);

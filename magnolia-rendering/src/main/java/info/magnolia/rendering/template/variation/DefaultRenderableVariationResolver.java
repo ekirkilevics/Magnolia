@@ -43,7 +43,7 @@ import info.magnolia.rendering.template.RenderableDefinition;
  *
  * @version $Id$
  */
-public class RenderableVariationResolverImpl implements RenderableVariationResolver{
+public class DefaultRenderableVariationResolver implements RenderableVariationResolver{
 
     @Override
     public RenderableDefinition resolveVariation(RenderableDefinition renderableDefinition) {
