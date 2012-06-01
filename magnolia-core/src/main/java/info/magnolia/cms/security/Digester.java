@@ -58,7 +58,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * @version 2.0
+ * @deprecated since 4.5.3 - use SecurityUtil instead.
  */
+@Deprecated
 public final class Digester {
 
     public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
@@ -115,7 +117,7 @@ public final class Digester {
      */
     public static String getMD5Hex(String data) {
         try {
-            String result = Digester.getDigest(data, Digester.MD5);
+            byte[] result = Digester.getDigest(data.getBytes(), Digester.MD5);
             return Digester.toHEX(result);
         }
         catch (NoSuchAlgorithmException e) {
@@ -140,7 +142,7 @@ public final class Digester {
      */
     public static String toHEX(byte[] data) {
         StringBuffer hexValue = new StringBuffer();
-        char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+        char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         for (int i = 0; i < data.length; i++) {
             byte byteValue = data[i];
             hexValue.append(digits[(byteValue & 0xf0) >> 4]);

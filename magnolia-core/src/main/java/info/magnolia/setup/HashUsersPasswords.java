@@ -35,7 +35,7 @@ package info.magnolia.setup;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.security.Digester;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -103,7 +103,7 @@ public final class HashUsersPasswords extends AllChildrenNodesOperation {
                 }
                 if (Base64.isArrayByteBase64(pwdBytes)) {
                     String pwd = new String(Base64.decodeBase64(pwdBytes));
-                    String hashedPwd = Digester.getBCrypt(pwd);
+                    String hashedPwd = SecurityUtil.getBCrypt(pwd);
                     node.setNodeData("pswd", hashedPwd);
                 }
             }
