@@ -48,7 +48,6 @@ import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -70,7 +69,6 @@ import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Utility functions required in the context of Security.
@@ -82,18 +80,6 @@ public class SecurityUtil {
     private static final String PRIVATE_KEY = "key.private";
     private static final String PUBLIC_KEY = "key.public";
     private static final String KEY_LOCATION_PROPERTY = "magnolia.author.key.location";
-    
-    
-    public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
-    public static final String MD5 = "MD5"; //$NON-NLS-1$
-    
-    /**
-     * There are five (5) FIPS-approved* algorithms for generating a condensed representation of a message (message
-     * digest): SHA-1, SHA-224, SHA-256,SHA-384, and SHA-512. <strong>Not supported yet</strong>
-     */
-    public static final String SHA256 = "SHA-256"; //$NON-NLS-1$
-    public static final String SHA384 = "SHA-384"; //$NON-NLS-1$
-    public static final String SHA512 = "SHA-512"; //$NON-NLS-1$
 
     /**
      * Encryption algorithm used ... if you are ever changing this, keep in mind underlying impl relies on padding!
@@ -380,70 +366,5 @@ public class SecurityUtil {
         if(!keypair.exists()) {
             throw new SecurityException("Private key store doesn't exist at [" + keypair.getAbsolutePath() + "]. Please, ensure that [" + KEY_LOCATION_PROPERTY + "] actually points to the correct location");
         }
-    }
-    
-    public static String getBCrypt(String text) {
-        // gensalt's log_rounds parameter determines the complexity
-        // the work factor is 2^log_rounds, and the default is 10
-        String hashed = BCrypt.hashpw(text, BCrypt.gensalt(12));
-        return hashed;
-    }
-    
-    public static boolean matchBCrypted(String candidate, String hash) {
-        // Check that an unencrypted password matches one that has
-        // previously been hashed
-        return BCrypt.checkpw(candidate, hash);
-    }
-    
-    /**
-     * Message Digesting function.
-     * 
-     */
-    public static String getDigest(String data, String algorithm) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance(algorithm);
-        md.reset();
-        return new String(md.digest(data.getBytes()));
-    }
-    
-    /**
-     * Message Digesting function.
-     * 
-     */
-    public static byte[] getDigest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance(algorithm);
-        md.reset();
-        return md.digest(data);
-    }
-    
-    /**
-     * Gets SHA-1 encoded -> hex string.
-     */
-    public static String getSHA1Hex(byte[] data) {
-        try {
-            return byteArrayToHex(getDigest(data, SecurityUtil.SHA1));
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new SecurityException("Couldn't digest with " + SecurityUtil.SHA1 + " algorithm!");
-        }
-    }
-    
-    public static String getSHA1Hex(String data) {
-        return getSHA1Hex(data.getBytes());
-    }
-     
-    /**
-     * Gets MD5 encoded -> hex string.
-     */
-    public static String getMD5Hex(byte[] data) {
-        try {
-            return byteArrayToHex(getDigest(data, SecurityUtil.MD5));
-        }
-        catch (NoSuchAlgorithmException e) {
-            throw new SecurityException("Couldn't digest with " + SecurityUtil.MD5 + " algorithm!");
-        }
-    }
-    
-    public static String getMD5Hex(String data) {
-        return getMD5Hex(data.getBytes());
     }
 }

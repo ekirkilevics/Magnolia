@@ -53,7 +53,7 @@ import info.magnolia.context.WebContext;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 
-import java.io.OutputStream;
+import java.security.DigestOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -216,7 +216,7 @@ public class SimpleSyndicatorTest {
         Node jcr = createStrictMock(Node.class);
         expect(content.getJCRNode()).andReturn(jcr);
         expect(jcr.getPath()).andReturn(path);
-        session.exportSystemView(eq(path), isA(OutputStream.class), eq(false), eq(!isFile));
+        session.exportSystemView(eq(path), isA(DigestOutputStream.class), eq(false), eq(!isFile));
         expect(content.getName()).andReturn(path.substring(1));
 
         expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);

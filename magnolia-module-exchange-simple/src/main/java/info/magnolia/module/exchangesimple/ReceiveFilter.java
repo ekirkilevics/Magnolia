@@ -54,10 +54,11 @@ import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.DigestInputStream;
 import java.security.InvalidParameterException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +81,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.TeeInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -108,14 +108,17 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     private int retryWait = 2;
 
     private final ExchangeSimpleModule module;
-    
-    private final ByteArrayOutputStream md5;
+    private final MessageDigest md;
 
 
     @Inject
     public ReceiveFilter(ExchangeSimpleModule module) {
         this.module = module;
-        this.md5 = new ByteArrayOutputStream();
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("In order to proceed with activation please run Magnolia CMS using Java version with MD5 support.", e);
+        }
     }
 
     public int getUnlockRetries() {
@@ -372,12 +375,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     protected Element getImportedContentRoot(MultipartForm data, String resourceFileName, String resourcesmd5) throws JDOMException, IOException {
         Document resourceDocument = data.getDocument(resourceFileName);
         SAXBuilder builder = new SAXBuilder();
-        InputStream documentInputStream = new TeeInputStream(resourceDocument.getStream(), md5);
+        InputStream documentInputStream = new DigestInputStream(resourceDocument.getStream(), md);
         org.jdom.Document jdomDocument = builder.build(documentInputStream);
         IOUtils.closeQuietly(documentInputStream);
-        
-        String sign = SecurityUtil.getMD5Hex(md5.toByteArray());
-        md5.reset();
+        String sign = SecurityUtil.byteArrayToHex(md.digest());
         if (!resourcesmd5.equals(sign)) {
             throw new SecurityException("Signature of received resource (" + sign + ") doesn't match expected signature (" + resourcesmd5 + "). This might mean that the activation operation have been intercepted by a third party and content have been modified during transfer.");
         }
@@ -574,15 +575,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             final String transientStoreHandle = transientNode.getHandle();
             // import properties into transientStore
             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
-            final String expectedMD5 = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
-            final InputStream inputStream = new TeeInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md5);
+            final String md5 = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
+            final InputStream inputStream = new DigestInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md);
             // need to import in system context
             systemHM.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
-            final String calculatedMD5 = SecurityUtil.getMD5Hex(md5.toByteArray());
-            md5.reset();
-            
-            if (!calculatedMD5.equals(expectedMD5)) {
+            final String calculatedMD5 = SecurityUtil.byteArrayToHex(md.digest());
+            if (!calculatedMD5.equals(md5)) {
                 throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit.");
             }
             // copy properties from transient store to existing content
@@ -616,16 +615,15 @@ public class ReceiveFilter extends AbstractMgnlFilter {
 
         final String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         final String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
-        final String expectedMD5 = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
+        final String md5 = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
         // do actual import
-        final InputStream inputStream = new TeeInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md5);
+        final InputStream inputStream = new DigestInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md);
         log.debug("Importing {} into parent path {}", new Object[] {name, parentPath});
         hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
-        final String calculatedMD5 = SecurityUtil.getMD5Hex(md5.toByteArray());
-        md5.reset();
-        if (!calculatedMD5.equals(expectedMD5)) {
-            throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit. Expected signature:" + expectedMD5 + ", actual signature found: " + calculatedMD5);
+        final String calculatedMD5 = SecurityUtil.byteArrayToHex(md.digest());
+        if (!calculatedMD5.equals(md5)) {
+            throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit. Expected signature:" + md5 + ", actual signature found: " + calculatedMD5);
         }
         Iterator fileListIterator = resourceElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
         // parent path
@@ -649,7 +647,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      */
     protected synchronized String remove(HttpServletRequest request, String md5) throws Exception {
 
-        if (!md5.equals(SecurityUtil.getMD5Hex(request.getHeader(BaseSyndicatorImpl.NODE_UUID)))) {
+        if (!md5.equals(SecurityUtil.byteArrayToHex(md.digest(request.getHeader(BaseSyndicatorImpl.NODE_UUID).getBytes())))) {
             throw new SecurityException("Signature of resource doesn't match. This seems like malicious attempt to delete content. Request was issued from " + request.getRemoteAddr());
         }
         HierarchyManager hm = getHierarchyManager(request);

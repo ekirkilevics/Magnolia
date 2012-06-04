@@ -61,6 +61,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -83,6 +85,8 @@ import com.google.inject.Inject;
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
     private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
+
+    private final MessageDigest md;
 
     /**
      * URI used for activation.
@@ -168,6 +172,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     public static final String ACTIVATION_AUTH_KEY = "X-magnolia-act-auth-init";
 
     public BaseSyndicatorImpl() {
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new SecurityException("In order to proceed with activation please run Magnolia CMS using Java version with MD5 support.", e);
+        }
     }
     /**
      * Runs a given job in the thread pool.
@@ -525,7 +534,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         if (nodeUUID != null) {
             connection.addRequestProperty(NODE_UUID, nodeUUID);
             // send md5 of uuid ... it would be silly to send clear text along the encrypted message
-            md5 = SecurityUtil.getMD5Hex(nodeUUID);
+            md5 = SecurityUtil.byteArrayToHex(md.digest(nodeUUID.getBytes()));
         }
         // send md5 of uuid ... it would be silly to send clear text along the encrypted message
         String pass = System.currentTimeMillis() + ";" + this.user.getName() + ";" + md5;
@@ -542,7 +551,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
             connection.setRequestProperty(ACTIVATION_AUTH_KEY, SecurityUtil.encrypt(SecurityUtil.getPublicKey(), handshakeKey));
         }
     }
-    
+
     /**
      * Retrieves URL subscriber is listening on for (de)activation requests.
      */

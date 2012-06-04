@@ -62,12 +62,14 @@ import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.repository.RepositoryConstants;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
@@ -77,7 +79,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.TeeOutputStream;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.jdom.Document;
@@ -98,10 +99,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class ResourceCollector {
 
-    private final ByteArrayOutputStream md5;
+    private final MessageDigest md;
 
     public ResourceCollector() throws ExchangeException {
-        md5 = new ByteArrayOutputStream();
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            throw new ExchangeException("In order to proceed with activation please run Magnolia CMS using Java version with MD5 support.", e);
+        }
     }
 
     private static final Logger log = LoggerFactory.getLogger(ResourceCollector.class);
@@ -117,7 +122,9 @@ public class ResourceCollector {
      * @throws Exception
      */
     protected ActivationContent collect(Content node, List<String> orderBefore, String parent, String workspaceName, String repositoryName, Rule contentFilterRule) throws Exception {
-        md5.reset();
+
+        // just to be sure, there should be no reason for md to not be reset (reset is called automatically after digest call)
+        md.reset();
 
         Content.ContentFilter contentFilter = new RuleBasedContentFilter(contentFilterRule);
 
@@ -142,15 +149,13 @@ public class ResourceCollector {
         addOrderingInfo(root, orderBefore);
 
         this.addResources(root, node.getWorkspace().getSession(), node, contentFilter, activationContent);
-        XMLOutputter outputter = new XMLOutputter();        
-        
+        XMLOutputter outputter = new XMLOutputter();
 
-        outputter.output(document, new TeeOutputStream(new FileOutputStream(resourceFile), md5));
+        outputter.output(document, new DigestOutputStream(new FileOutputStream(resourceFile), md));
         // add resource file to the list
         activationContent.addFile(resourceFile.getName(), resourceFile);
         // add signature of the resource file itself
-        activationContent.addProperty(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.getMD5Hex(md5.toByteArray()));
-        md5.reset();
+        activationContent.addProperty(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.byteArrayToHex(md.digest()));
 
         // add deletion info
         activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
@@ -183,13 +188,11 @@ public class ResourceCollector {
 
     protected void addResources(Element resourceElement, Session session, final Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
         final String workspaceName = content.getWorkspace().getName();
-        
         log.debug("Preparing content {}:{} for publishing.", new String[] { workspaceName, content.getHandle() });
         final String uuid = content.getUUID();
 
         File file = File.createTempFile("exchange_" + uuid, ".xml.gz", Path.getTempDirectory());
-        
-        OutputStream outputStream = new TeeOutputStream(new GZIPOutputStream(new FileOutputStream(file)), md5);
+        OutputStream outputStream = new DigestOutputStream(new GZIPOutputStream(new FileOutputStream(file)), md);
 
         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
         if (content.isNodeType("nt:frozenNode") || workspaceName.equals(RepositoryConstants.VERSION_STORE)) {
@@ -218,10 +221,7 @@ public class ResourceCollector {
         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
         element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, uuid);
         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
-        
-        element.setAttribute(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.getMD5Hex(md5.toByteArray()));
-        md5.reset();
-        
+        element.setAttribute(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.byteArrayToHex(md.digest()));
         resourceElement.addContent(element);
         // add this file element as resource in activation content
         activationContent.addFile(file.getName(), file);

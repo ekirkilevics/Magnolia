@@ -40,7 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.SecurityUtil;
+import info.magnolia.cms.security.Digester;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockContent;
 
@@ -77,7 +77,7 @@ public class HashUsersPasswordsTest {
         hash.execute(installContext);
         String hashPwd = superuser.getNodeData("pswd").getString();
         assertFalse(encodedPwd.equals(hashPwd));
-        assertTrue(SecurityUtil.matchBCrypted("blaboo", hashPwd));
+        assertTrue(Digester.matchBCrypted("blaboo", hashPwd));
     }
 
 }
