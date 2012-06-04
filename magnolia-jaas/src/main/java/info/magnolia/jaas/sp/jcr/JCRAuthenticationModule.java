@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,7 +33,7 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
-import info.magnolia.cms.security.Digester;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.SecuritySupport;
@@ -162,7 +162,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         if (Base64.isArrayByteBase64(serverPassword.getBytes())) {
             match = Arrays.equals(Base64.decodeBase64(serverPassword), new String(this.pswd).getBytes());
         } else {
-            match = Digester.matchBCrypted(new String(this.pswd), serverPassword);
+            match = SecurityUtil.matchBCrypted(new String(this.pswd), serverPassword);
         }
         if (!match) {
             if (getMaxAttempts() > 0 && !UserManager.ANONYMOUS_USER.equals(user.getName())){

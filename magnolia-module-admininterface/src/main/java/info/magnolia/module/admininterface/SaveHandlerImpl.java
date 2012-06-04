@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -48,7 +48,7 @@ import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Digester;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
@@ -618,12 +618,12 @@ public class SaveHandlerImpl implements SaveHandler {
             }
         } else if (encoding == ControlImpl.ENCRYPTION_HASH_SHA) {
             if (StringUtils.isNotEmpty(valueStr)) {
-                valueStr = Digester.getSHA1Hex(valueStr);
+                valueStr = SecurityUtil.getSHA1Hex(valueStr);
                 write = true;
             }
         } else if (encoding == ControlImpl.ENCRYPTION_HASH_BCRYPT) {
             if (StringUtils.isNotEmpty(valueStr)) {
-                valueStr = Digester.getBCrypt(valueStr);
+                valueStr = SecurityUtil.getBCrypt(valueStr);
                 write = true;
             }
         } else {
