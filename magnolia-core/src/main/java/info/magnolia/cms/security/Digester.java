@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.security;
 
-import  org.mindrot.jbcrypt.BCrypt;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.slf4j.Logger;
@@ -58,7 +56,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sameer Charles
  * @version 2.0
+ * @deprecated since 4.5.3 - use SecurityUtil instead.
  */
+@Deprecated
 public final class Digester {
 
     public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
@@ -85,43 +85,25 @@ public final class Digester {
     }
 
     public static String getDigest(String data, String algorithm) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance(algorithm);
-        md.reset();
-        return new String(md.digest(data.getBytes()));
+        return SecurityUtil.getDigest(data, algorithm);
     }
 
     public static byte[] getDigest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance(algorithm);
-        md.reset();
-        return md.digest(data);
+        return SecurityUtil.getDigest(data, algorithm);
     }
 
     /**
      * Gets SHA-1 encoded -> hex string.
      */
     public static String getSHA1Hex(String data) {
-        try {
-            String result = Digester.getDigest(data, Digester.SHA1);
-            return Digester.toHEX(result);
-        }
-        catch (NoSuchAlgorithmException e) {
-            log.error(e.getMessage(), e);
-        }
-        return data;
+        return SecurityUtil.getSHA1Hex(data);
     }
 
     /**
      * Gets MD5 encoded -> hex string.
      */
     public static String getMD5Hex(String data) {
-        try {
-            String result = Digester.getDigest(data, Digester.MD5);
-            return Digester.toHEX(result);
-        }
-        catch (NoSuchAlgorithmException e) {
-            log.error(e.getMessage(), e);
-        }
-        return data;
+        return SecurityUtil.getMD5Hex(data);
     }
 
     /**
@@ -130,7 +112,7 @@ public final class Digester {
      * @return string representing hex values of the byte array
      */
     public static String toHEX(String data) {
-        return Digester.toHEX(data.getBytes());
+        return toHEX(data.getBytes());
     }
 
     /**
@@ -139,26 +121,14 @@ public final class Digester {
      * @return string representing hex values of the byte array
      */
     public static String toHEX(byte[] data) {
-        StringBuffer hexValue = new StringBuffer();
-        char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-        for (int i = 0; i < data.length; i++) {
-            byte byteValue = data[i];
-            hexValue.append(digits[(byteValue & 0xf0) >> 4]);
-            hexValue.append(digits[byteValue & 0x0f]);
-        }
-        return hexValue.toString();
+        return SecurityUtil.byteArrayToHex(data);
     }
 
     public static String getBCrypt(String text) {
-        // gensalt's log_rounds parameter determines the complexity
-        // the work factor is 2^log_rounds, and the default is 10
-        String hashed = BCrypt.hashpw(text, BCrypt.gensalt(12));
-        return hashed;
+        return SecurityUtil.getBCrypt(text);
     }
 
     public static boolean matchBCrypted(String candidate, String hash) {
-        // Check that an unencrypted password matches one that has
-        // previously been hashed
-        return BCrypt.checkpw(candidate, hash);
+        return SecurityUtil.matchBCrypted(candidate, hash);
     }
 }
