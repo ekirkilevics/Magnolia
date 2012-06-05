@@ -4,7 +4,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>4.5.4-SNAPSHOT</version>
+    <version>5.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-templating-editor</artifactId>
@@ -96,7 +96,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-templating</artifactId>
-      <version>4.5.4-SNAPSHOT</version>
+      <version>5.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -141,7 +141,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>4.5.4-SNAPSHOT</version>
+      <version>5.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
