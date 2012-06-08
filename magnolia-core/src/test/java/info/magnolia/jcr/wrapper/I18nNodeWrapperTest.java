@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2011-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -201,6 +201,21 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
         //THEN
         assertTrue(parent instanceof I18nNodeWrapper);
 
+    }
+
+    @Test
+    public void testGetAncestorReturnsWrappedNode() throws Exception {
+        //GIVEN
+        final Node root = new MockNode();
+        root.addNode("bar").addNode("foo").addNode("baz");
+
+        //WHEN
+        final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(root.getNode("bar/foo/baz"));
+        
+        //THEN
+        for (int i = 1; i < wrappedNode.getDepth(); ++i) {
+            assertTrue(wrappedNode.getAncestor(i) instanceof I18nNodeWrapper);
+        }
     }
 
     @Test(expected=ItemNotFoundException.class)

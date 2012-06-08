@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2011-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -38,6 +38,7 @@ import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 
 import javax.jcr.AccessDeniedException;
+import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -84,6 +85,11 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-         return wrapNode(super.getParent());
+        return wrapNode(super.getParent());
+    }
+    
+    @Override
+    public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
+        return wrapNode((Node) super.getAncestor(depth)); 
     }
 }
