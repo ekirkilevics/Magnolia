@@ -33,33 +33,43 @@
  */
 package info.magnolia.cms.util;
 
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletRequestWrapper;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Utility methods for operations related to Servlet API.
  *
  * @author tmattsson
  * @see info.magnolia.cms.util.RequestHeaderUtil
- * @deprecated since 4.5 - use {@link info.magnolia.cms.util.ServletUtil} instead.
  */
-@Deprecated
-public abstract class ServletUtils {
-    
-    public static final String FORWARD_REQUEST_URI_ATTRIBUTE = ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE;
-    public static final String FORWARD_QUERY_STRING_ATTRIBUTE = ServletUtil.FORWARD_QUERY_STRING_ATTRIBUTE; 
-    public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE;
-    public static final String ERROR_REQUEST_STATUS_CODE_ATTRIBUTE = ServletUtil.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE;
+public abstract class ServletUtil {
+
+    public static final String FORWARD_REQUEST_URI_ATTRIBUTE = "javax.servlet.forward.request_uri";
+    public static final String FORWARD_QUERY_STRING_ATTRIBUTE = "javax.servlet.forward.query_string";
+
+    public static final String INCLUDE_REQUEST_URI_ATTRIBUTE = "javax.servlet.include.request_uri";
+
+    public static final String ERROR_REQUEST_STATUS_CODE_ATTRIBUTE = "javax.servlet.error.status_code";
 
     /**
      * Returns the init parameters for a {@link javax.servlet.ServletConfig} object as a Map, preserving the order in which they are exposed
      * by the {@link javax.servlet.ServletConfig} object.
      */
     public static LinkedHashMap<String, String> initParametersToMap(ServletConfig config) {
-        return ServletUtil.initParametersToMap(config);
+        LinkedHashMap<String, String> initParameters = new LinkedHashMap<String, String>();
+        Enumeration parameterNames = config.getInitParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = (String) parameterNames.nextElement();
+            initParameters.put(parameterName, config.getInitParameter(parameterName));
+        }
+        return initParameters;
     }
 
     /**
@@ -67,21 +77,34 @@ public abstract class ServletUtils {
      * by the {@link javax.servlet.FilterConfig} object.
      */
     public static LinkedHashMap<String, String> initParametersToMap(FilterConfig config) {
-        return ServletUtil.initParametersToMap(config);
+        LinkedHashMap<String, String> initParameters = new LinkedHashMap<String, String>();
+        Enumeration parameterNames = config.getInitParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String parameterName = (String) parameterNames.nextElement();
+            initParameters.put(parameterName, config.getInitParameter(parameterName));
+        }
+        return initParameters;
     }
 
     /**
      * Finds a request wrapper object inside the chain of request wrappers.
      */
     public static <T extends ServletRequest> T getWrappedRequest(ServletRequest request, Class<T> clazz) {
-        return ServletUtil.getWrappedRequest(request, clazz);
+        while (request != null) {
+            if (clazz.isAssignableFrom(request.getClass())) {
+                return (T) request;
+            }
+            request = (request instanceof ServletRequestWrapper) ? ((ServletRequestWrapper) request).getRequest() : null;
+        }
+        return null;
     }
 
     /**
      * Returns true if the request has a content type that indicates that is a multipart request.
      */
     public static boolean isMultipart(HttpServletRequest request) {
-        return ServletUtil.isMultipart(request);
+        String contentType = request.getContentType();
+        return contentType != null && contentType.toLowerCase().startsWith("multipart/");
     }
 
     /**
@@ -89,14 +112,14 @@ public abstract class ServletUtils {
      * an include operation has begun and will return true after that include operations has completed.
      */
     public static boolean isForward(HttpServletRequest request) {
-        return ServletUtil.isForward(request);
+        return request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null && !isInclude(request);
     }
 
     /**
      * Returns true if the request is currently processing an include operation.
      */
     public static boolean isInclude(HttpServletRequest request) {
-        return request.getAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE) != null;
+        return request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null;
     }
 
     /**
@@ -105,7 +128,7 @@ public abstract class ServletUtils {
      * forward() while rendering the error page.
      */
     public static boolean isError(HttpServletRequest request) {
-        return ServletUtil.isError(request);
+        return request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null;
     }
 
     /**
@@ -113,7 +136,17 @@ public abstract class ServletUtils {
      * filter mappings in web.xml.
      */
     public static DispatcherType getDispatcherType(HttpServletRequest request) {
-        return ServletUtil.getDispatcherType(request);
+        // The order of these tests is important.
+        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null) {
+            return DispatcherType.INCLUDE;
+        }
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
+            return DispatcherType.FORWARD;
+        }
+        if (request.getAttribute(ERROR_REQUEST_STATUS_CODE_ATTRIBUTE) != null) {
+            return DispatcherType.ERROR;
+        }
+        return DispatcherType.REQUEST;
     }
 
     /**
@@ -121,7 +154,10 @@ public abstract class ServletUtils {
      * request attributes. The returned uri is not decoded.
      */
     public static String getOriginalRequestURI(HttpServletRequest request) {
-        return ServletUtil.getOriginalRequestURI(request);
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
+            return (String) request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE);
+        }
+        return request.getRequestURI();
     }
 
     /**
@@ -129,7 +165,36 @@ public abstract class ServletUtils {
      * attributes. The returned url is not decoded.
      */
     public static String getOriginalRequestURLIncludingQueryString(HttpServletRequest request) {
-        return ServletUtil.getOriginalRequestURLIncludingQueryString(request);
+        if (request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE) != null) {
+            StringBuilder builder = new StringBuilder();
+
+            String scheme = request.getScheme();
+            builder.append(scheme).append("://").append(request.getServerName());
+
+            int port = request.getServerPort();
+            if ((scheme.equalsIgnoreCase("http") && port == 80) || (scheme.equalsIgnoreCase("https") && port == 443)) {
+                // adding port is not necessary
+            } else {
+                builder.append(":").append(port);
+            }
+
+            String requestUri = (String) request.getAttribute(FORWARD_REQUEST_URI_ATTRIBUTE);
+            builder.append(requestUri);
+
+            String queryString = (String) request.getAttribute(FORWARD_QUERY_STRING_ATTRIBUTE);
+            if (StringUtils.isNotEmpty(queryString)) {
+                builder.append("?").append(queryString);
+            }
+
+            return builder.toString();
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(request.getRequestURL());
+        String queryString = request.getQueryString();
+        if (StringUtils.isNotEmpty(queryString)) {
+            builder.append("?").append(queryString);
+        }
+        return builder.toString();
     }
 
     /**
@@ -137,6 +202,8 @@ public abstract class ServletUtils {
      * returned uri is not decoded.
      */
     public static String getRequestUri(HttpServletRequest request) {
-        return ServletUtil.getRequestUri(request);
+        if (request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE) != null)
+            return (String) request.getAttribute(INCLUDE_REQUEST_URI_ATTRIBUTE);
+        return request.getRequestURI();
     }
 }
