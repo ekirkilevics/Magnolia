@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2010-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -45,9 +45,9 @@ import org.junit.Test;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 
 /**
- * Tests for {@link ServletUtils}.
+ * Tests for {@link ServletUtil}.
  */
-public class ServletUtilsTest {
+public class ServletUtilTest {
 
     @Test
     public void testServletInitParametersToMap() {
@@ -58,7 +58,7 @@ public class ServletUtilsTest {
 
         CustomServletConfig servletConfig = new CustomServletConfig("servlet", null, initParameters);
 
-        LinkedHashMap<String, String> map = ServletUtils.initParametersToMap(servletConfig);
+        LinkedHashMap<String, String> map = ServletUtil.initParametersToMap(servletConfig);
         assertEquals(3, map.size());
         assertEquals("value1", map.get("key1"));
         String[] strings = map.keySet().toArray(new String[3]);
@@ -76,7 +76,7 @@ public class ServletUtilsTest {
 
         CustomFilterConfig servletConfig = new CustomFilterConfig("filter", null, initParameters);
 
-        LinkedHashMap<String, String> map = ServletUtils.initParametersToMap(servletConfig);
+        LinkedHashMap<String, String> map = ServletUtil.initParametersToMap(servletConfig);
         assertEquals(3, map.size());
         assertEquals("value1", map.get("key1"));
         String[] strings = map.keySet().toArray(new String[3]);
@@ -89,9 +89,9 @@ public class ServletUtilsTest {
         MockHttpServletRequest mock = new MockHttpServletRequest();
         HttpServletRequest request = new HttpServletRequestWrapper(mock) {};
 
-        assertNotNull(ServletUtils.getWrappedRequest(request, MockHttpServletRequest.class));
+        assertNotNull(ServletUtil.getWrappedRequest(request, MockHttpServletRequest.class));
 
-        assertNull(ServletUtils.getWrappedRequest(mock, request.getClass()));
+        assertNull(ServletUtil.getWrappedRequest(mock, request.getClass()));
     }
 
     @Test
@@ -99,66 +99,66 @@ public class ServletUtilsTest {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
         mock.setContentType("multipart/form-data");
-        assertTrue(ServletUtils.isMultipart(mock));
+        assertTrue(ServletUtil.isMultipart(mock));
 
         mock.setContentType("multipart/whatever");
-        assertTrue(ServletUtils.isMultipart(mock));
+        assertTrue(ServletUtil.isMultipart(mock));
 
         mock.setContentType("MULTIPART/form-data");
-        assertTrue(ServletUtils.isMultipart(mock));
+        assertTrue(ServletUtil.isMultipart(mock));
 
         mock.setContentType("text/html");
-        assertFalse(ServletUtils.isMultipart(mock));
+        assertFalse(ServletUtil.isMultipart(mock));
     }
 
     @Test
     public void testIsForward() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
-        assertFalse(ServletUtils.isForward(mock));
+        assertFalse(ServletUtil.isForward(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
-        assertTrue(ServletUtils.isForward(mock));
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertTrue(ServletUtil.isForward(mock));
 
-        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
-        assertFalse(ServletUtils.isForward(mock));
+        mock.setAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertFalse(ServletUtil.isForward(mock));
     }
 
     @Test
     public void testIsInclude() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
-        assertFalse(ServletUtils.isInclude(mock));
+        assertFalse(ServletUtil.isInclude(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
-        assertFalse(ServletUtils.isInclude(mock));
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertFalse(ServletUtil.isInclude(mock));
 
-        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
-        assertTrue(ServletUtils.isInclude(mock));
+        mock.setAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertTrue(ServletUtil.isInclude(mock));
     }
 
     @Test
     public void testIsError() {
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
-        assertFalse(ServletUtils.isError(mock));
-        assertFalse(ServletUtils.isForward(mock));
-        assertFalse(ServletUtils.isInclude(mock));
+        assertFalse(ServletUtil.isError(mock));
+        assertFalse(ServletUtil.isForward(mock));
+        assertFalse(ServletUtil.isInclude(mock));
 
-        mock.setAttribute(ServletUtils.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
-        assertTrue(ServletUtils.isError(mock));
-        assertFalse(ServletUtils.isForward(mock));
-        assertFalse(ServletUtils.isInclude(mock));
+        mock.setAttribute(ServletUtil.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
+        assertTrue(ServletUtil.isError(mock));
+        assertFalse(ServletUtil.isForward(mock));
+        assertFalse(ServletUtil.isInclude(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
-        assertTrue(ServletUtils.isError(mock));
-        assertTrue(ServletUtils.isForward(mock));
-        assertFalse(ServletUtils.isInclude(mock));
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertTrue(ServletUtil.isError(mock));
+        assertTrue(ServletUtil.isForward(mock));
+        assertFalse(ServletUtil.isInclude(mock));
 
-        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
-        assertTrue(ServletUtils.isError(mock));
-        assertFalse(ServletUtils.isForward(mock));
-        assertTrue(ServletUtils.isInclude(mock));
+        mock.setAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertTrue(ServletUtil.isError(mock));
+        assertFalse(ServletUtil.isForward(mock));
+        assertTrue(ServletUtil.isInclude(mock));
     }
 
     @Test
@@ -166,24 +166,24 @@ public class ServletUtilsTest {
 
         MockHttpServletRequest mock = new MockHttpServletRequest();
 
-        assertEquals(DispatcherType.REQUEST, ServletUtils.getDispatcherType(mock));
+        assertEquals(DispatcherType.REQUEST, ServletUtil.getDispatcherType(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
-        assertEquals(DispatcherType.FORWARD, ServletUtils.getDispatcherType(mock));
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, "/test.html");
+        assertEquals(DispatcherType.FORWARD, ServletUtil.getDispatcherType(mock));
 
-        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
-        assertEquals(DispatcherType.INCLUDE, ServletUtils.getDispatcherType(mock));
+        mock.setAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE, "/test.jsp");
+        assertEquals(DispatcherType.INCLUDE, ServletUtil.getDispatcherType(mock));
 
-        mock.removeAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE);
-        mock.removeAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
-        mock.setAttribute(ServletUtils.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
-        assertEquals(DispatcherType.ERROR, ServletUtils.getDispatcherType(mock));
+        mock.removeAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE);
+        mock.removeAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE);
+        mock.setAttribute(ServletUtil.ERROR_REQUEST_STATUS_CODE_ATTRIBUTE, 500);
+        assertEquals(DispatcherType.ERROR, ServletUtil.getDispatcherType(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, "/error.html");
-        assertEquals(DispatcherType.FORWARD, ServletUtils.getDispatcherType(mock));
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, "/error.html");
+        assertEquals(DispatcherType.FORWARD, ServletUtil.getDispatcherType(mock));
 
-        mock.setAttribute(ServletUtils.INCLUDE_REQUEST_URI_ATTRIBUTE, "/error.jsp");
-        assertEquals(DispatcherType.INCLUDE, ServletUtils.getDispatcherType(mock));
+        mock.setAttribute(ServletUtil.INCLUDE_REQUEST_URI_ATTRIBUTE, "/error.jsp");
+        assertEquals(DispatcherType.INCLUDE, ServletUtil.getDispatcherType(mock));
     }
 
     @Test
@@ -191,11 +191,11 @@ public class ServletUtilsTest {
         MockHttpServletRequest mock = new MockHttpServletRequest();
         mock.setRequestURI("/some/path/and/some.file");
 
-        assertEquals("/some/path/and/some.file", ServletUtils.getOriginalRequestURI(mock));
+        assertEquals("/some/path/and/some.file", ServletUtil.getOriginalRequestURI(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
         mock.setRequestURI("/forwarded/to/test/path");
-        assertEquals("/some/path/and/some.file", ServletUtils.getOriginalRequestURI(mock));
+        assertEquals("/some/path/and/some.file", ServletUtil.getOriginalRequestURI(mock));
     }
 
     @Test
@@ -205,19 +205,19 @@ public class ServletUtilsTest {
         mock.setRequestURI("/foo/bar.html");
         mock.setQueryString("a=5&b=6");
 
-        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtil.getOriginalRequestURLIncludingQueryString(mock));
 
-        mock.setAttribute(ServletUtils.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
-        mock.setAttribute(ServletUtils.FORWARD_QUERY_STRING_ATTRIBUTE, mock.getQueryString());
+        mock.setAttribute(ServletUtil.FORWARD_REQUEST_URI_ATTRIBUTE, mock.getRequestURI());
+        mock.setAttribute(ServletUtil.FORWARD_QUERY_STRING_ATTRIBUTE, mock.getQueryString());
         mock.setScheme("http");
         mock.setServerName("some.domain");
         mock.setServerPort(80);
 
         mock.setRequestURL("/forwarded/to/test/path");
         mock.setQueryString("qwerty=yes");
-        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+        assertEquals("http://some.domain/foo/bar.html?a=5&b=6", ServletUtil.getOriginalRequestURLIncludingQueryString(mock));
 
         mock.setServerPort(8080);
-        assertEquals("http://some.domain:8080/foo/bar.html?a=5&b=6", ServletUtils.getOriginalRequestURLIncludingQueryString(mock));
+        assertEquals("http://some.domain:8080/foo/bar.html?a=5&b=6", ServletUtil.getOriginalRequestURLIncludingQueryString(mock));
     }
 }
