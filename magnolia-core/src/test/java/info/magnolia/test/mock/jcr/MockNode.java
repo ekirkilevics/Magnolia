@@ -765,8 +765,11 @@ public class MockNode extends AbstractNode {
     public void update(String srcWorkspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
-
-    public void setNew(boolean isNew) {
+    /**
+     * Can force this mock node to "act" as new, that is as if not yet saved and thus only living in the transient storage of the current session.
+     * <p>By default the {@link #isNew()} method will return false.
+     */
+    public void setIsNew(boolean isNew) {
         this.isNew = isNew;
     }
 }

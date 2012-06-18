@@ -432,7 +432,7 @@ public class MockNodeTest {
     @Test
     public void testIsNewReturnsTrueOnlyIfSetExplicitly() throws Exception {
         MockNode newNode  = new MockNode("qux");
-        newNode.setNew(true);
+        newNode.setIsNew(true);
         assertTrue(newNode.isNew());
     }
 }
