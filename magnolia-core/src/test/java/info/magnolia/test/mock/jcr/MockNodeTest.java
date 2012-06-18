@@ -422,4 +422,17 @@ public class MockNodeTest {
     public void testConstructionFailsWhenNameContainsSlash() {
         new MockNode("/we/don/not/support/names/with/slashes/as/people/could/expect/this/creates/a/whole/node/structure");
     }
+
+    @Test
+    public void testIsNewReturnsFalseByDefault() throws Exception {
+        Node newNode  = new MockNode("qux");
+        assertFalse(newNode.isNew());
+    }
+
+    @Test
+    public void testIsNewReturnsTrueOnlyIfSetExplicitly() throws Exception {
+        MockNode newNode  = new MockNode("qux");
+        newNode.setNew(true);
+        assertTrue(newNode.isNew());
+    }
 }

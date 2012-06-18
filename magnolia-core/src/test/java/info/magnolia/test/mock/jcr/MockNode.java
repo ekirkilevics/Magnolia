@@ -106,6 +106,8 @@ public class MockNode extends AbstractNode {
      */
     private Session session;
 
+    private boolean isNew = false;
+
     /**
      * Create a root node (name = ROOT_NODE_NAME) without a session.
      */
@@ -499,9 +501,12 @@ public class MockNode extends AbstractNode {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     * Returns false by default, unless set explicitly as true via the corresponding setter method.
+     */
     @Override
     public boolean isNew() {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+        return isNew;
     }
 
     @Override
@@ -759,5 +764,9 @@ public class MockNode extends AbstractNode {
     @Override
     public void update(String srcWorkspaceName) {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    }
+
+    public void setNew(boolean isNew) {
+        this.isNew = isNew;
     }
 }
