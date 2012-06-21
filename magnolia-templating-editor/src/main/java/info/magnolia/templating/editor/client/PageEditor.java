@@ -294,7 +294,7 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_CHANNEL_PARAMETER);
 
         urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, String.valueOf(isPreview()));
-        urlBuilder.setParameter(MGNL_CHANNEL_PARAMEiTER, channelName);
+        urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, channelName);
         final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, channelName);
         //this causes the pop up to show
         previewChannelWidget.center();
