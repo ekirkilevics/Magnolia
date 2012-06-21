@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2011-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -283,6 +283,7 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     public static void createChannelPreview(final String channelName, final Orientation orientation) {
+        setPreview(true);
         GWT.log("Creating preview for channel type [" + channelName + "] ");
 
         final UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
@@ -292,7 +293,8 @@ public class PageEditor extends HTML implements EntryPoint {
         urlBuilder.removeParameter(MGNL_INTERCEPT_PARAMETER);
         urlBuilder.removeParameter(MGNL_CHANNEL_PARAMETER);
 
-        urlBuilder.setParameter(MGNL_CHANNEL_PARAMETER, channelName);
+        urlBuilder.setParameter(MGNL_PREVIEW_PARAMETER, String.valueOf(isPreview()));
+        urlBuilder.setParameter(MGNL_CHANNEL_PARAMEiTER, channelName);
         final PreviewChannel previewChannelWidget = new PreviewChannel(urlBuilder.buildString(), orientation, channelName);
         //this causes the pop up to show
         previewChannelWidget.center();
