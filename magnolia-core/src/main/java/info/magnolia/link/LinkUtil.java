@@ -36,6 +36,7 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
@@ -74,13 +75,13 @@ public class LinkUtil {
      * Pattern to find a link.
      */
     public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
-        "(<(a|img|embed) " + // start <a or <img
-        "[^>]*" +  // some attributes
-        "(href|src)[ ]*=[ ]*\")" + // start href or src
-        "([^\"]*)" + // the link
-        "(\"" + // ending "
-        "[^>]*" + // any attributes
-        ">)"); // end the tag
+            "(<(a|img|embed) " + // start <a or <img
+                    "[^>]*" +  // some attributes
+                    "(href|src)[ ]*=[ ]*\")" + // start href or src
+                    "([^\"]*)" + // the link
+                    "(\"" + // ending "
+                    "[^>]*" + // any attributes
+            ">)"); // end the tag
 
     /**
      * Logger.
@@ -180,7 +181,7 @@ public class LinkUtil {
      * Determines whether the given link is external link or anchor (i.e. returns true for all non translatable links).
      */
     public static boolean isExternalLinkOrAnchor(String href) {
-       return LinkUtil.EXTERNAL_LINK_PATTERN.matcher(href).matches() || href.startsWith("#");
+        return LinkUtil.EXTERNAL_LINK_PATTERN.matcher(href).matches() || href.startsWith("#");
     }
 
     /**
@@ -254,9 +255,11 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path for provided node data.
-     * @param nodedata Node data to create link for.
+     * 
+     * @param nodedata
+     *            Node data to create link for.
      * @return Absolute link to the provided node data.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createAbsoluteLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
@@ -267,10 +270,13 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
-     * @param uuid UUID of content to create link to.
-     * @param repository Name of the repository where content is located.
+     * 
+     * @param uuid
+     *            UUID of content to create link to.
+     * @param repository
+     *            Name of the repository where content is located.
      * @return Absolute link to the provided content.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createAbsoluteLink(String repository, String uuid) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
@@ -280,9 +286,11 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
-     * @param content content to create link to.
+     * 
+     * @param content
+     *            content to create link to.
      * @return Absolute link to the provided content.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createAbsoluteLink(Content content) {
         if(content == null){
@@ -305,22 +313,38 @@ public class LinkUtil {
 
     /**
      * Creates link guessing best possible link format from current site and provided node.
-     * @param nodedata Node data to create link for.
+     * 
+     * @param nodedata
+     *            Node data to create link for.
      * @return Absolute link to the provided node data.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createLink(Content node) {
         if(node == null){
             return null;
+        }
+        if (node.isNodeType(MgnlNodeType.NT_RESOURCE)) {
+            try {
+                // This content is what was formerly hidden as binary node data and still needs to be treated as such until new Link API is ready.
+                String name = node.getName();
+                Content parent = node.getParent();
+                return LinkUtil.createLink(parent.getNodeData(name));
+            } catch (RepositoryException e) {
+                log.debug(e.getMessage(), e);
+            } catch (LinkException e) {
+                log.debug(e.getMessage(), e);
+            }
         }
         return LinkTransformerManager.getInstance().getBrowserLink(node.getHandle()).transform(LinkFactory.createLink(node));
     }
 
     /**
      * Creates link guessing best possible link format from current site and provided node data.
-     * @param nodedata Node data to create link for.
+     * 
+     * @param nodedata
+     *            Node data to create link for.
      * @return Absolute link to the provided node data.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
@@ -335,10 +359,13 @@ public class LinkUtil {
 
     /**
      * Creates link guessing best possible link format from current site and provided content.
-     * @param uuid UUID of content to create link to.
-     * @param repository Name of the repository where content is located.
+     * 
+     * @param uuid
+     *            UUID of content to create link to.
+     * @param repository
+     *            Name of the repository where content is located.
      * @return Absolute link to the provided content.
-     * @see AbstractI18nContentSupport
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
     public static String createLink(String repository, String uuid) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);

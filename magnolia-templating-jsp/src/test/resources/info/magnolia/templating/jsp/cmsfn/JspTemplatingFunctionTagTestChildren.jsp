@@ -6,7 +6,7 @@
 
 <body>
 <div id="1">
-    res=${(cmsfn:children(content, 'mgnl:areae'))[0]['@path']}
+    res=${(cmsfn:children(content, 'mgnl:area'))[0]['@path']}
 </div>
 <div id="2">
     res=${(cmsfn:children(content,''))[1]['@path']}

@@ -33,13 +33,14 @@
  */
 package info.magnolia.cms.i18n;
 
-import java.util.Collection;
-import java.util.Locale;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
+import java.util.Collection;
+import java.util.Locale;
+
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 
@@ -81,15 +82,34 @@ public interface I18nContentSupport {
 
     /**
      * Returns the NodeData object based on the language passes.
+     * 
+     * @deprecated since 4.5.4 use {@link #getProperty(Node, String, Locale)} instead.
      */
+    @Deprecated
     public NodeData getNodeData(Content node, String name, Locale locale) throws RepositoryException;
 
     /**
      * Returns the NodeData object based on the current language.
+     * 
+     * @deprecated since 4.5.4 use {@link #getProperty(Node, String)} instead.
      */
+    @Deprecated
     public NodeData getNodeData(Content node, String name);
 
+    /**
+     * Returns named localized child (if exists) of provided node (or non localized in case localized child doesn't exist).
+     */
     public Node getNode(Node node, String name) throws RepositoryException;
+
+    /**
+     * Returns localized property of given name and current locale.
+     */
+    public Property getProperty(Node node, String name) throws RepositoryException;
+
+    /**
+     * Returns localized property of given named and given locale.
+     */
+    public Property getProperty(Node node, String name, Locale locale) throws RepositoryException;
 
     /**
      * Returns the available locales.

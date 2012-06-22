@@ -46,7 +46,6 @@ import info.magnolia.test.ComponentsTestUtil;
 import javax.inject.Provider;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.meterware.httpunit.GetMethodWebRequest;
@@ -404,8 +403,6 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
         assertThat(responseStr, containsString("<div id=\"1\">\n    res=/foo/bar/paragraphs/1\n</div>"));
     }
 
-    @Ignore
-    //TODO: Define the testCase
     @Test
     public void testLinkForProperty() throws Exception {
         // GIVEN
@@ -416,6 +413,7 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
 
         // THEN
         String responseStr = response.getText();
+        assertThat(responseStr, containsString("<div id=\"1\">\n    res=/foo/bar/paragraphs/1/image/file.jpg\n</div>"));
     }
 
     @Test
