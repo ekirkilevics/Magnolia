@@ -38,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
@@ -47,6 +49,7 @@ import info.magnolia.rendering.model.RenderingModel;
 import info.magnolia.rendering.model.RenderingModelImpl;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.test.AbstractMagnoliaTestCase;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.jcr.MockNode;
 
@@ -108,6 +111,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
         ctx = mock(RenderingContext.class);
 
         Components.setComponentProvider(new MockComponentProvider());
+        ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
     }
 
     @Test(expected = RenderException.class)
@@ -139,7 +143,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
             }
         };
         // WHEN
-        renderer.render(ctx, contextObjects);
+            renderer.render(ctx, contextObjects);
 
         // THEN - expected Exception
     }
