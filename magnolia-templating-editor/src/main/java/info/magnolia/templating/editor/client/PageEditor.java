@@ -209,7 +209,6 @@ public class PageEditor extends HTML implements EntryPoint {
     }
 
     public static void addComponent(String workspace, String path, String nodeName, String availableComponents) {
-
         // Not used anymore. The node is passed together with the path
         String collectionName = null;
 
@@ -219,7 +218,11 @@ public class PageEditor extends HTML implements EntryPoint {
         if (availableComponents == null) {
             availableComponents = "";
         }
-        JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
+        if (availableComponents.contains(",")) {
+            JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/selectParagraph.html", "", "", locale);
+        } else if (!availableComponents.isEmpty()) {
+            JavascriptUtils.mgnlOpenDialog(path, collectionName, nodeName, availableComponents, workspace, ".magnolia/dialogs/editParagraph.html", "", "", locale);
+        }
     }
 
     public static void showTree(String workspace, String path) {
