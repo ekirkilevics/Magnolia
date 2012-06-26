@@ -33,13 +33,13 @@
  */
 package info.magnolia.test;
 
-import org.junit.After;
-import org.junit.Before;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
+
+import org.junit.After;
+import org.junit.Before;
 
 /**
  * Abstract base class for tests that resets static facilities to minimize side effects on tests running afterwards.
@@ -60,5 +60,6 @@ public abstract class AbstractMagnoliaTestCase {
         SystemProperty.setMagnoliaConfigurationProperties(new TestMagnoliaConfigurationProperties());
         MgnlContext.setInstance(null);
         Components.setComponentProvider(null);
+        ComponentsTestUtil.clear();
     }
 }
