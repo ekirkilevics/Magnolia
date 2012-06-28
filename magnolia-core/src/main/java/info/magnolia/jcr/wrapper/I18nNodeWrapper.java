@@ -53,13 +53,14 @@ import javax.jcr.RepositoryException;
  */
 public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
+    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+
     public I18nNodeWrapper(Node wrapped) {
         super(wrapped);
     }
 
     @Override
     public boolean hasProperty(String relPath) throws RepositoryException {
-        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         return i18nSupport.getNodeData(ContentUtil.asContent(getWrappedNode()), relPath).isExist();
     }
 
@@ -73,13 +74,11 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         return i18nSupport.getNodeData(ContentUtil.asContent(getWrappedNode()), relPath).getJCRProperty();
     }
 
     @Override
     public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
         return wrapNode(i18nSupport.getNode(getWrappedNode(), relPath));
     }
 
@@ -87,9 +86,9 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
     public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
         return wrapNode(super.getParent());
     }
-    
+
     @Override
     public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-        return wrapNode((Node) super.getAncestor(depth)); 
+        return wrapNode((Node) super.getAncestor(depth));
     }
 }

@@ -236,55 +236,71 @@ public class PropertyUtil {
 
     public static List<String> getValuesStringList(Value[] values) {
         ArrayList<String> list = new ArrayList<String>();
-        try {
-            for (Value value : values) {
-                switch (value.getType()) {
-                    case (PropertyType.STRING):
-                        list.add(value.getString());
-                        break;
-                    case (PropertyType.DOUBLE):
-                        list.add(Double.toString(value.getDouble()));
-                        break;
-                    case (PropertyType.LONG):
-                        list.add(Long.toString(value.getLong()));
-                        break;
-                    case (PropertyType.BOOLEAN):
-                        list.add(Boolean.toString(value.getBoolean()));
-                        break;
-                    case (PropertyType.DATE):
-                        Date valueDate = value.getDate().getTime();
-                        list.add(DateUtil.format(valueDate, PropertyUtil.getDateFormat()));
-                        break;
-                    case (PropertyType.BINARY):
-                        // for lack of better solution, fall through to the default - empty string
-                    default:
-                        list.add(StringUtils.EMPTY);
-                }
-            }
-        } catch (RepositoryException e) {
-            log.debug("RepositoryException caught: " + e.getMessage(), e);
+        for (Value value : values) {
+            list.add(getValueString(value));
         }
         return list;
     }
 
+    /**
+     * Returns value of the property converted to string no matter what it's type actually is. In case of dates, value if formatted according to format returned by {@link #getDateFormat()}. Binary and reference values are converted to empty string. In case of error during conversion, null will be returned instead. Works only for single value properties.
+     */
+    public static String getValueString(Property property) {
+        try {
+            return getValueString(property.getValue());
+        } catch (RepositoryException e) {
+            log.debug("RepositoryException caught: " + e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Returns value converted to string no matter what it's type actually is. In case of dates, value if formatted according to format returned by {@link #getDateFormat()}. Binary and reference values are converted to empty string. In case of error during conversion, null will be returned instead.
+     */
+    public static String getValueString(Value value) {
+        try {
+            switch (value.getType()) {
+            case (PropertyType.STRING):
+                return value.getString();
+            case (PropertyType.DOUBLE):
+                return Double.toString(value.getDouble());
+            case (PropertyType.LONG):
+                return Long.toString(value.getLong());
+            case (PropertyType.BOOLEAN):
+                return Boolean.toString(value.getBoolean());
+            case (PropertyType.DATE):
+                Date valueDate = value.getDate().getTime();
+            return DateUtil.format(valueDate, PropertyUtil.getDateFormat());
+            case (PropertyType.BINARY):
+                // for lack of better solution, fall through to the default - empty string
+            default:
+                return StringUtils.EMPTY;
+            }
+        } catch (RepositoryException e) {
+            log.debug("RepositoryException caught: " + e.getMessage(), e);
+        }
+        return null;
+
+    }
+
     public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
         switch (PropertyUtil.getJCRPropertyType(obj)) {
-            case PropertyType.STRING:
-                return valueFactory.createValue((String) obj);
-            case PropertyType.BOOLEAN:
-                return valueFactory.createValue((Boolean) obj);
-            case PropertyType.DATE:
-                return valueFactory.createValue((Calendar) obj);
-            case PropertyType.LONG:
-                return obj instanceof Long ? valueFactory.createValue(((Long) obj).longValue()) : valueFactory.createValue(((Integer) obj).longValue());
-            case PropertyType.DOUBLE:
-                return obj instanceof Double ? valueFactory.createValue((Double) obj) : valueFactory.createValue(((Float) obj).doubleValue());
-            case PropertyType.BINARY:
-                return valueFactory.createValue((InputStream) obj);
-            case PropertyType.REFERENCE:
-                return valueFactory.createValue(((Content) obj).getJCRNode());
-            default:
-                return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
+        case PropertyType.STRING:
+            return valueFactory.createValue((String) obj);
+        case PropertyType.BOOLEAN:
+            return valueFactory.createValue((Boolean) obj);
+        case PropertyType.DATE:
+            return valueFactory.createValue((Calendar) obj);
+        case PropertyType.LONG:
+            return obj instanceof Long ? valueFactory.createValue(((Long) obj).longValue()) : valueFactory.createValue(((Integer) obj).longValue());
+        case PropertyType.DOUBLE:
+            return obj instanceof Double ? valueFactory.createValue((Double) obj) : valueFactory.createValue(((Float) obj).doubleValue());
+        case PropertyType.BINARY:
+            return valueFactory.createValue((InputStream) obj);
+        case PropertyType.REFERENCE:
+            return valueFactory.createValue(((Content) obj).getJCRNode());
+        default:
+            return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
     }
 

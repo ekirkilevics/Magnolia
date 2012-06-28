@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
+ * This file Copyright (c) 2009-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -80,7 +80,7 @@ public class UnicodeNormalizerTest {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
-
+    
     @Test
     public void testAsciiStringsShouldPassThroughWithAutoDetect() {
         assertEquals("hello", UnicodeNormalizer.normalizeNFC("hello"));
@@ -103,14 +103,6 @@ public class UnicodeNormalizerTest {
     }
 
     @Test
-    public void testICUNormalizer() {
-        final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.ICUNormalizer();
-        assertEquals(NFC, n.normalizeNFC(NFD));
-        assertEquals(NFC, n.normalizeNFC(MACROMAN));
-        assertEquals("hello", n.normalizeNFC("hello"));
-    }
-
-    @Test
     public void testNonNormalizer() {
         final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.NonNormalizer();
         assertEquals(NFD, n.normalizeNFC(NFD));
@@ -119,15 +111,10 @@ public class UnicodeNormalizerTest {
     }
 
     @Test
-    public void testJava6ReflectionNormalizer() {
-        try {
-            Class.forName("java.text.Normalizer");
-            final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.Java6ReflectionNormalizer();
-            assertEquals(NFC, n.normalizeNFC(NFD));
-            assertEquals(NFC, n.normalizeNFC(MACROMAN));
-            assertEquals("hello", n.normalizeNFC("hello"));
-        } catch (ClassNotFoundException e) {
-            log.info("This test can only be run with Java 6.");
-        }
+    public void testJava6Normalizer() { 
+        final UnicodeNormalizer.Normalizer n = new UnicodeNormalizer.Java6Normalizer();
+        assertEquals(NFC, n.normalizeNFC(NFD));
+        assertEquals(NFC, n.normalizeNFC(MACROMAN));
+        assertEquals("hello", n.normalizeNFC("hello"));
     }
 }

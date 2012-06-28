@@ -6,13 +6,7 @@
 
 <body>
 <div id="1">
-    res=${(cmsfn:children(content, 'mgnl:area'))[0]['@path']}
-</div>
-<div id="2">
-    res=${(cmsfn:children(content,''))[1]['@path']}
-</div>
-<div id="3">
-    res=${(cmsfn:children(content,null))[2]['@path']}
+    res=${cmsfn:link(content.image)}
 </div>
 
 </body>

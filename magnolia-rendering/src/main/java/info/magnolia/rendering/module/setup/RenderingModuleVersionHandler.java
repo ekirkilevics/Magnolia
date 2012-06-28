@@ -59,9 +59,9 @@ public class RenderingModuleVersionHandler extends DefaultModuleVersionHandler {
     
     final Task transformSubTemplatesToVariations = new AbstractRepositoryTask("Transfrom subTemplates to variations", "Find and transfrom all subTemplates to variations."){
 
-        final String TEMPLATES = "templates";
-        final String SUBTEMPLATES = "subTemplates";
-        final String VARIATION = "variations";
+        private final String TEMPLATES = "templates";
+        private final String SUBTEMPLATES = "subTemplates";
+        private final String VARIATION = "variations";
 
         @Override
         protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
@@ -78,7 +78,7 @@ public class RenderingModuleVersionHandler extends DefaultModuleVersionHandler {
                 }
             }
         }
-        
+
         /**
          * Method that find all subTemplates in templates node.
          */
@@ -107,17 +107,76 @@ public class RenderingModuleVersionHandler extends DefaultModuleVersionHandler {
             while(subTemplatesNodeIterator.hasNext()){
                 Node subTemplatesNode = subTemplatesNodeIterator.nextNode();
                 if(!subTemplatesNode.getName().equals("MetaData")){
-                    if(subTemplatesNode.hasProperty("extension") && subTemplatesNode.hasProperty("templatePath") && subTemplatesNode.hasProperty("type")){
+                    if(subTemplatesNode.hasProperty("templatePath") && subTemplatesNode.hasProperty("type")){
                         PropertyUtil.renameProperty(subTemplatesNode.getProperty("templatePath"), "templateScript");
                         PropertyUtil.renameProperty(subTemplatesNode.getProperty("type"), "renderType");
-                        NodeUtil.renameNode(subTemplatesNode, subTemplatesNode.getProperty("extension").getString());
-                        subTemplatesNode.getProperty("extension").remove();
+                        if(subTemplatesNode.hasProperty("extension")){
+                            NodeUtil.renameNode(subTemplatesNode, subTemplatesNode.getProperty("extension").getString());
+                            subTemplatesNode.getProperty("extension").remove();
+                        }
                     }else{
                         new WarnTask("Transfrom subTemplates to Variations", "subTemplate from called " + subTemplatesNode.getName() + " has missing required property, can't transform this subTemplate properly. Please edit it in " + node.getPath() + "/variations.").execute(installContext);
                     }
                 }
             }
             NodeUtil.renameNode(node.getNode(SUBTEMPLATES), VARIATION);
+        }
+    };
+
+    /**
+     * This task will correct all variations that include old properties templatePath and type.
+     * templatePath is now templateScript
+     * type is now renderType
+     */
+    final Task correctVariations = new AbstractRepositoryTask("Correct variations", "Correct variations which include properties templatePath and type"){
+
+        private final String TEMPLATES = "templates";
+        private final String VARIATION = "variations";
+
+        @Override
+        protected void doExecute(InstallContext installContext) throws RepositoryException{
+            Session session = installContext.getJCRSession("config");
+            if (session == null) {
+                throw new RuntimeException("Repository config not loaded");
+            }
+
+            NodeIterator modulesNodeIterator = session.getNode("/modules").getNodes();
+            while(modulesNodeIterator.hasNext()){
+                Node moduleNode = modulesNodeIterator.nextNode();
+                if(moduleNode.hasNode(TEMPLATES)){
+                    findVariations(moduleNode, installContext);
+                }
+            }
+        }
+
+        /**
+         * Method that find all variations in templates node.
+         */
+        private void findVariations(Node node, InstallContext installContext) throws RepositoryException{
+            if(node.hasNode(VARIATION)){
+                correctVariations(node, installContext);
+                return;
+            }
+            if(node.hasNodes()){
+                NodeIterator nodeIterator = node.getNodes();
+                while(nodeIterator.hasNext()){
+                    findVariations(nodeIterator.nextNode(), installContext);
+                }
+            }
+        }
+
+        /**
+         * Method that rename properties templatePath and type.
+         */
+        private void correctVariations(Node node, InstallContext installContext) throws RepositoryException{
+            NodeIterator variationsNodeIterator = node.getNode(VARIATION).getNodes();
+            while(variationsNodeIterator.hasNext()){
+                Node variationNode = variationsNodeIterator.nextNode();
+                if(!variationNode.getName().equals("MetaData") && variationNode.hasProperty("templatePath") && variationNode.hasProperty("type")){
+                    PropertyUtil.renameProperty(variationNode.getProperty("templatePath"), "templateScript");
+                    PropertyUtil.renameProperty(variationNode.getProperty("type"), "renderType");
+                }
+            }
         }
     };
 
@@ -134,6 +193,9 @@ public class RenderingModuleVersionHandler extends DefaultModuleVersionHandler {
                  );
         register(DeltaBuilder.update("4.5.3", "")
                 .addTask(transformSubTemplatesToVariations)
+        );
+        register(DeltaBuilder.update("4.5.4", "")
+                .addTask(correctVariations)
         );
     }
 }

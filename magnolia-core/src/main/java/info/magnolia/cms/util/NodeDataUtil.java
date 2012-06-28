@@ -55,7 +55,6 @@ import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,15 +72,7 @@ public class NodeDataUtil {
     public static String getValueString(NodeData nodeData) {
         String dateFormat = null;
         if(nodeData.getType() == PropertyType.DATE){
-            try{
-                dateFormat = FastDateFormat.getDateInstance(
-                        FastDateFormat.SHORT,
-                        MgnlContext.getLocale()).getPattern();
-            }
-            // this happens if the context is not (yet) set
-            catch(IllegalStateException e){
-                dateFormat = DateUtil.YYYY_MM_DD;
-            }
+            dateFormat = PropertyUtil.getDateFormat();
         }
         return getValueString(nodeData, dateFormat);
     }
@@ -235,33 +226,33 @@ public class NodeDataUtil {
         }
         else{
             switch (PropertyUtil.getJCRPropertyType(valueObj)) {
-                case PropertyType.STRING:
-                    nodeData.setValue((String)valueObj);
-                    break;
-                case PropertyType.BOOLEAN:
-                    nodeData.setValue(((Boolean)valueObj).booleanValue());
-                    break;
-                case PropertyType.DATE:
-                    nodeData.setValue((Calendar)valueObj);
-                    break;
-                case PropertyType.LONG:
-                    // can either be a Long or Integer - see #getJCRPropertyType(Object)
-                    long longToSet = (valueObj instanceof Integer) ? ((Integer) valueObj).longValue() : ((Long) valueObj).longValue();
-                    nodeData.setValue(longToSet);
-                    break;
-                case PropertyType.DOUBLE:
-                    // can either be a Double or Float - see #getJCRPropertyType(Object)
-                    double doubleToSet = (valueObj instanceof Float) ? ((Float) valueObj).doubleValue() : ((Double) valueObj).doubleValue();
-                    nodeData.setValue(doubleToSet);
-                    break;
-                case PropertyType.BINARY:
-                    nodeData.setValue((InputStream)valueObj);
-                    break;
-                case PropertyType.REFERENCE:
-                    nodeData.setValue((Content)valueObj);
-                    break;
-                default:
-                    nodeData.setValue(valueObj.toString());
+            case PropertyType.STRING:
+                nodeData.setValue((String)valueObj);
+                break;
+            case PropertyType.BOOLEAN:
+                nodeData.setValue(((Boolean)valueObj).booleanValue());
+                break;
+            case PropertyType.DATE:
+                nodeData.setValue((Calendar)valueObj);
+                break;
+            case PropertyType.LONG:
+                // can either be a Long or Integer - see #getJCRPropertyType(Object)
+                long longToSet = (valueObj instanceof Integer) ? ((Integer) valueObj).longValue() : ((Long) valueObj).longValue();
+                nodeData.setValue(longToSet);
+                break;
+            case PropertyType.DOUBLE:
+                // can either be a Double or Float - see #getJCRPropertyType(Object)
+                double doubleToSet = (valueObj instanceof Float) ? ((Float) valueObj).doubleValue() : ((Double) valueObj).doubleValue();
+                nodeData.setValue(doubleToSet);
+                break;
+            case PropertyType.BINARY:
+                nodeData.setValue((InputStream)valueObj);
+                break;
+            case PropertyType.REFERENCE:
+                nodeData.setValue((Content)valueObj);
+                break;
+            default:
+                nodeData.setValue(valueObj.toString());
             }
         }
         return nodeData;
@@ -466,6 +457,7 @@ public class NodeDataUtil {
     /**
      * @deprecated since 4.5 - use {@link PropertyUtil#createValue(Object, ValueFactory)} instead
      */
+    @Deprecated
     public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
         return PropertyUtil.createValue(obj, valueFactory);
     }
@@ -475,6 +467,7 @@ public class NodeDataUtil {
      *
      * @deprecated since 4.5 - directly use {@link PropertyUtil#createValue(String, int, ValueFactory)} instead.
      */
+    @Deprecated
     public static Value createValue(String valueStr, int type, ValueFactory valueFactory) {
         return PropertyUtil.createValue(valueStr, type, valueFactory);
     }
@@ -482,6 +475,7 @@ public class NodeDataUtil {
     /**
      * @deprecated since 4.5 - use {@link PropertyUtil#getJCRPropertyType(Object)} instead
      */
+    @Deprecated
     public static int getJCRPropertyType(Object obj) {
         return PropertyUtil.getJCRPropertyType(obj);
     }
@@ -489,6 +483,7 @@ public class NodeDataUtil {
     /**
      * @deprecated since 4.5  - use {@link PropertyUtil#getValuesStringList(Value[])} instead
      */
+    @Deprecated
     public static List<String> getValuesStringList(Value[] values) {
         return PropertyUtil.getValuesStringList(values);
     }
@@ -496,6 +491,7 @@ public class NodeDataUtil {
     /**
      * @deprecated since 4.5 - use {@link PropertyUtil#getDateFormat()} instead
      */
+    @Deprecated
     public static String getDateFormat() {
         return PropertyUtil.getDateFormat();
     }

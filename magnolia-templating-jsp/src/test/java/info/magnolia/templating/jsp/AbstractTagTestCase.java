@@ -33,7 +33,8 @@
  */
 package info.magnolia.templating.jsp;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.gui.i18n.DefaultI18nAuthoringSupport;
@@ -137,19 +138,25 @@ public abstract class AbstractTagTestCase {
         runner.registerServlet("*.jsp", "org.apache.jasper.servlet.JspServlet", params);
         // setup context
         session = MockUtil.createAndSetHierarchyManager("website", StringUtils.join(new String[]{
-            "/foo/bar.@type=mgnl:page",
-            "/foo/bar.title=Bar title",
-            "/foo/bar/0.text=hello root 1",
-            "/foo/bar/MetaData.@type=mgnl:metadata",
-            "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
-            "/foo/bar/paragraphs.@type=mgnl:areae",
-            "/foo/bar/paragraphs/0.@type=mgnl:component",
-            "/foo/bar/paragraphs/0.@uuid=100",
-            "/foo/bar/paragraphs/1.@type=mgnl:component",
-            "/foo/bar/paragraphs/1.@uuid=101",
-            "/foo/bar/paragraphs/1.text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1"}, "\n"));
+                "/foo/bar.@type=mgnl:page",
+                "/foo/bar.title=Bar title",
+                "/foo/bar/0.text=hello root 1",
+                "/foo/bar/MetaData.@type=mgnl:metadata",
+                "/foo/bar/MetaData.mgnl\\:template=testPageTemplate",
+                "/foo/bar/paragraphs.@type=mgnl:area",
+                "/foo/bar/paragraphs/0.@type=mgnl:component",
+                "/foo/bar/paragraphs/0.@uuid=100",
+                "/foo/bar/paragraphs/1.@type=mgnl:component",
+                "/foo/bar/paragraphs/1.@uuid=101",
+                "/foo/bar/paragraphs/1.text=hello 1",
+                "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
+                "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
+                "/foo/bar/paragraphs/1/image.@type=mgnl:resource",
+                "/foo/bar/paragraphs/1/image.jcr:data=binary:12345",
+                "/foo/bar/paragraphs/1/image.extension=jpg",
+                "/foo/bar/paragraphs/1/image.fileName=file",
+
+        }, "\n"));
         aggState = new AggregationState();
         // let's make sure we render stuff on an author instance
         aggState.setPreviewMode(false);

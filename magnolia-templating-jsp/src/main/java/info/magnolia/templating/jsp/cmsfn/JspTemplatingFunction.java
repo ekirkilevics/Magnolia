@@ -68,9 +68,9 @@ public class JspTemplatingFunction {
      *  private static TemplatingFunctions templatingFunctions = Components.getComponent(TemplatingFunctions.class);
      */
     private static TemplatingFunctions getTemplatingFunctions() {
-       if( templatingFunctions==null ) {
-           templatingFunctions = Components.getComponent(TemplatingFunctions.class);
-       }
+        if( templatingFunctions==null ) {
+            templatingFunctions = Components.getComponent(TemplatingFunctions.class);
+        }
         return templatingFunctions;
     }
 
@@ -179,6 +179,11 @@ public class JspTemplatingFunction {
 
     @Function
     public static  String link(ContentMap contentMap) throws RepositoryException {
+        return getTemplatingFunctions().link(contentMap);
+    }
+
+    @Function
+    public static String link(ContentMap contentMap, String propertyName) throws RepositoryException {
         return getTemplatingFunctions().link(contentMap);
     }
 

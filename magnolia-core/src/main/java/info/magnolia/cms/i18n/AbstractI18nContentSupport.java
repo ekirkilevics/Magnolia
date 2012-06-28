@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.PropertyUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -47,6 +48,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -81,7 +83,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     /**
      * The active locales.
      */
-    private Map<String, Locale> locales = new LinkedHashMap<String, Locale>();
+    private final Map<String, Locale> locales = new LinkedHashMap<String, Locale>();
 
     @Override
     public Locale getLocale() {
@@ -265,8 +267,9 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
                 // getNextContentLocale() returns null once the end of the locale chain is reached
                 while(locale != null){
                     String localeSpecificChildName = name + "_" + locale;
-                    if (node.hasNode(localeSpecificChildName))
+                    if (node.hasNode(localeSpecificChildName)) {
                         return node.getNode(localeSpecificChildName);
+                    }
                     checkedLocales.add(locale);
                     locale = getNextContentLocale(locale, checkedLocales);
                 }
@@ -277,6 +280,39 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         }
 
         return node.getNode(name);
+    }
+
+    @Override
+    public Property getProperty(Node node, String name) throws RepositoryException {
+        if (!isEnabled()) {
+            return node.getProperty(name);
+        }
+        try {
+            // test for the current language
+            Locale locale = getLocale();
+            Set<Locale> checkedLocales = new HashSet<Locale>();
+
+            // getNextContentLocale() returns null once the end of the locale chain is reached
+            while (locale != null) {
+                Property property = getProperty(node, name, locale);
+                if (!isEmpty(property)) {
+                    return property;
+                }
+                checkedLocales.add(locale);
+                locale = getNextContentLocale(locale, checkedLocales);
+            }
+        } catch (RepositoryException e) {
+            log.error("can't read i18n nodeData " + name + " from node " + node, e);
+        }
+
+        // return the node data
+        return node.getProperty(name);
+    }
+
+    @Override
+    public Property getProperty(Node node, String name, Locale locale) throws RepositoryException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -321,11 +357,24 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     /**
      * Checks if the nodedata field is empty.
+     * 
+     * @deprecated since 4.5.4. Use {@link #isEmpty(Property)} instead.
      */
+    @Deprecated
     protected boolean isEmpty(NodeData nd) {
         if (nd != null && nd.isExist()) {
             // TODO use a better way to find out if it is empty
             return StringUtils.isEmpty(NodeDataUtil.getValueString(nd));
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the property field is empty.
+     */
+    protected boolean isEmpty(Property nd) {
+        if (nd != null) {
+            return StringUtils.isEmpty(PropertyUtil.getValueString(nd));
         }
         return true;
     }

@@ -74,7 +74,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class TemplatingFunctions {
 
-    private Provider<AggregationState> aggregationStateProvider;
+    private final Provider<AggregationState> aggregationStateProvider;
 
     //TODO: To review with Philipp. Should not use Provider, but has deep impact on CategorizationSupportImpl PageSyndicator CategorySyndicator....
     @Inject
@@ -354,6 +354,7 @@ public class TemplatingFunctions {
      * FIXME: Should be changed when a decision is made on SCRUM-525.
      */
     public String link(Property property) {
+        // THIS IS NOT WORKING!!!! - it requires someone to pass in property called jcr:data ... won't work for anything else !!!!!
         try {
             Node parentNode = null;
             String propertyName = null;

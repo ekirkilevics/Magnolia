@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2011 Magnolia International
+ * This file Copyright (c) 2009-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -41,16 +41,12 @@ import java.lang.reflect.Method;
 import javax.inject.Singleton;
 
 /**
- * A wrapper around java.text.Normalizer and com.ibm.icu.text.Normalizer; uses the former if present, or none
- * if none is present.
+ * A wrapper around java.text.Normalizer
  *
- * <strong>note:</strong> if not running under Java >=6, and without ICU, this does nothing.
- * If needed, one can use their own implementation, by setting the info.magnolia.cms.util.UnicodeNormalizer$Normalizer
- * system property.
+ * <strong>note:</strong> If needed, one can use their own implementation, 
+ * by setting the info.magnolia.cms.util.UnicodeNormalizer$Normalizer system property.
  *
  * @see java.text.Normalizer
- * @see com.ibm.icu.text.Normalizer
- * @see <a href="http://www.icu-project.org/">http://www.icu-project.org/</a> to get the ICU4J library.
  * @see <a href="http://en.wikipedia.org/wiki/Unicode_equivalence#Normal_forms">http://en.wikipedia.org/wiki/Unicode_equivalence#Normal_forms</a> for more information.
  *
  * @author gjoseph
@@ -61,7 +57,6 @@ public class UnicodeNormalizer {
 
     private static final String JAVA6_NORMALIZER_CLASS = "java.text.Normalizer";
     private static final String JAVA6_FORMPARAM_CLASS = "java.text.Normalizer$Form";
-    private static final String ICU_NORMALIZER_CLASS = "com.ibm.icu.text.Normalizer";
 
     private static final Normalizer normalizer = Components.getSingleton(Normalizer.class);
 
@@ -104,15 +99,14 @@ public class UnicodeNormalizer {
     }
 
     /**
-     * This uses reflection, since we're still compiling with Java 5.
-     * This implementation could be externalized to a "java 6 only" module if needed.
+     * Java 6 Normalizer wrapper.
      */
     @Singleton
-    public static final class Java6ReflectionNormalizer implements Normalizer {
+    public static final class Java6Normalizer implements Normalizer {
         private final Method normalize;
         private final Object nfc;
 
-        public Java6ReflectionNormalizer() {
+        public Java6Normalizer() {
             try {
                 final Class<?> normalizer = Class.forName(JAVA6_NORMALIZER_CLASS);
                 final Class<?> form = Class.forName(JAVA6_FORMPARAM_CLASS);
@@ -143,17 +137,6 @@ public class UnicodeNormalizer {
     }
 
     /**
-     * Uses {@link com.ibm.icu.text.Normalizer} to normalize the string.
-     */
-    @Singleton
-    public static final class ICUNormalizer implements UnicodeNormalizer.Normalizer {
-        @Override
-        public String normalizeNFC(String in) {
-            return com.ibm.icu.text.Normalizer.normalize(in, com.ibm.icu.text.Normalizer.NFC);
-        }
-    }
-
-    /**
      * Returns the original value unchanged.
      */
     @Singleton
@@ -173,24 +156,11 @@ public class UnicodeNormalizer {
 
         public AutoDetectNormalizer() {
             Normalizer candidate;
-            if (!SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
-                candidate = new NonNormalizer();
+            if (SystemProperty.getBooleanProperty(SystemProperty.MAGNOLIA_UTF8_ENABLED)) {
+                candidate = new Java6Normalizer();
+                
             } else {
-                try {
-                    Class.forName(JAVA6_NORMALIZER_CLASS);
-                    candidate = new Java6ReflectionNormalizer();
-                    log.info("Running on Java 6, using {} for unicode form normalization.", candidate.getClass());
-                } catch (ClassNotFoundException e) {
-                    log.warn("Not running on Java 6 ({} not found). Attempting to locate the ICU4J library.", JAVA6_NORMALIZER_CLASS);
-                    try {
-                        Class.forName(ICU_NORMALIZER_CLASS);
-                        candidate = new ICUNormalizer();
-                        log.info("ICU4J found, using {} for Unicode form normalization.", candidate.getClass());
-                    } catch (ClassNotFoundException e2) {
-                        log.warn("ICU4J not found ({} not found), Unicode will not be 100% supported; no Unicode form normalization available. If Java 6 is not an option, you can get the ICU4J library from http://www.icu-project.org/.", ICU_NORMALIZER_CLASS);
-                        candidate = new NonNormalizer();
-                    }
-                }
+                candidate = new NonNormalizer();
             }
             this.delegate = candidate;
         }

@@ -88,6 +88,9 @@ public class RenderingModuleVersionHandlerTest extends ModuleVersionHandlerTestC
         printStkHomeNode.setProperty("extension", "print");
         printStkHomeNode.setProperty("templatePath", "/templates/print.ftl");
         printStkHomeNode.setProperty("type", "freemarker");
+        Node htmlStkHomeNode = NodeUtil.createPath(session.getRootNode(), "/modules/standard-templating-kit/templates/stkHome/subTemplates/html", "mgnl:contentNode");
+        htmlStkHomeNode.setProperty("templatePath", "/templates/html.ftl");
+        htmlStkHomeNode.setProperty("type", "freemarker");
         Node subTempStkArticleNode = NodeUtil.createPath(session.getRootNode(), "/modules/standard-templating-kit/templates/stkArticle/subTemplates/html", "mgnl:contentNode");
         subTempStkArticleNode.setProperty("extension", "html");
         subTempStkArticleNode.setProperty("templatePath", "/templates/print.ftl");
@@ -101,7 +104,27 @@ public class RenderingModuleVersionHandlerTest extends ModuleVersionHandlerTestC
         assertTrue(printStkHomeNode.hasProperty("templateScript"));
         assertTrue(printStkHomeNode.hasProperty("renderType"));
         assertFalse(printStkHomeNode.hasProperty("extension"));
+        assertEquals("/modules/standard-templating-kit/templates/stkHome/variations/html", htmlStkHomeNode.getPath());
+        assertTrue(printStkHomeNode.hasProperty("templateScript"));
+        assertTrue(printStkHomeNode.hasProperty("renderType"));
         assertTrue(session.nodeExists("/modules/standard-templating-kit/templates/stkArticle/subTemplates/html"));
         assertFalse(session.nodeExists("/modules/standard-templating-kit/templates/variations/html"));
+    }
+
+    /**
+     * Testing update to version 4.5.4. Testing task which rename variations properties templatePath and type.
+     */
+    @Test
+    public void testOnUpdateFrom453() throws ModuleManagementException, LoginException, RepositoryException{
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.CONFIG);
+        Node htmlStkHomeNode = NodeUtil.createPath(session.getRootNode(), "/modules/standard-templating-kit/templates/stkHome/variations/html", "mgnl:contentNode");
+        htmlStkHomeNode.setProperty("templatePath", "/templates/print.ftl");
+        htmlStkHomeNode.setProperty("type", "freemarker");
+
+        executeUpdatesAsIfTheCurrentlyInstalledVersionWas(Version.parseVersion("4.5.3"));
+
+        assertEquals("/modules/standard-templating-kit/templates/stkHome/variations/html", htmlStkHomeNode.getPath());
+        assertTrue(htmlStkHomeNode.hasProperty("templateScript"));
+        assertTrue(htmlStkHomeNode.hasProperty("renderType"));
     }
 }

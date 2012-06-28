@@ -986,9 +986,7 @@ for Java Content Repositories (JCR).
     <!-- Modules -->
     <module>magnolia-module-cache</module>
     <module>magnolia-module-exchange-simple</module>
-    <module>magnolia-module-mail</module>
     <module>magnolia-module-store-client</module>
-    <module>magnolia-module-workflow</module>
     <module>magnolia-empty-webapp</module>
   </modules>
 </project>
