@@ -735,7 +735,6 @@ for Java Content Repositories (JCR).
     <module>magnolia-rendering</module>
     <module>magnolia-templating</module>
     <module>magnolia-templating-editor</module>
-    <module>magnolia-templating-samples</module>
 	<module>magnolia-templating-jsp</module>
 
     <module>magnolia-templating-compatibility</module>
