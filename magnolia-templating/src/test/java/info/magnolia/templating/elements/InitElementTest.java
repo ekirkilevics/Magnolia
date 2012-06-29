@@ -37,6 +37,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -56,6 +57,7 @@ public class InitElementTest extends AbstractElementTestCase {
     }
 
     @Test
+    @Ignore("See SCRUM-1239. Will most likely be removed in 5.0")
     public void testOutputContainsPageEditorJavascript() throws Exception {
         // GIVEN look at setUp method()
 
@@ -97,6 +99,7 @@ public class InitElementTest extends AbstractElementTestCase {
     }
 
     @Test
+    @Ignore("See SCRUM-1239. Will most likely be removed in 5.0")
     public void testOutputContainsPageEditorStyles() throws Exception {
         // GIVEN look at setUp method()
 

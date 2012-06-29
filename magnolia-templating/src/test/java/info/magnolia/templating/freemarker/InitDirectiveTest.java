@@ -65,7 +65,8 @@ public class InitDirectiveTest extends AbstractDirectiveTestCase {
         // THEN
         assertThat(result, containsString("<meta name=\"gwt:property\" content=\"locale=en_US\"/>"));
         assertThat(result, containsString("<script type=\"text/javascript\" src=\"test/.magnolia/pages/messages.en.js\"></script>"));
-        assertThat(result, containsString(".resources/magnolia-templating-editor/css/editor.css\"></link>"));
+        //TODO See SCRUM-1239. Will most likely be removed in 5.0
+        //assertThat(result, containsString(".resources/magnolia-templating-editor/css/editor.css\"></link>"));
         assertThat(result, containsString("<script type=\"text/javascript\" src=\"test/.resources/admin-js/dialogs/dialogs.js\"></script>"));
     }
 

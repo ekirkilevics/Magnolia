@@ -58,6 +58,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Embeds js and css needed while authoring pages.
+ * TODO: this will probably go away in 5.0 as the widget-editor will inject all needed js and css into the page to be edited. Or we might deprecte it and keep it for backward compatibility but w/o
+ * injecting the page_editor js source and css.
  *
  * @version $Id$
  */
@@ -96,8 +98,9 @@ public class InitElement extends AbstractContentTemplatingElement {
         helper.append("<meta name=\"gwt:property\" content=\"locale=" + i18nContentSupport.getLocale() +"\"/>\n");
         helper.append(src.getHtmlCss());
         helper.append(src.getHtmlJs());
-        helper.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + PAGE_EDITOR_CSS + "\"></link>\n");
-        helper.append("<script type=\"text/javascript\" src=\"" + PAGE_EDITOR_JS_SOURCE + "\"></script>\n");
+        //TODO see SCRUM-1239, we will probably get rid of the init tag in 5.0
+        //helper.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + PAGE_EDITOR_CSS + "\"></link>\n");
+        //helper.append("<script type=\"text/javascript\" src=\"" + PAGE_EDITOR_JS_SOURCE + "\"></script>\n");
 
         helper.openComment(CMS_PAGE_TAG);
         if(content != null) {
