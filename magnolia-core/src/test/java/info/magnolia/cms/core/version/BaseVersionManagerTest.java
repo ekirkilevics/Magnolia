@@ -79,9 +79,9 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
     public void setUp() throws Exception {
         super.setUp();
         // context is then cleared automatically on teardown by RepoTestCase(MgnlTestCase)
-        MockContext ctx = (MockContext) MgnlContext.getSystemContext();
+        MockContext ctx = (MockContext) MgnlContext.getInstance();
         ctx.setUser(new MgnlUser("toto","admin",Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP, null, null));
-
+        MgnlContext.setInstance(ctx);
     }
 
     @Test
@@ -174,6 +174,7 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         Node versionedNode = versionManager.getVersion(firstPage, v1.getName());
         assertEquals("v1title", versionedNode.getProperty("title").getString());
         assertTrue(versionedNode.hasNode("v1child"));
+        assertEquals("toto", versionManager.getSystemNode(versionedNode).getProperty(ContentVersion.VERSION_USER).getString());
 
         firstPage.setProperty("title", "v2title");
         firstPage.addNode("v2child", "mgnl:area");
@@ -183,6 +184,8 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         assertEquals(versionManager.getAllVersions(firstPage).getSize(), 3);
         assertEquals("v2title", versionedNode.getProperty("title").getString());
         assertTrue(versionedNode.hasNode("v2child"));
+        assertEquals("toto", versionManager.getSystemNode(versionedNode).getProperty(ContentVersion.VERSION_USER).getString());
+
     }
 
     @Override

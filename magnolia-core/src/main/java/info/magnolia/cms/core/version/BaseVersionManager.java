@@ -168,12 +168,13 @@ public abstract class BaseVersionManager {
      */
     public synchronized Version addVersion(final Node node, final Rule rule) throws UnsupportedRepositoryOperationException,
     RepositoryException {
+        final String userName = MgnlContext.getUser().getName();
         Version version = MgnlContext.doInSystemContext(new JCRSessionOp<Version>(node.getSession().getWorkspace().getName()) {
 
             @Override
             public Version exec(Session session) throws RepositoryException {
                 try {
-                    return createVersion(session.getNodeByIdentifier(node.getIdentifier()), rule);
+                    return createVersion(session.getNodeByIdentifier(node.getIdentifier()), rule, userName);
                 }
                 catch (RepositoryException re) {
                     // since add version is synchronized on a singleton object, its safe to revert all changes made in
@@ -198,18 +199,19 @@ public abstract class BaseVersionManager {
      */
     @Deprecated
     protected Version createVersion(Content node, Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
-        return createVersion(node.getJCRNode(), rule);
+        return createVersion(node.getJCRNode(), rule, "");
     }
 
     /**
      * Create version of the specified node and all child nodes based on the given <code>Rule</code>.
      * @param node to be versioned
      * @param rule
+     * @param userName
      * @return newly created version node
      * @throws UnsupportedOperationException if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException if any repository error occurs
      */
-    protected Version createVersion(Node node, Rule rule) throws UnsupportedRepositoryOperationException,
+    protected Version createVersion(Node node, Rule rule, String userName) throws UnsupportedRepositoryOperationException,
     RepositoryException {
         if (isInvalidMaxVersions()) {
             log.debug("Ignore create version, MaxVersionIndex < 1");
@@ -234,11 +236,6 @@ public abstract class BaseVersionManager {
         }
         catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
-        }
-        // temp fix, MgnlContext should always have user either logged-in or anonymous
-        String userName = "";
-        if (MgnlContext.getUser() != null) {
-            userName = MgnlContext.getUser().getName();
         }
         // add all system properties for this version
         systemInfo.setProperty(ContentVersion.VERSION_USER, userName);
