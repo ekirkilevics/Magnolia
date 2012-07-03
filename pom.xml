@@ -737,10 +737,6 @@ for Java Content Repositories (JCR).
     <module>magnolia-templating-editor</module>
 	<module>magnolia-templating-jsp</module>
 
-    <module>magnolia-templating-compatibility</module>
-    <module>magnolia-templating-compatibility-taglib-cms</module>
-    <module>magnolia-templating-compatibility-taglib-utility</module>
-
     <!-- Modules -->
     <module>magnolia-module-cache</module>
     <module>magnolia-module-exchange-simple</module>
