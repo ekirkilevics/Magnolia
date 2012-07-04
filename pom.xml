@@ -10,7 +10,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>5.0-SNAPSHOT</version>
+  <version>5.0-m5-s3</version>
   <description>
 Magnolia is an open-source enterprise class Content Management System
 developed by Magnolia International Ltd., based on the standard API
@@ -136,6 +136,7 @@ for Java Content Repositories (JCR).
     <connection>scm:git:http://git.magnolia-cms.com/magnolia_main</connection>
     <developerConnection>scm:git:https://git.magnolia-cms.com/magnolia_main</developerConnection>
     <url>http://git.magnolia-cms.com/gitweb/?p=magnolia_main.git</url>
+    <tag>magnolia-5.0-m5-s3</tag>
   </scm>
   <build>
     <resources>
