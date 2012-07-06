@@ -11,7 +11,7 @@
     <artifactId>magnolia-templating-jsp</artifactId>
     <name>magnolia-templating-jsp</name>
     <properties>
-        <cloverCoverageThreshold>70</cloverCoverageThreshold>
+        <cloverCoverageThreshold>73</cloverCoverageThreshold>
     </properties>
     <dependencies>
         <dependency>

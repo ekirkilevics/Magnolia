@@ -11,7 +11,7 @@
   <name>magnolia-module-admininterface</name>
 
   <properties>
-    <cloverCoverageThreshold>5</cloverCoverageThreshold>
+    <cloverCoverageThreshold>11</cloverCoverageThreshold>
   </properties>
 
   <dependencies>

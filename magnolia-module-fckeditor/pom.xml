@@ -11,7 +11,7 @@
   <name>magnolia-module-fckeditor</name>
 
   <properties>
-    <cloverCoverageThreshold>5</cloverCoverageThreshold>
+    <cloverCoverageThreshold>9</cloverCoverageThreshold>
   </properties>
 
   <dependencies>
