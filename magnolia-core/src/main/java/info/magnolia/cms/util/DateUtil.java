@@ -36,6 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
 import java.text.DateFormat;
@@ -228,5 +229,33 @@ public class DateUtil {
      */
     public static Calendar getCurrentUTCCalendar() {
         return Calendar.getInstance(UTC_TIME_ZONE);
+    }
+    
+    /**
+     * Expression for searching - representing a date.
+     */
+    public static String createDateExpression(Calendar calendar) {
+        return "DATE '" + DateFormatUtils.format(calendar.getTimeInMillis(), "yyyy-MM-dd", calendar.getTimeZone()) + "'";
+    }
+    
+    /**
+     * Expression for searching - representing a date and time.
+     */
+    public static String createDateTimeExpression(Calendar calendar) {
+        calendar.set(Calendar.MILLISECOND, 0);
+        StringBuffer str = new StringBuffer("TIMESTAMP '");
+        str.append(DateFormatUtils.format(calendar.getTime(), "yyyy-MM-dd'T'HH:mm:ss.SSSZ", calendar.getTimeZone()));
+        str.insert(str.length() - 2, ":");
+        str.append("'");
+        return str.toString();
+    }
+    
+    /**
+     * Expression for searching - not considering the timezone.
+     */
+    public static String createDateTimeExpressionIgnoreTimeZone(Calendar calendar) {
+        Calendar utc = Calendar.getInstance(DateUtils.UTC_TIME_ZONE);
+        utc.setTimeInMillis(calendar.getTimeInMillis() + calendar.getTimeZone().getRawOffset());
+        return createDateTimeExpression(utc);
     }
 }

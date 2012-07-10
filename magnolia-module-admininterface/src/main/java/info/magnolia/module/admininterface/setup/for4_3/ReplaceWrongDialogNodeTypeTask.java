@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
  * @author fgrilli
  * @version $Id$
  *
+ * @deprecated Not used since 4.5.
  */
 public class ReplaceWrongDialogNodeTypeTask extends AbstractRepositoryTask {
 

@@ -62,6 +62,8 @@ import org.slf4j.LoggerFactory;
  * search in paragraph content while retrieving a list of pages.
  *
  * @version $Id$
+ * 
+ * @deprecated Since 4.5.4 we are using JCR query API.
  */
 public class QueryResultImpl implements QueryResult {
 

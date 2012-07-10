@@ -53,6 +53,8 @@ import java.util.Iterator;
  * In 4.0 and 4.1, we accidentally overrode the default uri mapping on public instances to the "Quickstart" page,
  * even if templates were present.
  * This task simply warns the user if that hasn't been fixed in the meantime.
+ * 
+ * @deprecated Not used since 4.5.
  */
 public class UpdatedDefaultPublicURIWarning extends AbstractRepositoryTask {
 

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,30 +31,44 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.search;
+package info.magnolia.jcr.predicate;
 
-import info.magnolia.cms.core.Content;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
-import java.util.Collection;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Equivalent to {@link javax.jcr.query.QueryResult} but working with {@link Content} objects.
- * @author Sameer Charles
- * @author Fabrizio Giustina
+ * Predicate filtering based on the primary type of the node.
  * 
- * @deprecated Since 4.5.4 we are using JCR query API.
+ * @version $Id$
  */
-public interface QueryResult {
+public class NodeTypeParentPredicate extends AbstractPredicate<Node> {
 
-    /**
-     * Gets a collection of Content objects for mgnl:content NodeType.
-     */
-    Collection<Content> getContent();
+    private static final Logger log = LoggerFactory.getLogger(NodeTypePredicate.class);
+    private final String primaryNodeType;
 
-    /**
-     * Gets a collection of Content objects for specified NodeType.
-     */
-    Collection<Content> getContent(String nodeType);
+    public NodeTypeParentPredicate(String primaryNodeType) {
+        if (primaryNodeType == null) {
+            throw new NullPointerException("Type must have a value.");
+        }
+        this.primaryNodeType = primaryNodeType;
+    }
 
+    @Override
+    public boolean evaluateTyped(Node node) {
+        try {
+            while(node.getDepth() != 0){
+                if(node.isNodeType(primaryNodeType)){
+                    return true;
+                }
+                node = node.getParent();
+            }
+            return false;
+        } catch (RepositoryException e) {
+            log.error("Failed to read type of node {}", node);
+            return false;
+        }
+    }
 }

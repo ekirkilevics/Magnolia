@@ -58,6 +58,8 @@ import org.junit.Test;
  * Imports testdata into the repository during {@link #setUp()} and runs various queries against it
  * using the Magnolia Query API.
  *
+ * @deprecated Since 4.5.4 QueryUtilTest is holding query related tests. This class should be removed with old Query API.
+ *
  * @version $Id$
  */
 public class QueryTest extends RepositoryTestCase {

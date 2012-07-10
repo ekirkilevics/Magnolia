@@ -33,23 +33,25 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.repository.RepositoryManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.query.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +60,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * UI for launching JCR queries.
+ * @version $Id$
+ *
+ */
 public class JCRUtilsPage extends TemplatedMVCHandler {
     private static final Logger log = LoggerFactory.getLogger(JCRUtilsPage.class);
 
@@ -72,7 +78,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     private String statement = "";
 
-    private String language = Query.SQL;
+    private String language = Query.JCR_SQL2;
 
     private String[] supportedLanguages = new String[]{};
 
@@ -83,10 +89,10 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     public JCRUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         try {
-            supportedLanguages = MgnlContext.getQueryManager(RepositoryConstants.WEBSITE).getSupportedQueryLanguages();
-            supportedLanguages = (String[]) ArrayUtils.removeElement(supportedLanguages, javax.jcr.query.Query.JCR_JQOM) ;
+            supportedLanguages = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getWorkspace().getQueryManager().getSupportedQueryLanguages();
+            supportedLanguages = (String[]) ArrayUtils.removeElement(supportedLanguages, Query.JCR_JQOM) ;
 
-            final Iterator<String> iter = ContentRepository.getAllRepositoryNames();
+            final Iterator<String> iter = Components.getComponent(RepositoryManager.class).getWorkspaceNames().iterator();
             while(iter.hasNext()) {
                 repositories.add(iter.next());
             }
@@ -112,26 +118,32 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     public String query() {
         final long start = System.currentTimeMillis();
-        final Collection<Content> nodes;
+        final NodeIterator iterator;
         try {
-            nodes = QueryUtil.exceptionThrowingQuery(repository, statement, language, this.itemType);
+            iterator = QueryUtil.search(repository, statement, language, this.itemType);
         } catch (Throwable e) {
             this.result = e.getMessage() != null ? e.getMessage() : e.toString();
             log.error("Error in JCR query:", e);
             return VIEW_SHOW;
         }
         final StringBuilder sb = new StringBuilder();
-        sb.append(nodes.size());
-        sb.append(" nodes returned in ");
-        sb.append(System.currentTimeMillis() - start);
-        sb.append("ms\n");
 
-        for (Iterator<Content> iter = nodes.iterator(); iter.hasNext();) {
-            Content node = iter.next();
-            sb.append(node.getHandle());
+        int count = 0;
+        while(iterator.hasNext()) {
+            Node node = iterator.nextNode();
+            count++;
+            try {
+                sb.append(node.getPath());
+            } catch (RepositoryException e) {
+                this.result = e.getMessage() != null ? e.getMessage() : e.toString();
+                log.error("Error in JCR query:", e);
+                return VIEW_SHOW;
+            }
             sb.append("\n");
         }
 
+        sb.insert(0, Integer.toString(count) + " nodes returned in " + Long.toString((System.currentTimeMillis() - start)) + "ms\n");
+        
         this.result = sb.toString();
         return VIEW_SHOW;
     }
