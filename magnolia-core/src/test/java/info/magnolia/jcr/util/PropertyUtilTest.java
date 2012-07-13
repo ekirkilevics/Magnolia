@@ -33,7 +33,8 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockValue;
 
@@ -165,6 +166,7 @@ public class PropertyUtilTest {
         // THEN
         assertEquals(value, resr);
     }
+
 
     @Test
     public void testSetPropertyToDouble() throws RepositoryException {
@@ -490,4 +492,6 @@ public class PropertyUtilTest {
         // THEN
         assertEquals(value, resr);
     }
+
+
 }
