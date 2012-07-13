@@ -96,6 +96,10 @@ public class PropertyUtil {
             node.setProperty(propertyName, (Binary) propertyValue);
         } else if (propertyValue instanceof Calendar) {
             node.setProperty(propertyName, (Calendar) propertyValue);
+        } else if (propertyValue instanceof Date) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime((Date) propertyValue);
+            node.setProperty(propertyName, cal);
         } else if (propertyValue instanceof BigDecimal) {
             node.setProperty(propertyName, (BigDecimal) propertyValue);
         } else if (propertyValue instanceof String) {
@@ -387,5 +391,37 @@ public class PropertyUtil {
         return null;
     }
 
+    /**
+     * Return the Value Object from a property.
+     * Return null in case of exception.
+     */
+    public static Object getPropertyValueObject(Node node, String relativePath) {
+        Property property = getProperty(node, relativePath);
+        if(property != null) {
+            try {
+                switch (property.getType()) {
+                    case (PropertyType.DECIMAL):
+                        return property.getDecimal();
+                    case (PropertyType.STRING):
+                        return property.getString();
+                    case (PropertyType.DOUBLE):
+                        return Double.valueOf(property.getDouble());
+                    case (PropertyType.LONG):
+                        return Long.valueOf(property.getLong());
+                    case (PropertyType.BOOLEAN):
+                        return Boolean.valueOf(property.getBoolean());
+                    case (PropertyType.DATE):
+                        return property.getDate().getTime();
+                    case (PropertyType.BINARY):
+                        return null;
+                    default:
+                        return null;
+                }
+            } catch (Exception e) {
+                log.warn("Exception during casting the property value", e);
+            }
+        }
+        return null;
+    }
 
 }
