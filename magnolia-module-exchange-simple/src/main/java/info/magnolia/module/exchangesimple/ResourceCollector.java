@@ -55,7 +55,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
@@ -98,12 +97,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class ResourceCollector {
 
-    private final ByteArrayOutputStream md5;
-
-    public ResourceCollector() throws ExchangeException {
-        md5 = new ByteArrayOutputStream();
-    }
-
     private static final Logger log = LoggerFactory.getLogger(ResourceCollector.class);
 
     /**
@@ -117,8 +110,6 @@ public class ResourceCollector {
      * @throws Exception
      */
     protected ActivationContent collect(Content node, List<String> orderBefore, String parent, String workspaceName, String repositoryName, Rule contentFilterRule) throws Exception {
-        md5.reset();
-
         Content.ContentFilter contentFilter = new RuleBasedContentFilter(contentFilterRule);
 
         // make sure resource file is unique
@@ -144,13 +135,12 @@ public class ResourceCollector {
         this.addResources(root, node.getWorkspace().getSession(), node, contentFilter, activationContent);
         XMLOutputter outputter = new XMLOutputter();        
         
-
+        ByteArrayOutputStream md5 = new ByteArrayOutputStream();
         outputter.output(document, new TeeOutputStream(new FileOutputStream(resourceFile), md5));
         // add resource file to the list
         activationContent.addFile(resourceFile.getName(), resourceFile);
         // add signature of the resource file itself
         activationContent.addProperty(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.getMD5Hex(md5.toByteArray()));
-        md5.reset();
 
         // add deletion info
         activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
@@ -188,7 +178,7 @@ public class ResourceCollector {
         final String uuid = content.getUUID();
 
         File file = File.createTempFile("exchange_" + uuid, ".xml.gz", Path.getTempDirectory());
-        
+        ByteArrayOutputStream md5 = new ByteArrayOutputStream();
         OutputStream outputStream = new TeeOutputStream(new GZIPOutputStream(new FileOutputStream(file)), md5);
 
         // TODO: remove the second check. It should not be necessary. The only safe way to identify the versioned node is by looking at its type since the type is mandated by spec. and the frozen nodes is what the filter below removes anyway
@@ -220,7 +210,6 @@ public class ResourceCollector {
         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
         
         element.setAttribute(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.getMD5Hex(md5.toByteArray()));
-        md5.reset();
         
         resourceElement.addContent(element);
         // add this file element as resource in activation content
