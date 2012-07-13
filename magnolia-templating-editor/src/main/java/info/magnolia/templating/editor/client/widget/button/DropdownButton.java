@@ -90,6 +90,7 @@ public class DropdownButton extends Button {
 
         Window.addWindowScrollHandler(new ScrollHandler() {
 
+            @Override
             public void onWindowScroll(ScrollEvent event) {
                 hideDropdown();
             }
