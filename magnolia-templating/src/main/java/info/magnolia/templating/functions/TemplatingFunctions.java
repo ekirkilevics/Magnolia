@@ -350,11 +350,12 @@ public class TemplatingFunctions {
     }
 
     /**
-     * FIXME Add a LinkUtil.createLink(Property property).... Dirty Hack.
-     * FIXME: Should be changed when a decision is made on SCRUM-525.
+     * There should be no real reason to use this method except to produce link to binary content stored in jcr:data property in which case one should call {@link #link(Node)} while passing parent node as a parameter. In case you find other valid reason to use this method, please raise it in a forum discussion or create issue. Otherwise this method will be removed in the future.
+     * 
+     * @deprecated since 4.5.4. There is no valid use case for this method.
      */
+    @Deprecated
     public String link(Property property) {
-        // THIS IS NOT WORKING!!!! - it requires someone to pass in property called jcr:data ... won't work for anything else !!!!!
         try {
             Node parentNode = null;
             String propertyName = null;
