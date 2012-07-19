@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,30 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.search;
-
-import info.magnolia.cms.core.Content;
+package info.magnolia.jcr.predicate;
 
 import java.util.Collection;
+import java.util.HashSet;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
- * Equivalent to {@link javax.jcr.query.QueryResult} but working with {@link Content} objects.
- * @author Sameer Charles
- * @author Fabrizio Giustina
+ * Predicate filtering based on the previous appearance of the node.
  * 
- * @deprecated Since 4.5.4 we are using JCR query API.
+ * @version $Id$
  */
-public interface QueryResult {
+public class DuplicateNodePredicate extends AbstractPredicate<Node> {
 
-    /**
-     * Gets a collection of Content objects for mgnl:content NodeType.
-     */
-    Collection<Content> getContent();
+    private Collection<String> collection = new HashSet<String>();
 
-    /**
-     * Gets a collection of Content objects for specified NodeType.
-     */
-    Collection<Content> getContent(String nodeType);
-
+    @Override
+    public boolean evaluateTyped(Node node) {
+        try {
+            if(!collection.contains(node.getPath())){
+                collection.add(node.getPath());
+                return true;
+            }
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        return false;
+    }
 }

@@ -44,6 +44,8 @@ import javax.jcr.query.InvalidQueryException;
  * Wrapping a JCR {@link javax.jcr.query.QueryManager}.
  *
  * @version $Id$
+ * 
+ * @deprecated Since 4.5.4 we are using JCR query API.
  */
 
 public class QueryManagerImpl implements QueryManager {

@@ -10,7 +10,7 @@
   <artifactId>magnolia-jaas</artifactId>
   <name>magnolia-jaas</name>
   <properties>
-    <cloverCoverageThreshold>5</cloverCoverageThreshold>
+    <cloverCoverageThreshold>7</cloverCoverageThreshold>
   </properties>
   <dependencies>
     <dependency>

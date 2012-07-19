@@ -10,7 +10,7 @@
   <artifactId>magnolia-gui</artifactId>
   <name>magnolia-gui</name>
   <properties>
-    <cloverCoverageThreshold>5</cloverCoverageThreshold>
+    <cloverCoverageThreshold>8</cloverCoverageThreshold>
   </properties>
   <dependencies>
     <dependency>

@@ -34,13 +34,13 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.module.InstallContext;
 
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
-import java.util.Collection;
+import javax.jcr.query.Query;
 
 /**
  * An abstract task to perform operations on nodes returned by a given query.
@@ -49,7 +49,7 @@ import java.util.Collection;
  * modified a property, the query might still return the node as if it had
  * the previous value.
  *
- * @version $Revision: $ ($Author: $)
+ * @version $Id$
  */
 public abstract class QueryTask extends AbstractRepositoryTask {
     private final String repositoryName;
@@ -63,11 +63,16 @@ public abstract class QueryTask extends AbstractRepositoryTask {
 
     @Override
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        final Collection<Content> nodes = QueryUtil.exceptionThrowingQuery(repositoryName, query, Query.SQL, ItemType.NT_BASE);
-        for (Content paragraphNode : nodes) {
-            operateOnNode(installContext, paragraphNode);
+        final NodeIterator nodeIterator = QueryUtil.search(repositoryName, query, Query.JCR_SQL2);
+        while(nodeIterator.hasNext()){
+            operateOnNode(installContext, nodeIterator.nextNode());
         }
     }
 
+    /**
+     * @deprecated Since 4.5.4 use info.magnolia.module.delta.QueryTask.operateOnNode(InstallContext, Node)
+     */
     protected abstract void operateOnNode(InstallContext installContext, Content node);
+
+    protected abstract void operateOnNode(InstallContext installContext, Node node);
 }

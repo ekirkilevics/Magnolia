@@ -45,6 +45,7 @@ import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -572,5 +573,39 @@ public class NodeUtil {
             return StringUtils.EMPTY;
         }
     }
-
+    
+    public static NodeIterator filterNodeType(NodeIterator iterator, String nodeType){
+        return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypePredicate(nodeType));
+    }
+    
+    public static NodeIterator filterDuplicates(NodeIterator iterator){
+        return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.DuplicateNodePredicate());
+    }
+    
+    public static NodeIterator filterParentNodeType(NodeIterator iterator, final String nodeType) throws RepositoryException{
+        return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypeParentPredicate(nodeType)) {
+            @Override
+            public Node nextNode(){
+                Node node = super.nextNode();
+                try {
+                    while(node.getDepth() != 0 && !node.isNodeType(nodeType)){
+                        if(node.getDepth() != 0){
+                            node = node.getParent();
+                        }
+                    }
+                } catch (RepositoryException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+                return node;
+            }
+        };
+    }
+    
+    public static Collection<Node> getCollectionFromNodeIterator(NodeIterator iterator){
+        Collection<Node> nodeCollection = new HashSet<Node>(150);
+        while(iterator.hasNext()){
+            nodeCollection.add(iterator.nextNode());
+        }
+        return nodeCollection;
+    }
 }

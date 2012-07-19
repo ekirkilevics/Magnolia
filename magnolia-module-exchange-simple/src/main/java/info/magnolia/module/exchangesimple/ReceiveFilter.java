@@ -108,14 +108,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     private int retryWait = 2;
 
     private final ExchangeSimpleModule module;
-    
-    private final ByteArrayOutputStream md5;
 
 
     @Inject
     public ReceiveFilter(ExchangeSimpleModule module) {
         this.module = module;
-        this.md5 = new ByteArrayOutputStream();
     }
 
     public int getUnlockRetries() {
@@ -372,12 +369,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     protected Element getImportedContentRoot(MultipartForm data, String resourceFileName, String resourcesmd5) throws JDOMException, IOException {
         Document resourceDocument = data.getDocument(resourceFileName);
         SAXBuilder builder = new SAXBuilder();
+        ByteArrayOutputStream md5 = new ByteArrayOutputStream();
         InputStream documentInputStream = new TeeInputStream(resourceDocument.getStream(), md5);
         org.jdom.Document jdomDocument = builder.build(documentInputStream);
         IOUtils.closeQuietly(documentInputStream);
         
         String sign = SecurityUtil.getMD5Hex(md5.toByteArray());
-        md5.reset();
         if (!resourcesmd5.equals(sign)) {
             throw new SecurityException("Signature of received resource (" + sign + ") doesn't match expected signature (" + resourcesmd5 + "). This might mean that the activation operation have been intercepted by a third party and content have been modified during transfer.");
         }
@@ -573,6 +570,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             final Content transientNode = activationTmp.createContent(uuid, MgnlNodeType.NT_PAGE);
             final String transientStoreHandle = transientNode.getHandle();
             // import properties into transientStore
+            final ByteArrayOutputStream md5 = new ByteArrayOutputStream();
             final String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
             final String expectedMD5 = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
             final InputStream inputStream = new TeeInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md5);
@@ -580,7 +578,6 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             systemHM.getWorkspace().getSession().importXML(transientStoreHandle, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
             IOUtils.closeQuietly(inputStream);
             final String calculatedMD5 = SecurityUtil.getMD5Hex(md5.toByteArray());
-            md5.reset();
             
             if (!calculatedMD5.equals(expectedMD5)) {
                 throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit.");
@@ -618,12 +615,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         final String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
         final String expectedMD5 = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_MD_ATTRIBUTE);
         // do actual import
+        final ByteArrayOutputStream md5 = new ByteArrayOutputStream();
         final InputStream inputStream = new TeeInputStream(new GZIPInputStream(data.getDocument(fileName).getStream()), md5);
         log.debug("Importing {} into parent path {}", new Object[] {name, parentPath});
         hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
         final String calculatedMD5 = SecurityUtil.getMD5Hex(md5.toByteArray());
-        md5.reset();
         if (!calculatedMD5.equals(expectedMD5)) {
             throw new SecurityException(fileName + " signature is not valid. Resource might have been modified in transit. Expected signature:" + expectedMD5 + ", actual signature found: " + calculatedMD5);
         }

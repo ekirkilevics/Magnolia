@@ -48,6 +48,8 @@ import javax.jcr.version.VersionException;
  * Equivalent to {@link javax.jcr.query.Query} but working with {@link Content} objects.
  * Date: Apr 4, 2005 Time: 11:02:35 AM
  * @version $Id$
+ * 
+ * @deprecated Since 4.5.4 we are using JCR query API.
  */
 
 public interface Query {

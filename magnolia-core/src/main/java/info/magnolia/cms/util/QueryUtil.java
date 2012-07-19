@@ -35,24 +35,29 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.search.Query;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.time.DateFormatUtils;
+import info.magnolia.jcr.util.NodeUtil;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.LoginException;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.query.InvalidQueryException;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.qom.QueryObjectModel;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 
-
 /**
  * Util to execute queries as simple as possible.
- * @author Philipp Bracher
  * @version $Id$
  *
  */
@@ -62,34 +67,50 @@ public class QueryUtil {
 
     /**
      * Executes a query.
+     * @deprecated Since 4.5.4 use search methods.
      */
     public static Collection<Content> query(String repository, String statement) {
-        return query(repository, statement, Query.SQL);
+        return query(repository, statement, "sql");
     }
 
     /**
      * Executes a query.
+     * @deprecated Since 4.5.4 use search methods.
      */
     public static Collection<Content> query(String repository, String statement, String language) {
         return query(repository, statement, language, ItemType.NT_BASE);
     }
 
+    /**
+    * @deprecated Since 4.5.4 use search methods.
+    */
     public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
         return exceptionThrowingQuery(repository, statement, language, returnItemType, Long.MAX_VALUE);
     }
 
     /**
      * Executes a query, throwing any exceptions that arise as a result.
+     * @deprecated Since 4.5.4 use search methods.
      */
     public static Collection<Content> exceptionThrowingQuery(String repository, String statement, String language, String returnItemType,
         long maxResultSize) throws RepositoryException {
-        QueryManager qm = MgnlContext.getQueryManager(repository);
-        Query query = qm.createQuery(statement, language);
-        query.setLimit(maxResultSize);
-        QueryResult result = query.execute();
-        return result.getContent(returnItemType);
+        Collection<Content> results = new ArrayList<Content>();
+        if(maxResultSize <= 0){
+            maxResultSize = Long.MAX_VALUE;
+        }
+        NodeIterator iterator = search(repository, statement, language, returnItemType);
+
+        long count = 1;
+        while(iterator.hasNext() && count <= maxResultSize){
+            results.add(ContentUtil.getContent(repository, iterator.nextNode().getPath()));
+            count++;
+        }
+        return results;
     }
 
+    /**
+     * @deprecated Since 4.5.4 use search methods.
+     */
     public static Collection<Content> query(String repository, String statement, String language, String returnItemType) {
         return query(repository, statement, language, returnItemType, Long.MAX_VALUE);
     }
@@ -97,9 +118,10 @@ public class QueryUtil {
     /**
      * Executes a query - if an exception is thrown, it is logged and an empty collection is
      * returned.
+     * @deprecated Since 4.5.4 use search methods.
      */
     @SuppressWarnings("unchecked")
-    // Collections.EMPTY_LIST;
+    // Collections.EMPTY_LIST;
     public static Collection<Content> query(String repository, String statement, String language, String returnItemType, long maxResultSize) {
         try {
             return exceptionThrowingQuery(repository, statement, language, returnItemType, maxResultSize);
@@ -112,6 +134,7 @@ public class QueryUtil {
 
     /**
      * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     * @deprecated
      */
     public static String createDateExpression(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
@@ -121,13 +144,15 @@ public class QueryUtil {
 
     /**
      * Expression representing a date.
+     * @deprecated since 4.5.4 use info.magnolia.cms.util.DateUtil.createDateExpression(calendar)
      */
     public static String createDateExpression(Calendar calendar) {
-        return "DATE '" + DateFormatUtils.format(calendar.getTimeInMillis(), "yyyy-MM-dd", calendar.getTimeZone()) + "'";
+        return DateUtil.createDateExpression(calendar);
     }
 
     /**
      * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     * @deprecated
      */
     public static String createDateTimeExpression(int year, int month, int day, int hour, int minutes, int seconds) {
         Calendar cal = Calendar.getInstance();
@@ -137,18 +162,15 @@ public class QueryUtil {
 
     /**
      * Expression representing a date and time.
+     * @deprecated since 4.5.4 use info.magnolia.cms.util.DateUtil.createDateTimeExpression(calendar)
      */
     public static String createDateTimeExpression(Calendar calendar) {
-        calendar.set(Calendar.MILLISECOND, 0);
-        StringBuffer str = new StringBuffer("TIMESTAMP '");
-        str.append(DateFormatUtils.format(calendar.getTime(), "yyyy-MM-dd'T'HH:mm:ss.SSSZ", calendar.getTimeZone()));
-        str.insert(str.length() - 2, ":");
-        str.append("'");
-        return str.toString();
+        return DateUtil.createDateTimeExpression(calendar);
     }
 
     /**
      * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     * @deprecated
      */
     public static String createDateTimeExpressionIgnoreTimeZone(int year, int month, int day, int hour, int minutes, int seconds) {
         Calendar cal = Calendar.getInstance(DateUtils.UTC_TIME_ZONE);
@@ -158,10 +180,79 @@ public class QueryUtil {
 
     /**
      * Do not consider the timezone.
+     * @deprecated since 4.5.4 use info.magnolia.cms.util.DateUtil.createDateTimeExpressionIgnoreTimeZone(calendar)
      */
     public static String createDateTimeExpressionIgnoreTimeZone(Calendar calendar) {
-        Calendar utc = Calendar.getInstance(DateUtils.UTC_TIME_ZONE);
-        utc.setTimeInMillis(calendar.getTimeInMillis() + calendar.getTimeZone().getRawOffset());
-        return createDateTimeExpression(utc);
+        return DateUtil.createDateTimeExpressionIgnoreTimeZone(calendar);
+    }
+    
+    /**
+     * Executes the query based on QOM and then pops-up in the node hierarchy until returnItemType is found. If the result
+     * is not returnItemType or none of its parents are then next node in result is checked.
+     * Duplicate nodes are removed from result.
+     * For date/time expressions use <code>DateUtil.create*Expression()</code> methods.
+     * @param model
+     * @param returnItemType
+     * @return Result as NodeIterator
+     * @throws InvalidQueryException
+     * @throws RepositoryException
+     */
+    public static NodeIterator search(QueryObjectModel model, String returnItemType) throws InvalidQueryException, RepositoryException{
+        return NodeUtil.filterDuplicates(NodeUtil.filterParentNodeType(model.execute().getNodes(), returnItemType));
+    }
+
+    /**
+     * Executes the query with given language.Unlike in the old API item type has to be specified in query itself.
+     * <code>SELECT * FROM [mgnl:page]</code> example for selecting just pages in JCR SQL2 language.
+     * Duplicate nodes are removed from result.
+     * For date/time expressions use <code>DateUtil.create*Expression()</code> methods.
+     * @param workspace
+     * @param statement
+     * @param language
+     * @return Result as NodeIterator
+     * @throws InvalidQueryException
+     * @throws RepositoryException
+     */
+    public static NodeIterator search(String workspace, String statement, String language) throws InvalidQueryException, RepositoryException{
+        Session session = MgnlContext.getJCRSession(workspace);
+        QueryManager manager = session.getWorkspace().getQueryManager();
+        Query query = manager.createQuery(statement, language);
+
+        return NodeUtil.filterDuplicates(query.execute().getNodes());
+    }
+
+    /**
+     * Executes the query using JCR SQL2 language. Unlike in the old API item type has to be specified in query itself.
+     * <code>SELECT * FROM [mgnl:page]</code> example for selecting just pages.
+     * For executing old query use info.magnolia.cms.util.QueryUtil.search(String workspace, String statement, String language)
+     * where you specify <code>Query.SQL</code> as the language.
+     * For date/time expressions use <code>DateUtil.create*Expression()</code> methods.
+     * @param workspace
+     * @param statement
+     * @return Result as NodeIterator
+     * @throws InvalidQueryException
+     * @throws RepositoryException
+     */
+    public static NodeIterator search(String workspace, String statement) throws InvalidQueryException, RepositoryException{
+        return search(workspace, statement, javax.jcr.query.Query.JCR_SQL2);
+    }
+
+    /**
+     * Searches for statement and then pops-up in the node hierarchy until returnItemType is found. If the result
+     * is not returnItemType or none of its parents are then next node in result is checked. Duplicate nodes are
+     * removed from result.
+     * For date/time expressions use <code>DateUtil.create*Expression()</code> methods.
+     * @param workspace
+     * @param statement
+     * @param language
+     * @param returnItemType
+     * @return query result as collection of nodes
+     * @throws LoginException
+     * @throws RepositoryException
+     */
+    public static NodeIterator search(String workspace, String statement, String language, String returnItemType) throws LoginException, RepositoryException{
+        NodeIterator resultIterator = search(workspace, statement, language);
+
+        return NodeUtil.filterDuplicates(NodeUtil.filterParentNodeType(resultIterator, returnItemType));
     }
 }

@@ -33,12 +33,14 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockValue;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
@@ -127,6 +129,19 @@ public class PropertyUtilTest {
     }
 
     @Test
+    public void testSetPropertyToDate() throws RepositoryException {
+        // GIVEN
+        final Object value = new Date();
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        Calendar res = root.getProperty(PROPERTY_NAME).getDate();
+
+        // THEN
+        assertEquals(value, res.getTime());
+    }
+
+    @Test
     public void testSetPropertyToValue() throws RepositoryException {
         // GIVEN
         final Object value = new MockValue("x");
@@ -151,6 +166,7 @@ public class PropertyUtilTest {
         // THEN
         assertEquals(value, resr);
     }
+
 
     @Test
     public void testSetPropertyToDouble() throws RepositoryException {
@@ -396,5 +412,86 @@ public class PropertyUtilTest {
         // THEN
         assertEquals("Should be Null  ",null,res);
     }
+
+    @Test
+    public void testGetPropertyValueObjectDouble() throws RepositoryException {
+        // GIVEN
+        final Object value = Double.valueOf("42.195");
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        double res = (Double)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, res);
+    }
+
+    @Test
+    public void testGetPropertyValueObjectString() throws RepositoryException {
+        // GIVEN
+        final Object value = "value";
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        String res = (String)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, res);
+    }
+
+
+    @Test
+    public void testGetPropertyValueObjectCalendar() throws RepositoryException {
+        // GIVEN
+        final Object value = Calendar.getInstance();
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        Calendar res = Calendar.getInstance();
+        res.setTime((Date)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME));
+
+        // THEN
+        assertEquals(value, res);
+    }
+
+    @Test
+    public void testGetPropertyValueObjectDate() throws RepositoryException {
+        // GIVEN
+        final Object value = new Date();
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        Date res = (Date)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, res);
+    }
+
+    @Test
+    public void testGetPropertyValueObjectBoolean() throws RepositoryException {
+        // GIVEN
+        final Object value = Boolean.TRUE;
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        boolean res = (Boolean)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, res);
+    }
+
+    @Test
+    public void testGetPropertyValueObjectLong() throws RepositoryException {
+        // GIVEN
+        final Object value = Long.valueOf(123l);
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // WHEN
+        long resr = (Long)PropertyUtil.getPropertyValueObject(root,PROPERTY_NAME);
+
+        // THEN
+        assertEquals(value, resr);
+    }
+
 
 }

@@ -59,6 +59,7 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -112,6 +113,14 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
 
         Components.setComponentProvider(new MockComponentProvider());
         ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
+    }
+    
+    @Override
+    @After
+    public void tearDown() throws Exception{
+        super.tearDown();
+        MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
     }
 
     @Test(expected = RenderException.class)

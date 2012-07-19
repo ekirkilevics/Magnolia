@@ -54,12 +54,10 @@ import info.magnolia.repository.RepositoryConstants;
  * Base class for managers that monitor configuration within modules and react when its changed to reload. Configuration
  * is read from a sub path of each modules configuration node. Subclasses override either reload(List<Node>) or the pair
  * onClear() and onRegister().
- *
- * @version $Id$
  */
 public abstract class ModuleConfigurationObservingManager {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Object reloadMonitor = new Object();
     private final String pathWithinModule;
@@ -128,10 +126,12 @@ public abstract class ModuleConfigurationObservingManager {
         }
     }
 
-    protected void onClear() throws RepositoryException {
+    protected void onClear() throws RepositoryException{
+        // defaults to no action
     }
 
-    protected void onRegister(Node node) throws RepositoryException {
+    protected void onRegister(Node node) throws RepositoryException{
+        // defaults to no action
     }
 
     private List<Node> getObservedNodes() throws RepositoryException {

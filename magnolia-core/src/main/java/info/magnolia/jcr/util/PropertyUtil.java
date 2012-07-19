@@ -41,9 +41,12 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.jcr.Binary;
@@ -79,6 +82,7 @@ public class PropertyUtil {
     /**
      * Allows setting a Node's property from an object.
      */
+    @SuppressWarnings("unchecked")
     public static void setProperty(Node node, String propertyName, Object propertyValue) throws RepositoryException {
         if (node == null) {
             throw new IllegalArgumentException("Cannot set a property on a null-node!");
@@ -96,6 +100,10 @@ public class PropertyUtil {
             node.setProperty(propertyName, (Binary) propertyValue);
         } else if (propertyValue instanceof Calendar) {
             node.setProperty(propertyName, (Calendar) propertyValue);
+        } else if (propertyValue instanceof Date) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime((Date) propertyValue);
+            node.setProperty(propertyName, cal);
         } else if (propertyValue instanceof BigDecimal) {
             node.setProperty(propertyName, (BigDecimal) propertyValue);
         } else if (propertyValue instanceof String) {
@@ -108,6 +116,14 @@ public class PropertyUtil {
             node.setProperty(propertyName, (Boolean) propertyValue);
         } else if (propertyValue instanceof InputStream) {
             node.setProperty(propertyName, (InputStream) propertyValue);
+        } else if (propertyValue instanceof Collection) {
+            String[] list = new String[((Collection<Object>)propertyValue).size()];
+            int pos = 0;
+            for (Object value : (Collection<Object>)propertyValue) {
+                list[pos] = value.toString();
+                pos +=1;
+            }
+            node.setProperty(propertyName, list);
         } else {
             // TODO dlipp: verify if this is desired default-behavior: NodeDataUtil#setValue sets propertyValue.toString() as default!
             throw new IllegalArgumentException("Cannot set property to a value of type " + propertyValue.getClass());
@@ -387,5 +403,64 @@ public class PropertyUtil {
         return null;
     }
 
+    /**
+     * Return the Value Object from a property.
+     * Return null in case of exception.
+     * The returned Object could be a basic {@link PropertyType} type or in case
+     * of multivalue, a Set of {@link PropertyType} type objects.
+     *
+     */
+    public static Object getPropertyValueObject(Node node, String relativePath) {
+        Property property = getProperty(node, relativePath);
+        if(property != null) {
+            try {
+                //Handle Multivalue fields
+                if(property.isMultiple()) {
+                    Value[] values = property.getValues();
+                    Set<Object> res = new HashSet<Object>();
+                    for(Value value:values) {
+                        res.add(getValueObject(value));
+                    }
+                    return res;
+                } else {
+                    return getValueObject(property.getValue());
+                }
+
+            } catch (Exception e) {
+                log.warn("Exception during casting the property value", e);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Return the Value Object from a {@link Value}.
+     * Return null in case of exception.
+     */
+    public static Object getValueObject(Value value) {
+        try {
+            switch (value.getType()) {
+                case (PropertyType.DECIMAL):
+                    return value.getDecimal();
+                case (PropertyType.STRING):
+                    return value.getString();
+                case (PropertyType.DOUBLE):
+                    return Double.valueOf(value.getDouble());
+                case (PropertyType.LONG):
+                    return Long.valueOf(value.getLong());
+                case (PropertyType.BOOLEAN):
+                    return Boolean.valueOf(value.getBoolean());
+                case (PropertyType.DATE):
+                    return value.getDate().getTime();
+                case (PropertyType.BINARY):
+                    return null;
+                default:
+                    return null;
+            }
+        } catch (Exception e) {
+            log.warn("Exception during casting the property value", e);
+        }
+        return null;
+    }
 
 }

@@ -4,7 +4,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>23</version>
+    <version>24</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -136,6 +136,7 @@ for Java Content Repositories (JCR).
     <connection>scm:git:http://git.magnolia-cms.com/magnolia_main</connection>
     <developerConnection>scm:git:https://git.magnolia-cms.com/magnolia_main</developerConnection>
     <url>http://git.magnolia-cms.com/gitweb/?p=magnolia_main.git</url>
+    <tag>HEAD</tag>
   </scm>
   <build>
     <resources>
@@ -530,12 +531,6 @@ for Java Content Repositories (JCR).
         <classifier>asl</classifier>
       </dependency>
       <dependency>
-        <!-- This should be synchonized with ldap module-->
-        <groupId>com.ibm.icu</groupId>
-        <artifactId>icu4j</artifactId>
-        <version>4.0.1</version>
-      </dependency>
-      <dependency>
         <groupId>net.sourceforge.openutils</groupId>
         <artifactId>openutils-log4j</artifactId>
         <version>2.0.5</version>
@@ -735,17 +730,11 @@ for Java Content Repositories (JCR).
     <module>magnolia-rendering</module>
     <module>magnolia-templating</module>
     <module>magnolia-templating-editor</module>
-    <module>magnolia-templating-samples</module>
 	<module>magnolia-templating-jsp</module>
-
-    <module>magnolia-templating-compatibility</module>
-    <module>magnolia-templating-compatibility-taglib-cms</module>
-    <module>magnolia-templating-compatibility-taglib-utility</module>
 
     <!-- Modules -->
     <module>magnolia-module-cache</module>
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-store-client</module>
-    <module>magnolia-empty-webapp</module>
   </modules>
 </project>
