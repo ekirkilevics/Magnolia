@@ -199,7 +199,7 @@ public abstract class BaseVersionManager {
      */
     @Deprecated
     protected Version createVersion(Content node, Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
-        return createVersion(node.getJCRNode(), rule, "");
+        return createVersion(node.getJCRNode(), rule, MgnlContext.getUser().getName());
     }
 
     /**
