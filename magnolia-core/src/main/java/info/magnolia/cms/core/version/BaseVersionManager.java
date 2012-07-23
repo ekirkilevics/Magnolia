@@ -168,7 +168,7 @@ public abstract class BaseVersionManager {
      */
     public synchronized Version addVersion(final Node node, final Rule rule) throws UnsupportedRepositoryOperationException,
     RepositoryException {
-        final String userName = MgnlContext.getUser().getName();
+        final String userName = getSafelyUsersNameFromMgnlContenxt();
         Version version = MgnlContext.doInSystemContext(new JCRSessionOp<Version>(node.getSession().getWorkspace().getName()) {
 
             @Override
@@ -199,7 +199,15 @@ public abstract class BaseVersionManager {
      */
     @Deprecated
     protected Version createVersion(Content node, Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
-        return createVersion(node.getJCRNode(), rule, MgnlContext.getUser().getName());
+        return createVersion(node.getJCRNode(), rule, getSafelyUsersNameFromMgnlContenxt());
+    }
+
+    private String getSafelyUsersNameFromMgnlContenxt(){
+        String userName = "";
+        if (MgnlContext.getUser() != null) {
+            userName = MgnlContext.getUser().getName();
+        }
+        return userName;
     }
 
     /**

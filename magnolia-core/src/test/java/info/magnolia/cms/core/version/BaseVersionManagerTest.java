@@ -186,6 +186,20 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         assertTrue(versionedNode.hasNode("v2child"));
         assertEquals("toto", versionManager.getSystemNode(versionedNode).getProperty(ContentVersion.VERSION_USER).getString());
 
+        //test when user wasn't set into MgnlContext
+        MockContext ctx = (MockContext) MgnlContext.getInstance();
+        ctx.setUser(null);
+        MgnlContext.setInstance(ctx);
+
+        firstPage.setProperty("title", "v3title");
+        firstPage.addNode("v3child", "mgnl:area");
+        firstPage.save();
+        Version v3 = versionManager.addVersion(firstPage, rule);
+        versionedNode = versionManager.getVersion(firstPage, v3.getName());
+        assertEquals(versionManager.getAllVersions(firstPage).getSize(), 4);
+        assertEquals("v3title", versionedNode.getProperty("title").getString());
+        assertTrue(versionedNode.hasNode("v3child"));
+        assertEquals("", versionManager.getSystemNode(versionedNode).getProperty(ContentVersion.VERSION_USER).getString());
     }
 
     @Override
