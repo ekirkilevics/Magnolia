@@ -36,8 +36,6 @@ package info.magnolia.test.mock.jcr;
 import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -50,7 +48,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests for MockValue.
  */
 public class MockValueTest {
     @Test
@@ -67,30 +65,30 @@ public class MockValueTest {
     }
     @Test
     public void testGetBinary() throws Exception {
-        Object objectValue = new Binary() {
-            @Override
-            public void dispose() {
-            }
-
-            @Override
-            public long getSize() throws RepositoryException {
-                return 0;
-            }
-
-            @Override
-            public InputStream getStream() throws RepositoryException {
-                return null;
-            }
-
-            @Override
-            public int read(byte[] b, long position) throws IOException, RepositoryException {
-                return 0;
-            }
-        };
+        // GIVEN
+        Object objectValue = new MockBinary("Hallo".getBytes());
         MockValue jcrValue = new MockValue(objectValue);
-        assertEquals(objectValue, jcrValue.getBinary());
 
+        // WHEN
+        Binary result = jcrValue.getBinary();
+
+        // THEN
+        assertEquals(objectValue, result);
     }
+
+    @Test
+    public void testGetBinaryFromString() throws Exception {
+        // GIVEN
+        Object objectValue = "Hallo";
+        MockValue jcrValue = new MockValue(objectValue);
+
+        // WHEN
+        Binary result = jcrValue.getBinary();
+
+        // THEN
+        assertEquals(5, result.getSize());
+    }
+
 
     @Test(expected = ValueFormatException.class)
     public void testGetBinaryWithWrongValueType() throws Exception {

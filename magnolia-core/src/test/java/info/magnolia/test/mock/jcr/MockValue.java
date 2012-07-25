@@ -51,7 +51,7 @@ import javax.jcr.ValueFormatException;
 import org.apache.commons.io.IOUtils;
 
 /**
- * @version $Id$
+ * Mock implementation for Values.
  */
 public class MockValue implements Value {
 
@@ -79,10 +79,21 @@ public class MockValue implements Value {
         this.value = valueToSet;
     }
 
+    /**
+     * Caution: when used via info.magnolia.jcr.util.PropertiesImportExport binaries are stored as String so we have
+     * to retrieve these as well.
+     */
     @Override
     public Binary getBinary() throws RepositoryException {
         if (value instanceof Binary) {
             return (Binary) value;
+        }
+        if (value instanceof String) {
+            try {
+                return new MockBinary(((String) value).getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
         }
         throw new ValueFormatException("Value can't be converted to Binary: " + value);
     }

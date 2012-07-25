@@ -54,22 +54,17 @@ import org.apache.jackrabbit.util.ISO8601;
  * Utility class providing support for properties-like format to import/export jcr data. Useful when data regularly
  * needs to be bootstrapped, for instance, and the jcr xml format is too cumbersome to maintain.
  *
+ * Caution: Binary data is represented as ByteArrayInputStream because of the lack of a proper javax.jcr.Binary implementation
+ *
  * TODO : handle conflicts (already existing nodes, properties, what to do with existing properties if we don't create
  * new nodes, ...)
  *
  * TODO dlipp - export is not yet implemented
- *
- * @version $Id$
  */
 public class PropertiesImportExport {
 
     /**
      * Each property is one item in the properties varargs passed in.
-     * 
-     * @param root
-     * @param properties
-     * @throws IOException
-     * @throws RepositoryException
      */
     public void createNodes(Node root, String... properties) throws IOException, RepositoryException {
         createNodes(root, IOUtils.toInputStream(StringUtils.join(Arrays.asList(properties), "\n")));
@@ -77,11 +72,6 @@ public class PropertiesImportExport {
 
     /**
      * Each property or node in the stream has to be separated by the \n.
-     * 
-     * @param root
-     * @param propertiesStream
-     * @throws IOException
-     * @throws RepositoryException
      */
     public void createNodes(Node root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
@@ -169,7 +159,7 @@ public class PropertiesImportExport {
     }
 
     /**
-     * Intentionally created this method to allow simple creation of sublcasses actually setting the identifier (e.g. in
+     * Intentionally created this method to allow simple creation of subclasses actually setting the identifier (e.g. in
      * tests).
      */
     protected void setIdentifier(Node ignoredNode, String ignoredString) {
