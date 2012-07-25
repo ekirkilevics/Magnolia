@@ -58,6 +58,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
@@ -453,7 +454,7 @@ public class PropertyUtil {
                 case (PropertyType.DATE):
                     return value.getDate().getTime();
                 case (PropertyType.BINARY):
-                    return null;
+                    return IOUtils.toByteArray(value.getBinary().getStream());
                 default:
                     return null;
             }
