@@ -34,14 +34,16 @@
 package info.magnolia.test.mock.jcr;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.jcr.Binary;
 import javax.jcr.RepositoryException;
 
 /**
- * Implementation of Binary for mocking purposes.
+ * Implementation of Binary for mocking purposes - simplified version of from org.apache.jackrabbit.value.BinaryImpl.
  */
 public class MockBinary implements Binary {
 
@@ -50,9 +52,31 @@ public class MockBinary implements Binary {
     private byte[] buffer = EMPTY_BYTE_ARRAY;
 
     public MockBinary(InputStream in) throws IOException {
-        byte[] buffer = new byte[in.available()];
-        in.read(buffer);
-        in.close();
+        byte[] spoolBuffer = new byte[0x2000];
+        int read;
+        int len = 0;
+        OutputStream out = null;
+        File spoolFile = null;
+        try {
+            while ((read = in.read(spoolBuffer)) > 0) {
+                if (out != null) {
+                    // spool to temp file
+                    out.write(spoolBuffer, 0, read);
+                    len += read;
+                } else {
+                    // reallocate new buffer and spool old buffer contents
+                    byte[] newBuffer = new byte[len + read];
+                    System.arraycopy(buffer, 0, newBuffer, 0, len);
+                    System.arraycopy(spoolBuffer, 0, newBuffer, len, read);
+                    buffer = newBuffer;
+                    len += read;
+                }
+            }
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
     public MockBinary(byte[] buffer) {
@@ -69,7 +93,6 @@ public class MockBinary implements Binary {
 
     @Override
     public int read(byte[] b, long position) throws IOException, RepositoryException {
-        // this instance is backed by an in-memory buffer
         int length = Math.min(b.length, buffer.length - (int) position);
         if (length > 0) {
             System.arraycopy(buffer, (int) position, b, 0, length);
