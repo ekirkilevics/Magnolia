@@ -92,8 +92,9 @@ public class PropertyUtil {
             throw new IllegalArgumentException("Cannot set a property without a provided name");
         }
 
-        // let's find out what type of value we got
-        if (propertyValue instanceof Value) {
+        if (propertyValue == null){
+            node.setProperty(propertyName, (Value) null);
+        } else if (propertyValue instanceof Value) {
             node.setProperty(propertyName, (Value) propertyValue);
         } else if (propertyValue instanceof Node) {
             node.setProperty(propertyName, (Node) propertyValue);

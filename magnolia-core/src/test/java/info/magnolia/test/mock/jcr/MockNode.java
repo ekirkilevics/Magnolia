@@ -72,8 +72,6 @@ import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 /**
  * Mock implementation of a Node. Initially gets a random generated UUID set. It's currently overriding all setValue methods
  * from {@link AbstractNode} . This has the advantage, we don't need a session and a value-factory.
- *
- * @version $Id$
  */
 public class MockNode extends AbstractNode {
 
@@ -724,15 +722,26 @@ public class MockNode extends AbstractNode {
         throw new UnsupportedOperationException("Not implemented. This is a fake class.");
     }
 
+    /**
+     * According to 10.4.2.4 in jcr 2.0 spec, there's no null values for properties - setting a property value to
+     * null will remove the property.
+     */
     @Override
     public Property setProperty(String name, Value value) {
-        MockProperty property = (MockProperty) this.properties.get(name);
-        if (property == null) {
-            property = new MockProperty(name, (MockValue) value, this);
-            properties.put(name, property);
+        MockProperty property = null;
+        if (value == null) {
+            properties.remove(name);
         } else {
-            property.setValue(value);
+            property = (MockProperty) properties.get(name);
+            if (property == null) {
+                // create new property
+                property = new MockProperty(name, (MockValue) value, this);
+                properties.put(name, property);
+            } else {
+                property.setValue(value);
+            }
         }
+
         return property;
     }
 

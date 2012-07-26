@@ -51,13 +51,14 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import javax.jcr.nodetype.NodeType;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests for MockNode.
  */
 public class MockNodeTest {
 
@@ -302,6 +303,33 @@ public class MockNodeTest {
 
         assertEquals(value, root.getProperty("string").getValue());
     }
+
+    @Test
+    public void testSetPropertyToNullDoesntCreateProperty() throws Exception {
+        // GIVEN
+        final MockValue value = null;
+
+        // WHEN
+        root.setProperty("string", value);
+
+        // THEN
+        assertFalse(root.hasProperty("string"));
+    }
+
+    @Test
+    public void testSetExistingPropertyToNullRemovesTheProperty() throws Exception {
+        // GIVEN
+        final MockValue value = new MockValue("stringValue");
+        root.setProperty("string", value);
+        assertTrue(root.hasProperty("string"));
+
+        // WHEN
+        root.setProperty("string", (Value) null);
+
+        // THEN
+        assertFalse(root.hasProperty("string"));
+    }
+
     @Test
     public void testChildNodesAndPropertiesGetProperSession() throws Exception {
         MockSession session = new MockSession("test");

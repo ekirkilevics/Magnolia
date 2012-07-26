@@ -33,8 +33,6 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockValue;
 
@@ -49,6 +47,7 @@ import javax.jcr.Value;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 
 
 /**
@@ -207,6 +206,18 @@ public class PropertyUtilTest {
 
         // THEN
         assertEquals(identifier, res);
+    }
+
+    @Test
+    public void testSetPropertyToNul() throws RepositoryException {
+        // GIVEN
+        final Object value = null;
+
+        // WHEN
+        PropertyUtil.setProperty(root, PROPERTY_NAME, value);
+
+        // THEN
+        assertFalse(root.hasProperty(PROPERTY_NAME));
     }
 
     @Test
