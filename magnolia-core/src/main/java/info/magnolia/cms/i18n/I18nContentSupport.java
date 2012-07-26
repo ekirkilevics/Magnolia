@@ -107,6 +107,11 @@ public interface I18nContentSupport {
     public Property getProperty(Node node, String name) throws RepositoryException;
 
     /**
+     * Returns true if localized property or default property exists false if there is no variation of property for any locale.
+     */
+    public boolean hasProperty(Node node, String name) throws RepositoryException;
+
+    /**
      * Returns localized property of given named and given locale.
      */
     public Property getProperty(Node node, String name, Locale locale) throws RepositoryException;

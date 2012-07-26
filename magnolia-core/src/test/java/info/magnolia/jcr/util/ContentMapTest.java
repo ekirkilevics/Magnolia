@@ -45,8 +45,6 @@ import info.magnolia.test.mock.jcr.SessionTestUtil;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import javax.jcr.Node;
-
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,9 +62,9 @@ public class ContentMapTest {
     public void testGetBasicProps() throws Exception {
         MockSession hm = SessionTestUtil.createSession("testWorkspace",
                 "/bla.prop1=test\n" +
-                "/bla/bla.prop1=test\n" +
-                "/bla/bla.prop2=something\n" +
-                "/bla/bla.@uuid=12345\n" +
+                        "/bla/bla.prop1=test\n" +
+                        "/bla/bla.prop2=something\n" +
+                        "/bla/bla.@uuid=12345\n" +
                 "/bla/bla/jcr.@type=mgnl:contentNode");
         ContentMap map = new ContentMap(hm.getNode("/bla/bla"));
         assertFalse(map.keySet().isEmpty());
@@ -81,9 +79,8 @@ public class ContentMapTest {
         assertEquals(2, map.get("@depth"));
     }
 
-    // @Test
+    @Test
     public void testGetBinaryProps() throws Exception {
-        // FIXME: yes, you!
         String contentProperties = StringUtils.join(Arrays.asList(
                 "/somepage/mypage.@type=mgnl:content",
                 "/somepage/mypage/paragraphs.@type=mgnl:contentNode",
@@ -94,18 +91,18 @@ public class ContentMapTest {
                 "/somepage/mypage/paragraphs/0/attachment1.fileName=hello",
                 "/somepage/mypage/paragraphs/0/attachment1.extension=gif",
                 // being a binary node, magnolia knows to store data as jcr:data w/o need to be explicitly told so
-                "/somepage/mypage/paragraphs/0.attachment1=binary:X",
+                "/somepage/mypage/paragraphs/0/attachment1.jcr\\:data=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment1.jcr\\:mimeType=image/gif",
                 "/somepage/mypage/paragraphs/0/attachment1.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
-                "/somepage/mypage/paragraphs/0.attachment2=binary:X",
+                "/somepage/mypage/paragraphs/0/attachment2.jcr\\:data=binary:X",
                 "/somepage/mypage/paragraphs/0/attachment2.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/attachment2.fileName=test",
                 "/somepage/mypage/paragraphs/0/attachment2.extension=jpeg",
                 "/somepage/mypage/paragraphs/0/attachment2.jcr\\:mimeType=image/jpeg",
                 "/somepage/mypage/paragraphs/0/attachment2.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00",
 
-                "/somepage/mypage/paragraphs/0.image3=binary:X",
+                "/somepage/mypage/paragraphs/0/image3.jcr\\:data=binary:X",
                 "/somepage/mypage/paragraphs/0/image3.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/image3.fileName=third",
                 "/somepage/mypage/paragraphs/0/image3.extension=png",
@@ -115,17 +112,18 @@ public class ContentMapTest {
                 // and more which should not match
                 "/somepage/mypage/paragraphs/0.foo=bar",
                 "/somepage/mypage/paragraphs/0.mybool=boolean:true",
-                "/somepage/mypage/paragraphs/0.rand=binary:X",
+                "/somepage/mypage/paragraphs/0/rand.jcr\\:data=binary:X",
                 "/somepage/mypage/paragraphs/0/rand.@type=mgnl:resource",
                 "/somepage/mypage/paragraphs/0/rand.fileName=randdddd",
                 "/somepage/mypage/paragraphs/0/rand.extension=png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:mimeType=image/png",
                 "/somepage/mypage/paragraphs/0/rand.jcr\\:lastModified=date:2009-10-14T08:59:01.227-04:00"
-        ), "\n");
+                ), "\n");
         MockSession hm = SessionTestUtil.createSession("testWorkspace", contentProperties);
         ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("attachment1"));
-        assertTrue(map.get("attachment1") instanceof Node);
+        assertTrue(map.get("attachment1") instanceof ContentMap);
+
     }
     @Test
     public void testGetOtherProps() throws Exception {
@@ -139,7 +137,7 @@ public class ContentMapTest {
                 "/somepage/mypage/paragraphs/0.attention=booyah",
                 "/somepage/mypage/paragraphs/0.imaginary=date:2009-10-14T08:59:01.227-04:00"
 
-        ), "\n");
+                ), "\n");
         MockSession hm = SessionTestUtil.createSession("testWorkspace", contentProperties);
         ContentMap map = new ContentMap(hm.getNode("/somepage/mypage/paragraphs/0"));
         assertNotNull(map.get("imaginary"));

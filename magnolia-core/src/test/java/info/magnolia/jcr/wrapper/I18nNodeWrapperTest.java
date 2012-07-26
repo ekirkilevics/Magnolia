@@ -33,7 +33,9 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
@@ -127,6 +129,20 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
     }
 
     @Test
+    public void testGetPropertyDoesntReturnResourceNode() throws Exception {
+        // GIVEN
+        final MockNode node = new MockNode("boo");
+        final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(node);
+
+        assertFalse(wrappedNode.hasProperty("blah"));
+        // WHEN
+        node.addNode("blah", "mgnl:resource");
+        // THEN
+        assertFalse(wrappedNode.hasProperty("blah"));
+
+    }
+
+    @Test
     public void testHasPropertyReturnsTrueWhenOnlyLocaleVariantIsAvailable() throws Exception {
         //GIVEN
         final I18nContentSupport defSupport = Components.getComponent(I18nContentSupport.class);
@@ -211,7 +227,7 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
 
         //WHEN
         final I18nNodeWrapper wrappedNode = new I18nNodeWrapper(root.getNode("bar/foo/baz"));
-        
+
         //THEN
         for (int i = 1; i < wrappedNode.getDepth(); ++i) {
             assertTrue(wrappedNode.getAncestor(i) instanceof I18nNodeWrapper);

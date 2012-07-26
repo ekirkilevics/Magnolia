@@ -283,6 +283,20 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     }
 
     @Override
+    public boolean hasProperty(Node node, String name) throws RepositoryException {
+        if (!isEnabled()) {
+            return node.hasProperty(name);
+        }
+        try {
+            // get property using all the rules in getProperty method. If not found, then it doesn't exist.
+            getProperty(node, name);
+        } catch (RepositoryException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public Property getProperty(Node node, String name) throws RepositoryException {
         if (!isEnabled()) {
             return node.getProperty(name);
@@ -311,7 +325,10 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     @Override
     public Property getProperty(Node node, String name, Locale locale) throws RepositoryException {
-        // TODO Auto-generated method stub
+        String propName = name + "_" + locale;
+        if (node.hasProperty(propName)) {
+            return node.getProperty(propName);
+        }
         return null;
     }
 
