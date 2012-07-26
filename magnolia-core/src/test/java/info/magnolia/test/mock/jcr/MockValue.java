@@ -49,6 +49,7 @@ import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.value.BinaryImpl;
 
 /**
  * Mock implementation for Values.
@@ -90,7 +91,7 @@ public class MockValue implements Value {
         }
         if (value instanceof String) {
             try {
-                return new MockBinary(((String) value).getBytes("UTF-8"));
+                return new BinaryImpl(((String) value).getBytes("UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }

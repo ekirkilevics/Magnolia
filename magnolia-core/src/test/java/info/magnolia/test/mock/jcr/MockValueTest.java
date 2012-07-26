@@ -45,6 +45,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.ValueFormatException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.value.BinaryImpl;
 import org.junit.Test;
 
 /**
@@ -66,7 +67,7 @@ public class MockValueTest {
     @Test
     public void testGetBinary() throws Exception {
         // GIVEN
-        Object objectValue = new MockBinary("Hallo".getBytes());
+        Object objectValue = new BinaryImpl("Hallo".getBytes());
         MockValue jcrValue = new MockValue(objectValue);
 
         // WHEN
