@@ -37,9 +37,11 @@ import info.magnolia.objectfactory.Components;
 
 /**
  * Get the current I18nContentSupport object from this factory. Observation is used.
+ * 
  * @version $Id$
- *
+ * @deprecated since 4.5.5, use {@link Components#getComponent(Class)} instead.
  */
+@Deprecated
 public class I18nContentSupportFactory {
 
     public static I18nContentSupport getI18nSupport() {
