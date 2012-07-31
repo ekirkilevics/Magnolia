@@ -288,7 +288,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             }
         }
         if (iter.hasNext()) {
-            log.error("More than one user found with name [{}] in realm [{}]");
+            log.error("More than one user found with name [{}] in realm [{}]", name, realmName);
         }
         return user;
     }
