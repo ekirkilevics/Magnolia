@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node xmlns="" sv:name="magnoliaToAdminCentral" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node sv:name="magnoliaToAdminCentral" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>cea1d9b5-ab41-462c-935c-dc9c33e963f3</sv:value>
   </sv:property>
-  <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>redirect:/.magnolia/pages/adminCentral.html</sv:value>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.cms.beans.config.DefaultVirtualURIMapping</sv:value>
   </sv:property>
   <sv:property sv:name="fromURI" sv:type="String">
     <sv:value>/.magnolia</sv:value>
   </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.beans.config.DefaultVirtualURIMapping</sv:value>
+  <sv:property sv:name="jcr:createdBy" sv:type="String">
+    <sv:value>admin</sv:value>
+  </sv:property>
+  <sv:property sv:name="toURI" sv:type="String">
+    <sv:value>redirect:/.magnolia/admincentral</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a54d42b3-6dd5-439d-9269-3ad79048a446</sv:value>
+    <sv:property sv:name="jcr:createdBy" sv:type="String">
+      <sv:value>admin</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
@@ -35,9 +34,8 @@
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2004-11-02T15:34:20.341+01:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:lastmodified" sv:type="String">
-      <sv:value>2004-11-02T15:34:20.365+01:00</sv:value>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2012-07-31T10:55:21.490+02:00</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>
-
