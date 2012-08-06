@@ -115,6 +115,7 @@ public class MockValueTest {
         assertEquals(objectValue, jcrValue.getDate());
 
     }
+
     @Test
     public void testGetDateFromString() throws Exception {
         MockValue jcrValue = new MockValue("2012-06-15T10:39:23.901+01:00");
@@ -122,6 +123,12 @@ public class MockValueTest {
         assertEquals(cal.get(Calendar.YEAR), 2012);
         assertEquals(cal.get(Calendar.MONTH), Calendar.JUNE);
         assertEquals(cal.get(Calendar.DAY_OF_MONTH), 15);
+    }
+
+    @Test(expected = ValueFormatException.class)
+    public void testGetDateFromUnparseableString() throws Exception {
+        MockValue jcrValue = new MockValue("foo bar");
+        jcrValue.getDate();
     }
 
     @Test(expected = ValueFormatException.class)
