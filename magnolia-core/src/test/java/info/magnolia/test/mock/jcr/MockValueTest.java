@@ -34,6 +34,7 @@
 package info.magnolia.test.mock.jcr;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
@@ -106,12 +107,21 @@ public class MockValueTest {
     public void testGetBooleanmWithWrongValueType() throws Exception {
         new MockValue(BigDecimal.ONE).getBoolean();
     }
+
     @Test
     public void testGetDate() throws Exception {
         Object objectValue = Calendar.getInstance();
         MockValue jcrValue = new MockValue(objectValue);
         assertEquals(objectValue, jcrValue.getDate());
 
+    }
+    @Test
+    public void testGetDateFromString() throws Exception {
+        MockValue jcrValue = new MockValue("2012-06-15T10:39:23.901+01:00");
+        Calendar cal = jcrValue.getDate();
+        assertEquals(cal.get(Calendar.YEAR), 2012);
+        assertEquals(cal.get(Calendar.MONTH), Calendar.JUNE);
+        assertEquals(cal.get(Calendar.DAY_OF_MONTH), 15);
     }
 
     @Test(expected = ValueFormatException.class)

@@ -111,6 +111,8 @@ public class MockValue implements Value {
     public Calendar getDate() throws ValueFormatException, RepositoryException {
         if (value instanceof Calendar) {
             return (Calendar) value;
+        } else if(value instanceof String) {
+            return org.apache.jackrabbit.util.ISO8601.parse((String)value);
         }
         throw new ValueFormatException("Value can't be converted to Calendar: " + value);
     }
