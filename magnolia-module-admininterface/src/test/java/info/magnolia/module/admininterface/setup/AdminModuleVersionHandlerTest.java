@@ -57,7 +57,7 @@ import org.junit.Test;
  */
 public class AdminModuleVersionHandlerTest extends ModuleVersionHandlerTestCase {
     private static final String QUICKSTART = "redirect:/.magnolia/pages/quickstart.html";
-    private static final String ADMIN_CENTRAL = "redirect:/.magnolia/pages/adminCentral.html";
+    private static final String ADMIN_CENTRAL = "redirect:/.magnolia/admincentral";
 
     @Override
     @Before
