@@ -45,10 +45,13 @@ import info.magnolia.link.LinkUtil;
 import info.magnolia.templating.functions.TemplatingFunctions;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.inject.Provider;
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -99,4 +102,29 @@ public class JspTemplatingFunctionTest extends RepositoryTestCase {
         assertEquals("/01/image/Cents1-1.jpg", link2);
     }
 
+    @Test
+    public void testGetContentByIdentifier() throws RepositoryException{
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String id = addedNode.getIdentifier();
+
+            //THEN
+
+            //get content by identifier when repository was provided
+            Node returnedNode1 = JspTemplatingFunction.contentByIdentifier(id, repository);
+            assertEquals(addedNode, returnedNode1);
+
+            //get content by identifier when repository was empty -> will taken the default (website)
+            Node returnedNode2 = JspTemplatingFunction.contentByIdentifier(id, "");
+            assertEquals(addedNode, returnedNode2);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
 }

@@ -55,6 +55,7 @@ import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
@@ -69,6 +70,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -1536,6 +1538,25 @@ public class TemplatingFunctionsTest {
         String property = functions.metaData(myNode, "foo");
         //THEN
         assertEquals("bar", property);
+    }
+
+    @Test
+    public void testGetContentByIdentifier() throws RepositoryException{
+        // GIVEN
+        String id = childPage.getIdentifier();
+        Session session = childPage.getSession();
+        MockUtil.setSessionAndHierarchyManager(session);
+        String repository = session.getWorkspace().getName();
+
+        //THEN
+
+        //get content by identifier when repository was provided
+        Node returnedNode1 = functions.contentByIdentifier(repository, id);
+        assertEquals(childPage, returnedNode1);
+
+        //get content by identifier when repository wasn't provided -> will taken the default (website)
+        Node returnedNode2 = functions.contentByIdentifier(id);
+        assertEquals(childPage, returnedNode2);
     }
 
 

@@ -283,9 +283,9 @@ public class JspTemplatingFunction {
     @Function
     public static  Node contentByIdentifier(String id, String repository){
         if( repository.isEmpty()) {
-            return getTemplatingFunctions().content(id);
+            return getTemplatingFunctions().contentByIdentifier(id);
         }
-        return getTemplatingFunctions().content(repository, id);
+        return getTemplatingFunctions().contentByIdentifier(repository, id);
     }
 
     @Function
