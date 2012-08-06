@@ -275,6 +275,19 @@ public class JspTemplatingFunction {
         return getTemplatingFunctions().content(repository, path);
     }
 
+    /**
+     * Return the Node for the given identifier
+     * from the given repository.
+     * If the repository is empty, take the default (website).
+     */
+    @Function
+    public static  Node contentByIdentifier(String id, String repository){
+        if( repository.isEmpty()) {
+            return getTemplatingFunctions().content(id);
+        }
+        return getTemplatingFunctions().content(repository, id);
+    }
+
     @Function
     public static  List<ContentMap> asContentMapList(Collection<Node> nodeList) {
         return getTemplatingFunctions().asContentMapList(nodeList);

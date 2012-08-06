@@ -90,4 +90,32 @@ public class SessionUtil {
         }
         return res;
     }
+
+    /**
+     * Return the Node by the given identifier from the given repository. In case of Exception, return null.
+     */
+    public static Node getNodeByIdentifier(String repository, String id) {
+        Node res = null;
+        Session session;
+        if (StringUtils.isBlank(repository) || StringUtils.isBlank(id)) {
+            log.debug("getNode returns null because either identifier: '" + id + "' or repository: '" + repository
+                    + "' is empty");
+            return res;
+        }
+        try {
+            session = MgnlContext.getJCRSession(repository);
+            if (session != null) {
+                res = session.getNodeByIdentifier(id);
+            }
+        } catch (LoginException e) {
+            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
+        } catch (PathNotFoundException e) {
+            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
+        } catch (RepositoryException e) {
+            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
+        } catch (IllegalArgumentException e) {
+            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
+        }
+        return res;
+    }
 }

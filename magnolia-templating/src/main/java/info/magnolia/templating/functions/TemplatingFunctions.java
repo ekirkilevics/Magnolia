@@ -507,6 +507,22 @@ public class TemplatingFunctions {
         return SessionUtil.getNode(repository, path);
     }
 
+    /**
+     * Return the Node by the given identifier
+     * from the website repository.
+     */
+    public Node contentByIdentifier(String id){
+        return contentByIdentifier(RepositoryConstants.WEBSITE, id);
+    }
+
+    /**
+    * Return the Node by the given identifier
+    * from the given repository.
+    */
+    public Node contentByIdentifier(String repository, String id){
+        return SessionUtil.getNodeByIdentifier(repository, id);
+    }
+
     public List<ContentMap> asContentMapList(Collection<Node> nodeList) {
         if (nodeList != null) {
             List<ContentMap> contentMapList = new ArrayList<ContentMap>();

@@ -180,4 +180,91 @@ public class SessionUtilTest {
             MgnlContext.setInstance(null);
         }
     }
+
+    @Test
+    public void testGetNodeByIdentifier() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String id = addedNode.getIdentifier();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id);
+
+            // THEN
+            assertEquals(addedNode, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeByIdentifierNoSessionPassed() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String id = addedNode.getIdentifier();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNodeByIdentifier(null, id);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    @Test
+    public void testGetNodeByIdentifierBadId() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String id = addedNode.getIdentifier();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id + 1);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    public void testGetNodeByIdentifierBadSession() throws RepositoryException {
+        try {
+            // GIVEN
+            MockUtil.initMockContext();
+            String repository = "website";
+            MockSession session = new MockSession(repository);
+            MockUtil.setSessionAndHierarchyManager(session);
+            Node rootNode = session.getRootNode();
+            Node addedNode = rootNode.addNode("1");
+            String id = addedNode.getIdentifier();
+
+            // WHEN
+            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id);
+
+            // THEN
+            assertEquals(null, returnedNode);
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
 }
