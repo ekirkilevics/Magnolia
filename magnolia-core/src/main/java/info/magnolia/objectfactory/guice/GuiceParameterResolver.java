@@ -33,12 +33,17 @@
  */
 package info.magnolia.objectfactory.guice;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.List;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.google.inject.internal.Annotations;
+import com.google.inject.internal.Errors;
+import com.google.inject.internal.ErrorsException;
+
+import info.magnolia.objectfactory.MgnlInstantiationException;
 import info.magnolia.objectfactory.ParameterInfo;
 import info.magnolia.objectfactory.ParameterResolver;
 
@@ -63,24 +68,32 @@ public class GuiceParameterResolver implements ParameterResolver {
     @Override
     public Object resolveParameter(ParameterInfo parameter) {
 
-        Type genericParameterType = parameter.getGenericParameterType();
-        Class<?> parameterType = parameter.getParameterType();
-
         // We ask for an existing binding so Guice wont create jit bindings for things like Class and String
         // This means that all parameters need to be explicitly bound
 
-        // If the parameter is javax.inject.Provider<T> we will look for a provider of T instead
-        if (genericParameterType instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
-            if (parameterizedType.getRawType() == javax.inject.Provider.class) {
-                Type actualType = parameterizedType.getActualTypeArguments()[0];
-                Binding<?> existingBinding = injector.getExistingBinding(Key.get(actualType));
-                return existingBinding != null ? existingBinding.getProvider() : UNRESOLVED;
-            }
-        }
-
-        Key<?> key = Key.get(parameterType);
+        Key<?> key = getKey(parameter);
         Binding<?> existingBinding = injector.getExistingBinding(key);
         return existingBinding != null ? existingBinding.getProvider().get() : UNRESOLVED;
+    }
+
+    private Key<?> getKey(ParameterInfo parameter) {
+        try {
+
+            // Get TypeLiteral for this parameter
+            TypeLiteral<?> declaringType = TypeLiteral.get(parameter.getDeclaringClass());
+            List<TypeLiteral<?>> parameterTypes = declaringType.getParameterTypes(parameter.getConstructor());
+            TypeLiteral<?> parameterType = parameterTypes.get(parameter.getParameterIndex());
+
+            // Create Key object for this parameter
+            Errors errors = new Errors(parameter.getConstructor());
+            return Annotations.getKey(
+                    parameterType,
+                    parameter.getConstructor(),
+                    parameter.getParameterAnnotations(),
+                    errors);
+
+        } catch (ErrorsException e) {
+            throw new MgnlInstantiationException(e.getMessage(), e);
+        }
     }
 }

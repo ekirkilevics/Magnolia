@@ -33,6 +33,7 @@
  */
 package info.magnolia.objectfactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 
@@ -56,6 +57,10 @@ public class ParameterInfo {
         this.genericParameterType = constructor.getGenericParameterTypes()[parameterIndex];
     }
 
+    public Class<?> getDeclaringClass() {
+        return constructor.getDeclaringClass();
+    }
+
     public Constructor getConstructor() {
         return constructor;
     }
@@ -70,5 +75,9 @@ public class ParameterInfo {
 
     public Type getGenericParameterType() {
         return genericParameterType;
+    }
+
+    public Annotation[] getParameterAnnotations() {
+        return constructor.getParameterAnnotations()[parameterIndex];
     }
 }
