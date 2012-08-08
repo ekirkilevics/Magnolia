@@ -213,9 +213,9 @@ public class QueryUtilTest extends RepositoryTestCase{
         result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
         assertEquals(MgnlNodeType.NT_PAGE, result.nextNode().getPrimaryNodeType().getName());
     }
-    
+
     @Test
     public void testQueryBuild(){
-    	assertEquals("select * from [nt:base] as t where ISDESCENDANTNODE([/site1]) AND contains(t.*, 'area') AND contains(t.*, 'component')", QueryUtil.buildQuery("component,area", "/site1"));
+        assertEquals("select * from [nt:base] as t where ISDESCENDANTNODE([/site1]) AND contains(t.*, 'area') AND contains(t.*, 'component')", QueryUtil.buildQuery("component,area", "/site1"));
     }
 }
