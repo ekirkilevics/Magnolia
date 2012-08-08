@@ -38,6 +38,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,13 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.qom.QueryObjectModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Util to execute queries as simple as possible.
@@ -254,5 +259,23 @@ public class QueryUtil {
         NodeIterator resultIterator = search(workspace, statement, language);
 
         return NodeUtil.filterDuplicates(NodeUtil.filterParentNodeType(resultIterator, returnItemType));
+    }
+    
+    /**
+     * Creates a simple SQL2 query statement.
+     * 
+     * @param statement
+     * @param startPath
+     */
+    public static String buildQuery (String statement, String startPath){
+        Set<String> arguments = new HashSet<String>(Arrays.asList(StringUtils.splitByWholeSeparator(statement, ",")));
+
+        Iterator<String> argIt = arguments.iterator();
+        String queryString = "select * from [nt:base] as t where ISDESCENDANTNODE(["+startPath+"])";
+        while(argIt.hasNext()){
+            queryString = queryString + " AND contains(t.*, '"+argIt.next()+"')";
+        }
+        log.debug("query string: " + queryString);
+        return queryString;
     }
 }

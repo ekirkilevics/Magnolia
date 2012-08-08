@@ -314,4 +314,13 @@ public class JspTemplatingFunction {
         return getTemplatingFunctions().metaData(content, property);
     }
 
+    @Function
+    public static Collection<Node> search(String workspace, String statement, String language, String returnItemType){
+        return getTemplatingFunctions().search(workspace, statement, language, returnItemType);
+    }
+
+    @Function
+    public static Collection<Node> simpleSearch(String workspace, String statement, String returnItemType, String startPath){
+        return getTemplatingFunctions().simpleSearch(workspace, statement, returnItemType, startPath);
+    }
 }

@@ -40,6 +40,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
@@ -66,6 +67,8 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An object exposing several methods useful for templates. It is exposed in templates as <code>cmsfn</code>.
@@ -73,6 +76,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class TemplatingFunctions {
+
+    private static final Logger log = LoggerFactory.getLogger(TemplatingFunctions.class);
 
     private final Provider<AggregationState> aggregationStateProvider;
 
@@ -634,5 +639,44 @@ public class TemplatingFunctions {
      */
     public String metaData(ContentMap content, String property){
         return metaData(content.getJCRNode(), property);
+    }
+    
+    /**
+     * Executes query and returns result as Collection of Nodes.
+     * 
+     * @param workspace
+     * @param statement has to be in formal form for chosen language
+     * @param language
+     * @param returnItemType
+     */
+    public Collection<Node> search(String workspace, String statement, String language, String returnItemType){
+        try {
+            return NodeUtil.getCollectionFromNodeIterator(QueryUtil.search(workspace, statement, language, returnItemType));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
+    }
+    
+    /**
+     * Executes simple SQL2 query and returns result as Collection of Nodes.
+     * 
+     * @param workspace
+     * @param statement should be set of labels target has to contain inserted as one string each separated by comma
+     * @param returnItemType
+     * @param startPath can be inserted, for results without limitation set it to slash
+     */
+    public Collection<Node> simpleSearch(String workspace, String statement, String returnItemType, String startPath){
+        if(StringUtils.isEmpty(statement)){
+            log.error("Cannot search with empty statement.");
+            return null;
+        }
+        String query = QueryUtil.buildQuery(statement, startPath);
+        try {
+            return NodeUtil.getCollectionFromNodeIterator(QueryUtil.search(workspace, query, "JCR-SQL2", returnItemType));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return null;
     }
 }
