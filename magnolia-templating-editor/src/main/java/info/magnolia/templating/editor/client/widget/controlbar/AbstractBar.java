@@ -165,7 +165,12 @@ public abstract class AbstractBar extends FlowPanel {
     public void attach(MgnlElement mgnlElement) {
         Element element = mgnlElement.getFirstElement();
         if (element != null) {
-            element.insertFirst(getElement());
+            if(element.hasTagName("DIV")){
+                element.insertFirst(getElement());
+            }else{
+                final Node parentNode = element.getParentNode();
+                parentNode.insertBefore(getElement(), element);
+            }
         }
         onAttach();
     }
