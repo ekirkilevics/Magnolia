@@ -13,18 +13,3 @@ src/main/java/META-INF
 
 # Why is this ignored ?
 /magnolia-core/src/main/java/info/magnolia/jcr/util
-
-/magnolia-empty-webapp/repositories
-/magnolia-empty-webapp/src/main/webapp/repositories
-/magnolia-empty-webapp/src/main/webapp/cache
-/magnolia-empty-webapp/src/main/webapp/tmp
-/magnolia-empty-webapp/src/main/webapp/logs
-/magnolia-empty-webapp/src/main/webapp/admintemplates
-/magnolia-empty-webapp/src/main/webapp/META-INF
-/magnolia-empty-webapp/src/main/webapp/templates
-/magnolia-empty-webapp/src/main/webapp/WEB-INF/classes
-/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/*.tmp
-/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/centrino
-/magnolia-empty-webapp/src/main/webapp/WEB-INF/config/kentrino
-/magnolia-empty-webapp/src/main/webapp/docroot/samples
-/magnolia-empty-webapp/src/main/webapp/docroot/rssaggregator
