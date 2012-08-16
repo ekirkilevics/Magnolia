@@ -10,6 +10,3 @@ target
 .checkstyle
 
 src/main/java/META-INF
-
-# Why is this ignored ?
-/magnolia-core/src/main/java/info/magnolia/jcr/util
