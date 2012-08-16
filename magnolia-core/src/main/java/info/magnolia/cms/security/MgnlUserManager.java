@@ -636,13 +636,23 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     public User removeGroup(User user, String groupName) {
-        super.remove(user.getName(), groupName, NODE_GROUPS);
+        try {
+            super.remove(user.getName(), groupName, NODE_GROUPS);
+        } catch (PrincipalNotFoundException e) {
+            // user doesn't exist in this UM
+            return null;
+        }
         return getUser(user.getName());
     }
 
     @Override
     public User removeRole(User user, String roleName) {
-        super.remove(user.getName(), roleName, NODE_ROLES);
+        try {
+            super.remove(user.getName(), roleName, NODE_ROLES);
+        } catch (PrincipalNotFoundException e) {
+            // user doesn't exist in this UM
+            return null;
+        }
         return getUser(user.getName());
     }
 }

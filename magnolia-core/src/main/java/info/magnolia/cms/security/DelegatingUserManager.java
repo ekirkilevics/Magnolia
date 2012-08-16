@@ -271,7 +271,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User removeGroup(final User user, final String groupName) {
-        return delegateUntilSupported(new Op<User>() {
+        return delegateUntilNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.removeGroup(user, groupName);
@@ -281,7 +281,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User removeRole(final User user, final String roleName) {
-        return delegateUntilSupported(new Op<User>() {
+        return delegateUntilNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.removeRole(user, roleName);
