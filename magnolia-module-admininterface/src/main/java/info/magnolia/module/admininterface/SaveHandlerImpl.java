@@ -85,6 +85,7 @@ import javax.jcr.ValueFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.devlib.schmidt.imageinfo.ImageInfo;
 import org.slf4j.Logger;
@@ -488,6 +489,7 @@ public class SaveHandlerImpl implements SaveHandler {
             String src = imageOrDowloadMatcher.group(4);
 
             String link = StringUtils.removeStart(src, MgnlContext.getContextPath());
+            link = StringEscapeUtils.unescapeHtml(link);
 
             // process the tmporary uploaded files
             Matcher tmpFileMatcher = tmpFilePattern.matcher(src);
