@@ -143,4 +143,16 @@ public class MgnlUserTest {
         assertTrue(rolesJ.contains("roleZ"));
     }
 
+    @Test
+    public void testInGroup(){
+        User georges = uman.getUser("georges");
+        assertTrue(georges.inGroup("groupB"));
+        assertFalse(georges.inGroup("groupE"));
+        assertFalse(georges.inGroup("notExistingGroup"));
+
+        User julien = uman.getUser("julien");
+        assertTrue(julien.inGroup("groupC"));
+        assertFalse(julien.inGroup("groupA"));
+    }
+
 }

@@ -36,6 +36,7 @@ package info.magnolia.cms.security;
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -196,17 +197,19 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
 
                 @Override
                 public Collection<String> doExec(Session session) throws RepositoryException {
-                    Node groupsOrRoles = session.getNode(getName()).getNode(nodeName);
+                    Node groupsOrRoles = session.getNode(getPath()).getNode(nodeName);
                     List<String> list = new ArrayList<String>();
                     for (PropertyIterator props = groupsOrRoles.getProperties(); props.hasNext();) {
                         // check for the existence of this ID
                         Property property = props.nextProperty();
-                        try {
-                            list.add(property.getString());
-                        } catch (ItemNotFoundException e) {
-                            log.debug("Role [{}] does not exist in the ROLES repository", name);
-                        } catch (IllegalArgumentException e) {
-                            log.debug("{} has invalid value", property.getPath());
+                        if(!property.getName().startsWith(MgnlNodeType.JCR_PREFIX)){
+                            try {
+                                list.add(property.getString());
+                            } catch (ItemNotFoundException e) {
+                                log.debug("Role [{}] does not exist in the ROLES repository", name);
+                            } catch (IllegalArgumentException e) {
+                                log.debug("{} has invalid value", property.getPath());
+                            }
                         }
                     }
                     return list;
@@ -225,6 +228,9 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
                             }
                         } catch (ItemNotFoundException e) {
                             log.debug("Role [{}] does not exist in the ROLES repository", name);
+                        } catch (RepositoryException e) {
+                            //log exception and continue iterate over the groups or roles
+                            log.debug(e.getMessage(), e);
                         }
                     }
                     return false;
