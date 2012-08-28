@@ -332,10 +332,13 @@ public class MockNode extends AbstractNode {
 
     @Override
     public String getPath() throws RepositoryException {
-        if (parent == null) {
-            return ROOT_NODE_NAME.equals(name) ? "/" : "/" + getName();
+        if (isRoot()) {
+            return "/";
         }
-        return parent.getPath() == "/" ?  "/" + getName() : parent.getPath() + "/" + getName();
+        if (parent == null || parent.getPath().equals("/")) {
+            return "/" + getName();
+        }
+        return (parent.getPath() + "/" + getName());
     }
 
     @Override
@@ -416,6 +419,7 @@ public class MockNode extends AbstractNode {
     /**
      * @deprecated as on {@link Node} - use getIdentifier instead
      */
+    @Deprecated
     @Override
     public String getUUID() {
         return getIdentifier();
@@ -654,6 +658,9 @@ public class MockNode extends AbstractNode {
     }
 
     public void setParent(MockNode parent) {
+        if (parent == this) {
+            throw new IllegalArgumentException("Node can't be it's own parent");
+        }
         this.parent = parent;
     }
 
