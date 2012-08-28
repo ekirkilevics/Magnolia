@@ -736,6 +736,5 @@ for Java Content Repositories (JCR).
     <module>magnolia-module-cache</module>
     <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-store-client</module>
-    <module>magnolia-empty-webapp</module>
   </modules>
 </project>

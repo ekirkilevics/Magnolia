@@ -44,7 +44,6 @@ import javax.security.auth.Subject;
 
 /**
  * Manages users.
- * @version $Revision$ ($Author$)
  */
 public interface UserManager {
 
@@ -118,7 +117,7 @@ public interface UserManager {
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException;
 
     /**
-     * Sets given property for the user and returns updated user object with new value of the property.
+     * Sets given property for the user.
      * 
      * @param user
      *            User to be updated. If property doesn't exist yet, it will be created. If the value is null, property will be removed if existing.
@@ -126,7 +125,7 @@ public interface UserManager {
      *            Name of the property.
      * @param propertyValue
      *            Value of the property. Use org.apache.jackrabbit.value.ValueFactoryImpl to convert type to Value.
-     * @return
+     * @return updated user object with new value of the property.
      */
     public User setProperty(User user, String propertyName, Value propertyValue);
 
@@ -178,17 +177,16 @@ public interface UserManager {
     public void updateLastAccessTimestamp(User user) throws UnsupportedOperationException;
 
     /**
-     * Checks whether principal belongs to the named resource.
-     * @param name principal name
+     * @return whether principal belongs to the named resource.
+     * @param principal name of the principal
      * @param resourceName either group or role name
      * @param resourceType either group or role see
-     * @return
+     *
      */
     public boolean hasAny(String principal, String resourceName, String resourceType);
 
     /**
-     * Returns all ACLs assigned to the given user.
-     * @return
+     * @return all ACLs assigned to the given user.
      */
     public Map<String, ACL> getACLs(User user);
 

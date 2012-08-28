@@ -40,7 +40,6 @@ import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.MgnlContext.VoidOp;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
@@ -108,6 +107,8 @@ public abstract class RepositoryBackedSecurityManager {
                             log.debug("Role [{}] does not exist in the {} repository", resourceName, resourceTypeName);
                         } catch (IllegalArgumentException e) {
                             log.debug("{} has invalid value", property.getPath());
+                        } catch (ValueFormatException e) {
+                            log.debug("{} has invalid value", property.getPath());
                         }
                     }
                     return list;
@@ -126,7 +127,7 @@ public abstract class RepositoryBackedSecurityManager {
                             if (session.getNodeByIdentifier(groupOrRole).getName().equalsIgnoreCase(resourceName)) {
                                 return true;
                             }
-                        } catch (ItemNotFoundException e) {
+                        } catch (RepositoryException e) {
                             log.debug("Role [{}] does not exist in the ROLES repository", resourceName);
                         }
                     }
@@ -207,36 +208,43 @@ public abstract class RepositoryBackedSecurityManager {
         return null;
     }
 
-    protected void remove(final String principalName, final String resourceName, final String resourceTypeName) {
-        // FIXME: need same thing as add() method
+    /**
+     * This call is lenient and will not throw exception in case principal doesn't exist! Instead it will simply return without making any change.
+     * 
+     * @param principalName
+     *            name of the user or group to be updated
+     * @param resourceName
+     *            name of the group or role to be added
+     * @param resourceTypeName
+     *            type of the added resource (group or role) {@link #NODE_ROLES}, {@link #NODE_GROUPS}
+     * @throws PrincipalNotFoundException
+     */
+    protected void remove(final String principalName, final String resourceName, final String resourceTypeName) throws PrincipalNotFoundException {
         try {
             final String nodeID = getLinkedResourceId(resourceName, resourceTypeName);
 
             if (hasAny(principalName, resourceName, resourceTypeName)) {
-                MgnlContext.doInSystemContext(new SilentSessionOp<VoidOp>(getRepositoryName()) {
-
-                    @Override
-                    public VoidOp doExec(Session session) throws RepositoryException {
-                        Node principalNode = findPrincipalNode(principalName, session);
-                        if (!principalNode.hasNode(resourceTypeName)) {
-                            log.debug("resource type {} is not set for principal {}", resourceTypeName, principalName);
-                            return null;
+                Session session = MgnlContext.getJCRSession(getRepositoryName());
+                Node principalNode = findPrincipalNode(principalName, session);
+                if (!principalNode.hasNode(resourceTypeName)) {
+                    throw new PrincipalNotFoundException("Principal " + principalName + " of type " + resourceTypeName + " was not found.");
+                }
+                Node node = principalNode.getNode(resourceTypeName);
+                for (PropertyIterator iter = node.getProperties(); iter.hasNext();) {
+                    Property nodeData = iter.nextProperty();
+                    // check for the existence of this ID
+                    try {
+                        if (nodeData.getString().equals(nodeID)) {
+                            nodeData.remove();
+                            session.save();
+                            // do not break here ... if resource was ever added multiple times remove all occurrences
                         }
-                        Node node = principalNode.getNode(resourceTypeName);
-                        for (PropertyIterator iter = node.getProperties(); iter.hasNext();) {
-                            Property nodeData = iter.nextProperty();
-                            // check for the existence of this ID
-                            try {
-                                if (nodeData.getString().equals(nodeID)) {
-                                    nodeData.remove();
-                                    // do not break here ... if resource was ever added multiple times remove all occurrences
-                                }
-                            } catch (IllegalArgumentException e) {
-                                log.debug("{} has invalid value", nodeData.getPath());
-                            }
-                        }
-                        return null;
-                    }});
+                    } catch (IllegalArgumentException e) {
+                        log.debug("{} has invalid value", nodeData.getPath());
+                    } catch (ValueFormatException e) {
+                        log.debug("{} has invalid value", nodeData.getPath());
+                    }
+                }
             }
         }
         catch (RepositoryException e) {

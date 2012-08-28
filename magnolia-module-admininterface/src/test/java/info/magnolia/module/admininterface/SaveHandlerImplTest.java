@@ -88,7 +88,7 @@ public class SaveHandlerImplTest {
 
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager("data", getClass().getResourceAsStream("sample-data-repo.properties"));
-        MockUtil.createAndSetHierarchyManager("dms");
+        MockUtil.createAndSetHierarchyManager("dms", getClass().getResourceAsStream("sample-dms-repo.properties"));
         MockWebContext webCtx = (MockWebContext) MockUtil.getMockContext();
         webCtx.setContextPath("/magnoliaAuthor");
 
@@ -118,7 +118,40 @@ public class SaveHandlerImplTest {
         assertEquals("test1", fileTest1.getNodeData("document").getAttribute(FileProperties.PROPERTY_FILENAME));
         assertEquals("test2", fileTest2.getNodeData("document").getAttribute(FileProperties.PROPERTY_FILENAME));
 
-        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"${link:{uuid:{"+ fileTest1.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file},nodeData:{document},extension:{jpg}}}\" alt=\"\" /><img src=\"/dms/demo-project/img/logos/magnolia-logo.png\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"${link:{uuid:{" + fileTest2.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file0},nodeData:{document},extension:{jpg}}}\" alt=\"\" /></p>";
+        final String expectedValue = "<p><img width=\"300\" height=\"100\" src=\"${link:{uuid:{"+ fileTest1.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file},nodeData:{document},extension:{jpg}}}\" alt=\"\" /><img src=\"${link:{uuid:{a1918662-8cbe-4346-ac5a-1b24a9950e2b},repository:{dms},handle:{/demo-project/img/logos/magnolia-logo},nodeData:{},extension:{png}}}\" alt=\"\" /><img width=\"280\" height=\"70\" src=\"${link:{uuid:{" + fileTest2.getUUID() + "},repository:{data},handle:{/contactA/richedit_files/file0},nodeData:{document},extension:{jpg}}}\" alt=\"\" /></p>";
+
+        assertEquals(expectedValue, updatedValue);
+    }
+
+    /**
+     * Test for update links with special characters returned by rich editor.
+     */
+    @Test
+    public void testUpdateLinkWithSpecialCharacters() throws LoginException, RepositoryException, IOException {
+        // GIVEN
+        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
+        uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/dms", "dms", ""));
+        ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
+
+        MockUtil.initMockContext();
+        MockUtil.createAndSetHierarchyManager("dms");
+        MockUtil.createAndSetHierarchyManager("website");
+        MockWebContext webCtx = (MockWebContext) MockUtil.getMockContext();
+        webCtx.setContextPath("/magnoliaAuthor");
+
+        SaveHandlerImpl save = new SaveHandlerImpl();
+
+        Content node = MgnlContext.getHierarchyManager("website").getRoot().createContent("demo").createContent("content");
+        final String uuid = MgnlContext.getJCRSession("dms").getRootNode().addNode("testöäüćř").addNode("magnolia-logo").getIdentifier();
+
+        final String value = "<p><img src=\"/magnoliaAuthor/dms/test&ouml;&auml;&uuml;ćř/magnolia-logo.png\" alt=\"\" /></p>";
+
+        // WHEN
+        final String updatedValue = save.updateLinks(node, "richedit", value);
+
+        //THEN
+        final String expectedValue = "<p><img src=\"${link:{uuid:{"+ uuid +"},repository:{dms},handle:{/testöäüćř/magnolia-logo},nodeData:{},extension:{png}}}\" alt=\"\" /></p>";
 
         assertEquals(expectedValue, updatedValue);
     }

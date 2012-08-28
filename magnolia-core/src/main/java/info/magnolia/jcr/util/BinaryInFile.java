@@ -45,7 +45,7 @@ import javax.jcr.RepositoryException;
 /**
  * Represents binary data stored in a file on the file system.
  *
- * @version $Id$
+ * @deprecated since 5.0 use {@link javax.jcr.Session#getValueFactory()} and then {@link javax.jcr.ValueFactory#createBinary(java.io.InputStream)} instead.
  */
 public class BinaryInFile implements Binary {
 
