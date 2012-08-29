@@ -36,8 +36,9 @@ package info.magnolia.cms.security;
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.io.Serializable;
@@ -199,17 +200,15 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
                 public Collection<String> doExec(Session session) throws RepositoryException {
                     Node groupsOrRoles = session.getNode(getPath()).getNode(nodeName);
                     List<String> list = new ArrayList<String>();
-                    for (PropertyIterator props = groupsOrRoles.getProperties(); props.hasNext();) {
+                    for (PropertyIterator props = new FilteringPropertyIterator(groupsOrRoles.getProperties(), new JCRPropertyHidingPredicate()); props.hasNext();) {
                         // check for the existence of this ID
                         Property property = props.nextProperty();
-                        if(!property.getName().startsWith(MgnlNodeType.JCR_PREFIX)){
-                            try {
-                                list.add(property.getString());
-                            } catch (ItemNotFoundException e) {
-                                log.debug("Role [{}] does not exist in the ROLES repository", name);
-                            } catch (IllegalArgumentException e) {
-                                log.debug("{} has invalid value", property.getPath());
-                            }
+                        try {
+                            list.add(property.getString());
+                        } catch (ItemNotFoundException e) {
+                            log.debug("Role [{}] does not exist in the ROLES repository", name);
+                        } catch (IllegalArgumentException e) {
+                            log.debug("{} has invalid value", property.getPath());
                         }
                     }
                     return list;
