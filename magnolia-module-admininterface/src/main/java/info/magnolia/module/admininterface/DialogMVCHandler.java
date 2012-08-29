@@ -152,17 +152,19 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         super(name, request, response);
 
         form = MgnlContext.getPostedForm();
-        params = new RequestFormUtil(request, form);
+        if(form != null || request != null){
+            params = new RequestFormUtil(request, form);
 
-        path = params.getParameter("mgnlPath"); //$NON-NLS-1$
-        nodeCollectionName = params.getParameter("mgnlNodeCollection"); //$NON-NLS-1$
-        nodeName = params.getParameter("mgnlNode"); //$NON-NLS-1$
-        richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
-        richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
-        repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
-        locale = params.getParameter("mgnlLocale"); //$NON-NLS-1$
-        if (StringUtils.isNotEmpty(repository)) {
-            hm = MgnlContext.getHierarchyManager(repository);
+            path = params.getParameter("mgnlPath"); //$NON-NLS-1$
+            nodeCollectionName = params.getParameter("mgnlNodeCollection"); //$NON-NLS-1$
+            nodeName = params.getParameter("mgnlNode"); //$NON-NLS-1$
+            richE = params.getParameter("mgnlRichE"); //$NON-NLS-1$
+            richEPaste = params.getParameter("mgnlRichEPaste"); //$NON-NLS-1$
+            repository = params.getParameter("mgnlRepository", getRepository()); //$NON-NLS-1$
+            locale = params.getParameter("mgnlLocale"); //$NON-NLS-1$
+            if (StringUtils.isNotEmpty(repository)) {
+                hm = MgnlContext.getHierarchyManager(repository);
+            }
         }
         msgs = MessagesManager.getMessages();
         // proxied. no need to refresh instance every time.
