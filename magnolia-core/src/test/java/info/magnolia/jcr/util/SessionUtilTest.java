@@ -46,12 +46,29 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @version $Id$
  */
 public class SessionUtilTest {
+
+    private final String WEBSITE = "website";
+
+    @Before
+    public void setUp() throws RepositoryException{
+        MockUtil.initMockContext();
+        MockSession session = new MockSession(WEBSITE);
+        MockUtil.setSessionAndHierarchyManager(session);
+    }
+
+    @After
+    public void tearDown() {
+        MgnlContext.setInstance(null);
+    }
+
     @Test
     public void testHasSameUnderlyingSessionWithTwoWrappersOnSameSession() {
         // GIVEN
@@ -96,175 +113,95 @@ public class SessionUtilTest {
 
     @Test
     public void testGetNode() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String path = addedNode.getPath();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNode(repository, path);
+        // WHEN
+        Node returnedNode = SessionUtil.getNode(WEBSITE, addedNode.getPath());
 
-            // THEN
-            assertEquals(addedNode, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(addedNode, returnedNode);
     }
 
     @Test
     public void testGetNodeNoSessionPassed() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String path = addedNode.getPath();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNode(null, path);
+        // WHEN
+        Node returnedNode = SessionUtil.getNode(null, addedNode.getPath());
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 
     @Test
     public void testGetNodeBadPath() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String path = addedNode.getPath();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNode(repository, path + 1);
+        // WHEN
+        Node returnedNode = SessionUtil.getNode(WEBSITE, addedNode.getPath() + 1);
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 
     public void testGetNodeBadSession() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String path = addedNode.getPath();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNode("dms", path);
+        // WHEN
+        Node returnedNode = SessionUtil.getNode("dms", addedNode.getPath());
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 
     @Test
     public void testGetNodeByIdentifier() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String id = addedNode.getIdentifier();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id);
+        // WHEN
+        Node returnedNode = SessionUtil.getNodeByIdentifier(WEBSITE, addedNode.getIdentifier());
 
-            // THEN
-            assertEquals(addedNode, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(addedNode, returnedNode);
     }
 
     @Test
     public void testGetNodeByIdentifierNoSessionPassed() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String id = addedNode.getIdentifier();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNodeByIdentifier(null, id);
+        // WHEN
+        Node returnedNode = SessionUtil.getNodeByIdentifier(null, addedNode.getIdentifier());
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 
     @Test
     public void testGetNodeByIdentifierBadId() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String id = addedNode.getIdentifier();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id + 1);
+        // WHEN
+        Node returnedNode = SessionUtil.getNodeByIdentifier(WEBSITE, addedNode.getIdentifier() + 1);
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 
     public void testGetNodeByIdentifierBadSession() throws RepositoryException {
-        try {
-            // GIVEN
-            MockUtil.initMockContext();
-            String repository = "website";
-            MockSession session = new MockSession(repository);
-            MockUtil.setSessionAndHierarchyManager(session);
-            Node rootNode = session.getRootNode();
-            Node addedNode = rootNode.addNode("1");
-            String id = addedNode.getIdentifier();
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
 
-            // WHEN
-            Node returnedNode = SessionUtil.getNodeByIdentifier(repository, id);
+        // WHEN
+        Node returnedNode = SessionUtil.getNodeByIdentifier(WEBSITE, addedNode.getIdentifier());
 
-            // THEN
-            assertEquals(null, returnedNode);
-        } finally {
-            MgnlContext.setInstance(null);
-        }
+        // THEN
+        assertEquals(null, returnedNode);
     }
 }

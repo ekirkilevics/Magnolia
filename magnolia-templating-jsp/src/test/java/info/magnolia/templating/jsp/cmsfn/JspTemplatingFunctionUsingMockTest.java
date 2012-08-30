@@ -35,31 +35,26 @@ package info.magnolia.templating.jsp.cmsfn;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.importexport.BootstrapUtil;
-import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.link.LinkUtil;
 import info.magnolia.templating.functions.TemplatingFunctions;
 import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.RepositoryTestCase;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.inject.Provider;
-import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class JspTemplatingFunctionTest extends RepositoryTestCase {
+public class JspTemplatingFunctionUsingMockTest {
 
-    @Override
+    private final String WEBSITE = "website";
+
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
+    public void setUp() throws RepositoryException{
         Provider<AggregationState> aggregationProvider = new Provider<AggregationState>() {
             @Override
             public AggregationState get() {
@@ -69,33 +64,32 @@ public class JspTemplatingFunctionTest extends RepositoryTestCase {
 
         TemplatingFunctions templatingFunctions = new TemplatingFunctions(aggregationProvider);
         ComponentsTestUtil.setInstance(TemplatingFunctions.class, templatingFunctions);
-        ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+        
+        MockUtil.initMockContext();
+        MockSession session = new MockSession(WEBSITE);
+        MockUtil.setSessionAndHierarchyManager(session);
+    }
+
+    @After
+    public void tearDown() {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
     }
 
     @Test
-    public void testLink() throws Exception {
+    public void testGetContentByIdentifier() throws RepositoryException{
         // GIVEN
-        BootstrapUtil.bootstrap(new String[] { "/website.01.xml" }, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String id = addedNode.getIdentifier();
 
-        Node test = MgnlContext.getJCRSession("website").getRootNode().getNode("01");
-        ContentMap contentMap = new ContentMap(test);
-        // THEN
+        //THEN
 
-        // the old way - still works, but is not easily used in templates and not exposed as function
-        String link3 = LinkUtil.createLink(ContentUtil.asContent(test).getNodeData("image"));
-        assertEquals("/01/image/Cents1-1.jpg", link3);
+        //get content by identifier when repository was provided
+        Node returnedNode1 = JspTemplatingFunction.contentByIdentifier(id, WEBSITE);
+        assertEquals(addedNode, returnedNode1);
 
-        // something once can do if (s)he knows about repo structure
-        String link = JspTemplatingFunction.linkForProperty(((ContentMap) contentMap.get("image")).getJCRNode().getProperty("jcr:data"));
-        assertEquals("/01/image/Cents1-1.jpg", link);
-
-        // old style using ${content.image} should still work (imho)
-        // this was partially working in 4.5.0-4.5.2 by generating wrong link and servlet being lenient enough to deliver right binary
-        String link1 = JspTemplatingFunction.link((ContentMap) contentMap.get("image"));
-        assertEquals("/01/image/Cents1-1.jpg", link1);
-
-        // again should work, but doesn't
-        String link2 = JspTemplatingFunction.linkForWorkspace(test.getSession().getWorkspace().getName(), test.getNode("image").getIdentifier());
-        assertEquals("/01/image/Cents1-1.jpg", link2);
+        //get content by identifier when repository was empty -> will taken the default (website)
+        Node returnedNode2 = JspTemplatingFunction.contentByIdentifier(id, "");
+        assertEquals(addedNode, returnedNode2);
     }
 }
