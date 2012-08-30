@@ -136,7 +136,7 @@ for Java Content Repositories (JCR).
     <connection>scm:git:http://git.magnolia-cms.com/magnolia_main</connection>
     <developerConnection>scm:git:https://git.magnolia-cms.com/magnolia_main</developerConnection>
     <url>http://git.magnolia-cms.com/gitweb/?p=magnolia_main.git</url>
-    <tag>magnolia-5.0-prev1-rc1</tag>
+    <tag>HEAD</tag>
   </scm>
   <build>
     <resources>
