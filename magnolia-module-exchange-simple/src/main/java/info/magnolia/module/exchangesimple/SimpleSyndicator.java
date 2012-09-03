@@ -113,7 +113,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     }
 
     private List<Exception> executeExchangeTask(ExchangeTask runnable) throws ExchangeException {
-        Collection<Subscriber> allSubscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Collection<Subscriber> allSubscribers = getSubscribers();
         Iterator<Subscriber> subscriberIterator = allSubscribers.iterator();
         final Sync done = new CountDown(allSubscribers.size());
         final List<Exception> errors = new ArrayList<Exception>();
@@ -203,4 +203,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         return null;
     }
 
+    protected Collection<Subscriber> getSubscribers() {
+        return ActivationManagerFactory.getActivationManager().getSubscribers();
+    }
 }

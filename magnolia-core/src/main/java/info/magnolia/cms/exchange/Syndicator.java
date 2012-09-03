@@ -127,5 +127,4 @@ public interface Syndicator {
      */
     public void deactivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException;
 
-
 }
