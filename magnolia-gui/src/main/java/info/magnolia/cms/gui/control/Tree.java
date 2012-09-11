@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,6 +36,7 @@ package info.magnolia.cms.gui.control;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.MetaDataUtil;
@@ -83,6 +84,8 @@ public class Tree extends ControlImpl {
     public static final String DEFAULT_ICON_CONTENTNODE = DEFAULT_ICON;
 
     public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
+    
+    public static final String DEFAULT_ICON_DELETED = ICONDOCROOT + "document_deleted.gif";
 
     /**
      * @deprecated since 4.4, use ItemType.MGNL_NODE_DATA instead
@@ -187,9 +190,10 @@ public class Tree extends ControlImpl {
         this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
 
         // set default icons
-        this.setIcon(ItemType.CONTENT.getSystemName(), DEFAULT_ICON_CONTENT);
-        this.setIcon(ItemType.CONTENTNODE.getSystemName(), DEFAULT_ICON_CONTENTNODE);
-        this.setIcon(ITEM_TYPE_NODEDATA, DEFAULT_ICON_NODEDATA);
+        this.addIcon(MgnlNodeType.NT_CONTENT, DEFAULT_ICON_CONTENT);
+        this.addIcon(MgnlNodeType.NT_CONTENTNODE, DEFAULT_ICON_CONTENTNODE);
+        this.addIcon(MgnlNodeType.MGNL_NODE_DATA, DEFAULT_ICON_NODEDATA);
+        this.addIcon(MgnlNodeType.MIX_DELETED, DEFAULT_ICON_DELETED);
     }
 
     /**
