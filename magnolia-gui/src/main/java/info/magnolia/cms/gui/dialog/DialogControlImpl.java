@@ -47,6 +47,9 @@ import info.magnolia.cms.util.RequestFormUtil;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -442,7 +445,15 @@ public abstract class DialogControlImpl implements DialogControl {
                 if(node.isMultiValue() == NodeData.MULTIVALUE_TRUE) {
                     values = NodeDataUtil.getValuesStringList(node.getValues());
                 } else {
-                    Iterator it = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().iterator();
+                    Collection<NodeData> nodeDataCollection = this.getStorageNode().getContent(this.getName()).getNodeDataCollection();
+                    List<NodeData> nodeDatas = new ArrayList<NodeData>(nodeDataCollection);
+                    Collections.sort(nodeDatas, new Comparator<NodeData> () {
+                        @Override
+                        public int compare(NodeData o1, NodeData o2) {
+                          return o1.getName().compareTo(o2.getName());
+                        }            
+                    });
+                    Iterator<NodeData> it = nodeDatas.iterator();
                     while (it.hasNext()) {
                         NodeData data = (NodeData) it.next();
                         values.add(data.getString());
