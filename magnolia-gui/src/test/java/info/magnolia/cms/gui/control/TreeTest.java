@@ -46,29 +46,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TreeIconTest {
-    
-    public static final String ICONDOCROOT = "/.resources/icons/16/"; //$NON-NLS-1$
-
-    public static final String DEFAULT_ICON = ICONDOCROOT + "cubes.gif";
-
-    public static final String DEFAULT_ICON_CONTENT = ICONDOCROOT + "document_plain_earth.gif";
-
-    public static final String DEFAULT_ICON_CONTENTNODE = DEFAULT_ICON;
-    
-    public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
-    
-    public static final String DEFAULT_ICON_DELETED = ICONDOCROOT + "document_deleted.gif";
-    
-    private Tree testTree;
+public class TreeTest {
     
     @Before
     public void setUp() throws RepositoryException {
         MockUtil.initMockContext();
         MockSession session = new MockSession("website");
-        MockUtil.setSessionAndHierarchyManager(session);
-        
-        testTree = new Tree("testTree", "website");
+        MockUtil.setSessionAndHierarchyManager(session); 
     }
 
     @After
@@ -77,15 +61,19 @@ public class TreeIconTest {
     }
 
     @Test
-    public void testDeletedIconExistence() {      
+    public void testDeletedIconExistence() {
+        Tree testTree = new Tree("testTree", "website");
+        
         assertNotNull(testTree.getIcon(MgnlNodeType.MIX_DELETED));
     }
     
     @Test
     public void testIconPaths() {
-        assertEquals(testTree.getIcon(MgnlNodeType.NT_CONTENT), DEFAULT_ICON_CONTENT);
-        assertEquals(testTree.getIcon(MgnlNodeType.NT_CONTENTNODE), DEFAULT_ICON_CONTENTNODE);
-        assertEquals(testTree.getIcon(MgnlNodeType.MGNL_NODE_DATA), DEFAULT_ICON_NODEDATA);
-        assertEquals(testTree.getIcon(MgnlNodeType.MIX_DELETED), DEFAULT_ICON_DELETED);
+        Tree testTree = new Tree("testTree", "website");
+        
+        assertEquals(testTree.getIcon(MgnlNodeType.NT_CONTENT), Tree.DEFAULT_ICON_CONTENT);
+        assertEquals(testTree.getIcon(MgnlNodeType.NT_CONTENTNODE), Tree.DEFAULT_ICON_CONTENTNODE);
+        assertEquals(testTree.getIcon(MgnlNodeType.MGNL_NODE_DATA), Tree.DEFAULT_ICON_NODEDATA);
+        assertEquals(testTree.getIcon(MgnlNodeType.MIX_DELETED), Tree.DEFAULT_ICON_DELETED);
     }
 }
