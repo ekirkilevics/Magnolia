@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -139,8 +139,15 @@ public class MagnoliaServletContextListener implements ServletContextListener {
 
             // Expose server name as a system property, so it can be used in log4j configurations
             // rootPath and webapp are not exposed since there can be different webapps running in the same jvm
-            System.setProperty("server", platform.getComponent(MagnoliaInitPaths.class).getServerName());
-
+            
+            String serverName = platform.getComponent(MagnoliaInitPaths.class).getServerName();
+            if (serverName == null) {
+                log.warn("Failed to obtain server name, please check your configuration. Using 'default' as server name instead.");
+                serverName = "default";
+            }
+            
+            System.setProperty("server", serverName);
+            
             // Load module definitions
             moduleManager = platform.getComponent(ModuleManager.class);
             moduleManager.loadDefinitions();
