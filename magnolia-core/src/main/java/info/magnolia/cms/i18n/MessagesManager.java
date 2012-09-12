@@ -55,7 +55,7 @@ public abstract class MessagesManager {
     /**
      * Use this basename if no other is provided.
      */
-    public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages";
+    public static final String DEFAULT_BASENAME = "info.magnolia.ui.admincentral.messages";
 
     /**
      * The node name where the configuration for i18n is stored.
