@@ -109,8 +109,8 @@ public class ResourceCollector {
      * 
      * @throws Exception
      */
-    protected ActivationContent collect(Content node, List<String> orderBefore, String parent, String workspaceName, String repositoryName, Rule contentFilterRule) throws Exception {
-        Content.ContentFilter contentFilter = new RuleBasedContentFilter(contentFilterRule);
+    public ActivationContent collect(Content node, List<String> orderBefore, String parent, String workspaceName, String repositoryName, Rule contentFilterRule) throws Exception {
+        Content.ContentFilter contentFilter = getContentFilter(contentFilterRule);
 
         // make sure resource file is unique
         File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
@@ -133,8 +133,8 @@ public class ResourceCollector {
         addOrderingInfo(root, orderBefore);
 
         this.addResources(root, node.getWorkspace().getSession(), node, contentFilter, activationContent);
-        XMLOutputter outputter = new XMLOutputter();        
-        
+        XMLOutputter outputter = new XMLOutputter();
+
         ByteArrayOutputStream md5 = new ByteArrayOutputStream();
         outputter.output(document, new TeeOutputStream(new FileOutputStream(resourceFile), md5));
         // add resource file to the list
@@ -146,6 +146,10 @@ public class ResourceCollector {
         activationContent.addProperty(ItemType.DELETED_NODE_MIXIN, "" + node.hasMixin(ItemType.DELETED_NODE_MIXIN));
 
         return activationContent;
+    }
+
+    protected Content.ContentFilter getContentFilter(Rule contentFilterRule) {
+        return new RuleBasedContentFilter(contentFilterRule);
     }
 
     /**
@@ -208,9 +212,9 @@ public class ResourceCollector {
         element.setAttribute(RESOURCE_MAPPING_NAME_ATTRIBUTE, content.getName());
         element.setAttribute(RESOURCE_MAPPING_UUID_ATTRIBUTE, uuid);
         element.setAttribute(RESOURCE_MAPPING_ID_ATTRIBUTE, file.getName());
-        
+
         element.setAttribute(RESOURCE_MAPPING_MD_ATTRIBUTE, SecurityUtil.getMD5Hex(md5.toByteArray()));
-        
+
         resourceElement.addContent(element);
         // add this file element as resource in activation content
         activationContent.addFile(file.getName(), file);
