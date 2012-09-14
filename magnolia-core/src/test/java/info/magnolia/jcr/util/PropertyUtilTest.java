@@ -51,7 +51,7 @@ import static org.junit.Assert.*;
 
 
 /**
- * @version $Id$
+ * Tests for PropertyUtil.
  */
 public class PropertyUtilTest {
 
@@ -394,34 +394,33 @@ public class PropertyUtilTest {
         // THEN
         assertEquals(defaultValue, res);
     }
+
     @Test
-    public void testGetProperty() throws RepositoryException {
+    public void testGetPropertyOrNull() throws RepositoryException {
         // GIVEN
-        Property res = null;
-        String propertyValue = "value";
-        String propertyName = "myProperty";
+        final String propertyValue = "value";
+        final String propertyName = "myProperty";
         root.setProperty(propertyName, propertyValue);
 
         // WHEN
-        res = PropertyUtil.getProperty(root, "myProperty");
+        final Property res = PropertyUtil.getPropertyOrNull(root, "myProperty");
 
         // THEN
-        assertEquals("Props Name should be "+propertyName,propertyName, res.getName());
-        assertEquals("Props Value should be "+propertyValue,propertyValue, res.getString());
+        assertEquals("Props Name should be " + propertyName, propertyName, res.getName());
+        assertEquals("Props Value should be " + propertyValue, propertyValue, res.getString());
     }
     @Test
-    public void testGetPropertyPathNotFoundException() throws RepositoryException {
+    public void testGetPropertyOrNullPathNotFoundException() throws RepositoryException {
         // GIVEN
-        Property res = null;
-        String propertyValue = "value";
-        String propertyName = "myProperty";
+        final String propertyValue = "value";
+        final String propertyName = "myProperty";
         root.setProperty(propertyName, propertyValue);
 
         // WHEN
-        res = PropertyUtil.getProperty(root, "myProperty"+2);
+        final Property res = PropertyUtil.getPropertyOrNull(root, "myProperty"+2);
 
         // THEN
-        assertEquals("Should be Null  ",null,res);
+        assertEquals("Should be Null  ", null, res);
     }
 
     @Test
@@ -503,6 +502,5 @@ public class PropertyUtilTest {
         // THEN
         assertEquals(value, resr);
     }
-
 
 }

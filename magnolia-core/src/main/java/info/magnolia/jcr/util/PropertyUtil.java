@@ -51,7 +51,6 @@ import java.util.TimeZone;
 
 import javax.jcr.Binary;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -67,8 +66,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Property-related utility methods.
- *
- * @version $Id$
  */
 public class PropertyUtil {
 
@@ -389,20 +386,23 @@ public class PropertyUtil {
     }
 
     /**
-     * Return the Property relative to the Node.
-     * Return null in case of Exception.
+     * Return the Property relative to the Node or null if it's not existing or in case of any RepositoryException.
      */
-    public static Property getProperty(Node node, String relativePath) {
+    public static Property getPropertyOrNull(Node node, String relativePath) {
         try {
-            return node.getProperty(relativePath);
-        }
-        catch (PathNotFoundException e) {
-            log.error("Property Access Exception ",e);
+            return node.hasProperty(relativePath) ? node.getProperty(relativePath) : null;
         }
         catch (RepositoryException e) {
-            log.error("Property Access Exception ",e);
+            log.debug("Could not retrieve property " + relativePath, e);
         }
         return null;
+    }
+
+    /**
+     * @deprecated since 4.5 - use getPropertyOrNull instead
+     */
+    public static Property getProperty(Node node, String relativePath) {
+        return getPropertyOrNull(node, relativePath);
     }
 
     /**
