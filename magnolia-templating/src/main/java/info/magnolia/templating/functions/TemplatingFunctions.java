@@ -623,9 +623,9 @@ public class TemplatingFunctions {
             if(content.hasNode(MetaData.DEFAULT_META_NODE)){
                 Node node = content.getNode(MetaData.DEFAULT_META_NODE);
                 if(node.hasProperty(property)) {
-                    return PropertyUtil.getProperty(node, property).getString();
+                    return PropertyUtil.getPropertyOrNull(node, property).getString();
                 } else if(node.hasProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + property)) {
-                    return PropertyUtil.getProperty(node, RepositoryConstants.NAMESPACE_PREFIX + ":" + property).getString();
+                    return PropertyUtil.getPropertyOrNull(node, RepositoryConstants.NAMESPACE_PREFIX + ":" + property).getString();
                 }
             }
         } catch (RepositoryException e) {

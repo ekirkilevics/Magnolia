@@ -1091,10 +1091,10 @@ public class TemplatingFunctionsTest {
         MgnlContext.setInstance(context);
 
         // WHEN
-        String resultLink = functions.link(PropertyUtil.getProperty(topPage,name));
+        String resultLink = functions.link(PropertyUtil.getPropertyOrNull(topPage,name));
 
         // THEN
-        assertEquals(CONTEXT_PATH + topPage.getPath()+"/"+name, resultLink);
+        assertEquals(CONTEXT_PATH + topPage.getPath() + "/" + name, resultLink);
     }
 
     @Test
@@ -1109,10 +1109,10 @@ public class TemplatingFunctionsTest {
         MgnlContext.setInstance(context);
 
         // WHEN
-        String resultLink = functions.link(PropertyUtil.getProperty(childPage,name));
+        String resultLink = functions.link(PropertyUtil.getPropertyOrNull(childPage,name));
 
         // THEN
-        assertEquals(CONTEXT_PATH + childPage.getPath()+"/"+name, resultLink);
+        assertEquals(CONTEXT_PATH + childPage.getPath() + "/" + name, resultLink);
     }
 
     @Test

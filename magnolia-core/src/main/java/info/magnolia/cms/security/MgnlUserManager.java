@@ -138,7 +138,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 Node userNode;
                 try {
                     userNode = session.getNode(path);
-                    if(propertyValue == null && PropertyUtil.getProperty(userNode, propertyName) != null){
+                    if(propertyValue == null && PropertyUtil.getPropertyOrNull(userNode, propertyName) != null){
                         userNode.getProperty(propertyName).remove();
                     }else if(propertyValue != null){
                         userNode.setProperty(propertyName, propertyValue);

@@ -413,7 +413,7 @@ public class PropertyUtil {
      *
      */
     public static Object getPropertyValueObject(Node node, String relativePath) {
-        Property property = getProperty(node, relativePath);
+        final Property property = getPropertyOrNull(node, relativePath);
         if(property != null) {
             try {
                 //Handle Multivalue fields
