@@ -33,10 +33,9 @@
  */
 package info.magnolia.cms.security;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.core.ItemType;
 
 import javax.jcr.Node;
@@ -48,12 +47,11 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import org.easymock.IMocksControl;
-import org.easymock.classextension.EasyMock;
+import info.magnolia.cms.core.MgnlNodeType;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests for MgnlUserManager.
  */
 public class MgnlUserManagerTest {
 
@@ -104,62 +102,68 @@ public class MgnlUserManagerTest {
         }
     }
 
+
     @Test
     public void testFindPrincipalNode() throws RepositoryException {
-        IMocksControl control = EasyMock.createControl();
-        Session session = control.createMock(Session.class);
-        Workspace workspace = control.createMock(Workspace.class);
-        QueryManager qm = control.createMock(QueryManager.class);
-        Query query = control.createMock(Query.class);
-        QueryResult result = control.createMock(QueryResult.class);
-        NodeIterator nodeIterator = control.createMock(NodeIterator.class);
-        Node node = control.createMock(Node.class);
+        // GIVEN
+        final Session session = mock(Session.class);
+        final Workspace workspace = mock(Workspace.class);
+        final QueryManager qm = mock(QueryManager.class);
+        final Query query = mock(Query.class);
+        final QueryResult result = mock(QueryResult.class);
+        final NodeIterator nodeIterator = mock(NodeIterator.class);
+        final Node node = mock(Node.class);
 
-        expect(session.getWorkspace()).andReturn(workspace);
-        expect(workspace.getQueryManager()).andReturn(qm);
-        expect(qm.createQuery("select * from [mgnl:user] where name() = 'test'", Query.JCR_SQL2)).andReturn(query);
-        expect(query.execute()).andReturn(result);
-        expect(result.getNodes()).andReturn(nodeIterator);
-        expect(nodeIterator.hasNext()).andReturn(true).times(1);
-        expect(nodeIterator.hasNext()).andReturn(false);
-        expect(nodeIterator.nextNode()).andReturn(node);
-        expect(node.isNodeType(ItemType.USER.getSystemName())).andReturn(true);
+        when(session.getWorkspace()).thenReturn(workspace);
+        when(workspace.getQueryManager()).thenReturn(qm);
+        when(qm.createQuery("select * from [mgnl:user] where name() = 'test'", Query.JCR_SQL2)).thenReturn(query);
+        when(query.execute()).thenReturn(result);
+        when(result.getNodes()).thenReturn(nodeIterator);
+        when(nodeIterator.hasNext()).thenReturn(true).thenReturn(false);
+        when(nodeIterator.nextNode()).thenReturn(node);
+        when(node.isNodeType(MgnlNodeType.USER)).thenReturn(true);
 
-        control.replay();
         MgnlUserManager um = new MgnlUserManager();
         // Realm "all"
         um.setRealmName(Realm.REALM_ALL.getName());
-        Node principal = um.findPrincipalNode("test", session);
+
+        // WHEN
+        final Node principal = um.findPrincipalNode("test", session);
+
+        // THEN
         assertNotNull(principal);
-        control.verify();
+    }
 
-        control = EasyMock.createControl();
-        session = control.createMock(Session.class);
-        workspace = control.createMock(Workspace.class);
-        qm = control.createMock(QueryManager.class);
-        query = control.createMock(Query.class);
-        result = control.createMock(QueryResult.class);
-        nodeIterator = control.createMock(NodeIterator.class);
-        node = control.createMock(Node.class);
+    @Test
+    public void testFindPrincipalNodeWithOtherRealm() throws RepositoryException {
+        // GIVEN
+        final Session session = mock(Session.class);
+        final Workspace workspace = mock(Workspace.class);
+        final QueryManager qm = mock(QueryManager.class);
+        final Query query = mock(Query.class);
+        final QueryResult result = mock(QueryResult.class);
+        final NodeIterator nodeIterator = mock(NodeIterator.class);
+        final Node node = mock(Node.class);
 
-        expect(session.getWorkspace()).andReturn(workspace);
-        expect(workspace.getQueryManager()).andReturn(qm);
-        expect(
+        when(session.getWorkspace()).thenReturn(workspace);
+        when(workspace.getQueryManager()).thenReturn(qm);
+        when(
                 qm.createQuery("select * from [mgnl:user] where name() = 'test' and isdescendantnode(['/otherRealm'])",
-                        Query.JCR_SQL2)).andReturn(query);
-        expect(query.execute()).andReturn(result);
-        expect(result.getNodes()).andReturn(nodeIterator);
-        expect(nodeIterator.hasNext()).andReturn(true).times(1);
-        expect(nodeIterator.hasNext()).andReturn(false);
-        expect(nodeIterator.nextNode()).andReturn(node);
-        expect(node.isNodeType(ItemType.USER.getSystemName())).andReturn(true);
+                        Query.JCR_SQL2)).thenReturn(query);
+        when(query.execute()).thenReturn(result);
+        when(result.getNodes()).thenReturn(nodeIterator);
+        when(nodeIterator.hasNext()).thenReturn(true).thenReturn(false);
+        when(nodeIterator.nextNode()).thenReturn(node);
+        when(node.isNodeType(ItemType.USER.getSystemName())).thenReturn(true);
 
-        control.replay();
-        um = new MgnlUserManager();
+        final MgnlUserManager um = new MgnlUserManager();
 
         um.setRealmName("otherRealm");
-        principal = um.findPrincipalNode("test", session);
+
+        // WHEN
+        final Node principal = um.findPrincipalNode("test", session);
+
+        // THEN
         assertNotNull(principal);
-        control.verify();
     }
 }
