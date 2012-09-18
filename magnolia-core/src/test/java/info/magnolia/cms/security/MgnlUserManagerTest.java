@@ -48,12 +48,28 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.objectfactory.Components;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockComponentProvider;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.MockValue;
+import org.junit.After;
 import org.junit.Test;
 
 /**
  * Tests for MgnlUserManager.
  */
 public class MgnlUserManagerTest {
+
+    @After
+    public void tearDown() {
+        ComponentsTestUtil.clear();
+        SystemProperty.clear();
+        MgnlContext.setInstance(null);
+    }
 
     @Test
     public void testUsernameIsValidatedUponCreation() {
@@ -165,5 +181,67 @@ public class MgnlUserManagerTest {
 
         // THEN
         assertNotNull(principal);
+    }
+
+    @Test
+    public void testSetProperty() throws Exception {
+        // GIVEN
+        final SystemContext ctx = mock(SystemContext.class);
+        final MgnlUser user = mock(MgnlUser.class);
+        final String path = "users";
+        when(user.getPath()).thenReturn(path);
+        final String propName = "prop";
+        final String propValue = "value";
+        final MgnlUserManager um = new MgnlUserManager();
+        Components.setComponentProvider(new MockComponentProvider());
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+
+        MgnlContext.setInstance(ctx);
+
+        when(ctx.getUser()).thenReturn(user);
+
+        final String workspace = "users";
+        final Session session = new MockSession(workspace);
+        final Node usersNode = session.getRootNode().addNode(path);
+        when(ctx.getJCRSession(workspace)).thenReturn(session);
+
+        MgnlContext.setInstance(ctx);
+
+        // WHEN
+        um.setProperty(user, propName, new MockValue(propValue));
+
+        // THEN
+        assertEquals(propValue, usersNode.getProperty(propName).getString());
+    }
+
+    @Test
+    public void testSetPropertyToNull() throws Exception {
+        // GIVEN
+        final SystemContext ctx = mock(SystemContext.class);
+        final MgnlUser user = mock(MgnlUser.class);
+        final String path = "users";
+        when(user.getPath()).thenReturn(path);
+        final String propName = "prop";
+        final MgnlUserManager um = new MgnlUserManager();
+        Components.setComponentProvider(new MockComponentProvider());
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+
+        MgnlContext.setInstance(ctx);
+
+        when(ctx.getUser()).thenReturn(user);
+
+        final String workspace = "users";
+        final Session session = new MockSession(workspace);
+        final Node usersNode = session.getRootNode().addNode(path);
+        usersNode.setProperty(propName, "someOldValue");
+        when(ctx.getJCRSession(workspace)).thenReturn(session);
+
+        MgnlContext.setInstance(ctx);
+
+        // WHEN
+        um.setProperty(user, propName, null);
+
+        // THEN
+        assertFalse(usersNode.hasProperty(propName));
     }
 }

@@ -81,7 +81,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manages the users stored in Magnolia itself.
- * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager extends RepositoryBackedSecurityManager implements UserManager {
 
@@ -138,13 +137,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 Node userNode;
                 try {
                     userNode = session.getNode(path);
-                    if(propertyValue == null && PropertyUtil.getPropertyOrNull(userNode, propertyName) != null){
-                        userNode.getProperty(propertyName).remove();
-                    }else if(propertyValue != null){
+                    // setting value to null would remove existing properties anyway, so no need to create a
+                    // not-yet-existing-one first and then set it to null.
+                    if(propertyValue != null || PropertyUtil.getPropertyOrNull(userNode, propertyName) != null){
                         userNode.setProperty(propertyName, propertyValue);
+                        session.save();
                     }
-                    session.save();
                 }
+
                 catch (RepositoryException e) {
                     session.refresh(false);
                     log.error("Property {} can't be changed. " + e.getMessage(), propertyName);
