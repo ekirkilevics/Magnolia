@@ -38,7 +38,7 @@ import java.util.Map;
 import javax.jcr.observation.Event;
 
 /**
- * @version $Id$
+ * Mock implementation for an {@link Event}.
  */
 public class MockEvent implements Event {
 

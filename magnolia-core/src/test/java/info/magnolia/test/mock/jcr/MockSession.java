@@ -57,7 +57,7 @@ import org.apache.jackrabbit.commons.AbstractSession;
 import org.xml.sax.ContentHandler;
 
 /**
- * @version $Id$
+ * Mock implementation for a {@link Session}.
  */
 public class MockSession extends AbstractSession {
 
