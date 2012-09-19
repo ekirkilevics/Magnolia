@@ -729,8 +729,7 @@ for Java Content Repositories (JCR).
     <!-- Templating -->
     <module>magnolia-rendering</module>
     <module>magnolia-templating</module>
-    <module>magnolia-templating-editor</module>
-	<module>magnolia-templating-jsp</module>
+    <module>magnolia-templating-jsp</module>
 
     <!-- Modules -->
     <module>magnolia-module-cache</module>
