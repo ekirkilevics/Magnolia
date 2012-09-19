@@ -59,6 +59,7 @@ import info.magnolia.test.mock.MockWebContext;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -142,8 +143,10 @@ public class SaveHandlerImplTest {
 
         SaveHandlerImpl save = new SaveHandlerImpl();
 
+        String escapedUtfString = "\u00F6\u00E4\u00FC";
+
         Content node = MgnlContext.getHierarchyManager("website").getRoot().createContent("demo").createContent("content");
-        final String uuid = MgnlContext.getJCRSession("dms").getRootNode().addNode("testöäüćř").addNode("magnolia-logo").getIdentifier();
+        final String uuid = MgnlContext.getJCRSession("dms").getRootNode().addNode("test" + escapedUtfString + "ćř").addNode("magnolia-logo").getIdentifier();
 
         final String value = "<p><img src=\"/magnoliaAuthor/dms/test&ouml;&auml;&uuml;ćř/magnolia-logo.png\" alt=\"\" /></p>";
 
@@ -151,7 +154,7 @@ public class SaveHandlerImplTest {
         final String updatedValue = save.updateLinks(node, "richedit", value);
 
         //THEN
-        final String expectedValue = "<p><img src=\"${link:{uuid:{"+ uuid +"},repository:{dms},handle:{/testöäüćř/magnolia-logo},nodeData:{},extension:{png}}}\" alt=\"\" /></p>";
+        final String expectedValue = "<p><img src=\"${link:{uuid:{"+ uuid +"},repository:{dms},handle:{/test"  + escapedUtfString + "ćř/magnolia-logo},nodeData:{},extension:{png}}}\" alt=\"\" /></p>";
 
         assertEquals(expectedValue, updatedValue);
     }
