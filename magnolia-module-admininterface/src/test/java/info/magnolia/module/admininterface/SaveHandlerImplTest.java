@@ -59,7 +59,6 @@ import info.magnolia.test.mock.MockWebContext;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
