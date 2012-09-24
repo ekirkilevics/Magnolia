@@ -149,10 +149,9 @@ public class ExtendingContentWrapper extends ContentWrapper {
     }
 
     private boolean isExists(String extendedNode, Content parent) throws RepositoryException {
-        if (extendedNode.startsWith("/") && getWrappedContent().getHierarchyManager().isExist(extendedNode)) {
-            return true;
+        if (extendedNode.startsWith("/")){
+            return getWrappedContent().getHierarchyManager().isExist(extendedNode);
         }
-
         return parent.hasContent(extendedNode);
     }
 
