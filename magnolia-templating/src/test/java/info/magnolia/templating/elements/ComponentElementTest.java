@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2010-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,7 +34,11 @@
 package info.magnolia.templating.elements;
 
 import static org.junit.Assert.assertEquals;
+import info.magnolia.rendering.engine.RenderException;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,6 +101,19 @@ public class ComponentElementTest extends AbstractElementTestCase {
     public void testPostRender() throws Exception {
         element.end(out);
         assertEquals("<!-- /cms:component -->\n", out.toString());
+    }
+
+    @Test
+    public void testRenderWithoutComment() throws IOException, RenderException {
+        // GIVEN
+        element.setContent(getComponentNode());
+        element.setRenderEditbar(false);
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertEquals(StringUtils.EMPTY, out.toString());
     }
 
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -76,6 +76,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     private final TemplateDefinitionAssignment templateDefinitionAssignment;
     private TemplateDefinition componentDefinition;
 
+    private boolean renderEditbar = true;
     private String dialog;
     private Boolean editable;
 
@@ -96,18 +97,7 @@ public class ComponentElement extends AbstractContentTemplatingElement {
         }
 
         if(isAdmin() && hasPermission(content)){
-            MarkupHelper helper = new MarkupHelper(out);
 
-            helper.openComment("cms:component");
-
-
-            helper.attribute(AreaDirective.CONTENT_ATTRIBUTE, getNodePath(content));
-
-            if(content instanceof InheritanceNodeWrapper) {
-                if (((InheritanceNodeWrapper) content).isInherited()) {
-                    helper.attribute("inherited", "true");
-                }
-            }
             try {
                 this.componentDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
             } catch (RegistrationException e) {
@@ -116,23 +106,37 @@ public class ComponentElement extends AbstractContentTemplatingElement {
 
             final Messages messages = MessagesManager.getMessages(componentDefinition.getI18nBasename());
 
-            this.editable = resolveEditable();
-            if (this.editable != null) {
-                helper.attribute("editable", String.valueOf(this.editable));
-            }
+            if (isRenderEditbar()) {
+                MarkupHelper helper = new MarkupHelper(out);
 
-            if(StringUtils.isEmpty(dialog)) {
-                dialog = resolveDialog();
-            }
-            helper.attribute("dialog", dialog);
+                helper.openComment("cms:component");
 
-            String label = StringUtils.defaultIfEmpty(componentDefinition.getTitle(),componentDefinition.getName());
-            helper.attribute("label", messages.getWithDefault(label, label));
+                helper.attribute(AreaDirective.CONTENT_ATTRIBUTE, getNodePath(content));
 
-            if(StringUtils.isNotEmpty(componentDefinition.getDescription())){
-                helper.attribute("description", componentDefinition.getDescription());
+                if(content instanceof InheritanceNodeWrapper) {
+                    if (((InheritanceNodeWrapper) content).isInherited()) {
+                        helper.attribute("inherited", "true");
+                    }
+                }
+
+                this.editable = resolveEditable();
+                if (this.editable != null) {
+                    helper.attribute("editable", String.valueOf(this.editable));
+                }
+
+                if(StringUtils.isEmpty(dialog)) {
+                    dialog = resolveDialog();
+                }
+                helper.attribute("dialog", dialog);
+
+                String label = StringUtils.defaultIfEmpty(componentDefinition.getTitle(),componentDefinition.getName());
+                helper.attribute("label", messages.getWithDefault(label, label));
+
+                if(StringUtils.isNotEmpty(componentDefinition.getDescription())){
+                    helper.attribute("description", componentDefinition.getDescription());
+                }
+                helper.append(" -->\n");
             }
-            helper.append(" -->\n");
         }
 
         // TODO not sure how to pass editable
@@ -171,7 +175,9 @@ public class ComponentElement extends AbstractContentTemplatingElement {
     @Override
     public void end(Appendable out) throws IOException, RenderException {
         if(isAdmin()){
-            new MarkupHelper(out).closeComment("cms:component");
+            if (renderEditbar) {
+                new MarkupHelper(out).closeComment("cms:component");
+            }
         }
     }
 
@@ -204,5 +210,13 @@ public class ComponentElement extends AbstractContentTemplatingElement {
 
     public Boolean getEditable() {
         return editable;
+    }
+
+    public boolean isRenderEditbar() {
+        return renderEditbar;
+    }
+
+    public void setRenderEditbar(boolean renderEditbar) {
+        this.renderEditbar = renderEditbar;
     }
 }

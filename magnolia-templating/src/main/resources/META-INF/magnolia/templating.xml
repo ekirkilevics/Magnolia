@@ -16,6 +16,10 @@
       <type>info.magnolia.templating.freemarker.Directives</type>
       <implementation>info.magnolia.templating.freemarker.Directives</implementation>
     </component>
+    <component>
+      <type>info.magnolia.templating.freemarker.ReadOnlyDirectives</type>
+      <implementation>info.magnolia.templating.freemarker.ReadOnlyDirectives</implementation>
+    </component>
 
   </components>
   <dependencies>
