@@ -227,9 +227,6 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
                             }
                         } catch (ItemNotFoundException e) {
                             log.debug("Role [{}] does not exist in the ROLES repository", name);
-                        } catch (RepositoryException e) {
-                            //log exception and continue iterate over the groups or roles
-                            log.debug(e.getMessage(), e);
                         }
                     }
                     return false;
