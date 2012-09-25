@@ -45,6 +45,7 @@ import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.tldgen.annotations.Function;
 
 
@@ -269,7 +270,7 @@ public class JspTemplatingFunction {
      */
     @Function
     public static  Node content(String path,String repository){
-        if( repository.isEmpty()) {
+        if(StringUtils.isBlank(repository)) {
             return getTemplatingFunctions().content(path);
         }
         return getTemplatingFunctions().content(repository, path);
@@ -282,7 +283,7 @@ public class JspTemplatingFunction {
      */
     @Function
     public static  Node contentByIdentifier(String id, String repository){
-        if( repository.isEmpty()) {
+        if(StringUtils.isBlank(repository)) {
             return getTemplatingFunctions().contentByIdentifier(id);
         }
         return getTemplatingFunctions().contentByIdentifier(repository, id);

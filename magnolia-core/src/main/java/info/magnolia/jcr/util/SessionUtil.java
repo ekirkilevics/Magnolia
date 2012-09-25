@@ -79,13 +79,7 @@ public class SessionUtil {
             if (session != null) {
                 res = session.getNode(path);
             }
-        } catch (LoginException e) {
-            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
-        } catch (PathNotFoundException e) {
-            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
         } catch (RepositoryException e) {
-            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
-        } catch (IllegalArgumentException e) {
             log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
         }
         return res;
@@ -107,13 +101,7 @@ public class SessionUtil {
             if (session != null) {
                 res = session.getNodeByIdentifier(id);
             }
-        } catch (LoginException e) {
-            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
-        } catch (PathNotFoundException e) {
-            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
         } catch (RepositoryException e) {
-            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
-        } catch (IllegalArgumentException e) {
             log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
         }
         return res;

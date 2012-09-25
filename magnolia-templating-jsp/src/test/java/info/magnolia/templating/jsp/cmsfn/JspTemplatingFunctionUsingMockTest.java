@@ -52,6 +52,7 @@ import org.junit.Test;
 public class JspTemplatingFunctionUsingMockTest {
 
     private final String WEBSITE = "website";
+    private final String DMS = "dms";
 
     @Before
     public void setUp() throws RepositoryException{
@@ -64,10 +65,10 @@ public class JspTemplatingFunctionUsingMockTest {
 
         TemplatingFunctions templatingFunctions = new TemplatingFunctions(aggregationProvider);
         ComponentsTestUtil.setInstance(TemplatingFunctions.class, templatingFunctions);
-        
+
         MockUtil.initMockContext();
-        MockSession session = new MockSession(WEBSITE);
-        MockUtil.setSessionAndHierarchyManager(session);
+        MockUtil.setSessionAndHierarchyManager(new MockSession(WEBSITE));
+        MockUtil.setSessionAndHierarchyManager(new MockSession(DMS));
     }
 
     @After
@@ -82,14 +83,101 @@ public class JspTemplatingFunctionUsingMockTest {
         Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
         String id = addedNode.getIdentifier();
 
-        //THEN
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.contentByIdentifier(id, WEBSITE);
 
-        //get content by identifier when repository was provided
-        Node returnedNode1 = JspTemplatingFunction.contentByIdentifier(id, WEBSITE);
-        assertEquals(addedNode, returnedNode1);
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
 
-        //get content by identifier when repository was empty -> will taken the default (website)
-        Node returnedNode2 = JspTemplatingFunction.contentByIdentifier(id, "");
-        assertEquals(addedNode, returnedNode2);
+    @Test
+    public void testGetContentByIdentifierFromAnotherThanDefaultRepo() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(DMS).getRootNode().addNode("1");
+        String id = addedNode.getIdentifier();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.contentByIdentifier(id, DMS);
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContentByIdentifierWhenRepositoryIsEmpty() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String id = addedNode.getIdentifier();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.contentByIdentifier(id, "");
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContentByIdentifierWhenRepositoryIsNull() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String id = addedNode.getIdentifier();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.contentByIdentifier(id, null);
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContent() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String path = addedNode.getPath();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.content(path, WEBSITE);
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContentFromAnotherThanDefaultRepo() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(DMS).getRootNode().addNode("1");
+        String path = addedNode.getPath();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.content(path, DMS);
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContentWhenRepositoryIsEmpty() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String path = addedNode.getPath();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.content(path, "");
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
+    }
+
+    @Test
+    public void testGetContentWhenRepositoryIsNull() throws RepositoryException{
+        // GIVEN
+        Node addedNode = MgnlContext.getJCRSession(WEBSITE).getRootNode().addNode("1");
+        String path = addedNode.getPath();
+
+        // WHEN
+        Node returnedNode = JspTemplatingFunction.content(path, null);
+
+        // THEN
+        assertEquals(addedNode, returnedNode);
     }
 }
