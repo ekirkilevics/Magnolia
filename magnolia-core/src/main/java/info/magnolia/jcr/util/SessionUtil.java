@@ -36,9 +36,7 @@ package info.magnolia.jcr.util;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.wrapper.DelegateSessionWrapper;
 
-import javax.jcr.LoginException;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
