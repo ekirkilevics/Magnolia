@@ -59,6 +59,7 @@ import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -68,6 +69,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -423,10 +425,19 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if (areaDefinition != null && areaDefinition.getAvailableComponents().size() > 0) {
             Iterator<ComponentAvailability> iterator = areaDefinition.getAvailableComponents().values().iterator();
             List<String> componentIds = new ArrayList<String>();
+            final Collection<String> userRoles = MgnlContext.getUser().getAllRoles();
             while (iterator.hasNext()) {
                 ComponentAvailability availableComponent = iterator.next();
                 if(availableComponent.isEnabled()) {
-                    componentIds.add(availableComponent.getId());
+                    // check roles
+                    final Collection<String> roles = availableComponent.getRoles();
+                    if (!roles.isEmpty()) {
+                        if (CollectionUtils.containsAny(userRoles, roles)) {
+                            componentIds.add(availableComponent.getId());
+                        }
+                    } else {
+                        componentIds.add(availableComponent.getId());
+                    }
                 }
             }
             return StringUtils.join(componentIds, ',');

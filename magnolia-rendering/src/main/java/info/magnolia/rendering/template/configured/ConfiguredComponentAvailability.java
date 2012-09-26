@@ -65,6 +65,10 @@ public class ConfiguredComponentAvailability implements ComponentAvailability {
         return this.roles;
     }
 
+    public void addRole(String role) {
+        this.roles.add(role);
+    }
+
     public void setRoles(Collection<String> roles) {
         this.roles = roles;
     }
