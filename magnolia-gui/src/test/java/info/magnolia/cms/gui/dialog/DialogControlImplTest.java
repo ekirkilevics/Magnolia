@@ -55,53 +55,55 @@ import org.junit.Test;
  * @version $Id$
  */
 public class DialogControlImplTest {
-    
+
     private HttpServletRequest request;
-    
+
     private HttpServletResponse response;
-    
+
     private Content configNode;
-    
+
     @Before
     public void setUp() {
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         configNode = mock(Content.class);
     }
-    
+
     @Test
     public void testSortMultiselectItemsInRightOrder() throws RepositoryException, IOException {
+        // GIVEN
         DialogMultiSelect select = new DialogMultiSelect();
         select.setConfig(DialogMultiSelect.CONFIG_SAVE_MODE, DialogMultiSelect.SAVE_MODE_LIST);
-        
+
         // insert unsorted properties
         String unsortedProp =
-            "/root/another/node.1=/categorization/Family\n" +           
+            "/root/another/node.1=/categorization/Family\n" +
             "/root/another/node.2=/categorization/Sports\n" +
             "/root/another/node.0=/categorization/Culture\n";
-        
+
         // sorted node data
         List<String> sorted = new ArrayList<String>();
         sorted.add("/categorization/Culture");
         sorted.add("/categorization/Family");
         sorted.add("/categorization/Sports");
-        
+
         // unsorted node data
         List<String> unsorted = new ArrayList<String>();
         unsorted.add("/categorization/Family");
         unsorted.add("/categorization/Sports");
         unsorted.add("/categorization/Culture");
-        
+
         HierarchyManager hm = MockUtil.createHierarchyManager(unsortedProp);
 
         when(configNode.getHandle()).thenReturn("/root");
         when(configNode.getName()).thenReturn("/another/node");
-        
+
         select.init(request, response, hm.getContent("/root"), configNode);
-        
-        // read sorted values
+
+        // WHEN
         List<String> nodeValues = select.readValues();
 
+        // THEN
         assertFalse(nodeValues.equals(unsorted));
         assertTrue(nodeValues.equals(sorted));
     }
