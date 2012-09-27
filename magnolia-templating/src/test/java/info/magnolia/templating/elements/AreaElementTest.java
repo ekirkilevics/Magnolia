@@ -37,11 +37,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.mockito.Mockito.*;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.ComponentAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredComponentAvailability;
 import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -188,6 +193,66 @@ public class AreaElementTest extends AbstractElementTestCase {
         assertThat(out.toString(),containsString("<!-- /cms:area -->"));
         assertEquals("Should get the RenderType value from RemplateDefinition ", getTemplateDefinition().getRenderType(), areaDefinition.getRenderType());
         assertEquals("Should get the I18N value from RemplateDefinition ", getTemplateDefinition().getI18nBasename(), areaDefinition.getI18nBasename());
+    }
+
+    @Test
+    public void testAvailableComponentsForEditor() throws IOException, RenderException {
+        // GIVEN
+        prepareAreaDefinition();
+        element.setName("stage");
+
+        // user role is editor
+        ArrayList<String> userRoles = new ArrayList<String>();
+        userRoles.add("editor");
+
+        when(MgnlContext.getUser().getAllRoles()).thenReturn(userRoles);
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertEquals("Components available to editor should be:", "component_2", element.getAvailableComponents());
+    }
+
+         @Test
+    public void testAvailableComponentsForSuperuser() throws IOException, RenderException {
+        // GIVEN
+        prepareAreaDefinition();
+        element.setName("stage");
+
+        // user role is superuser
+        ArrayList<String> userRoles = new ArrayList<String>();
+        userRoles.add("superuser");
+
+        when(MgnlContext.getUser().getAllRoles()).thenReturn(userRoles);
+
+        // WHEN
+        element.begin(out);
+
+        // THEN
+        assertEquals("Components available to superuser should be:", "component_2,component_1", element.getAvailableComponents());
+    }
+
+    private void prepareAreaDefinition() {
+        Map<String, ComponentAvailability> availableComponents = new HashMap<String, ComponentAvailability>();
+
+        // component available only to superuser
+        ConfiguredComponentAvailability firstComponentAvailability = new ConfiguredComponentAvailability();
+        firstComponentAvailability.addRole("superuser");
+        firstComponentAvailability.setEnabled(true);
+        firstComponentAvailability.setId("component_1");
+
+        // component available to superuser and editor
+        ConfiguredComponentAvailability secondComponentAvailability = new ConfiguredComponentAvailability();
+        secondComponentAvailability.addRole("superuser");
+        secondComponentAvailability.addRole("editor");
+        secondComponentAvailability.setEnabled(true);
+        secondComponentAvailability.setId("component_2");
+
+        availableComponents.put("component_1", firstComponentAvailability);
+        availableComponents.put("component_2", secondComponentAvailability);
+
+        areaDefinition.setAvailableComponents(availableComponents);
     }
 
 }
