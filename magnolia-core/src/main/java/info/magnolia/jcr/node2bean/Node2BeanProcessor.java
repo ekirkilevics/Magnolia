@@ -33,6 +33,9 @@
  */
 package info.magnolia.jcr.node2bean;
 
+/**
+ * Transforms nodes to beans or maps. The transformer is use to resolve classes or to instantiate beans.
+ */
 public interface Node2BeanProcessor {
 
 }

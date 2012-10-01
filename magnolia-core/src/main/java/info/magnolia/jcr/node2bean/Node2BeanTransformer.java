@@ -33,6 +33,9 @@
  */
 package info.magnolia.jcr.node2bean;
 
+/**
+ * Contract for transformation from node to java beans.
+ */
 public interface Node2BeanTransformer {
 
 }

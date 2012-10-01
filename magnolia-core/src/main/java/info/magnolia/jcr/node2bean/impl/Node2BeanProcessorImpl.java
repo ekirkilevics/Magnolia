@@ -35,6 +35,9 @@ package info.magnolia.jcr.node2bean.impl;
 
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 
+/**
+ * Contains the logic for traversing the hierarchy and do the calls to the transformer.
+ */
 public class Node2BeanProcessorImpl implements Node2BeanProcessor{
 
 }

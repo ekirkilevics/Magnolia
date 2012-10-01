@@ -35,6 +35,9 @@ package info.magnolia.jcr.node2bean.impl;
 
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 
+/**
+ * Concrete implementation using reflection and adder methods.
+ */
 public class Node2BeanTransformerImpl implements Node2BeanTransformer{
 
 }
