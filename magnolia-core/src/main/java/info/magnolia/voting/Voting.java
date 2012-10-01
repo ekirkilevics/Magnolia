@@ -46,8 +46,8 @@ import info.magnolia.voting.voters.OrVoting;
  */
 public interface Voting {
 
-    public static Voting AND = new AndVoting();
-    public static Voting OR = new OrVoting();
+    public static final Voting AND = new AndVoting();
+    public static final Voting OR = new OrVoting();
     public static Voting HIGHEST_LEVEL = new DefaultVoting();
 
     int vote(Voter[] voters, Object value);
