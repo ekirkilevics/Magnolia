@@ -289,7 +289,7 @@ public class ContentVersion extends DefaultContent {
         }
         Content content = base.getContent(name);
         // only return the node if it was excluded from the versioning, otherwise the node is new
-        if(!rule.isAllowed(content.getNodeTypeName())){
+        if(!rule.isAllowed(content.getJCRNode())){
             return content;
         }
         throw new PathNotFoundException(base.getHandle() + "/" + name);
@@ -306,7 +306,7 @@ public class ContentVersion extends DefaultContent {
         else if(base.hasContent(name)){
             Content content = base.getContent(name);
             // only return the node if it was excluded from the versioning, otherwise the node is new
-            if(!rule.isAllowed(content.getNodeTypeName())){
+            if(!rule.isAllowed(content.getJCRNode())){
                 return true;
             }
         }
@@ -396,7 +396,7 @@ public class ContentVersion extends DefaultContent {
         Collection<Content> transientChildren = ((AbstractContent)this.base).getChildren(filter, namePattern, orderCriteria);
         for (Content transientChild : transientChildren) {
             try {
-                if(!rule.isAllowed(transientChild.getNodeTypeName())){
+                if(!rule.isAllowed(transientChild.getJCRNode())){
                     result.add(transientChild);
                 }
             }
