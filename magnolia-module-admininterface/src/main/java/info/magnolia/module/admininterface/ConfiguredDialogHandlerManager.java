@@ -101,8 +101,8 @@ public class ConfiguredDialogHandlerManager extends ModuleConfigurationObserving
             for (Iterator<Content> iter = dialogNodes.iterator(); iter.hasNext(); ) {
                 Content dialogNode = new ExtendingContentWrapper(new SystemContentWrapper(iter.next()));
                 try {
-                    if (dialogNode.getItemType().equals(ItemType.CONTENT)) {
-                        log.debug("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
+                    if (dialogNode.getItemType().equals(ItemType.CONTENT) && dialogNode.hasNodeData("label")) {
+                        log.warn("Dialog definitions should be of type contentNode but [" + dialogNode.getHandle() + "] is of type content.");
                     }
                 } catch (RepositoryException e) {
                     log.error("Can't check for node type of the dialog node [" + dialogNode.getHandle() + "]: " + ExceptionUtils.getMessage(e), e);
