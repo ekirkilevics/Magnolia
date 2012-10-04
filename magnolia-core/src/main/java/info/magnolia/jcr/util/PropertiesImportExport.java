@@ -59,7 +59,7 @@ import org.apache.jackrabbit.util.ISO8601;
  * TODO : handle conflicts (already existing nodes, properties, what to do with existing properties if we don't create
  * new nodes, ...)
  *
- * TODO dlipp - export is not yet implemented
+ * TODO dlipp - export is not yet implemented (MAGNOLIA-4564)
  */
 public class PropertiesImportExport {
 
