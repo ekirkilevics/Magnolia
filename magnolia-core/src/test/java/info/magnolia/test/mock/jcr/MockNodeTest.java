@@ -465,8 +465,8 @@ public class MockNodeTest {
     }
 
     @Test
-    public void testGetNodesByPattern() throws RepositoryException {
-    	// GIVEN
+    public void testGetPropertiesByPattern() throws RepositoryException {
+        // GIVEN
         final MockNode node = new MockNode("test");
         node.setProperty("prop", "val");
 
