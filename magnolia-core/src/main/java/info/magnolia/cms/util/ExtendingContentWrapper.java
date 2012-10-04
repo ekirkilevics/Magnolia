@@ -67,6 +67,7 @@ import org.slf4j.LoggerFactory;
  * <li>nodes laying deeper in the hierarchy can extend an other node
  * </ul>
  *
+ * @deprecated since Magnolia 5.0 - use {@link info.magnolia.jcr.wrapper.ExtendingNodeWrapper} instead.
  * @version $Id$
  * @see InheritanceContentWrapper a class supporting content inheritance.
  */
