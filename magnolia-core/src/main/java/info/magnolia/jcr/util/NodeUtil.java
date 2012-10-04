@@ -56,6 +56,7 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
+import javax.jcr.nodetype.NodeTypeManager;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
@@ -167,9 +168,9 @@ public class NodeUtil {
         if (MgnlNodeType.NT_FROZENNODE.equals(actualType) && !(MgnlNodeType.NT_FROZENNODE.equals(type))) {
             final Property p = node.getProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE);
             final String s = p.getString();
-            return s.equalsIgnoreCase(type);
-
-            // FIXME this method does not consider mixins when the node is frozen
+            NodeTypeManager ntManager = node.getSession().getWorkspace().getNodeTypeManager();
+            NodeType primaryNodeType = ntManager.getNodeType(s);
+            return primaryNodeType.isNodeType(type);
         }
         return node.isNodeType(type);
     }
