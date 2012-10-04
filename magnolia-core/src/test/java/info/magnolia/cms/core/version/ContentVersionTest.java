@@ -42,6 +42,7 @@ import static info.magnolia.cms.core.ItemType.CONTENTNODE;
 import static info.magnolia.cms.core.ItemType.NT_RESOURCE;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
@@ -83,10 +84,14 @@ public class ContentVersionTest extends RepositoryTestCase {
 
         Content page = hm.createContent("/", "page", CONTENT.getSystemName());
         Content parargraph = page.createContent("paragraph", CONTENTNODE.getSystemName());
+        Content area = page.createContent("area", MgnlNodeType.NT_AREA);
+        Content component = page.createContent("component", MgnlNodeType.NT_COMPONENT);
         Content subpage = page.createContent("subpage", CONTENT.getSystemName());
 
         page.setNodeData("nodedata", VERSIONED);
         parargraph.setNodeData("nodedata", VERSIONED);
+        area.setNodeData("nodedata", VERSIONED);
+        component.setNodeData("nodedata", VERSIONED);
         subpage.setNodeData("nodedata", VERSIONED);
         hm.save();
 
@@ -95,10 +100,14 @@ public class ContentVersionTest extends RepositoryTestCase {
 
         page.setNodeData("nodedata", NOT_VERSIONED);
         parargraph.setNodeData("nodedata", NOT_VERSIONED);
+        area.setNodeData("nodedata", NOT_VERSIONED);
+        component.setNodeData("nodedata", NOT_VERSIONED);
         subpage.setNodeData("nodedata", NOT_VERSIONED);
 
         page.createContent("new-subpage", CONTENT);
         page.createContent("new-paragraph", CONTENTNODE);
+        page.createContent("new-area", MgnlNodeType.NT_AREA);
+        page.createContent("new-component", MgnlNodeType.NT_AREA);
 
         hm.save();
 
@@ -112,11 +121,16 @@ public class ContentVersionTest extends RepositoryTestCase {
         // page and paragraph are versioned together
         assertEquals(VERSIONED, versionedPage.getNodeData("nodedata").getString());
         assertEquals(VERSIONED, versionedPage.getContent("paragraph").getNodeData("nodedata").getString());
+        assertEquals(VERSIONED, versionedPage.getContent("area").getNodeData("nodedata").getString());
+        assertEquals(VERSIONED, versionedPage.getContent("component").getNodeData("nodedata").getString());
 
         // navigation to subpage should work, but the subpage should be the current page
         assertEquals(NOT_VERSIONED, versionedPage.getContent("subpage").getNodeData("nodedata").getString());
         // navigation to the parent should work, but the parent should be the current page
         assertEquals(NOT_VERSIONED, versionedSubpage.getParent().getNodeData("nodedata").getString());
+        assertEquals(NOT_VERSIONED, versionedSubpage.getParent().getContent("paragraph").getNodeData("nodedata").getString());
+        assertEquals(NOT_VERSIONED, versionedSubpage.getParent().getContent("area").getNodeData("nodedata").getString());
+        assertEquals(NOT_VERSIONED, versionedSubpage.getParent().getContent("component").getNodeData("nodedata").getString());
 
         // ----------------------------
         // Test that the versioned content returns the same handles as the original content
@@ -125,9 +139,13 @@ public class ContentVersionTest extends RepositoryTestCase {
         // test that the handles are the same as of the current nodes
         assertEquals(page.getHandle(), versionedPage.getHandle());
         assertEquals(page.getContent("paragraph").getHandle(), versionedPage.getContent("paragraph").getHandle());
+        assertEquals(page.getContent("area").getHandle(), versionedPage.getContent("area").getHandle());
+        assertEquals(page.getContent("component").getHandle(), versionedPage.getContent("component").getHandle());
 
         assertEquals(page.getNodeData("nodedata").getHandle(), versionedPage.getNodeData("nodedata").getHandle());
         assertEquals(page.getContent("paragraph").getNodeData("nodedata").getHandle(), versionedPage.getContent("paragraph").getNodeData("nodedata").getHandle());
+        assertEquals(page.getContent("area").getNodeData("nodedata").getHandle(), versionedPage.getContent("area").getNodeData("nodedata").getHandle());
+        assertEquals(page.getContent("component").getNodeData("nodedata").getHandle(), versionedPage.getContent("component").getNodeData("nodedata").getHandle());
 
         assertEquals(page.getContent("subpage").getHandle(), versionedSubpage.getHandle());
         assertEquals(page.getHandle(), versionedSubpage.getParent().getHandle());
@@ -146,16 +164,24 @@ public class ContentVersionTest extends RepositoryTestCase {
             fail("new-subpage should be accessable");
         }
 
-        // after versioning we have added a new paragraph lets test that this is not visible
-        assertEquals(1, versionedPage.getChildren(CONTENTNODE).size());
+        // after versioning we have added a new paragraph, area and component lets test that those are not visible
+        assertEquals(3, versionedPage.getChildren(CONTENTNODE).size());
         assertFalse(versionedPage.hasContent("new-paragraph"));
+        assertFalse(versionedPage.hasContent("new-area"));
+        assertFalse(versionedPage.hasContent("new-component"));
+        assertFalse("the new sub pragraph should not be reachable", isContentReachable(versionedPage, "new-paragraph"));
+        assertFalse("the new sub area should not be reachable", isContentReachable(versionedPage, "new-area"));
+        assertFalse("the new sub component should not be reachable", isContentReachable(versionedPage, "new-component"));
+    }
+
+    private boolean isContentReachable(ContentVersion versionedPage, String content){
         try {
-            versionedPage.getContent("new-paragraph");
-            fail("the new sub pragraph should not be reachable");
+            versionedPage.getContent(content);
         }
         catch (Exception e) {
-            // that is expected
+            return false;
         }
+        return true;
     }
 
     @Test

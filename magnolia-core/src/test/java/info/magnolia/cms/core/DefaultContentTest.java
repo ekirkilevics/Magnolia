@@ -37,7 +37,9 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.repository.Provider;
@@ -316,27 +318,42 @@ public class DefaultContentTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws RepositoryException {
-        doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(true, "foo", "foo");
-        doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(false, "bar", "foo");
+    public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws Exception {
+        // GIVEN
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_CONTENTNODE);
+        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        node.getSession().save();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final DefaultContent content = new DefaultContent();
+
+        // WHEN-THEN
+        assertTrue(content.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
     }
 
-    private void doTestIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes(boolean expectedResult, String requiredType, String returnedType) throws RepositoryException {
-        final Node node = createStrictMock(Node.class);
-        final Property nodeTypeProp = createStrictMock(Property.class);
-        final Property nodeFrozenTypeProp = createStrictMock(Property.class);
+    @Test
+    public void testIsNodeTypeForNodeCheckFrozenTypeForSupertypesIfWereNotLookingForFrozenNodes() throws Exception {
+        // GIVEN
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_AREA);
+        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        node.getSession().save();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final DefaultContent content = new DefaultContent();
 
-        expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp);
-        expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
-        expect(node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)).andReturn(nodeFrozenTypeProp);
-        expect(nodeFrozenTypeProp.getString()).andReturn(returnedType);
+        // WHEN-THEN
+        assertTrue(content.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
+    }
 
-        replay(node, nodeTypeProp, nodeFrozenTypeProp);
-        final DefaultContent c = new DefaultContent();
-        c.setNode(node);
-        assertEquals(expectedResult, c.isNodeType(node, requiredType));
+    @Test
+    public void testIsNotNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws Exception {
+        // GIVEN
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_CONTENT);
+        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        node.getSession().save();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final DefaultContent content = new DefaultContent();
 
-        verify(node, nodeTypeProp, nodeFrozenTypeProp);
+        // WHEN-THEN
+        assertFalse(content.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
     }
 
     @Test

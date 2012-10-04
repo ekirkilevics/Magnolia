@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,34 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.voting;
+package info.magnolia.jcr.node2bean.impl;
 
-import info.magnolia.objectfactory.Components;
-import info.magnolia.voting.voters.AndVoting;
-import info.magnolia.voting.voters.OrVoting;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 
 /**
- * Contract for decision maker (i.e. class executing set of voters and providing combined output).
- * @author philipp
- * @version $Id$
- *
- * @content2bean
+ * Concrete implementation using reflection and adder methods.
  */
-public interface Voting {
+public class Node2BeanTransformerImpl implements Node2BeanTransformer{
 
-    public static final Voting AND = new AndVoting();
-    public static final Voting OR = new OrVoting();
-    public static Voting HIGHEST_LEVEL = new DefaultVoting();
-
-    int vote(Voter[] voters, Object value);
-
-    /**
-     * Factory for instantiation of the <code>Voting</code> implementation.
-     * @deprecated since 4.4, use one of the constants
-     */
-    static class Factory {
-        public static Voting getDefaultVoting() {
-            return Components.getSingleton(Voting.class);
-        }
-    }
 }

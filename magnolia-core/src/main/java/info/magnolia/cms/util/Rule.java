@@ -117,7 +117,9 @@ public class Rule implements Serializable {
     }
 
     /**
-     * True if given nodeType is allowed.
+     * True if allowedTypes contains nodeType.
+     * Method return false also if nodeType is subtype of one of the allowedTypes.
+     * @deprecated since 4.5.5 - use {@link info.magnolia.cms.util.Rule.isAllowed(Node)} instead.
      */
     public boolean isAllowed(String nodeType) {
         boolean allowed = this.allowedTypes.contains(nodeType);

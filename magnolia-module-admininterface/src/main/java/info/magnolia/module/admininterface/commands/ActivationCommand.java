@@ -213,8 +213,15 @@ public class ActivationCommand extends BaseActivationCommand {
 
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                if (o1.equals(o2)) {
+                    return 0;
+                }
+
                 String handle1 = (String) o1.get("handle");
                 String handle2 = (String) o2.get("handle");
+                if (handle1.equals(handle2)) {
+                    return 0;
+                }
                 if (handle2.startsWith(handle1)) {
                     // o2 is child of o1, say o1 is smaller to get it ordered BEFORE o2
                     return -1;
@@ -225,7 +232,10 @@ public class ActivationCommand extends BaseActivationCommand {
                     // siblings ... to reverse order, the higher index value get ordered before lower values index
                     int idx1 = (Integer) o1.get("index");
                     int idx2 = (Integer) o2.get("index");
-                    // index is generated in the loop above and can be never same for 2 items ... skip equality case
+                    // index is generated in the loop above and can be never same for 2 items ...
+                    if (idx1 == idx2) {
+                        return 0;
+                    }
                     return idx1 < idx2 ? 1 : -1;
                 }
 
@@ -233,6 +243,9 @@ public class ActivationCommand extends BaseActivationCommand {
                 int dirLevels1 = StringUtils.countMatches(handle1, "/");
                 int dirLevels2 = StringUtils.countMatches(handle2, "/");
                 // since parents are checked above, the equality case here means different hierarchy of same depth and is irrelevant to activation order
+                if (dirLevels1 == dirLevels2) {
+                    return 0;
+                }
                 return dirLevels1 < dirLevels2 ? -1 : 1;
             }});
 
