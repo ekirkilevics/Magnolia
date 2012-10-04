@@ -463,4 +463,20 @@ public class MockNodeTest {
         newNode.setIsNew(true);
         assertTrue(newNode.isNew());
     }
+
+    @Test
+    public void testGetNodesByPattern() throws RepositoryException {
+    	// GIVEN
+        final MockNode node = new MockNode("test");
+        node.setProperty("prop", "val");
+
+        // WHEN
+        PropertyIterator it = node.getProperties(new String[] {"p*"});
+
+        // THEN
+        Property property = it.nextProperty();
+        assertEquals(1, it.getSize());
+        assertEquals("prop", property.getName());
+        assertEquals("val", property.getString());
+    }
 }

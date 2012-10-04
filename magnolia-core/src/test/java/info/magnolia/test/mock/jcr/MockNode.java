@@ -363,8 +363,8 @@ public class MockNode extends AbstractNode {
     }
 
     @Override
-    public PropertyIterator getProperties(String[] nameGlobs) {
-        throw new UnsupportedOperationException("Not implemented. This is a fake class.");
+    public PropertyIterator getProperties(String[] nameGlobs) throws RepositoryException {
+        return ChildrenCollectorFilter.collectProperties(this, nameGlobs);
     }
 
     @Override
