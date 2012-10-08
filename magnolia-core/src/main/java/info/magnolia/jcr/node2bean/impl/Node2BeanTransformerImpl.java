@@ -33,11 +33,337 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.lang.LocaleUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.wrapper.SystemNodeWrapper;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentProvider;
 
 /**
  * Concrete implementation using reflection and adder methods.
  */
 public class Node2BeanTransformerImpl implements Node2BeanTransformer{
+    
+    private static final Logger log = LoggerFactory.getLogger(Node2BeanTransformerImpl.class);
+
+    private final BeanUtilsBean beanUtilsBean;
+    
+    public Node2BeanTransformerImpl() {
+        super();
+
+        // We use non-static BeanUtils conversion, so we can
+        // * use our custom ConvertUtilsBean
+        // * control converters (convertUtilsBean.register()) - we can register them here, locally, as opposed to a
+        // global ConvertUtils.register()
+        final EnumAwareConvertUtilsBean convertUtilsBean = new EnumAwareConvertUtilsBean();
+
+        // de-register the converter for Class, we do our own conversion in convertPropertyValue()
+        convertUtilsBean.deregister(Class.class);
+
+        this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
+    }
+
+    @Override
+    public TransformationState newState() {
+        return new TransformationStateImpl();
+    }
+
+    @Override
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state, ComponentProvider componentProvider) throws ClassNotFoundException, RepositoryException {
+        TypeDescriptor typeDscr = null;
+        Node node = state.getCurrentNode();
+
+        try {
+            if (node.hasProperty("class")) {
+                String className = node.getProperty("class").getString();
+                if (StringUtils.isBlank(className)) {
+                    throw new ClassNotFoundException("(no value for class property)");
+                }
+                Class<?> clazz = Classes.getClassFactory().forName(className);
+                typeDscr = typeMapping.getTypeDescriptor(clazz);
+            }
+        } catch (RepositoryException e) {
+            // ignore
+            log.warn("can't read class property", e);
+        }
+
+        if (typeDscr == null && state.getLevel() > 1) {
+            TypeDescriptor parentTypeDscr = state.getCurrentType();
+            PropertyTypeDescriptor propDscr;
+
+            if (parentTypeDscr.isMap() || parentTypeDscr.isCollection()) {
+                if (state.getLevel() > 2) {
+                    // this is not necessarily the parent node of the current
+                    String mapProperyName = state.peekNode(1).getName();
+                    propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName, typeMapping);
+                    if (propDscr != null) {
+                        typeDscr = propDscr.getCollectionEntryType();
+                    }
+                }
+            } else {
+                propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName(), typeMapping);
+                if (propDscr != null) {
+                    typeDscr = propDscr.getType();
+                }
+            }
+        }
+
+        typeDscr = onResolveType(typeMapping, state, typeDscr, componentProvider);
+
+        if (typeDscr != null) {
+            // might be that the factory util defines a default implementation for interfaces
+            final Class<?> type = typeDscr.getType();
+            typeDscr = typeMapping.getTypeDescriptor(componentProvider.getImplementation(type));
+
+            // now that we know the property type we should delegate to the custom transformer if any defined
+            Node2BeanTransformer customTransformer = typeDscr.getTransformer();
+            if (customTransformer != null && customTransformer != this) {
+                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(typeMapping, state, componentProvider);
+                // if no specific type has been provided by the
+                // TODO - is this comparison working ?
+                if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
+                    // might be that the factory util defines a default implementation for interfaces
+                    Class<?> implementation = componentProvider.getImplementation(typeFoundByCustomTransformer.getType());
+                    typeDscr = typeMapping.getTypeDescriptor(implementation);
+                }
+            }
+        }
+
+        if (typeDscr == null || typeDscr.needsDefaultMapping()) {
+            if (typeDscr == null) {
+                log.debug("was not able to resolve type for node [{}] will use a map", node);
+            }
+            typeDscr = TypeMapping.MAP_TYPE;
+        }
+
+        log.debug("{} --> {}", node.getPath(), typeDscr.getType());
+
+        return typeDscr;
+    }
+
+    @Override
+    public Collection<Node> getChildren(Node node) throws RepositoryException {
+        return NodeUtil.getCollectionFromNodeIterator(node.getNodes());
+    }
+
+    @Override
+    public Object newBeanInstance(TransformationState state, Map values, ComponentProvider componentProvider) throws Node2BeanException {
+        // we try first to use conversion (Map --> primitive type)
+        // this is the case when we flattening the hierarchy?
+        final Object bean = convertPropertyValue(state.getCurrentType().getType(), values);
+        // were the properties transformed?
+        if (bean == values) {
+            try {
+                // TODO MAGNOLIA-2569 MAGNOLIA-3525 what is going on here ? (added the following if to avoid permanently
+                // requesting LinkedHashMaps to ComponentFactory)
+                final Class<?> type = state.getCurrentType().getType();
+                if (LinkedHashMap.class.equals(type)) {
+                    // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a
+                    // LinkedHashMap, so what are we doing in here ?
+                    return new LinkedHashMap();
+                } else if (Map.class.isAssignableFrom(type)) {
+                    // TODO ?
+                    log.warn("someone wants another type of map ? " + type);
+                }
+                return componentProvider.newInstance(type);
+            } catch (Throwable e) {
+                throw new Node2BeanException(e);
+            }
+        }
+        return bean;
+    }
+
+    @Override
+    public void initBean(TransformationState state, Map values) throws Node2BeanException {
+        Object bean = state.getCurrentBean();
+
+        Method init;
+        try {
+            init = bean.getClass().getMethod("init", new Class[] {});
+            try {
+                init.invoke(bean); // no parameters
+            } catch (Exception e) {
+                throw new Node2BeanException("can't call init method", e);
+            }
+        } catch (SecurityException e) {
+            return;
+        } catch (NoSuchMethodException e) {
+            return;
+        }
+        log.debug("{} is initialized", bean);
+        
+    }
+
+    @Override
+    public Object convertPropertyValue(Class<?> propertyType, Object value) throws Node2BeanException {
+        if (Class.class.equals(propertyType)) {
+            try {
+                return Classes.getClassFactory().forName(value.toString());
+            } catch (ClassNotFoundException e) {
+                log.error(e.getMessage());
+                throw new Node2BeanException(e);
+            }
+        }
+
+        if (Locale.class.equals(propertyType)) {
+            if (value instanceof String) {
+                String localeStr = (String) value;
+                if (StringUtils.isNotEmpty(localeStr)) {
+                    return LocaleUtils.toLocale(localeStr);
+                }
+            }
+        }
+
+        if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+            // TODO never used ?
+            return ((Map) value).values();
+        }
+
+        // this is mainly the case when we are flattening node hierarchies
+        if ((String.class.equals(propertyType)) && (value instanceof Map) && (((Map) value).size() == 1)) {
+            return ((Map) value).values().iterator().next();
+        }
+
+        return value;
+    }
+    
+    /**
+     * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
+     * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
+     */
+    //TODO check the meaning of this method, should be removed or abstract
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+        return resolvedType;
+    }
+
+    @Override
+    public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
+        String propertyName = descriptor.getName();
+        if (propertyName.equals("class")) {
+            return;
+        }
+        Object value = values.get(propertyName);
+        Object bean = state.getCurrentBean();
+
+        if (propertyName.equals("content") && value == null) {
+            value = new SystemNodeWrapper(state.getCurrentNode());
+        } else if (propertyName.equals("name") && value == null) {
+            value = state.getCurrentNode().getName();
+        } else if (propertyName.equals("className") && value == null) {
+            value = values.get("class");
+        }
+
+        // do no try to set a bean-property that has no corresponding node-property
+        // else if (!values.containsKey(propertyName)) {
+        if (value == null) {
+            return;
+        }
+
+        log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
+
+        // if the parent bean is a map, we can't guess the types.
+        if (!(bean instanceof Map)) {
+            try {
+                PropertyTypeDescriptor dscr = mapping.getPropertyTypeDescriptor(bean.getClass(), propertyName);
+                if (dscr.getType() != null) {
+
+                    // try to use an adder method for a Collection property of the bean
+                    if (dscr.isCollection() || dscr.isMap()) {
+                        log.debug("{} is of type collection, map or /array", propertyName);
+                        Method method = dscr.getAddMethod();
+
+                        if (method != null) {
+                            log.debug("clearing the current content of the collection/map");
+                            try {
+                                Object col = PropertyUtils.getProperty(bean, propertyName);
+                                if (col != null) {
+                                    MethodUtils.invokeExactMethod(col, "clear", new Object[] {});
+                                }
+                            } catch (Exception e) {
+                                log.debug("no clear method found on collection {}", propertyName);
+                            }
+
+                            Class<?> entryClass = dscr.getCollectionEntryType().getType();
+
+                            log.debug("will add values by using adder method {}", method.getName());
+                            for (Iterator<Object> iter = ((Map<Object, Object>) value).keySet().iterator(); iter
+                                    .hasNext();) {
+                                Object key = iter.next();
+                                Object entryValue = ((Map<Object, Object>) value).get(key);
+                                entryValue = convertPropertyValue(entryClass, entryValue);
+                                if (dscr.isCollection()) {
+                                    log.debug("will add value {}", entryValue);
+                                    method.invoke(bean, new Object[] {entryValue});
+                                }
+                                // is a map
+                                else {
+                                    log.debug("will add key {} with value {}", key, entryValue);
+                                    method.invoke(bean, new Object[] {key, entryValue});
+                                }
+                            }
+
+                            return;
+                        }
+                        log.debug("no add method found for property {}", propertyName);
+                        if (dscr.isCollection()) {
+                            log.debug("transform the values to a collection", propertyName);
+                            value = ((Map<Object, Object>) value).values();
+                        }
+                    } else {
+                        value = convertPropertyValue(dscr.getType().getType(), value);
+                    }
+                }
+            } catch (Exception e) {
+                // do it better
+                log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+                        new Object[] {propertyName, value, bean.getClass().getName(),
+                                state.getCurrentNode().getPath(), e.toString()});
+                log.debug("stacktrace", e);
+            }
+        }
+
+        try {
+            // This uses the converters registered in beanUtilsBean.convertUtilsBean (see constructor of this class)
+            // If a converter is registered, beanutils will convert value.toString(), not the value object as-is.
+            // If no converter is registered, then the value Object is set as-is.
+            // If convertPropertyValue() already converted this value, you'll probably want to unregister the beanutils
+            // converter.
+            // some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
+            beanUtilsBean.setProperty(bean, propertyName, value);
+
+            // TODO this also does things we probably don't want/need, i.e nested and indexed properties
+
+        } catch (Exception e) {
+            // do it better
+            log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+                    new Object[] {propertyName, value, bean.getClass().getName(),
+                            state.getCurrentNode().getPath(), e.toString()});
+            log.debug("stacktrace", e);
+        }
+    }
 
 }

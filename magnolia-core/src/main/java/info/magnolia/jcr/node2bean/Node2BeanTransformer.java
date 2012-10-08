@@ -33,9 +33,65 @@
  */
 package info.magnolia.jcr.node2bean;
 
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+
+import java.util.Collection;
+import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
 /**
  * Contract for transformation from node to java beans.
  */
 public interface Node2BeanTransformer {
+    /**
+     * Create a state object to share the state between the processor and transformer.
+     */
+    public TransformationState newState();
 
+    /**
+     * Resolves the class to use for the current node.
+     */
+    public TypeDescriptor resolveType(TypeMapping typeMapping, TransformationState state, ComponentProvider componentProvider) throws ClassNotFoundException, RepositoryException;
+
+    /**
+     * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
+     * @throws RepositoryException 
+     */
+    public Collection<Node> getChildren(Node node) throws RepositoryException;
+
+    /**
+     * Instantiates the bean.
+     */
+    public Object newBeanInstance(TransformationState state, Map values, ComponentProvider componentProvider) throws Node2BeanException;
+
+    /**
+     * Called after all properties are set.
+     */
+    public void initBean(TransformationState state, Map values) throws Node2BeanException;
+
+
+    /**
+     * Set this property on that bean. Allows excluding of properties.
+     * @throws RepositoryException 
+     */
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException;
+
+    /**
+     * Transforms the simple basic jcr property value objects to more complex properties.
+     */
+    public Object convertPropertyValue(Class<?> propertyType, Object value) throws Node2BeanException;
+
+
+    /**
+     * Creates singleton instance of content2bean transformer.
+     * @deprecated since 4.5, we should use IoC...
+     */
+    class Factory {
+        public static Node2BeanTransformer getDefaultTransformer() {
+            return Components.getSingleton(Node2BeanTransformer.class);
+        }
+    }
 }
