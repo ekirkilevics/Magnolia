@@ -76,7 +76,6 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setName(propName);
 
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
-        String methodName = null;
 
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor descriptor = descriptors[i];
@@ -85,38 +84,34 @@ public class TypeMappingImpl implements TypeMapping {
                 if (propertytype != null) {
                     dscr.setType(getTypeDescriptor(propertytype));
                 }
-                methodName = descriptor.getWriteMethod().getName();
+                if (descriptor.getWriteMethod() != null) {
+                    dscr.setWriteMethod(descriptor.getWriteMethod());
+                }
                 break;
             }
         }
 
         if (dscr.getType() != null) {
             if (dscr.isMap() || dscr.isCollection()) {
-                Class<?> classType = dscr.isMap() ? Map.class : Collection.class;
-                if (methodName != null) { // TODO log warn/error if method name is null?
-                    Method method = null;
-                    Type[] parameterArgs = new Type[] {};
-                    try {
-                        method = beanClass.getMethod(methodName, classType);
-                        Type[] parameterTypes = method.getGenericParameterTypes();
-                        for (Type genericParameterType : parameterTypes) {
-                            if (genericParameterType instanceof ParameterizedType) {
-                                ParameterizedType type = (ParameterizedType) genericParameterType;
-                                parameterArgs = type.getActualTypeArguments();
-                            }
+                Method method = null;
+                if (dscr.getWriteMethod() != null) { // TODO log warn/error if method is null?
+                    method = dscr.getWriteMethod();
+                    Type[] typeArgs = new Type[] {};
+                    Type[] parameterTypes = method.getGenericParameterTypes();
+                    for (Type genericParameterType : parameterTypes) {
+                        if (genericParameterType instanceof ParameterizedType) {
+                            ParameterizedType type = (ParameterizedType) genericParameterType;
+                            typeArgs = type.getActualTypeArguments();
                         }
+                    }
 
-                        if (parameterArgs.length > 0) {
-                            if (dscr.isMap()) {
-                                dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) parameterArgs[0]));
-                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) parameterArgs[1]));
-                            } else if (dscr.isCollection()){
-                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) parameterArgs[0]));
-                            }
+                    if (typeArgs.length > 0) {
+                        if (dscr.isMap()) {
+                            dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
+                        } else if (dscr.isCollection()){
+                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
                         }
-
-                    } catch (NoSuchMethodException e1) {
-                        // TODO just log a warning or ... ?
                     }
                 }
             }
