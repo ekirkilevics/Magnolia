@@ -33,12 +33,26 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.wrapper.SystemNodeWrapper;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.ComponentProvider;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -52,26 +66,17 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.jcr.node2bean.Node2BeanException;
-import info.magnolia.jcr.node2bean.Node2BeanTransformer;
-import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
-import info.magnolia.jcr.node2bean.TransformationState;
-import info.magnolia.jcr.node2bean.TypeDescriptor;
-import info.magnolia.jcr.node2bean.TypeMapping;
-import info.magnolia.jcr.util.NodeUtil;
-import info.magnolia.jcr.wrapper.SystemNodeWrapper;
-import info.magnolia.objectfactory.Classes;
-import info.magnolia.objectfactory.ComponentProvider;
+import com.google.common.collect.Iterables;
 
 /**
  * Concrete implementation using reflection and adder methods.
  */
 public class Node2BeanTransformerImpl implements Node2BeanTransformer{
-    
+
     private static final Logger log = LoggerFactory.getLogger(Node2BeanTransformerImpl.class);
 
     private final BeanUtilsBean beanUtilsBean;
-    
+
     public Node2BeanTransformerImpl() {
         super();
 
@@ -215,7 +220,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
             return;
         }
         log.debug("{} is initialized", bean);
-        
+
     }
 
     @Override
@@ -250,7 +255,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
 
         return value;
     }
-    
+
     /**
      * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
      * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
@@ -294,7 +299,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                     // try to use an adder method for a Collection property of the bean
                     if (dscr.isCollection() || dscr.isMap()) {
                         log.debug("{} is of type collection, map or /array", propertyName);
-                        Method method = dscr.getAddMethod();
+                        Method method = dscr.getWriteMethod();
 
                         if (method != null) {
                             log.debug("clearing the current content of the collection/map");
@@ -307,8 +312,24 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                                 log.debug("no clear method found on collection {}", propertyName);
                             }
 
-                            Class<?> entryClass = dscr.getCollectionEntryType().getType();
+                            if (dscr.isMap()) {
+                                method.invoke(bean, value);
+                            } else if (dscr.getType().getType().isArray()){
+                                // prasarna kvuli serazeni nodu, aby pole vracelo stale to samy.
+                                Class<?> entryClass = dscr.getCollectionEntryType().getType();
+                                Map<Object, Object> map = (Map<Object, Object>) value;
+                                Map<Object, Object> test = new TreeMap<Object, Object>(map);
+                                List<Object> list = new LinkedList(test.values());
 
+                                Object[] arr = (Object[]) Array.newInstance(entryClass, list.size());
+                                for (int i = 0; i < arr.length; i++) {
+                                    arr[i] = Iterables.get(list, i);
+                                }
+                                method.invoke(bean, new Object[] {arr});
+                            } else if (dscr.isCollection()) {
+                                method.invoke(bean, ((Map<Object, Object>) value).values());
+                            }
+                            /*
                             log.debug("will add values by using adder method {}", method.getName());
                             for (Iterator<Object> iter = ((Map<Object, Object>) value).keySet().iterator(); iter
                                     .hasNext();) {
@@ -325,7 +346,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                                     method.invoke(bean, new Object[] {key, entryValue});
                                 }
                             }
-
+*/
                             return;
                         }
                         log.debug("no add method found for property {}", propertyName);
@@ -339,6 +360,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                 }
             } catch (Exception e) {
                 // do it better
+                e.printStackTrace();
                 log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
                         new Object[] {propertyName, value, bean.getClass().getName(),
                                 state.getCurrentNode().getPath(), e.toString()});
