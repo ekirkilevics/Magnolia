@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.node2bean;
 
+import java.lang.reflect.Method;
+
 /**
  * Describes a property. Type, type used for creating concrete instances, is it a map/collection, adder method, ...
  */
@@ -41,6 +43,7 @@ public class PropertyTypeDescriptor {
     private TypeDescriptor type;
     private TypeDescriptor collectionEntryType;
     private TypeDescriptor collectionKeyType;
+    private Method writeMethod;
 
     public TypeDescriptor getCollectionEntryType() {
         return this.collectionEntryType;
@@ -80,5 +83,17 @@ public class PropertyTypeDescriptor {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Method getAddMethod() {
+        return null;
+    }
+
+    public Method getWriteMethod() {
+        return writeMethod;
+    }
+
+    public void setWriteMethod(Method writeMethod) {
+        this.writeMethod = writeMethod;
     }
 }
