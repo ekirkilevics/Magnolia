@@ -38,15 +38,15 @@ import java.util.Map;
 /**
  * Bean with map of {@link String} and {@link SimpleBean}.
  */
-public class BeanWithMapWithGenerics {
+public class BeanWithMapWithGenerics extends SimpleBean {
 
-    private Map<String, SimpleBean> map;
+    private Map<String, SimpleBean> beans;
 
-    public Map<String, SimpleBean> getMap() {
-        return map;
+    public Map<String, SimpleBean> getBeans() {
+        return beans;
     }
 
-    public void setMap(Map<String, SimpleBean> map) {
-        this.map = map;
+    public void setBeans(Map<String, SimpleBean> beans) {
+        this.beans = beans;
     }
 }

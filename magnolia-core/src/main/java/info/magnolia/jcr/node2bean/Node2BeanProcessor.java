@@ -33,9 +33,28 @@
  */
 package info.magnolia.jcr.node2bean;
 
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import info.magnolia.objectfactory.ComponentProvider;
+
 /**
  * Transforms nodes to beans or maps. The transformer is use to resolve classes or to instantiate beans.
  */
 public interface Node2BeanProcessor {
+
+    public Object toBean(Node node) throws Node2BeanException, RepositoryException;
+
+    /**
+     * Transforms the node to a bean using the passed transformer and component provider.
+     * @throws RepositoryException
+     */
+    public Object toBean(Node node, boolean recursive, final Node2BeanTransformer transformer, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException;
+
+    /**
+     * Similar to <code>toBean()</code> but uses a passed bean as the root bean.
+     * @throws RepositoryException
+     */
+    public Object setProperties(final Object bean, Node node, boolean recursive, final Node2BeanTransformer transformer, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException;
 
 }
