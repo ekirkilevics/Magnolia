@@ -33,6 +33,12 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.objectfactory.Components;
+
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -44,12 +50,6 @@ import java.util.Map;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
-import info.magnolia.jcr.node2bean.TypeDescriptor;
-import info.magnolia.jcr.node2bean.Node2BeanTransformer;
-import info.magnolia.jcr.node2bean.TypeMapping;
-import info.magnolia.objectfactory.Components;
 
 /**
  * Basic type mapping implementation.
@@ -77,6 +77,7 @@ public class TypeMappingImpl implements TypeMapping {
 
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
 
+
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor descriptor = descriptors[i];
             if (descriptor.getName().equals(propName)) {
@@ -93,11 +94,17 @@ public class TypeMappingImpl implements TypeMapping {
 
         if (dscr.getType() != null) {
             if (dscr.isMap() || dscr.isCollection()) {
-                Method method = null;
-                if (dscr.getWriteMethod() != null) { // TODO log warn/error if method is null?
-                    method = dscr.getWriteMethod();
+                Method method = dscr.getWriteMethod();
+                if (method != null) { // TODO log warn/error if method is null?
                     Type[] typeArgs = new Type[] {};
-                    Type[] parameterTypes = method.getGenericParameterTypes();
+                    Type[] parameterTypes = null;
+                    if (dscr.getType().getType().isArray()) {
+                        // this is needed because of arrays
+                        // since there is no adder method, we need to determine type being passed by setter
+                        typeArgs = method.getParameterTypes();
+                    }
+
+                    parameterTypes = method.getGenericParameterTypes();
                     for (Type genericParameterType : parameterTypes) {
                         if (genericParameterType instanceof ParameterizedType) {
                             ParameterizedType type = (ParameterizedType) genericParameterType;
@@ -110,7 +117,11 @@ public class TypeMappingImpl implements TypeMapping {
                             dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
                             dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
                         } else if (dscr.isCollection()){
-                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                            if (dscr.getType().getType().isArray()) {
+                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>)typeArgs[0]).getComponentType()));
+                            } else {
+                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                            }
                         }
                     }
                 }
