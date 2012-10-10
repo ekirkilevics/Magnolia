@@ -4,7 +4,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom-ce</artifactId>
-    <version>25-SNAPSHOT</version>
+    <version>24</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -20,7 +20,7 @@ for Java Content Repositories (JCR).
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia-cms.com/release/5.0-prev1.html</documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/5.0-alpha1-s7.html</documentationURL>
     <javaVersion>1.6</javaVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
