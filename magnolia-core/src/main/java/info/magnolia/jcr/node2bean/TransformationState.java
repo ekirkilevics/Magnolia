@@ -36,7 +36,10 @@ package info.magnolia.jcr.node2bean;
 import javax.jcr.Node;
  
 /**
- *
+ * This state contains three stacks. This allows the transformer to know the full state created during the
+ * transformation process. A stack for classes, beans, and nodes are kept.
+ * <p/>
+ * It is the processors job to populate this state.
  */
 public interface TransformationState {
  

@@ -49,10 +49,8 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -136,8 +134,6 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                 }
             }
         }
-
-        typeDscr = onResolveType(typeMapping, state, typeDscr, componentProvider);
 
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
@@ -256,15 +252,6 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
         return value;
     }
 
-    /**
-     * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
-     * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
-     */
-    //TODO check the meaning of this method, should be removed or abstract
-    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
-        return resolvedType;
-    }
-
     @Override
     public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
         String propertyName = descriptor.getName();
@@ -315,38 +302,19 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
                             } else if (dscr.getType().getType().isArray()){
-                                // prasarna kvuli serazeni nodu, aby pole vracelo stale to samy.
                                 Class<?> entryClass = dscr.getCollectionEntryType().getType();
                                 Map<Object, Object> map = (Map<Object, Object>) value;
-                                Map<Object, Object> test = new TreeMap<Object, Object>(map);
-                                List<Object> list = new LinkedList(test.values());
+                                Collection<Object> list = new LinkedList<Object>(map.values());
 
                                 Object[] arr = (Object[]) Array.newInstance(entryClass, list.size());
                                 for (int i = 0; i < arr.length; i++) {
                                     arr[i] = Iterables.get(list, i);
                                 }
+
                                 method.invoke(bean, new Object[] {arr});
                             } else if (dscr.isCollection()) {
                                 method.invoke(bean, ((Map<Object, Object>) value).values());
                             }
-                            /*
-                            log.debug("will add values by using adder method {}", method.getName());
-                            for (Iterator<Object> iter = ((Map<Object, Object>) value).keySet().iterator(); iter
-                                    .hasNext();) {
-                                Object key = iter.next();
-                                Object entryValue = ((Map<Object, Object>) value).get(key);
-                                entryValue = convertPropertyValue(entryClass, entryValue);
-                                if (dscr.isCollection()) {
-                                    log.debug("will add value {}", entryValue);
-                                    method.invoke(bean, new Object[] {entryValue});
-                                }
-                                // is a map
-                                else {
-                                    log.debug("will add key {} with value {}", key, entryValue);
-                                    method.invoke(bean, new Object[] {key, entryValue});
-                                }
-                            }
-*/
                             return;
                         }
                         log.debug("no add method found for property {}", propertyName);

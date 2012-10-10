@@ -42,7 +42,7 @@ import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TransformationState;
  
 /**
- *
+ * Transformation state implementation. Contains stacks of info for the types, beans and the content.
  */
 @Singleton
 public class TransformationStateImpl implements TransformationState {
