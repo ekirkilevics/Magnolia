@@ -172,7 +172,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
 
     @Override
     public Collection<Node> getChildren(Node node) throws RepositoryException {
-        return NodeUtil.getCollectionFromNodeIterator(node.getNodes());
+        return NodeUtil.getSortedCollectionFromNodeIterator(node.getNodes());
     }
 
     @Override
