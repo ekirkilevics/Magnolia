@@ -72,12 +72,11 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
 
     private boolean forceCreation = true;
 
-    private boolean recursive;
+    private boolean recursive = true;
 
     @Inject
-    public Node2BeanProcessorImpl(TypeMapping typeMapping, boolean recursive) {
+    public Node2BeanProcessorImpl(TypeMapping typeMapping) {
         this.typeMapping = typeMapping;
-        this.recursive = recursive;
     }
 
     @Override
@@ -262,5 +261,9 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
 
     public boolean isForceCreation() {
         return this.forceCreation;
+    }
+
+    public void setForceCreation(boolean forceCreation) {
+        this.forceCreation = forceCreation;
     }
 }
