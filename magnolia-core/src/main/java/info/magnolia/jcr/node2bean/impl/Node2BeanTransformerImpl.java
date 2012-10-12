@@ -45,12 +45,18 @@ import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -69,11 +75,15 @@ import com.google.common.collect.Iterables;
 /**
  * Concrete implementation using reflection and adder methods.
  */
-public class Node2BeanTransformerImpl implements Node2BeanTransformer{
+public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
     private static final Logger log = LoggerFactory.getLogger(Node2BeanTransformerImpl.class);
 
     private final BeanUtilsBean beanUtilsBean;
+
+    protected Class<?> defaultListImpl = LinkedList.class;
+
+    protected Class<?> defaultSetImpl = HashSet.class;
 
     public Node2BeanTransformerImpl() {
         super();
@@ -135,6 +145,8 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
             }
         }
 
+        typeDscr = onResolveType(typeMapping, state, typeDscr, componentProvider);
+
         if (typeDscr != null) {
             // might be that the factory util defines a default implementation for interfaces
             final Class<?> type = typeDscr.getType();
@@ -182,7 +194,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                 // TODO MAGNOLIA-2569 MAGNOLIA-3525 what is going on here ? (added the following if to avoid permanently
                 // requesting LinkedHashMaps to ComponentFactory)
                 final Class<?> type = state.getCurrentType().getType();
-                if (LinkedHashMap.class.equals(type)) {
+                if (LinkedHashMap.class.equals(type) || Collection.class.isAssignableFrom(type)) {
                     // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a
                     // LinkedHashMap, so what are we doing in here ?
                     return new LinkedHashMap();
@@ -252,6 +264,14 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
         return value;
     }
 
+    /**
+     * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
+     * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
+     */
+    protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+        return resolvedType;
+    }
+
     @Override
     public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
         String propertyName = descriptor.getName();
@@ -284,7 +304,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                 if (dscr.getType() != null) {
 
                     // try to use an adder method for a Collection property of the bean
-                    if (dscr.isCollection() || dscr.isMap()) {
+                    if (dscr.isCollection() || dscr.isMap() || dscr.isArray()) {
                         log.debug("{} is of type collection, map or /array", propertyName);
                         Method method = dscr.getWriteMethod();
 
@@ -301,7 +321,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
 
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
-                            } else if (dscr.getType().getType().isArray()){
+                            } else if (dscr.isArray()){
                                 Class<?> entryClass = dscr.getCollectionEntryType().getType();
                                 Map<Object, Object> map = (Map<Object, Object>) value;
                                 Collection<Object> list = new LinkedList<Object>(map.values());
@@ -310,14 +330,13 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                                 for (int i = 0; i < arr.length; i++) {
                                     arr[i] = Iterables.get(list, i);
                                 }
-
                                 method.invoke(bean, new Object[] {arr});
                             } else if (dscr.isCollection()) {
-                                method.invoke(bean, ((Map<Object, Object>) value).values());
+                                value = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
+                                method.invoke(bean, value);
                             }
                             return;
                         }
-                        log.debug("no add method found for property {}", propertyName);
                         if (dscr.isCollection()) {
                             log.debug("transform the values to a collection", propertyName);
                             value = ((Map<Object, Object>) value).values();
@@ -354,6 +373,39 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer{
                             state.getCurrentNode().getPath(), e.toString()});
             log.debug("stacktrace", e);
         }
+    }
+
+    /**
+     *
+     * @param map
+     * @param clazz
+     * @return Collection of elements or null.
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws IllegalArgumentException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    protected Collection<?> createCollectionFromMap(Map<?, ?> map, Class<?> clazz) throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        Collection<?> collection = null;
+        Constructor<?> constructor = null;
+        if (clazz.isInterface()) {
+            // class is an interface, we need to decide which implementation of interface we will use
+            if (List.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(Queue.class)) { // List and Queue can both use LinkedList
+                constructor = defaultListImpl.getConstructor(Collection.class);
+            } else if (Set.class.isAssignableFrom(clazz)) {
+                constructor = defaultSetImpl.getConstructor(Collection.class);
+            }
+        } else {
+            if (Collection.class.isAssignableFrom(clazz)) {
+                constructor = clazz.getConstructor(Collection.class);
+            }
+        }
+        if (constructor != null) {
+            collection = (Collection<?>) constructor.newInstance(map.values());
+        }
+        return collection;
     }
 
 }

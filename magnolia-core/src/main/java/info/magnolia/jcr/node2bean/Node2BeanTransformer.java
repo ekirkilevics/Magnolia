@@ -34,7 +34,6 @@
 package info.magnolia.jcr.node2bean;
 
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 
 import java.util.Collection;
 import java.util.Map;
@@ -58,7 +57,7 @@ public interface Node2BeanTransformer {
 
     /**
      * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
     public Collection<Node> getChildren(Node node) throws RepositoryException;
 
@@ -75,7 +74,7 @@ public interface Node2BeanTransformer {
 
     /**
      * Set this property on that bean. Allows excluding of properties.
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
     public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException;
 
@@ -84,14 +83,4 @@ public interface Node2BeanTransformer {
      */
     public Object convertPropertyValue(Class<?> propertyType, Object value) throws Node2BeanException;
 
-
-    /**
-     * Creates singleton instance of content2bean transformer.
-     * @deprecated since 4.5, we should use IoC...
-     */
-    class Factory {
-        public static Node2BeanTransformer getDefaultTransformer() {
-            return Components.getSingleton(Node2BeanTransformer.class);
-        }
-    }
 }
