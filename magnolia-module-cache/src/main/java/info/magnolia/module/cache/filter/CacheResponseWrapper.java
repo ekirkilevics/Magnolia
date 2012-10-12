@@ -392,16 +392,22 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
             if(serveIfThresholdReached){
                 replayHeadersAndStatus(originalResponse);
                 out = originalResponse.getOutputStream();
-                log.debug("Reached threshold for in-memory caching. Will not cache and stream response directly to user. Cache temp file is {}", contentFile.getAbsolutePath());
+                log.debug("Reached threshold for in-memory caching. Will not cache and stream response directly to user.");
             }
             else{
                 contentFile = File.createTempFile("cacheStream", null, Path.getTempDirectory());
-                log.debug("Reached threshold for in-memory caching. Will continue caching in new cache temp file {}", contentFile.getAbsolutePath());
-                contentFile.deleteOnExit();
-                out = new FileOutputStream(contentFile);
+                if (contentFile != null) {
+                    log.debug("Reached threshold for in-memory caching. Will continue caching in new cache temp file {}", contentFile.getAbsolutePath());
+                    contentFile.deleteOnExit();
+                    out = new FileOutputStream(contentFile);
+                } else {
+                    log.error("Reached threshold for in-memory caching, but unable to create the new cache temp file. Will not cache and stream response directly to user.");
+                    replayHeadersAndStatus(originalResponse);
+                    out = originalResponse.getOutputStream();
+                }
             }
             out.write(getBufferedContent());
-            // TODO: flush the buffer afterwards or even set it to null? should not be needed anymore so GC should be allowed to collect it.
+            out.flush();
         }
     }
 }
