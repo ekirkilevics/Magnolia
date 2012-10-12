@@ -38,6 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
@@ -564,5 +565,39 @@ public class ExtendingNodeWrapperTest {
             assertEquals(nodeNames.get(i), node.getName());
             i++;
         }
+    }
+
+    @Test
+    public void testSubNodesAreWrapped() throws RepositoryException, IOException {
+        // GIVEN
+        session = SessionTestUtil.createSession("test",
+                "/parent.string=Hello\n" +
+                "/parent.integer=10\n" +
+                "/parent/beans/sub1.string=foo\n" +
+                "/parent/beans/sub2.string=bar\n" +
+                "/parent/beans/sub3.string=baz\n" +
+                "/sub/bean.string=World\n" +
+                "/sub/bean.integer=999\n" +
+                "/sub/bean.extends=/parent\n" +
+                "/another/sub/bean.extends=../../../sub/bean\n" +
+                "/another/sub/bean/beans/sub3.string=bla\n" +
+                "/another/sub/bean/beans/sub4.string=blah\n"
+                );
+        ExtendingNodeWrapper node = new ExtendingNodeWrapper(session.getNode("/another/sub/bean"));
+
+        // WHEN
+        List<Node> nodes = (List<Node>) NodeUtil.getSortedCollectionFromNodeIterator(node.getNode("beans").getNodes());
+
+        // THEN
+        assertEquals(4, nodes.size());
+
+        for (Node n : nodes) {
+            assertTrue(n instanceof ExtendingNodeWrapper);
+        }
+
+        assertEquals("foo", nodes.get(0).getProperty("string").getString());
+        assertEquals("bar", nodes.get(1).getProperty("string").getString());
+        assertEquals("bla", nodes.get(2).getProperty("string").getString());
+        assertEquals("blah", nodes.get(3).getProperty("string").getString());
     }
 }

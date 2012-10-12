@@ -34,6 +34,7 @@
 package info.magnolia.jcr.wrapper;
 
 import info.magnolia.jcr.iterator.RangeIteratorImpl;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -122,7 +123,7 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
                     if (isExists(extendingNodePath, getWrappedNode())) {
                         // support multiple inheritance
                         if (extendingNodePath.startsWith("/")) {
-                            extendedNode = getWrappedNode().getSession().getNode(extendingNodePath);
+                            extendedNode = wrapIfNeeded(getWrappedNode().getSession().getNode(extendingNodePath));
                         } else {
                             extendedNode = wrapIfNeeded(getWrappedNode().getNode(extendingNodePath));
                         }
@@ -200,10 +201,10 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
 
     @Override
     public NodeIterator getNodes(String namePattern) throws RepositoryException {
-        Collection<Node> children = getChildNodesAsList(getWrappedNode(), namePattern);
-        if (extending && extendedNode.hasNodes()) {
+        Collection<Node> children = NodeUtil.getSortedCollectionFromNodeIterator(getWrappedNode().getNodes());
+        if (extending) {
 
-            Collection<Node> extendedNodeChildren = getChildNodesAsList(extendedNode, namePattern);
+            Collection<Node> extendedNodeChildren = NodeUtil.getSortedCollectionFromNodeIterator(extendedNode.getNodes());
             Map<String, Node> merged = new LinkedHashMap<String, Node>();
 
             for (Node content : extendedNodeChildren) {
@@ -212,12 +213,10 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
             for (Node content : children) {
                 merged.put(content.getName(), content);
             }
-            return new NodeIteratorImpl(merged.values());
+            return new NodeIteratorImpl(wrapNodes(merged.values()));
         }
-        return new NodeIteratorImpl(children);
+        return new NodeIteratorImpl(wrapNodes(children));
     }
-
-
 
     @Override
     public boolean hasProperty(String relPath) throws RepositoryException {
@@ -342,6 +341,19 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     /**
+     *
+     * @param values
+     * @return Collection of wrapped nodes.
+     */
+    private Collection<Node> wrapNodes(Collection<Node> collection) {
+        Collection<Node> wrappedNodes = new ArrayList<Node>();
+        for (Node node : collection) {
+            wrappedNodes.add(wrapNode(node));
+        }
+        return wrappedNodes;
+    }
+
+    /**
      * Gets all properties from node and returns them as {@link java.util.List}.
      * @param node
      * @param namePattern
@@ -357,27 +369,6 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
             properties.add(prop);
         }
         return properties;
-    }
-
-    /**
-     * Obtains all child nodes from specified node as {@link java.util.List}.
-     * @param node
-     * @param namePattern
-     * @return List of nodes or empty list if node does not have children
-     * @throws RepositoryException
-     */
-    private static List<Node> getChildNodesAsList(Node node, String namePattern) throws RepositoryException {
-        List<Node> nodes = new ArrayList<Node>();
-        if (node.hasNodes()) {
-
-            NodeIterator it = node.getNodes(namePattern);
-
-            while (it.hasNext()) {
-                Node child = (Node) it.next();
-                nodes.add(child);
-            }
-        }
-        return nodes;
     }
 
     private static class PropertyIteratorImpl extends RangeIteratorImpl<Property> implements PropertyIterator {
