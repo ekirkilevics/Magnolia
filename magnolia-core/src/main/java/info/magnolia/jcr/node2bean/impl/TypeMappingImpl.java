@@ -93,12 +93,12 @@ public class TypeMappingImpl implements TypeMapping {
         }
 
         if (dscr.getType() != null) {
-            if (dscr.isMap() || dscr.isCollection()) {
+            if (dscr.isMap() || dscr.isCollection() || dscr.isArray()) {
                 Method method = dscr.getWriteMethod();
                 if (method != null) { // TODO log warn/error if method is null?
                     Type[] typeArgs = new Type[] {};
                     Type[] parameterTypes = null;
-                    if (dscr.getType().getType().isArray()) {
+                    if (dscr.isArray()) {
                         // this is needed because of arrays
                         // since there is no adder method, we need to determine type being passed by setter
                         typeArgs = method.getParameterTypes();
@@ -117,11 +117,9 @@ public class TypeMappingImpl implements TypeMapping {
                             dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
                             dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
                         } else if (dscr.isCollection()){
-                            if (dscr.getType().getType().isArray()) {
-                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>)typeArgs[0]).getComponentType()));
-                            } else {
-                                dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
-                            }
+                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                        } else if (dscr.isArray()) {
+                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>)typeArgs[0]).getComponentType()));
                         }
                     }
                 }
@@ -142,7 +140,8 @@ public class TypeMappingImpl implements TypeMapping {
         dscr = new TypeDescriptor();
         dscr.setType(beanClass);
         dscr.setMap(Map.class.isAssignableFrom(beanClass));
-        dscr.setCollection(beanClass.isArray() || Collection.class.isAssignableFrom(beanClass));
+        dscr.setCollection(Collection.class.isAssignableFrom(beanClass));
+        dscr.setArray(beanClass.isArray());
         types.put(beanClass, dscr);
 
         if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type

@@ -86,7 +86,7 @@ public class TypeMappingImplTest {
         TypeMapping mapping = new TypeMappingImpl();
 
         // WHEN
-        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithCollectionWithGenerics.class, "collection");
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithCollectionOfSimpleBean.class, "collection");
 
         // THEN
         assertNotNull(ptd);
@@ -121,7 +121,7 @@ public class TypeMappingImplTest {
         TypeMapping mapping = new TypeMappingImpl();
 
         // WHEN
-        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithCollectionWithGenerics.class, "collection");
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithCollectionOfSimpleBean.class, "collection");
 
         // THEN
         assertNotNull(ptd);
@@ -136,7 +136,7 @@ public class TypeMappingImplTest {
         TypeMapping mapping = new TypeMappingImpl();
 
         // WHEN
-        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithArray.class, "beans");
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithArrayOfSimpleBean.class, "beans");
 
         assertNotNull(ptd);
         assertEquals(SimpleBean.class, ptd.getCollectionEntryType().getType());
