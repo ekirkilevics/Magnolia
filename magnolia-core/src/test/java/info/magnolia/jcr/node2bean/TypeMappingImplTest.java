@@ -138,6 +138,7 @@ public class TypeMappingImplTest {
         // WHEN
         PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithArrayOfSimpleBean.class, "beans");
 
+        // THEN
         assertNotNull(ptd);
         assertEquals(SimpleBean.class, ptd.getCollectionEntryType().getType());
     }
