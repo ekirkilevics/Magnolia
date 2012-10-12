@@ -33,26 +33,21 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collection;
 
 /**
- * Another simple bean.
+ * Bean with collection of {@link SimpleBean}.
  */
-public class OtherSimpleBean extends SimpleBean {
+public class BeanWithCollectionOfSimpleBean {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(OtherSimpleBean.class);
+    private Collection<SimpleBean> collection;
 
-    private String value;
-
-    public String getValue() {
-        return value;
+    public Collection<SimpleBean> getCollection() {
+        return collection;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setCollection(Collection<SimpleBean> collection) {
+        this.collection = collection;
     }
+
 }

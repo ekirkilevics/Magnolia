@@ -33,20 +33,25 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.jcr.node2bean.SampleEnum;
 
 /**
- * Another simple bean.
+ * Bean with {@link SampleEnum} Enum.
  */
-public class OtherSimpleBean extends SimpleBean {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(OtherSimpleBean.class);
+public class BeanWithEnum {
 
     private String value;
+
+    private SampleEnum sample;
+
+
+    public SampleEnum getSample() {
+        return sample;
+    }
+
+    public void setSample(SampleEnum sample) {
+        this.sample = sample;
+    }
 
     public String getValue() {
         return value;

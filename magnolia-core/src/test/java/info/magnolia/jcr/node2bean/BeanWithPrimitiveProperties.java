@@ -33,26 +33,26 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * Another simple bean.
+ * Bean with int and boolean primitive properties.
  */
-public class OtherSimpleBean extends SimpleBean {
+public class BeanWithPrimitiveProperties {
+    private int integer;
+    private boolean bool;
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(OtherSimpleBean.class);
-
-    private String value;
-
-    public String getValue() {
-        return value;
+    public boolean isBool() {
+        return this.bool;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setBool(boolean bool) {
+        this.bool = bool;
+    }
+
+    public int getInteger() {
+        return this.integer;
+    }
+
+    public void setInteger(int integer) {
+        this.integer = integer;
     }
 }

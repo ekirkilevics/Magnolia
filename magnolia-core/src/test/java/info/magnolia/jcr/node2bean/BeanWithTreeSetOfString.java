@@ -33,26 +33,21 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.TreeSet;
 
 /**
- * Another simple bean.
+ * Bean with {@link TreeSet} of {@link String}.
  */
-public class OtherSimpleBean extends SimpleBean {
+public class BeanWithTreeSetOfString {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(OtherSimpleBean.class);
+    private TreeSet<String> values;
 
-    private String value;
-
-    public String getValue() {
-        return value;
+    public TreeSet<String> getValues() {
+        return values;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setValues(TreeSet<String> values) {
+        this.values = values;
     }
+
 }

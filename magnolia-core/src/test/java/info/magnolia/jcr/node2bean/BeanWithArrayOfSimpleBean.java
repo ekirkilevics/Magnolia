@@ -37,22 +37,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Another simple bean.
+ * Bean with array of {@link SimpleBean}.
  */
-public class OtherSimpleBean extends SimpleBean {
-
+public class BeanWithArrayOfSimpleBean extends SimpleBean {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(OtherSimpleBean.class);
+    private static Logger log = LoggerFactory.getLogger(BeanWithArrayOfSimpleBean.class);
 
-    private String value;
+    private SimpleBean[] beans = new SimpleBean[0];
 
-    public String getValue() {
-        return value;
+    public SimpleBean[] getBeans(){
+        return beans;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setBeans(SimpleBean[] beans) {
+        this.beans = beans;
     }
 }
