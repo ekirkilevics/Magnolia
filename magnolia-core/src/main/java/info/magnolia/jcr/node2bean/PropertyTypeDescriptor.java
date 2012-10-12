@@ -69,6 +69,10 @@ public class PropertyTypeDescriptor {
         return getType().isMap();
     }
 
+    public boolean isArray() {
+        return getType().isArray();
+    }
+
     public TypeDescriptor getType() {
         return this.type;
     }

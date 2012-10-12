@@ -61,6 +61,8 @@ public class TypeDescriptor {
 
     private boolean isCollection;
 
+    private boolean isArray;
+
     private Map<String, PropertyTypeDescriptor> descriptors;
 
     public MgnlNodeType getItemType() {
@@ -99,6 +101,14 @@ public class TypeDescriptor {
         this.isMap = isMap;
     }
 
+    public boolean isArray() {
+        return this.isArray;
+    }
+
+    public void setArray(boolean isArray) {
+        this.isArray = isArray;
+    }
+
     public PropertyTypeDescriptor getPropertyTypeDescriptor(String propertyName, TypeMapping typeMapping) {
         return getPropertyDescriptors(typeMapping).get(propertyName);
     }
@@ -107,7 +117,7 @@ public class TypeDescriptor {
      * @return true if this descriptor represents an map or collection, without a concrete type thereof.
      */
     public boolean needsDefaultMapping() {
-        return (isMap() || isCollection()) && (getType().isInterface() || getType().isArray());
+        return (isMap() || isCollection()) && (getType().isInterface()) || isArray();
     }
 
     /**
