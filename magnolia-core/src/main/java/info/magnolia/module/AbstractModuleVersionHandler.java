@@ -39,25 +39,28 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.delta.AbstractRepositoryTask;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.ModuleFilesExtraction;
-import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.delta.Condition;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionComparator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Extend this and register your deltas in the constructor using the register method.
@@ -123,15 +126,19 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     }
 
     protected List<Delta> getUpdateDeltas(InstallContext installContext, Version from) {
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
         final List<Delta> deltas = new LinkedList<Delta>();
         for (Version v : allDeltas.keySet()) {
             if (v.isStrictlyAfter(from)) {
-                deltas.add(allDeltas.get(v));
+                final Delta delta = allDeltas.get(v);
+                if (v.isEquivalent(toVersion) && !StringUtils.equals(v.getClassifier(), toVersion.getClassifier())) {
+                    delta.getTasks().add(new ModuleVersionUpdateTask(toVersion));
+                }
+                deltas.add(delta);
             }
         }
 
         // if there was no delta for the version being installed, we still need to add the default update tasks
-        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
         if (toVersion.isStrictlyAfter(from) && !allDeltas.containsKey(toVersion)) {
             deltas.add(getDefaultUpdate(installContext));
         }
@@ -141,6 +148,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     /**
      * @deprecated since 4.2, renamed to getDefaultUpdate(InstallContext installContext)
      */
+    @Deprecated
     protected Delta getUpdate(InstallContext installContext) {
         return getDefaultUpdate(installContext);
     }
