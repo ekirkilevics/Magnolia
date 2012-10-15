@@ -534,6 +534,25 @@ public class Node2BeanTest {
         assertEquals("bla", bean.getBeans().get("sub3").getString());
     }
 
+    @Test
+    public void testCollectionPropertyIsHidden() throws IOException, RepositoryException, Node2BeanException {
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
+                "/parent/beans/sub1.string=ahoj\n" +
+                "/parent/beans/sub2.string=hello\n"
+                );
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(
+                session.getNode("/parent"),
+                true,
+                new CollectionPropertyHidingTransformer(BeanWithCollectionOfSimpleBean.class, "beans"),
+                Components.getComponentProvider()
+                );
+
+        assertNull(bean.getBeans());
+    }
+
     public static class MyMap extends HashMap {
     }
 
