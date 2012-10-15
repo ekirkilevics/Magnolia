@@ -98,7 +98,7 @@ public class Node2BeanTest {
     }
 
     @Test
-    public void testContentToBeanWithSubMap() throws IOException, RepositoryException, Node2BeanException {
+    public void testNodeToBeanWithSubMap() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
@@ -551,6 +551,46 @@ public class Node2BeanTest {
                 );
 
         assertNull(bean.getBeans());
+    }
+
+    @Test
+    public void testNodeToBeanWithClassDefined2() throws RepositoryException, Node2BeanException, IOException {
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.OtherSimpleBean\n" +
+                "/parent.string=hello\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+
+        OtherSimpleBean bean = (OtherSimpleBean) n2b.toBean(session.getNode("/parent"), false, new ProxyingNode2BeanTransformer(), Components.getComponentProvider());
+        assertTrue(bean instanceof SimpleBean);
+        assertEquals("proxied: hello", bean.getString());
+    }
+
+    private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
+
+        @Override
+        public void initBean(TransformationState state, Map properties) throws Node2BeanException {
+            super.initBean(state, properties);
+            Object bean = state.getCurrentBean();
+            if (bean instanceof SimpleBean) {
+                state.setCurrentBean(new ProxyingSimpleBean((SimpleBean) bean));
+            }
+        }
+    }
+
+    private class ProxyingSimpleBean extends OtherSimpleBean {
+
+        private final SimpleBean target;
+
+        public ProxyingSimpleBean(SimpleBean target) {
+            this.target = target;
+        }
+
+        @Override
+        public String getString() {
+            return "proxied: " + target.getString();
+        }
     }
 
     public static class MyMap extends HashMap {
