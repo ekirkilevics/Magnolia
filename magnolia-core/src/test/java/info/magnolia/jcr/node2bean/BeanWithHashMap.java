@@ -33,21 +33,21 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import java.util.Collection;
+import java.util.Map;
 
 /**
- * Bean with collection of {@link SimpleBean}.
+ * Bean with HashMap of {@link String} and {@link SimpleBean}.
  */
-public class BeanWithCollectionWithGenerics {
+public class BeanWithHashMap {
 
-    private Collection<SimpleBean> collection;
+    private Map<String, SimpleBean> beans;
 
-    public Collection<SimpleBean> getCollection() {
-        return collection;
+    public Map<String, SimpleBean> getBeans() {
+        return beans;
     }
 
-    public void setCollection(Collection<SimpleBean> collection) {
-        this.collection = collection;
+    public void setBeans(Map<String, SimpleBean> beans) {
+        this.beans = beans;
     }
 
 }

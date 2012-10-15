@@ -33,6 +33,7 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -214,7 +215,16 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                     catch (RepositoryException e) {
                         log.error("can't read index of the node [" + childNode + "]", e);
                     }
-                    map.put(name, childBean);
+                    boolean isEnabled = true;
+                    try {
+                        Method method = childBean.getClass().getMethod("isEnabled", null);
+                        isEnabled = (Boolean) method.invoke(childBean, new Object[] {});
+                    } catch (Exception e) {
+                        // this is ok, enabled property is optional
+                    }
+                    if (isEnabled) {
+                        map.put(name, childBean);
+                    }
                 }
             }
         }

@@ -40,14 +40,14 @@ import java.util.Collection;
  */
 public class BeanWithCollectionOfSimpleBean {
 
-    private Collection<SimpleBean> collection;
+    private Collection<SimpleBean> beans;
 
-    public Collection<SimpleBean> getCollection() {
-        return collection;
+    public Collection<SimpleBean> getBeans() {
+        return beans;
     }
 
-    public void setCollection(Collection<SimpleBean> collection) {
-        this.collection = collection;
+    public void setBeans(Collection<SimpleBean> beans) {
+        this.beans = beans;
     }
 
 }

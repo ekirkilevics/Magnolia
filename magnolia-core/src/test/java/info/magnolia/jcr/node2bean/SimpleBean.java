@@ -40,6 +40,8 @@ public class SimpleBean {
 
     private int integer;
 
+    private boolean enabled = true;
+
     private String string;
 
     public int getInteger() {
@@ -56,5 +58,13 @@ public class SimpleBean {
 
     public void setString(String string) {
         this.string = string;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }

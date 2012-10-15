@@ -3,14 +3,13 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
@@ -30,6 +29,8 @@ import javax.jcr.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.collect.Iterables;
 
 /**
  *
@@ -265,6 +266,28 @@ public class Node2BeanTest {
     }
 
     @Test
+    public void testNodeToBeanWithHashMap() throws IOException, RepositoryException, Node2BeanException {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithHashMap\n" +
+                "/parent.integer=1\n" +
+                "/parent.string=Hello\n" +
+                "/parent/beans/sub1.integer=2\n" +
+                "/parent/beans/sub1.string=World\n" +
+                "/parent/beans/sub2.integer=3\n" +
+                "/parent/beans/sub2.string=:)\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        BeanWithHashMap bean = (BeanWithHashMap) n2b.toBean(session.getNode("/parent"));
+
+        // THEN
+        assertNotNull(bean.getBeans());
+        assertEquals(2, bean.getBeans().size());
+    }
+
+    @Test
     public void testClassPropertiesAreConvertedProperly() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
@@ -447,8 +470,68 @@ public class Node2BeanTest {
         assertEquals("bar", bean.getBeans().get("sub2").getString());
         assertEquals("bla", bean.getBeans().get("sub3").getString());
         assertEquals("blah", bean.getBeans().get("sub4").getString());
+    }
+
+    @Test
+    public void testBeansWithEnabledPropertySetToFalseAreExcludedFromCollection() throws IOException, RepositoryException, Node2BeanException {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
+                "/parent/beans/sub1.string=Hello\n" +
+                "/parent/beans/sub2.string=World\n" +
+                "/parent/beans/sub2.enabled=false\n"
+                );
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/parent"));
+
+        // THEN
+        assertNotNull(bean);
+        assertEquals(1, bean.getBeans().size());
+
+        // WHEN
+        SimpleBean simple = Iterables.get(bean.getBeans(), 0);
+
+        // THEN
+        assertEquals(true, simple.isEnabled());
+        assertEquals("Hello", simple.getString());
+    }
+
+    @Test
+    public void testBeansWithEnabledPropertySetToFalseAreExcludedFromMap() throws IOException, RepositoryException, Node2BeanException {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
+                        "/parent.string=Hello\n" +
+                        "/parent.integer=10\n" +
+                        "/parent/beans/sub1.string=foo\n" +
+                        "/parent/beans/sub1.enabled=false\n" +
+                        "/parent/beans/sub2.string=bar\n" +
+                        "/parent/beans/sub3.string=baz\n" +
+                        "/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
+                        "/sub/bean.string=World\n" +
+                        "/sub/bean.integer=999\n" +
+                        "/sub/bean.extends=/parent\n" +
+                        "/sub/bean.enabled=false\n" +
+                        "/another/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
+                        "/another/sub/bean.extends=../../../sub/bean\n" +
+                        "/another/sub/bean/beans/sub3.string=bla\n" +
+                        "/another/sub/bean/beans/sub4.string=blah\n" +
+                        "/another/sub/bean/beans/sub4.enabled=false\n"
+                );
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/another/sub/bean"));
+
+        // THEN
+        assertNotNull(bean);
         assertEquals(999, bean.getInteger());
         assertEquals("World", bean.getString());
+        assertEquals(2, bean.getBeans().size());
+        assertEquals("bar", bean.getBeans().get("sub2").getString());
+        assertEquals("bla", bean.getBeans().get("sub3").getString());
     }
 
     public static class MyMap extends HashMap {
