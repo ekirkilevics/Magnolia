@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.cache.executor;
 
-import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
+import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
  * Omit the executors subnode.

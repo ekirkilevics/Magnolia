@@ -33,16 +33,17 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.PropertyTypeDescriptor;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.ObservedComponentFactory;
 import info.magnolia.repository.RepositoryConstants;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
@@ -106,7 +107,7 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
         }
 
         @Override
-        protected Content2BeanTransformer getContent2BeanTransformer() {
+        protected Node2BeanTransformer getNode2BeanTransformer() {
             return new IPSecurityManagerTransformer();
         }
     }
@@ -114,10 +115,10 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
     /**
      * Transformer which uses the IP value of the rule as the key.
      */
-    public static final class IPSecurityManagerTransformer extends Content2BeanTransformerImpl {
+    public static final class IPSecurityManagerTransformer extends Node2BeanTransformerImpl {
 
         @Override
-        public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) {
+        public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
             final Object currentBean = state.getCurrentBean();
             if (currentBean instanceof IPSecurityManagerImpl) {
                 final IPSecurityManagerImpl ipSecMan = (IPSecurityManagerImpl) currentBean;

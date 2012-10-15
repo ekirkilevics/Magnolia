@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,27 +33,26 @@
  */
 package info.magnolia.module.cache.ehcache;
 
-import info.magnolia.content2bean.PropertyTypeDescriptor;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
 /**
- * A Content2BeanTransformer for net.ehcache.config.CacheConfiguration, because
+ * A Node2BeanTransformer for net.ehcache.config.CacheConfiguration, because
  * it does not respect javabeans conventions for setting the MemoryStoreEvictionPolicy.
  * (getter returns a MemoryStoreEvictionPolicy, setter takes a String as argument)
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
-public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
+public class CacheConfigurationTransformer extends Node2BeanTransformerImpl {
     @Override
-    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
         final TypeDescriptor typeDescriptor = descriptor.getType();
         final String propertyName = descriptor.getName();
         if ("memoryStoreEvictionPolicyFromObject".equals(propertyName)) {
@@ -61,7 +60,6 @@ public class CacheConfigurationTransformer extends Content2BeanTransformerImpl {
             return;
         } else if (typeDescriptor.getType().equals(MemoryStoreEvictionPolicy.class)) {
             final String memoryStoreEvictionPolicyName = (String) values.get(propertyName);
-            // final MemoryStoreEvictionPolicy policy = MemoryStoreEvictionPolicy.fromString(memoryStoreEvictionPolicyName);
             final CacheConfiguration cfg = (CacheConfiguration) state.getCurrentBean();
             cfg.setMemoryStoreEvictionPolicy(memoryStoreEvictionPolicyName);
         } else {

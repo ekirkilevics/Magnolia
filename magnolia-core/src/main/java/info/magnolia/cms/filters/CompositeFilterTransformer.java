@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
+import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
  * A special content2bean transformer for filters. For the CompositeFilter we omit the extra filters node.

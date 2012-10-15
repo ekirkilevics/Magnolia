@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.objectfactory.ObservedComponentFactory;
@@ -46,6 +46,8 @@ import info.magnolia.repository.RepositoryConstants;
 import java.util.Map;
 
 import javax.inject.Singleton;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 /**
  * Holds the basic server configuration info.
@@ -100,13 +102,13 @@ public class ServerConfiguration {
 
         // the false parameter here is the important thing to keep (not recursive)
         @Override
-        protected ServerConfiguration transformNode(Content node) throws Content2BeanException {
-            return (ServerConfiguration) Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
+        protected ServerConfiguration transformNode(Node node) throws Node2BeanException, RepositoryException {
+            return (ServerConfiguration) new Node2BeanProcessorImpl(Components.getComponent(TypeMapping.class)).toBean(node, false, new Node2BeanTransformerImpl() {
                 @Override
                 public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) {
                     return new ServerConfiguration();
                 }
-            });
+            }, Components.getComponentProvider());
         }
     }
 }
