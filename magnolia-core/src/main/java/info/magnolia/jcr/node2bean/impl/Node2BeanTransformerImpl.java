@@ -58,6 +58,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
@@ -81,12 +82,18 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
     private final BeanUtilsBean beanUtilsBean;
 
-    protected Class<?> defaultListImpl = LinkedList.class;
+    private final Class<?> defaultListImpl;
 
-    protected Class<?> defaultSetImpl = HashSet.class;
+    private final Class<?> defaultSetImpl;
 
+    @Inject
     public Node2BeanTransformerImpl() {
-        super();
+        this(LinkedList.class, HashSet.class);
+    }
+
+    public Node2BeanTransformerImpl(Class<?> defaultListImpl, Class<?> defaultSetImpl) {
+        this.defaultListImpl = defaultListImpl;
+        this.defaultSetImpl = defaultSetImpl;
 
         // We use non-static BeanUtils conversion, so we can
         // * use our custom ConvertUtilsBean
@@ -332,8 +339,8 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                 }
                                 method.invoke(bean, new Object[] {arr});
                             } else if (dscr.isCollection()) {
-                                value = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
-                                method.invoke(bean, value);
+                                Collection<?> collection = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
+                                method.invoke(bean, collection);
                             }
                             return;
                         }
