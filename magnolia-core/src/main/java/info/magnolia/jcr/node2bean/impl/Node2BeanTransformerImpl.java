@@ -198,16 +198,21 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         // were the properties transformed?
         if (bean == values) {
             try {
+                // is this property remove necessary?
+                values.remove("class");
                 // TODO MAGNOLIA-2569 MAGNOLIA-3525 what is going on here ? (added the following if to avoid permanently
                 // requesting LinkedHashMaps to ComponentFactory)
                 final Class<?> type = state.getCurrentType().getType();
-                if (LinkedHashMap.class.equals(type) || Collection.class.isAssignableFrom(type)) {
+                if (LinkedHashMap.class.equals(type)) {
                     // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a
                     // LinkedHashMap, so what are we doing in here ?
                     return new LinkedHashMap();
                 } else if (Map.class.isAssignableFrom(type)) {
                     // TODO ?
                     log.warn("someone wants another type of map ? " + type);
+                } else if (Collection.class.isAssignableFrom(type)) {
+                    // someone wants specific collection
+                    return type.newInstance();
                 }
                 return componentProvider.newInstance(type);
             } catch (Throwable e) {
@@ -330,8 +335,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                 method.invoke(bean, value);
                             } else if (dscr.isArray()){
                                 Class<?> entryClass = dscr.getCollectionEntryType().getType();
-                                Map<Object, Object> map = (Map<Object, Object>) value;
-                                Collection<Object> list = new LinkedList<Object>(map.values());
+                                Collection<Object> list = new LinkedList<Object>(((Map<Object, Object>) value).values());
 
                                 Object[] arr = (Object[]) Array.newInstance(entryClass, list.size());
                                 for (int i = 0; i < arr.length; i++) {
@@ -339,8 +343,10 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                 }
                                 method.invoke(bean, new Object[] {arr});
                             } else if (dscr.isCollection()) {
-                                Collection<?> collection = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
-                                method.invoke(bean, collection);
+                                if (value instanceof Map) {
+                                    value = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
+                                }
+                                method.invoke(bean, value);
                             }
                             return;
                         }

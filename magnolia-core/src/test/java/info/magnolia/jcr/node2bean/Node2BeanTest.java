@@ -16,11 +16,14 @@ import info.magnolia.test.mock.jcr.SessionTestUtil;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -380,6 +383,7 @@ public class Node2BeanTest {
 
         // THEN
         assertNotNull(map);
+        assertEquals(2, map.size());
         assertEquals("Hello", ((SimpleBean) map.get("a")).getString());
         assertEquals("World", ((SimpleBean) map.get("b")).getString());
         assertTrue("we wanted a custom map impl!", map instanceof MyMap);
@@ -536,6 +540,7 @@ public class Node2BeanTest {
 
     @Test
     public void testCollectionPropertyIsHidden() throws IOException, RepositoryException, Node2BeanException {
+        // GIVEN
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
                 "/parent/beans/sub1.string=ahoj\n" +
@@ -543,6 +548,7 @@ public class Node2BeanTest {
                 );
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
+        // WHEN
         final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(
                 session.getNode("/parent"),
                 true,
@@ -550,21 +556,55 @@ public class Node2BeanTest {
                 Components.getComponentProvider()
                 );
 
+        // THEN
         assertNull(bean.getBeans());
     }
 
     @Test
     public void testNodeToBeanWithClassDefined2() throws RepositoryException, Node2BeanException, IOException {
+        // GIVEN
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.OtherSimpleBean\n" +
                 "/parent.string=hello\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
-
+        // WHEN
         OtherSimpleBean bean = (OtherSimpleBean) n2b.toBean(session.getNode("/parent"), false, new ProxyingNode2BeanTransformer(), Components.getComponentProvider());
+
+        // THEN
         assertTrue(bean instanceof SimpleBean);
         assertEquals("proxied: hello", bean.getString());
+    }
+
+    @Test
+    public void testCanSpecifySpecificCollectionImplementation() throws Exception {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
+                "/parent/beans.class=java.util.Vector\n" +
+                "/parent/beans/a.class=info.magnolia.jcr.node2bean.SimpleBean\n" +
+                "/parent/beans/a.string=hello\n" +
+                "/parent/beans/b.class=info.magnolia.jcr.node2bean.SimpleBean\n" +
+                "/parent/beans/b.string=world\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/parent"));
+
+        // WHEN
+        final Collection<SimpleBean> coll = bean.getBeans();
+
+        // THEN
+        assertNotNull(coll);
+        assertEquals(2, coll.size());
+        final Iterator it = coll.iterator();
+        final SimpleBean a = (SimpleBean) it.next();
+        final SimpleBean b = (SimpleBean) it.next();
+        assertNotSame(a, b);
+        assertFalse(a.getString().equals(b.getString()));
+        assertTrue("hello".equals(a.getString()) || "hello".equals(b.getString()));
+        assertTrue("world".equals(a.getString()) || "world".equals(b.getString()));
+        assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
     }
 
     private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
