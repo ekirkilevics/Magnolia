@@ -49,6 +49,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -58,6 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
@@ -107,11 +109,25 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         convertUtilsBean.deregister(Class.class);
 
         convertUtilsBean.register(new Converter() {
-        @Override
+            @Override
             public Object convert(Class type, Object value) {
                 return new SimpleUrlPattern((String) value);
-                }
+            }
         }, SimpleUrlPattern.class);
+
+        convertUtilsBean.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                    return new MessageFormat((String) value);
+            }
+        }, MessageFormat.class);
+
+        convertUtilsBean.register(new Converter() {
+            @Override
+            public Object convert(Class type, Object value) {
+                return Pattern.compile((String) value);
+            }
+        }, Pattern.class);
 
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }

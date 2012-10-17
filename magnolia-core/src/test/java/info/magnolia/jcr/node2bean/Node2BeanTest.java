@@ -15,6 +15,7 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -630,6 +632,44 @@ public class Node2BeanTest {
         assertFalse(res.matches("Bonjour monde"));
     }
 
+    @Test
+    public void testMessageFormatIsConvertedAutomagically() throws Exception {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithMessageFormat\n" +
+                "/parent.myFormat=plop {0} plop {1} plop\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        final BeanWithMessageFormat res = (BeanWithMessageFormat) n2b.toBean(session.getNode("parent"));
+
+        // THEN
+        assertNotNull(res);
+        assertNotNull(res.getMyFormat());
+        assertTrue(res.getMyFormat() instanceof MessageFormat);
+        assertEquals("plop hey plop ho plop", res.formatIt("hey", "ho"));
+    }
+
+    @Test
+    public void testRegexPatternIsConvertedAutomagically() throws Exception {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithRegexPattern\n" +
+                "/parent.myPattern=a*b\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        final BeanWithRegexPattern res = (BeanWithRegexPattern) n2b.toBean(session.getNode("parent"));
+
+        // THEN
+        assertNotNull(res);
+        assertNotNull(res.getMyPattern());
+        assertTrue(res.getMyPattern() instanceof Pattern);
+        assertTrue(res.matches("aaaaab"));
+        assertFalse(res.matches("baaaaa"));
+    }
 
     private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
 
