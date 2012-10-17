@@ -4,6 +4,7 @@
 package info.magnolia.jcr.node2bean;
 
 import static org.junit.Assert.*;
+import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
@@ -606,6 +607,29 @@ public class Node2BeanTest {
         assertTrue("world".equals(a.getString()) || "world".equals(b.getString()));
         assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
     }
+
+    @Test
+    public void testSimpleUrlPatternIsConvertedAutomagically() throws Exception {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/parent.class=info.magnolia.jcr.node2bean.BeanWithSimpleUrlPattern\n" +
+                "/parent.myPattern=H?llo*\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+
+        // WHEN
+        final BeanWithSimpleUrlPattern res = (BeanWithSimpleUrlPattern) n2b.toBean(session.getNode("parent"));
+
+        // THEN
+        assertNotNull(res);
+        assertNotNull(res.getMyPattern());
+        assertTrue(res.getMyPattern() instanceof SimpleUrlPattern);
+        assertTrue(res.matches("Hello world"));
+        assertTrue(res.matches("Hallo weld"));
+        assertFalse(res.matches("Haaaallo weeeeeld"));
+        assertFalse(res.matches("Bonjour monde"));
+    }
+
 
     private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
 

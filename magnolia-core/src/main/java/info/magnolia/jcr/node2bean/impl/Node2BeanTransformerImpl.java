@@ -33,6 +33,7 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
@@ -63,6 +64,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.Converter;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
@@ -103,6 +105,13 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
         // de-register the converter for Class, we do our own conversion in convertPropertyValue()
         convertUtilsBean.deregister(Class.class);
+
+        convertUtilsBean.register(new Converter() {
+        @Override
+            public Object convert(Class type, Object value) {
+                return new SimpleUrlPattern((String) value);
+                }
+        }, SimpleUrlPattern.class);
 
         this.beanUtilsBean = new BeanUtilsBean(convertUtilsBean, new PropertyUtilsBean());
     }
