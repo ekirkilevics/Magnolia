@@ -123,9 +123,17 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
                     if (isExists(extendingNodePath, getWrappedNode())) {
                         // support multiple inheritance
                         if (extendingNodePath.startsWith("/")) {
-                            extendedNode = wrapIfNeeded(getWrappedNode().getSession().getNode(extendingNodePath));
+                            extendedNode = getWrappedNode().getSession().getNode(extendingNodePath);
                         } else {
-                            extendedNode = wrapIfNeeded(getWrappedNode().getNode(extendingNodePath));
+                            extendedNode = getWrappedNode().getNode(extendingNodePath);
+                        }
+                        if (!NodeUtil.isSame(getWrappedNode(), extendedNode)) {
+                            extendedNode = wrapIfNeeded(extendedNode);
+                        } else {
+                            // nodes are the same so we will not extend.
+                            extendedNode = null;
+                            extending = false;
+                            log.error("Node can't self-extend: " + getWrappedNode().getPath());
                         }
                     } else {
                         String message = "Can't find referenced node for value: " + wrapped;

@@ -600,4 +600,18 @@ public class ExtendingNodeWrapperTest {
         assertEquals("bla", nodes.get(2).getProperty("string").getString());
         assertEquals("blah", nodes.get(3).getProperty("string").getString());
     }
+
+    @Test
+    public void testNodeCannotSelfExtend() throws IOException, RepositoryException {
+        // GIVEN
+        session = SessionTestUtil.createSession("test",
+                "/parent.extends=../parent\n"
+                );
+
+        // WHEN
+        ExtendingNodeWrapper node = new ExtendingNodeWrapper(session.getNode("/parent"));
+
+        // THEN
+        assertFalse(node.isExtending());
+    }
 }
