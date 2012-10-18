@@ -35,10 +35,10 @@ package info.magnolia.jcr.node2bean;
 
 import info.magnolia.objectfactory.ComponentProvider;
 
-import java.util.Collection;
 import java.util.Map;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 /**
@@ -59,7 +59,7 @@ public interface Node2BeanTransformer {
      * Returns the children of the node to be transformed. Those are normally the direct children but might differ.
      * @throws RepositoryException
      */
-    public Collection<Node> getChildren(Node node) throws RepositoryException;
+    public NodeIterator getChildren(Node node) throws RepositoryException;
 
     /**
      * Instantiates the bean.

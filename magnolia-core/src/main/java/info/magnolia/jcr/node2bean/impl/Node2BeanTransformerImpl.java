@@ -33,13 +33,16 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
 import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.SystemNodeWrapper;
 import info.magnolia.objectfactory.Classes;
@@ -63,6 +66,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -211,8 +215,19 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
     }
 
     @Override
-    public Collection<Node> getChildren(Node node) throws RepositoryException {
-        return NodeUtil.getSortedCollectionFromNodeIterator(node.getNodes());
+    public NodeIterator getChildren(Node node) throws RepositoryException {
+        return new FilteringNodeIterator(node.getNodes(), new AbstractPredicate<Node>() {
+            @Override
+            public boolean evaluateTyped(Node t) {
+                try {
+                    return !(t.getName().startsWith(MgnlNodeType.JCR_PREFIX) ||
+                            t.getName().startsWith(MgnlNodeType.MGNL_PREFIX) ||
+                            NodeUtil.isNodeType(t, MgnlNodeType.NT_METADATA));
+                } catch (RepositoryException e) {
+                    return false;
+                }
+            }
+        });
     }
 
     @Override
