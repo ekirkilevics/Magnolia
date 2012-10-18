@@ -38,14 +38,15 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
 import info.magnolia.jcr.node2bean.TransformationState;
@@ -100,7 +101,7 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
             if(state.getLevel() > 1 && state.getCurrentType().equals(type)) {
                 // make it the default
                 // use property descriptor
-                resolvedType = propertyType;
+                resolvedType = getPropertyType();
             }
         }
         return resolvedType;
@@ -114,33 +115,39 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
         if (descriptor.getName().equals(collectionName)) {
             Object bean = state.getCurrentBean();
 
-            for (Entry<String, Object> entry : values.entrySet()) {
-                Object value = entry.getValue();
-                if(propertyType.getType().isInstance(value)){
-                    try {
-                        if (propertyDescriptor.isMap()) {
-                            writeMethod.invoke(bean, value);
-                        } else if (propertyDescriptor.isArray()) {
-                            Class<?> entryClass = propertyType.getType();
-                            Map<Object, Object> map = (Map<Object, Object>) value;
-                            Collection<Object> list = new LinkedList<Object>(map.values());
-
-                            Object[] arr = (Object[]) Array.newInstance(entryClass, list.size());
-                            for (int i = 0; i < arr.length; i++) {
-                                arr[i] = Iterables.get(list, i);
-                            }
-                            writeMethod.invoke(bean, new Object[] {arr});
-                        } else if (propertyDescriptor.isCollection()) {
-                            Collection<?> collection = createCollectionFromMap((Map<Object, Object>) value, propertyDescriptor.getType().getType());
-                            writeMethod.invoke(bean, collection);
-                        }
-                    } catch (Exception e) {
-                        log.error("Can't call set method " + propertyDescriptor.getWriteMethod(), e);
-                    }
+            Map<String, Object> value = Maps.filterValues(values, new Predicate<Object>() {
+                @Override
+                public boolean apply(Object input) {
+                    return getPropertyType().getType().isInstance(input);
                 }
+            });
+
+            try {
+                if (propertyDescriptor.isMap()) {
+                    writeMethod.invoke(bean, value);
+                } else if (propertyDescriptor.isArray()) {
+                    Class<?> entryClass = getPropertyType().getType();
+                    Collection<Object> list = new LinkedList<Object>(value.values());
+
+                    Object[] arr = (Object[]) Array.newInstance(entryClass, list.size());
+
+                    for (int i = 0; i < arr.length; i++) {
+                        arr[i] = Iterables.get(list, i);
+                    }
+                    writeMethod.invoke(bean, new Object[] {arr});
+                } else if (propertyDescriptor.isCollection()) {
+                    Collection<?> collection = createCollectionFromMap(value, propertyDescriptor.getType().getType());
+                    writeMethod.invoke(bean, collection);
+                }
+            } catch (Exception e) {
+                log.error("Can't call set method " + propertyDescriptor.getWriteMethod(), e);
             }
         } else {
             super.setProperty(mapping, state, descriptor, values);
         }
+    }
+
+    public TypeDescriptor getPropertyType() {
+        return propertyType;
     }
 }
