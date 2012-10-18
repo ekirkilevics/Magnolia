@@ -33,6 +33,21 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.PropertyUtil;
+import info.magnolia.jcr.wrapper.ExtendingNodeWrapper;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -41,24 +56,13 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.jcr.node2bean.Node2BeanException;
-import info.magnolia.jcr.node2bean.Node2BeanProcessor;
-import info.magnolia.jcr.node2bean.Node2BeanTransformer;
-import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
-import info.magnolia.jcr.node2bean.TransformationState;
-import info.magnolia.jcr.node2bean.TypeDescriptor;
-import info.magnolia.jcr.node2bean.TypeMapping;
-import info.magnolia.jcr.util.PropertyUtil;
-import info.magnolia.jcr.wrapper.ExtendingNodeWrapper;
-import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 
 /**
  * Contains the logic for traversing the hierarchy and do the calls to the transformer.
@@ -93,7 +97,6 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
     protected Object toBean(Node node, boolean recursive, Node2BeanTransformer transformer, TransformationState state, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException{
 
         state.pushNode(node);
-
         TypeDescriptor type = null;
         try {
             type = transformer.resolveType(typeMapping, state, componentProvider);
@@ -189,17 +192,28 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
      */
     protected Map<String, Object> toMap(Node node, boolean recursive, Node2BeanTransformer transformer, TransformationState state, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        PropertyIterator it = node.getProperties();
+        PropertyIterator it = new FilteringPropertyIterator(node.getProperties(), new AbstractPredicate<Property>() {
+            @Override
+            public boolean evaluateTyped(Property t) {
+                try {
+                    return !(t.getName().startsWith(MgnlNodeType.JCR_PREFIX) || t.getName().startsWith(MgnlNodeType.MGNL_PREFIX));
+                } catch (RepositoryException e) {
+                    return false;
+                }
+            }
+        }, null);
         while (it.hasNext()) {
-            Property p = (Property) it.next();
+            Property p = it.nextProperty();
             Object val = PropertyUtil.getValueObject(p.getValue());
             if (val != null) {
                 map.put(p.getName(), val);
             }
         }
         if(recursive){
-            final Collection<Node> children = transformer.getChildren(node);
-            for (Node childNode : children) {
+            final NodeIterator children = transformer.getChildren(node);
+
+            while (children.hasNext()) {
+                Node childNode = (Node) children.next();
                 // in case the the class can not get resolved we can use now
                 // the parent bean to resolve the class
 
