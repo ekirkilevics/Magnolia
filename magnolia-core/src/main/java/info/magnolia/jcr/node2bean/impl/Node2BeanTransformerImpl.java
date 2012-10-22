@@ -43,7 +43,6 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.predicate.AbstractPredicate;
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.wrapper.SystemNodeWrapper;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
@@ -82,7 +81,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Iterables;
 
 /**
- * Concrete implementation using reflection and adder methods.
+ * Concrete implementation using reflection, generics and setter methods.
+ *
  */
 public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
@@ -222,7 +222,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                 try {
                     return !(t.getName().startsWith(MgnlNodeType.JCR_PREFIX) ||
                             t.getName().startsWith(MgnlNodeType.MGNL_PREFIX) ||
-                            NodeUtil.isNodeType(t, MgnlNodeType.NT_METADATA));
+                            t.isNodeType(MgnlNodeType.NT_METADATA));
                 } catch (RepositoryException e) {
                     return false;
                 }
@@ -429,9 +429,17 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
     }
 
     /**
-     *
-     * @param map
-     * @param clazz
+     * Creates collection from map. Collection type depends on passed class parameter. If passed class parameter is
+     * interface, then default implementation will be used for creating collection.<br/>
+     * By default
+     * <ul>
+     * <li>{@link LinkedList} is used for creating List and Queue collections.</li>
+     * <li>{@link HashSet} is used for creating Set collection.</li>
+     * </ul>
+     * If passed class parameter is an implementation of any collection type, then this method will create
+     * this implementation and returns it.
+     * @param map a map which values will be converted to a collection
+     * @param clazz collection type
      * @return Collection of elements or null.
      * @throws SecurityException
      * @throws NoSuchMethodException
