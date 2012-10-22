@@ -56,7 +56,7 @@ import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
 /**
- *
+ * A transformer which "hides" a collection node. Extend or pass the type and node name in the constructor.
  */
 public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImpl {
 
@@ -76,6 +76,8 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
 
     /**
      *
+     * @param beanClass class which collection will be hidden
+     * @param collectioName name of collection to hide
      */
     public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectioName) {
         this.beanClass = beanClass;
@@ -87,9 +89,6 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
         propertyType = propertyDescriptor.getCollectionEntryType();
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl#onResolveType(info.magnolia.jcr.node2bean.TypeMapping, info.magnolia.jcr.node2bean.TransformationState, info.magnolia.jcr.node2bean.TypeDescriptor, info.magnolia.objectfactory.ComponentProvider)
-     */
     @Override
     protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
         if (resolvedType == null) {
@@ -107,9 +106,6 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
         return resolvedType;
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl#setProperty(info.magnolia.jcr.node2bean.TypeMapping, info.magnolia.jcr.node2bean.TransformationState, info.magnolia.jcr.node2bean.PropertyTypeDescriptor, java.util.Map)
-     */
     @Override
     public void setProperty(TypeMapping mapping, TransformationState state, PropertyTypeDescriptor descriptor, Map<String, Object> values) throws RepositoryException {
         if (descriptor.getName().equals(collectionName)) {
