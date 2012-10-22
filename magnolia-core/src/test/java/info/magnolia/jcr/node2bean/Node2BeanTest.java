@@ -1,4 +1,34 @@
 /**
+ * This file Copyright (c) 2012 Magnolia International
+ * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
+ *
+ *
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
+ *
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
+ *
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia-cms.com/mna.html
+ *
+ * Any modifications to this file must keep this entire header
+ * intact.
  *
  */
 package info.magnolia.jcr.node2bean;
@@ -39,7 +69,7 @@ import org.junit.Test;
 import com.google.common.collect.Iterables;
 
 /**
- *
+ * Node2Bean tests.
  */
 public class Node2BeanTest {
 
@@ -84,11 +114,9 @@ public class Node2BeanTest {
                 "/test/node.class=info.magnolia.jcr.node2bean.BeanWithSubBean\n" +
                 "/test/node.integer=999\n" +
                 "/test/node.string=Hello\n" +
-                "/test/node.jcr\\:primaryType=a\n" +
                 "/test/node/sub.class=info.magnolia.jcr.node2bean.OtherSimpleBean\n" +
                 "/test/node/sub.integer=111\n" +
-                "/test/node/sub.string=World\n" +
-                "/test/node/sub.jcr\\:primaryType=b\n"
+                "/test/node/sub.string=World\n"
                 );
 
         Node2BeanProcessorImpl node2bean = new Node2BeanProcessorImpl(typeMapping);
@@ -112,14 +140,10 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
                 "/parent.integer=1\n" +
                 "/parent.string=Hello\n" +
-                "/parent.jcr\\:primaryType=a\n" +
-                "/parent/beans.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub1.integer=2\n" +
                 "/parent/beans/sub1.string=World\n" +
-                "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub2.integer=3\n" +
-                "/parent/beans/sub2.string=:)\n" +
-                "/parent/beans/sub2.jcr\\:primaryType=a\n"
+                "/parent/beans/sub2.string=:)\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -145,8 +169,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfString\n" +
                 "/parent/values.val1=test\n" +
-                "/parent/values.val2=str\n" +
-                "/parent/values.jcr\\:primaryType=a\n"
+                "/parent/values.val2=str\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -166,8 +189,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithListOfString\n" +
                 "/parent/values.val1=test\n" +
-                "/parent/values.val2=str\n" +
-                "/parent/values.jcr\\:primaryType=a\n"
+                "/parent/values.val2=str\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -189,8 +211,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithSetOfString\n" +
                 "/parent/values.val1=test\n" +
-                "/parent/values.val2=str\n" +
-                "/parent/values.jcr\\:primaryType=a\n"
+                "/parent/values.val2=str\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -211,8 +232,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithArrayListOfString\n" +
                 "/parent/values.val1=test\n" +
-                "/parent/values.val2=str\n" +
-                "/parent/values.jcr\\:primaryType=a\n"
+                "/parent/values.val2=str\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -233,8 +253,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithTreeSetOfString\n" +
                 "/parent/values.val1=test\n" +
-                "/parent/values.val2=str\n" +
-                "/parent/values.jcr\\:primaryType=a\n"
+                "/parent/values.val2=str\n"
                 );
 
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
@@ -257,14 +276,10 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithArrayOfSimpleBean\n" +
                 "/parent.integer=1\n" +
                 "/parent.string=Hello\n" +
-                "/parent.jcr\\:primaryType=a\n" +
-                "/parent/beans.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub1.integer=2\n" +
                 "/parent/beans/sub1.string=World\n" +
-                "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub2.integer=3\n" +
-                "/parent/beans/sub2.string=:)\n" +
-                "/parent/beans/sub2.jcr\\:primaryType=a\n"
+                "/parent/beans/sub2.string=:)\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -293,15 +308,10 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithHashMap\n" +
                 "/parent.integer=1\n" +
                 "/parent.string=Hello\n" +
-                "/parent.jcr\\:primaryType=a\n" +
-                "/parent/beans.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub1.integer=2\n" +
                 "/parent/beans/sub1.string=World\n" +
-                "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub2.integer=3\n" +
-                "/parent/beans/sub2.string=:)\n" +
-                "/parent/beans/sub2.jcr\\:primaryType=a\n"
-
+                "/parent/beans/sub2.string=:)\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -355,10 +365,7 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
             "/parent.class=info.magnolia.jcr.node2bean.BeanWithListOfString\n" +
             "/parent/values/sub1.value=one\n" +
-            "/parent/values/sub1.jcr\\:primaryType=a\n" +
-            "/parent/values/sub2.value=two\n" +
-            "/parent/values/sub2.jcr\\:primaryType=a\n" +
-            "/parent/values.jcr\\:primaryType=a\n"
+            "/parent/values/sub2.value=two"
             );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -396,14 +403,10 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/foo/bar.class=" + BeanWithMapWithGenerics.class.getName(),
                 "/foo/bar/beans.class=" + MyMap.class.getName(),
-                "/foo/bar/beans.jcr\\:primaryType=a",
                 "/foo/bar/beans/a.class=" + SimpleBean.class.getName(),
                 "/foo/bar/beans/a.string=Hello",
-                "/foo/bar/beans/a.jcr\\:primaryType=a",
                 "/foo/bar/beans/b.class=" + SimpleBean.class.getName(),
-                "/foo/bar/beans/b.string=World",
-                "/foo/bar/beans/b.jcr\\:primaryType=a"
-                );
+                "/foo/bar/beans/b.string=World");
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
         final BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/foo/bar"));
@@ -424,14 +427,11 @@ public class Node2BeanTest {
         // WHEN
         Session session = SessionTestUtil.createSession("/test",
                 "/bar.class=" + BeanWithMapWithGenerics.class.getName(),
-                "/bar/beans.jcr\\:primaryType=a",
                 "/bar/beans.class=" + StupidMap.class.getName(),
                 "/bar/beans/a.class=" + SimpleBean.class.getName(),
                 "/bar/beans/a.string=hello",
-                "/bar/beans/a.jcr\\:primaryType=a",
                 "/bar/beans/b.class=" + SimpleBean.class.getName(),
-                "/bar/beans/b.string=world",
-                "/bar/beans/b.jcr\\:primaryType=a"
+                "/bar/beans/b.string=world"
                 );
 
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
@@ -482,22 +482,16 @@ public class Node2BeanTest {
                         "/parent.string=Hello\n" +
                         "/parent.integer=10\n" +
                         "/parent/beans/sub1.string=foo\n" +
-                        "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                         "/parent/beans/sub2.string=bar\n" +
-                        "/parent/beans/sub2.jcr\\:primaryType=a\n" +
                         "/parent/beans/sub3.string=baz\n" +
-                        "/parent/beans/sub3.jcr\\:primaryType=a\n" +
                         "/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
                         "/sub/bean.string=World\n" +
                         "/sub/bean.integer=999\n" +
                         "/sub/bean.extends=/parent\n" +
                         "/another/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
                         "/another/sub/bean.extends=../../../sub/bean\n" +
-                        "/another/sub/bean/beans.jcr\\:primaryType=a\n" +
                         "/another/sub/bean/beans/sub3.string=bla\n" +
-                        "/another/sub/bean/beans/sub3.jcr\\:primaryType=a\n" +
-                        "/another/sub/bean/beans/sub4.string=blah\n" +
-                        "/another/sub/bean/beans/sub4.jcr\\:primaryType=a\n"
+                        "/another/sub/bean/beans/sub4.string=blah\n"
                 );
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -520,12 +514,9 @@ public class Node2BeanTest {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
-                "/parent/beans.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub1.string=Hello\n" +
-                "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                 "/parent/beans/sub2.string=World\n" +
-                "/parent/beans/sub2.enabled=false\n" +
-                "/parent/beans/sub2.jcr\\:primaryType=a\n"
+                "/parent/beans/sub2.enabled=false\n"
                 );
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -553,11 +544,8 @@ public class Node2BeanTest {
                         "/parent.integer=10\n" +
                         "/parent/beans/sub1.string=foo\n" +
                         "/parent/beans/sub1.enabled=false\n" +
-                        "/parent/beans/sub1.jcr\\:primaryType=a\n" +
                         "/parent/beans/sub2.string=bar\n" +
-                        "/parent/beans/sub2.jcr\\:primaryType=a\n" +
                         "/parent/beans/sub3.string=baz\n" +
-                        "/parent/beans/sub3.jcr\\:primaryType=a\n" +
                         "/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
                         "/sub/bean.string=World\n" +
                         "/sub/bean.integer=999\n" +
@@ -565,12 +553,9 @@ public class Node2BeanTest {
                         "/sub/bean.enabled=false\n" +
                         "/another/sub/bean.class=info.magnolia.jcr.node2bean.BeanWithMapWithGenerics\n" +
                         "/another/sub/bean.extends=../../../sub/bean\n" +
-                        "/another/sub/bean/beans.jcr\\:primaryType=a\n" +
                         "/another/sub/bean/beans/sub3.string=bla\n" +
-                        "/another/sub/bean/beans/sub3.jcr\\:primaryType=a\n" +
                         "/another/sub/bean/beans/sub4.string=blah\n" +
-                        "/another/sub/bean/beans/sub4.enabled=false\n" +
-                        "/another/sub/bean/beans/sub4.jcr\\:primaryType=a\n"
+                        "/another/sub/bean/beans/sub4.enabled=false\n"
                 );
         final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
 
@@ -631,13 +616,10 @@ public class Node2BeanTest {
         Session session = SessionTestUtil.createSession("test",
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithCollectionOfSimpleBean\n" +
                 "/parent/beans.class=java.util.Vector\n" +
-                "/parent/beans.jcr\\:primaryType=a\n" +
                 "/parent/beans/a.class=info.magnolia.jcr.node2bean.SimpleBean\n" +
                 "/parent/beans/a.string=hello\n" +
-                "/parent/beans/a.jcr\\:primaryType=a\n" +
                 "/parent/beans/b.class=info.magnolia.jcr.node2bean.SimpleBean\n" +
-                "/parent/beans/b.string=world\n" +
-                "/parent/beans/b.jcr\\:primaryType=a\n"
+                "/parent/beans/b.string=world\n"
                 );
         Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
         final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/parent"));
