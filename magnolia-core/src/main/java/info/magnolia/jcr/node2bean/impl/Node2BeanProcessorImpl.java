@@ -90,6 +90,19 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
     }
 
     @Override
+    public Object toBean(Node node, final Class<?> defaultClass) throws Node2BeanException, RepositoryException {
+        return toBean(new ExtendingNodeWrapper(node), true, new Node2BeanTransformerImpl() {
+            @Override
+            protected TypeDescriptor onResolveType(TypeMapping mapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+                if(resolvedType==null && state.getLevel() == 1){
+                    return mapping.getTypeDescriptor(defaultClass);
+                }
+                return resolvedType;
+            }
+        }, transformer.newState(), Components.getComponentProvider());
+    }
+
+    @Override
     public Object toBean(Node node, boolean recursive, final Node2BeanTransformer transformer, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException {
         return toBean(new ExtendingNodeWrapper(node), recursive, transformer, transformer.newState(), componentProvider);
     }

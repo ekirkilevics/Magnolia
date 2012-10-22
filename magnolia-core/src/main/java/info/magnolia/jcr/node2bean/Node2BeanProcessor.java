@@ -43,10 +43,31 @@ import info.magnolia.objectfactory.ComponentProvider;
  */
 public interface Node2BeanProcessor {
 
+    /**
+     * Transforms given node to bean.
+     * @param node which will be transformed to bean
+     * @return bean object
+     * @throws Node2BeanException
+     * @throws RepositoryException
+     */
     public Object toBean(Node node) throws Node2BeanException, RepositoryException;
 
     /**
+     * Transforms given node to bean. Class parameter will be used in transformer as default type.
+     * @param node which will be transformed to bean
+     * @param defaultClass default type
+     * @return bean object
+     * @throws Node2BeanException
+     * @throws RepositoryException
+     */
+    public Object toBean(Node node, Class<?> defaultClass) throws Node2BeanException, RepositoryException;
+
+    /**
      * Transforms the node to a bean using the passed transformer and component provider.
+     * @param node which will be transformed to bean
+     * @param recursive if set to true then all subnodes will be transformed as well
+     * @return bean object
+     * @throws Node2BeanException
      * @throws RepositoryException
      */
     public Object toBean(Node node, boolean recursive, final Node2BeanTransformer transformer, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException;
