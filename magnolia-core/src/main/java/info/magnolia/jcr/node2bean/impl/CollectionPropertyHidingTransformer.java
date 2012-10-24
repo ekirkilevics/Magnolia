@@ -53,7 +53,6 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.objectfactory.ComponentProvider;
-import info.magnolia.objectfactory.Components;
 
 /**
  * A transformer which "hides" a collection node. Extend or pass the type and node name in the constructor.
@@ -82,15 +81,18 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
     public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectioName) {
         this.beanClass = beanClass;
         this.collectionName = collectioName;
-
-        type = Components.getComponent(TypeMapping.class).getTypeDescriptor(this.beanClass);
-        propertyDescriptor = type.getPropertyTypeDescriptor(collectionName, Components.getComponent(TypeMapping.class));
-        writeMethod = propertyDescriptor.getWriteMethod();
-        propertyType = propertyDescriptor.getCollectionEntryType();
     }
 
     @Override
     protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+        // lazy init, we need TypeMapping
+        if (type == null) {
+            type = typeMapping.getTypeDescriptor(beanClass);
+            propertyDescriptor = type.getPropertyTypeDescriptor(collectionName, typeMapping);
+            writeMethod = propertyDescriptor.getWriteMethod();
+            propertyType = propertyDescriptor.getCollectionEntryType();
+        }
+
         if (resolvedType == null) {
             // if we are transforming a child node which does not define
             // the class to be used, return the type of the collection entries
