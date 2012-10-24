@@ -105,8 +105,6 @@ public class Store extends AbstractExecutor {
             return;
         }
 
-        cachePolicyResult.setCachedEntry(cachedEntry);
-
         int timeToLiveInSeconds = cachedEntry.getTimeToLiveInSeconds();
         if (timeToLiveInSeconds == 0) {
             // put null to unblock the cache
@@ -118,6 +116,8 @@ public class Store extends AbstractExecutor {
 
             return;
         }
+
+        cachePolicyResult.setCachedEntry(cachedEntry);
 
         if (timeToLiveInSeconds == -1) {
             cache.put(key, cachedEntry);
