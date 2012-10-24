@@ -33,8 +33,6 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import info.magnolia.jcr.node2bean.SampleEnum;
-
 /**
  * Bean with {@link SampleEnum} Enum.
  */
