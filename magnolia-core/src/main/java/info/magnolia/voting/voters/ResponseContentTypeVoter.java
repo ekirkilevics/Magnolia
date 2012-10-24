@@ -59,12 +59,20 @@ public class ResponseContentTypeVoter extends AbstractBoolVoter {
         return allowed;
     }
 
+    public void setAllowed(List<String> allowed) {
+        this.allowed.addAll(allowed);
+    }
+
     public void addAllowed(String contentType) {
         allowed.add(contentType);
     }
 
     public List<String> getRejected() {
         return rejected;
+    }
+
+    public void setRejected(List<String> rejected) {
+        this.rejected.addAll(rejected);
     }
 
     public void addRejected(String contentType) {

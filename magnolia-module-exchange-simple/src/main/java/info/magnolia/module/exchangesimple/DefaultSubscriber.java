@@ -63,7 +63,7 @@ public class DefaultSubscriber implements Subscriber {
      */
     private int connectTimeout = 10000;
 
-    Collection subscriptions = new ArrayList();
+    private final Collection<Subscription> subscriptions = new ArrayList<Subscription>();
 
     private final String authMethod = "Basic";
 
@@ -98,12 +98,12 @@ public class DefaultSubscriber implements Subscriber {
     }
 
     @Override
-    public void setSubscriptions(Collection subscriptions) {
-        this.subscriptions = subscriptions;
+    public void setSubscriptions(Collection<Subscription> subscriptions) {
+        this.subscriptions.addAll(subscriptions);
     }
 
     @Override
-    public Collection getSubscriptions() {
+    public Collection<Subscription> getSubscriptions() {
         return this.subscriptions;
     }
 

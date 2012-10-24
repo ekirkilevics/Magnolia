@@ -68,6 +68,12 @@ public class WebContainerResourcesImpl implements WebContainerResources {
         return result;
     }
 
+    public void setMappings(Collection<String> mappings) {
+        for (String mapping : mappings) {
+            this.mapping.addMapping(mapping);
+        }
+    }
+
     public void addMapping(String mapping){
         this.mapping.addMapping(mapping);
     }

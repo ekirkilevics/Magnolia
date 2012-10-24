@@ -70,6 +70,10 @@ public class VoterSet extends BaseVoterImpl {
         return voters;
     }
 
+    public void setVoters(Voter[] voters) {
+        this.voters = (Voter[]) ArrayUtils.addAll(this.voters, voters);
+    }
+
     public void addVoter(Voter voter){
         if(voter.isEnabled()){
             voters = (Voter[]) ArrayUtils.add(voters, voter);
