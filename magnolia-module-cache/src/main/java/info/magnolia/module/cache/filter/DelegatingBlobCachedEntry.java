@@ -67,7 +67,7 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
 
     public static final String CONTENT_FILE_ATTRIBUTE = DelegatingBlobCachedEntry.class.getName() + ".contentFile";
 
-    private long contentLength;
+    private final long contentLength;
 
     public DelegatingBlobCachedEntry(long contentLength, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, String originalUrl, int timeToLiveInSeconds) throws IOException {
         super(contentType, characterEncoding, statusCode, headers, modificationDate, originalUrl, timeToLiveInSeconds);
@@ -83,6 +83,7 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
     public void replay(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         File contentFile = getContentFileBoundToTheRequest(request);
         if(contentFile != null){
+            log.debug("About to serve response from {}", contentFile.getAbsolutePath());
             super.replay(request, response, chain);
         }
         else{
@@ -93,13 +94,16 @@ public class DelegatingBlobCachedEntry extends ContentCachedEntry {
     @Override
     protected void writeContent(HttpServletRequest request, HttpServletResponse response, FilterChain chain, boolean acceptsGzipEncoding) throws IOException, ServletException {
         response.setContentLength((int) contentLength);
+
         File contentFile = getContentFileBoundToTheRequest(request);
         if(contentFile != null){
+            log.debug("Streaming out output from {}", contentFile.getAbsolutePath());
             FileInputStream contentStream = FileUtils.openInputStream(contentFile);
             try{
                 IOUtils.copy(contentStream,response.getOutputStream());
             }finally{
                 IOUtils.closeQuietly(contentStream);
+                log.debug("About to delete temp file {}", contentFile.getAbsolutePath());
                 if(!contentFile.delete()){
                     log.error("Can't delete file: " + contentFile);
                 }

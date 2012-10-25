@@ -20,7 +20,7 @@ for Java Content Repositories (JCR).
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia-cms.com/release/5.0-prev1.html</documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/5.0-alpha1-s7.html</documentationURL>
     <javaVersion>1.6</javaVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -261,7 +261,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>2.4.1</version>
+        <version>2.4.3</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>

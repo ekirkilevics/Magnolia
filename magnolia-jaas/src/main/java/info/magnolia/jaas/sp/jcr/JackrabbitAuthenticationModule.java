@@ -33,10 +33,20 @@
  */
 package info.magnolia.jaas.sp.jcr;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.security.PrincipalUtil;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.objectfactory.Components;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -50,13 +60,6 @@ import javax.security.auth.spi.LoginModule;
 import org.apache.jackrabbit.core.security.UserPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.PrincipalUtil;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
 
 /**
  * Login module for internal Jackrabbit authentication, validates the JackRabbit 'admin' user and uses the Subject
@@ -106,8 +109,9 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
         // can't use the context here because it's bound to the system user which is configured in the repository and
         // attempting to access it would fail. More specifically calling MgnlContext.getSubject() fails as a result of
         // trying to use SecuritySupport.
-        if (ContentRepository.REPOSITORY_USER.equals(this.name)) {
-            if (!Arrays.equals(password, ContentRepository.REPOSITORY_PSWD.toCharArray())) {
+
+        if (getAdminUser().equals(this.name)) {
+            if (!Arrays.equals(password, getAdminPassword().toCharArray())) {
                 throw new FailedLoginException();
             }
             compileAdminPrincipals();
@@ -156,7 +160,31 @@ public class JackrabbitAuthenticationModule implements LoginModule, Serializable
     }
 
     private void compileAdminPrincipals() {
-        this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(ContentRepository.REPOSITORY_USER));
+        this.subject.getPrincipals().add(new MagnoliaJRAdminPrincipal(getAdminUser()));
+    }
+
+    protected String getAdminUser() {
+        String user = ContentRepository.REPOSITORY_USER;
+        if (user == null) {
+            MagnoliaConfigurationProperties mcp = Components.getSingleton(MagnoliaConfigurationProperties.class);
+            user = mcp.getProperty("magnolia.connection.jcr.userId");
+        }
+        if (user == null) {
+            user = System.getProperty("magnolia.connection.jcr.userId");
+        }
+        return user;
+    }
+
+    protected String getAdminPassword() {
+        String user = ContentRepository.REPOSITORY_PSWD;
+        if (user == null) {
+            MagnoliaConfigurationProperties mcp = Components.getSingleton(MagnoliaConfigurationProperties.class);
+            user = mcp.getProperty("magnolia.connection.jcr.password");
+        }
+        if (user == null) {
+            user = System.getProperty("magnolia.connection.jcr.password");
+        }
+        return user;
     }
 
     /**

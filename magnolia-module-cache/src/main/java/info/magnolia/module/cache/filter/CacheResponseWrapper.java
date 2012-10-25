@@ -59,6 +59,8 @@ import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ThresholdingOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,6 +75,7 @@ import org.apache.commons.io.output.ThresholdingOutputStream;
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     public static final int DEFAULT_THRESHOLD = 500 * 1024;
+    private static final Logger log = LoggerFactory.getLogger(CacheResponseWrapper.class);
 
     private final ServletOutputStream wrappedStream;
     private PrintWriter wrappedWriter = null;
@@ -80,14 +83,14 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private int status = SC_OK;
     private boolean isError;
     private String redirectionLocation;
-    private HttpServletResponse originalResponse;
-    private ByteArrayOutputStream inMemoryBuffer;
+    private final HttpServletResponse originalResponse;
+    private final ByteArrayOutputStream inMemoryBuffer;
     private File contentFile;
     private long contentLength = -1;
-    private ResponseExpirationCalculator responseExpirationCalculator;
+    private final ResponseExpirationCalculator responseExpirationCalculator = new ResponseExpirationCalculator();
 
-    private ThresholdingOutputStream thresholdingOutputStream;
-    private boolean serveIfThresholdReached;
+    private final ThresholdingOutputStream thresholdingOutputStream;
+    private final boolean serveIfThresholdReached;
 
     private String errorMsg;
 
@@ -117,7 +120,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     public ServletOutputStream getOutputStream() throws IOException {
         return wrappedStream;
     }
-    
+
     public ThresholdingOutputStream getThresholdingOutputStream() throws IOException {
         return thresholdingOutputStream;
     }
@@ -151,26 +154,29 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     @Override
     public void reset() {
         super.reset();
-//        if (wrappedStream instanceof ByteArrayOutputStream) {
-//            ((ByteArrayOutputStream)wrappedStream).reset();
-//        }
+
         wrappedWriter = null;
         status = SC_OK;
-
-//         cookies.clear();
         headers.clear();
-//        contentType = null;
-//        contentLength = 0;
+        // cleanup temp file if any
+        cleanUp();
     }
 
 
     @Override
     public void resetBuffer() {
         super.resetBuffer();
-//        if (wrappedStream != null) {
-//            ((ByteArrayOutputStream)wrappedStream).reset();
-//        }
         wrappedWriter = null;
+        cleanUp();
+    }
+
+    public void cleanUp() {
+        if (contentFile != null && contentFile.exists()) {
+            if (!contentFile.delete()) {
+                log.error("Can't delete file: " + contentFile);
+            }
+        }
+        contentFile = null;
     }
 
     public int getStatus() {
@@ -208,16 +214,6 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         } catch (DateParseException e) {
             throw new IllegalStateException("Could not parse Last-Modified header with value " + value + " : " + e.getMessage());
         }
-    }
-
-    /**
-     * Enables expiration detection, response headers are then intercepted and suppressed from the response and used
-     * internally to calculate when the response expires (its time to live value). Use {@link #getTimeToLiveInSeconds()}
-     * to get the calculated value. See {@link ResponseExpirationCalculator} for more details on how the calculation
-     * is performed.
-     */
-    public void setResponseExpirationDetectionEnabled() {
-        this.responseExpirationCalculator = new ResponseExpirationCalculator();
     }
 
     /**
@@ -392,17 +388,26 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
         @Override
         protected void thresholdReached() throws IOException {
+
             if(serveIfThresholdReached){
                 replayHeadersAndStatus(originalResponse);
                 out = originalResponse.getOutputStream();
+                log.debug("Reached threshold for in-memory caching. Will not cache and stream response directly to user.");
             }
             else{
                 contentFile = File.createTempFile("cacheStream", null, Path.getTempDirectory());
-                contentFile.deleteOnExit();
-                out = new FileOutputStream(contentFile);
+                if (contentFile != null) {
+                    log.debug("Reached threshold for in-memory caching. Will continue caching in new cache temp file {}", contentFile.getAbsolutePath());
+                    contentFile.deleteOnExit();
+                    out = new FileOutputStream(contentFile);
+                } else {
+                    log.error("Reached threshold for in-memory caching, but unable to create the new cache temp file. Will not cache and stream response directly to user.");
+                    replayHeadersAndStatus(originalResponse);
+                    out = originalResponse.getOutputStream();
+                }
             }
             out.write(getBufferedContent());
+            out.flush();
         }
     }
-
 }
