@@ -33,16 +33,18 @@
  */
 package info.magnolia.commands;
 
-import java.util.Iterator;
-
-import javax.inject.Singleton;
-
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.objectfactory.Components;
+
+import java.util.Iterator;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
@@ -65,7 +67,11 @@ public class CommandsManager extends ObservedManager {
 
     private final CommandTransformer commandTransformer;
 
-    public CommandsManager() {
+    private final Node2BeanProcessor nodeToBean;
+
+    @Inject
+    public CommandsManager(Node2BeanProcessor nodeToBean) {
+        this.nodeToBean = nodeToBean;
         this.commandTransformer = new CommandTransformer();
     }
 
@@ -87,7 +93,7 @@ public class CommandsManager extends ObservedManager {
 
     protected void registerCatalog(Content node) {
         try {
-            MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, commandTransformer);
+            MgnlCatalog catalog = (MgnlCatalog) nodeToBean.toBean(node.getJCRNode(), true, commandTransformer, Components.getComponentProvider());
             CatalogFactory factory = CatalogFactory.getInstance();
             if (factory.getCatalog(catalog.getName()) == null) {
                 factory.addCatalog(catalog.getName(), catalog);
@@ -98,7 +104,10 @@ public class CommandsManager extends ObservedManager {
 
             log.debug("Catalog {} registered: {}", new Object[]{catalog.getName(), catalog});
         }
-        catch (Content2BeanException e) {
+        catch (RepositoryException e) {
+            log.error("Can't read catalog [" + node + "]", e);
+        }
+        catch (Node2BeanException e) {
             log.error("Can't create catalog [" + node  + "]", e);
         }
     }
@@ -149,6 +158,7 @@ public class CommandsManager extends ObservedManager {
      * @return Returns the instance.
      * @deprecated since 4.5, use IoC !
      */
+    @Deprecated
     public static CommandsManager getInstance() {
         return Components.getSingleton(CommandsManager.class);
     }

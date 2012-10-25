@@ -10,20 +10,20 @@
   <components>
     <id>system</id>
     <component>
-      <type>info.magnolia.content2bean.Content2BeanProcessor</type>
-      <implementation>info.magnolia.content2bean.impl.Content2BeanProcessorImpl</implementation>
+      <type>info.magnolia.jcr.node2bean.Node2BeanProcessor</type>
+      <implementation>info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl</implementation>
     </component>
     <component>
-      <type>info.magnolia.content2bean.Content2BeanTransformer</type>
-      <implementation>info.magnolia.content2bean.impl.Content2BeanTransformerImpl</implementation>
+      <type>info.magnolia.jcr.node2bean.Node2BeanTransformer</type>
+      <implementation>info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl</implementation>
     </component>
     <component>
-      <type>info.magnolia.content2bean.TransformationState</type>
-      <implementation>info.magnolia.content2bean.impl.TransformationStateImpl</implementation>
+      <type>info.magnolia.jcr.node2bean.TransformationState</type>
+      <implementation>info.magnolia.jcr.node2bean.impl.TransformationStateImpl</implementation>
     </component>
     <component>
-      <type>info.magnolia.content2bean.TypeMapping</type>
-      <implementation>info.magnolia.content2bean.impl.TypeMappingImpl</implementation>
+      <type>info.magnolia.jcr.node2bean.TypeMapping</type>
+      <implementation>info.magnolia.jcr.node2bean.impl.TypeMappingImpl</implementation>
     </component>
     <component>
       <type>info.magnolia.cms.i18n.MessagesManager</type>
@@ -168,6 +168,10 @@
       <type>info.magnolia.beanmerger.BeanMerger</type>
       <implementation>info.magnolia.beanmerger.ProxyBasedBeanMerger</implementation>
       <scope>singleton</scope>
+    </component>
+    <component>
+        <type>info.magnolia.cms.filters.CompositeFilterTransformer</type>
+        <implementation>info.magnolia.cms.filters.CompositeFilterTransformer</implementation>
     </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>

@@ -33,7 +33,8 @@
  */
 package info.magnolia.templating.freemarker;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import freemarker.cache.StringTemplateLoader;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
@@ -52,6 +53,12 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import info.magnolia.objectfactory.guice.GuiceComponentProviderBuilder;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
@@ -167,6 +174,10 @@ public abstract class AbstractDirectiveTestCase {
         configuration.registerImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
         configuration.registerImplementation(TemplateDefinitionAssignment.class, MetaDataBasedTemplateDefinitionAssignment.class);
         configuration.registerImplementation(ContextFactory.class);
+        // configure node2bean because its processor is injected into DefaultMessagesManager constructor
+        configuration.registerImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
+        configuration.registerImplementation(TypeMapping.class, TypeMappingImpl.class);
+        configuration.registerImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
 
         MockContext systemContext = new MockContext();
         systemContext.addSession("testWorkspace", session.getJcrSession());

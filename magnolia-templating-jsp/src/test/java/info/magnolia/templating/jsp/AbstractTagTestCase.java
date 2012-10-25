@@ -49,6 +49,12 @@ import info.magnolia.context.ContextFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.OutputProvider;
@@ -192,6 +198,10 @@ public abstract class AbstractTagTestCase {
         ComponentsTestUtil.setImplementation(I18nAuthoringSupport.class, DefaultI18nAuthoringSupport.class);
         ComponentsTestUtil.setImplementation(ContextFactory.class,ContextFactory.class);
         ComponentsTestUtil.setImplementation(TemplateDefinitionAssignment.class, MetaDataBasedTemplateDefinitionAssignment.class);
+        // configure node2bean because its processor is injected into DefaultMessagesManager constructor
+        ComponentsTestUtil.setImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
 
         MockContext systemContext = new MockContext();
         systemContext.addSession("website", session.getJcrSession());

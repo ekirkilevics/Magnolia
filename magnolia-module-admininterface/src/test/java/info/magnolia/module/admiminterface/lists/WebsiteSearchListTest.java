@@ -33,11 +33,9 @@
  */
 package info.magnolia.module.admiminterface.lists;
 
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
 import info.magnolia.cms.gui.query.SearchQuery;
@@ -48,15 +46,20 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.module.admininterface.lists.WebsiteSearchList;
 import info.magnolia.test.ComponentsTestUtil;
+
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 /**
  * @version $Id$
@@ -71,7 +74,7 @@ public class WebsiteSearchListTest {
     public void setUp(){
         Locale locale = new Locale("en");
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager(new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())));
         ComponentsTestUtil.setImplementation(MgnlContext.class, MgnlContext.class);
 
         request = mock(HttpServletRequest.class);
@@ -80,7 +83,7 @@ public class WebsiteSearchListTest {
         when(ctx.getLocale()).thenReturn(locale);
         MgnlContext.setInstance(ctx);
     }
-    
+
     @Test
     public void testSearchWithEmptySearchString(){
         WebsiteSearchList list = new WebsiteSearchList("test", request, response);

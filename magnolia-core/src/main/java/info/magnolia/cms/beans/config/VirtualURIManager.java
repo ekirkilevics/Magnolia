@@ -34,11 +34,11 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
-import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
-import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang.StringUtils;
@@ -68,10 +69,14 @@ public final class VirtualURIManager extends ObservedManager {
 
     public static final String TO_URI_NODEDATANAME = "toURI";
 
+    private final Node2BeanProcessor nodeToBean;
+
     /**
      * Instantiated by the system.
      */
-    public VirtualURIManager() {
+    @Inject
+    public VirtualURIManager(Node2BeanProcessor nodeToBean) {
+        this.nodeToBean = nodeToBean;
     }
 
     /**
@@ -126,10 +131,10 @@ public final class VirtualURIManager extends ObservedManager {
     protected void onRegister(Content node) {
         try {
             log.info("Loading VirtualURIMapping from {}", node.getHandle()); //$NON-NLS-1$
-            new Node2BeanProcessorImpl(Components.getComponent(TypeMapping.class)).setProperties(this.cachedURImapping, node.getJCRNode(), true, new Node2BeanTransformerImpl() {
+            nodeToBean.setProperties(this.cachedURImapping, node.getJCRNode(), true, new Node2BeanTransformerImpl() {
                 @Override
                 protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
-                    if(state.getLevel()==2 && resolvedType == null){
+                    if (state.getLevel() == 2 && resolvedType == null) {
                         return typeMapping.getTypeDescriptor(DefaultVirtualURIMapping.class);
                     }
                     return resolvedType;
@@ -156,6 +161,7 @@ public final class VirtualURIManager extends ObservedManager {
      * @return Returns the instance.
      * @deprecated since 4.5, use IoC !
      */
+    @Deprecated
     public static VirtualURIManager getInstance() {
         return Components.getSingleton(VirtualURIManager.class);
     }

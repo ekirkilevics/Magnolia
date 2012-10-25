@@ -33,23 +33,21 @@
  */
 package info.magnolia.rendering.template.assignment;
 
-import java.util.Collection;
-import java.util.Locale;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.junit.After;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
@@ -62,6 +60,15 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockWorkspace;
 
+import java.util.Collection;
+import java.util.Locale;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.junit.After;
+import org.junit.Test;
+
 /**
  * @version $Id$
  */
@@ -69,8 +76,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
 
     private static class SimpleTemplateDefinitionProvider implements TemplateDefinitionProvider {
 
-        private String id;
-        private TemplateDefinition templateDefinition;
+        private final String id;
+        private final TemplateDefinition templateDefinition;
 
         private SimpleTemplateDefinitionProvider(String id, TemplateDefinition templateDefinition) {
             this.id = id;
@@ -220,6 +227,10 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         MockSession session = new MockSession(new MockWorkspace("website"));
         MockUtil.setSessionAndHierarchyManager(session);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        // configure node2bean because its processor is injected into DefaultMessagesManager constructor
+        ComponentsTestUtil.setImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);

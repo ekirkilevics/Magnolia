@@ -38,26 +38,35 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.map.LazyMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Singleton;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -87,7 +96,11 @@ public class DefaultMessagesManager extends MessagesManager {
 
     private String defaultBasename = DEFAULT_BASENAME;
 
-    public DefaultMessagesManager() {
+    private final Node2BeanProcessor nodeToBean;
+
+    @Inject
+    public DefaultMessagesManager(Node2BeanProcessor nodeToBean) {
+        this.nodeToBean = nodeToBean;
         // setting default language (en)
         setDefaultLocale(FALLBACK_LOCALE);
 
@@ -172,7 +185,15 @@ public class DefaultMessagesManager extends MessagesManager {
                 languagesNode = configNode.createContent(LANGUAGES_NODE_NAME, ItemType.CONTENT);
             }
 
-            final Map<String, LocaleDefinition> languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
+            final Map<String, LocaleDefinition> languageDefinitions = (Map<String, LocaleDefinition>) nodeToBean.setProperties(new LinkedHashMap<String, LocaleDefinition>(), languagesNode.getJCRNode(), true, new Node2BeanTransformerImpl() {
+                @Override
+                protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
+                    if (resolvedType == null && state.getLevel() == 2) {
+                        return typeMapping.getTypeDescriptor(LocaleDefinition.class);
+                    }
+                    return resolvedType;
+                }
+            }, Components.getComponentProvider());
 
             // clear collection for reload
             availableLocales.clear();
@@ -240,6 +261,7 @@ public class DefaultMessagesManager extends MessagesManager {
      * remove the method, make it private. applicationLocale field is still needed. --and/or remove duplication with
      * SystemContext.locale
      */
+    @Deprecated
     public void setDefaultLocale(String defaultLocale) {
         this.applicationLocale = new Locale(defaultLocale);
         // MgnlContext.getSystemContext().setLocale(applicationLocale);

@@ -33,17 +33,19 @@
  */
 package info.magnolia.objectfactory.guice;
 
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.objectfactory.ComponentProvider;
+import info.magnolia.objectfactory.Components;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import com.google.inject.ProvisionException;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.objectfactory.ComponentProvider;
 
 
 /**
@@ -75,13 +77,15 @@ public class GuiceConfiguredComponentProvider<T> implements Provider<T> {
 
         try {
             return transformNode(node);
-        } catch (Content2BeanException e) {
+        } catch (Node2BeanException e) {
             throw new ProvisionException(e.getMessage(), e);
+        } catch (RepositoryException e) {
+            throw new ProvisionException("Can't read node [" + workspace + ":" + path + "]", e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected T transformNode(Node node) throws Content2BeanException{
-        return (T) Content2BeanUtil.toBean(ContentUtil.asContent(node), true, componentProvider);
+    protected T transformNode(Node node) throws Node2BeanException, RepositoryException{
+        return (T) Components.getComponent(Node2BeanProcessor.class).toBean(node, true, new Node2BeanTransformerImpl(), componentProvider);
     }
 }

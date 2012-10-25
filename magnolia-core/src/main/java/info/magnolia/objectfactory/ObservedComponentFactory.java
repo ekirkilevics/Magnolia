@@ -39,23 +39,20 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
-import info.magnolia.jcr.node2bean.TransformationState;
-import info.magnolia.jcr.node2bean.TypeMapping;
-import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
-
-import org.apache.commons.proxy.ObjectProvider;
-import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.util.Map;
+
+import org.apache.commons.proxy.ObjectProvider;
+import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic observed singleton factory.
@@ -212,22 +209,11 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     }
 
     protected T transformNode(Node node) throws Node2BeanException, RepositoryException {
-        return (T) new Node2BeanProcessorImpl(Components.getComponent(TypeMapping.class)).toBean(node, true, getNode2BeanTransformer(), componentProvider);
+        return (T) Components.getComponent(Node2BeanProcessor.class).toBean(node, true, getNode2BeanTransformer(), componentProvider);
     }
 
     protected Node2BeanTransformer getNode2BeanTransformer() {
-        // we can not discover again the same class we are building
-        return new Node2BeanTransformerImpl() {
-            @Override
-            public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Node2BeanException {
-                // TODO here too?
-/*                if (state.getCurrentType().getType().equals(interf)) {
-                    final ClassFactory classFactory = Classes.getClassFactory();
-                    return classFactory.newInstance(interf);
-                }*/
-                return super.newBeanInstance(state, properties, componentProvider);
-            }
-        };
+        return new Node2BeanTransformerImpl();
     }
 
     protected Class<T> getComponentType() {

@@ -46,6 +46,9 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.DummyUser;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.rendering.context.AggregationStateBasedRenderingContext;
 import info.magnolia.rendering.engine.AppendableOnlyOutputProvider;
 import info.magnolia.rendering.model.RenderingModel;
@@ -92,7 +95,7 @@ public class PlainTextRendererTest {
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
         ComponentsTestUtil.setInstance(SystemContext.class, webctx);
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager(new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())));
         webctx.setLocale(new Locale("en"));
     }
 

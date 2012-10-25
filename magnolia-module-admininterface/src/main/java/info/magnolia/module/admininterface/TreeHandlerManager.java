@@ -37,7 +37,8 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
 
@@ -46,6 +47,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -68,6 +70,13 @@ public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedM
      */
     private final Map<String, TreeHandlerConfig> treeHandlers = new HashMap<String, TreeHandlerConfig>();
 
+    private final Node2BeanProcessor nodeToBean;
+
+    @Inject
+    public TreeHandlerManager(Node2BeanProcessor nodeToBean) {
+        this.nodeToBean = nodeToBean;
+    }
+
     /**
      * Get the tree handler registered under a particular name.
      * @param name
@@ -88,7 +97,7 @@ public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedM
         try {
             Constructor<H> constructor = treeHandlerClass.getConstructor(String.class, HttpServletRequest.class, HttpServletResponse.class);
             AdminTreeMVCHandler newInstance = constructor.newInstance(name, request, response);
-            Content2BeanUtil.setProperties(newInstance, th.getTreeDefinition(), true);
+            nodeToBean.setProperties(newInstance, th.getTreeDefinition().getJCRNode(), true, new Node2BeanTransformerImpl(), Components.getComponentProvider());
             return newInstance;
         }
         catch (Exception e) {
@@ -157,11 +166,11 @@ public class TreeHandlerManager<H extends AdminTreeMVCHandler> extends ObservedM
 
     class TreeHandlerConfig {
 
-        private Class<H> handler;
+        private final Class<H> handler;
 
-        private String repository;
+        private final String repository;
 
-        private Content treeDefinition;
+        private final Content treeDefinition;
 
         TreeHandlerConfig(Class<H> handler, String repository, Content treeDefinition) {
             this.handler = handler;

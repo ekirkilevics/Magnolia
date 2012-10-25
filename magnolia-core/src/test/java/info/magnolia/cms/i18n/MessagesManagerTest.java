@@ -33,18 +33,28 @@
  */
 package info.magnolia.cms.i18n;
 
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.junit.Assert.assertEquals;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.ComponentsTestUtil;
+
+import java.util.Locale;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.createMock;
-
-import java.util.Locale;
 
 /**
  * @version $Id$
@@ -65,6 +75,10 @@ public class MessagesManagerTest {
         sysCtx = createStrictMock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, sysCtx);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        // configure node2bean because its processor is injected into DefaultMessagesManager constructor
+        ComponentsTestUtil.setImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
 
         // Replace the default bundle (adminterface) by a fake one - see MAGNOLIA-2528
         final DefaultMessagesManager mm = (DefaultMessagesManager) MessagesManager.getInstance();

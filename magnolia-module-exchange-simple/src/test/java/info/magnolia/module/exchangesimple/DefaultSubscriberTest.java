@@ -43,9 +43,12 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.BootstrapUtil;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
@@ -65,6 +68,8 @@ import org.junit.Test;
  */
 public class DefaultSubscriberTest extends RepositoryTestCase {
 
+    private Node2BeanProcessor n2b;
+
     @Override
     @Before
     public void setUp() throws Exception {
@@ -73,6 +78,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         ComponentsTestUtil.setImplementation(ActivationManager.class, DefaultActivationManager.class);
         ComponentsTestUtil.setImplementation(Syndicator.class, TestSyndicator.class);
         ComponentsTestUtil.setImplementation(Subscription.class, DefaultSubscription.class);
+        n2b = new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl());
     }
 
     @Override
@@ -92,7 +98,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
-        man.addSubscribers((Subscriber) Content2BeanUtil.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080"), true));
+        man.addSubscribers((Subscriber) n2b.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080").getJCRNode()));
         assertFalse(man.getSubscribers().isEmpty());
         Subscriber subscriber = man.getSubscribers().iterator().next();
 
@@ -110,7 +116,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         subContent.setNodeData("readTimeout", "4000");
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
-        man.addSubscribers((Subscriber) Content2BeanUtil.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080"), true));
+        man.addSubscribers((Subscriber) n2b.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080").getJCRNode()));
         assertFalse(man.getSubscribers().isEmpty());
         Subscriber subscriber = man.getSubscribers().iterator().next();
 
@@ -124,7 +130,7 @@ public class DefaultSubscriberTest extends RepositoryTestCase {
         HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.CONFIG);
 
         ActivationManager man = ActivationManagerFactory.getActivationManager();
-        man.addSubscribers((Subscriber) Content2BeanUtil.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080"), true));
+        man.addSubscribers((Subscriber) n2b.toBean(hm.getContent("/server/activation/subscribers/magnoliaPublic8080").getJCRNode()));
         assertFalse(man.getSubscribers().isEmpty());
         Subscriber subscriber = man.getSubscribers().iterator().next();
 

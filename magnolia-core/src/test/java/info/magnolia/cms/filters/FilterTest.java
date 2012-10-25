@@ -39,6 +39,9 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
@@ -99,7 +102,7 @@ public class FilterTest extends MgnlTestCase {
         MgnlMainFilter mf = new MgnlMainFilter(){
             @Override
             protected FilterManager getFilterManager(ServletContext servletContext) {
-                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, sysCtx) {
+                return new FilterManagerImpl(null/*only used for isSystemUIMode()*/, sysCtx, new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())) {
                     @Override
                     protected boolean isSystemUIMode() {
                         return false;

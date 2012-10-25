@@ -33,7 +33,19 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.servlets.ClasspathSpool;
+import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.repository.RepositoryConstants;
+
 import java.util.Collections;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.PathNotFoundException;
@@ -45,23 +57,10 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.servlets.ClasspathSpool;
-import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.module.ModuleManager;
-import info.magnolia.repository.RepositoryConstants;
-
 
 /**
- * Default {@link FilterManager} implementation; uses content2bean and observation
+ * Default {@link FilterManager} implementation; uses node2bean and observation
  * to maintain the filter chain configured at {@value #SERVER_FILTERS}.
- *
- * @version $Id$
  */
 @Singleton
 public class FilterManagerImpl implements FilterManager {
@@ -85,11 +84,13 @@ public class FilterManagerImpl implements FilterManager {
     private final MgnlFilterDispatcher filterDispatcher = new MgnlFilterDispatcher();
     private final Object resetLock = new Object();
     private FilterConfig filterConfig;
+    private final Node2BeanProcessor nodeToBean;
 
     @Inject
-    public FilterManagerImpl(ModuleManager moduleManager, SystemContext systemContext) {
+    public FilterManagerImpl(ModuleManager moduleManager, SystemContext systemContext, Node2BeanProcessor nodeToBean) {
         this.moduleManager = moduleManager;
         this.systemContext = systemContext;
+        this.nodeToBean = nodeToBean;
     }
 
     @Override
@@ -181,7 +182,7 @@ public class FilterManagerImpl implements FilterManager {
         try {
             final HierarchyManager hm = systemContext.getHierarchyManager(RepositoryConstants.CONFIG);
             final Content node = hm.getContent(SERVER_FILTERS);
-            MgnlFilter filter = (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
+            MgnlFilter filter = (MgnlFilter) nodeToBean.toBean(node.getJCRNode(), MgnlFilter.class);
             if (filter == null) {
                 throw new ServletException("Unable to create filter objects");
             }
@@ -190,7 +191,7 @@ public class FilterManagerImpl implements FilterManager {
             throw new ServletException("No filters configured at " + SERVER_FILTERS);
         } catch (RepositoryException e) {
             throw new ServletException("Can't read filter definitions", e);
-        } catch (Content2BeanException e) {
+        } catch (Node2BeanException e) {
             throw new ServletException("Can't create filter objects", e);
         }
     }

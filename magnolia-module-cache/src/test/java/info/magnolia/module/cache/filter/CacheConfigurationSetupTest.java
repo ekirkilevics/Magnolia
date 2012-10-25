@@ -41,8 +41,8 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CachePolicyExecutor;
@@ -51,6 +51,7 @@ import info.magnolia.module.cache.cachepolicy.Default;
 import info.magnolia.module.cache.executor.CompositeExecutor;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
+import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -96,8 +97,8 @@ public class CacheConfigurationSetupTest extends RepositoryTestCase {
 
         MgnlContext.login(MockUtil.createSubject(anonymous));
 
-        //Logger.getLogger("info.magnolia.content2bean").setLevel(Level.DEBUG);
-        cacheConf = (CacheConfiguration) Content2BeanUtil.toBean(content, true, CacheConfiguration.class);
+        Node2BeanProcessor n2b = Components.getComponent(Node2BeanProcessor.class);
+        cacheConf = (CacheConfiguration) n2b.toBean(content.getJCRNode(), CacheConfiguration.class);
     }
 
     @Test

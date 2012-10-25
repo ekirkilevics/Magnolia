@@ -33,11 +33,17 @@
  */
 package info.magnolia.module;
 
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.classextension.EasyMock.createStrictMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.repository.DefaultRepositoryManager;
-import info.magnolia.repository.RepositoryManager;
-import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.delta.AbstractTask;
@@ -50,17 +56,19 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.easymock.classextension.EasyMock.*;
+import info.magnolia.repository.DefaultRepositoryManager;
+import info.magnolia.repository.RepositoryManager;
+import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @version $Id$
@@ -144,7 +152,7 @@ public class ModuleManagerImplTest {
         replay(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
 
         final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(mod, fromVersion, Arrays.asList(d1, d2));
-        new ModuleManagerImpl(null,null,null,null).installOrUpdateModule(moduleAndDeltas, ctx);
+        new ModuleManagerImpl(null, null, null, null, null).installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
     }
