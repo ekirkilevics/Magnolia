@@ -89,10 +89,6 @@ public class PropertyTypeDescriptor {
         this.name = name;
     }
 
-    public Method getAddMethod() {
-        return null;
-    }
-
     public Method getWriteMethod() {
         return writeMethod;
     }

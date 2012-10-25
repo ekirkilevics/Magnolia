@@ -95,7 +95,7 @@ public class TypeMappingImpl implements TypeMapping {
         if (dscr.getType() != null) {
             if (dscr.isMap() || dscr.isCollection() || dscr.isArray()) {
                 Method method = dscr.getWriteMethod();
-                if (method != null) { // TODO log warn/error if method is null?
+                if (method != null) {
                     Type[] typeArgs = new Type[] {};
                     Type[] parameterTypes = null;
                     if (dscr.isArray()) {
@@ -122,6 +122,8 @@ public class TypeMappingImpl implements TypeMapping {
                             dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>)typeArgs[0]).getComponentType()));
                         }
                     }
+                } else {
+                    log.debug("Setter method for type [{}] in bean class [{}] doesn't exists.", dscr.getType().getType().getName(), beanClass.getName());
                 }
             }
         }
@@ -147,8 +149,9 @@ public class TypeMappingImpl implements TypeMapping {
         if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type
             Node2BeanTransformer transformer = null;
             try {
-                Class<?> clazz = Class.forName(beanClass.getName() + "Transformer");
-                transformer = (Node2BeanTransformer) Components.getComponent(clazz);
+                @SuppressWarnings("unchecked")
+                Class<Node2BeanTransformer> clazz = (Class<Node2BeanTransformer>) Class.forName(beanClass.getName() + "Transformer");
+                transformer = Components.getComponent(clazz);
             } catch (Exception e) {
                 log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
             }

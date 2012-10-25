@@ -82,7 +82,6 @@ import com.google.common.collect.Iterables;
 
 /**
  * Concrete implementation using reflection, generics and setter methods.
- *
  */
 public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
@@ -94,14 +93,17 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
     private final Class<?> defaultSetImpl;
 
+    private final Class<?> defaultQueueImpl;
+
     @Inject
     public Node2BeanTransformerImpl() {
-        this(LinkedList.class, HashSet.class);
+        this(LinkedList.class, HashSet.class, LinkedList.class);
     }
 
-    public Node2BeanTransformerImpl(Class<?> defaultListImpl, Class<?> defaultSetImpl) {
+    public Node2BeanTransformerImpl(Class<?> defaultListImpl, Class<?> defaultSetImpl, Class<?> defaultQueueImpl) {
         this.defaultListImpl = defaultListImpl;
         this.defaultSetImpl = defaultSetImpl;
+        this.defaultQueueImpl = defaultQueueImpl;
 
         // We use non-static BeanUtils conversion, so we can
         // * use our custom ConvertUtilsBean
@@ -150,14 +152,14 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             if (node.hasProperty("class")) {
                 String className = node.getProperty("class").getString();
                 if (StringUtils.isBlank(className)) {
-                    throw new ClassNotFoundException("(no value for class property)");
+                    log.warn("Cannot resolve type for node [" + node + "] because class property has empty value.");
+                } else {
+                    Class<?> clazz = Classes.getClassFactory().forName(className);
+                    typeDscr = typeMapping.getTypeDescriptor(clazz);
                 }
-                Class<?> clazz = Classes.getClassFactory().forName(className);
-                typeDscr = typeMapping.getTypeDescriptor(clazz);
             }
         } catch (RepositoryException e) {
-            // ignore
-            log.warn("can't read class property", e);
+            log.warn("Can't read class property from node [{}]", node.getPath(), e);
         }
 
         if (typeDscr == null && state.getLevel() > 1) {
@@ -193,7 +195,8 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             if (customTransformer != null && customTransformer != this) {
                 TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(typeMapping, state, componentProvider);
                 // if no specific type has been provided by the
-                // TODO - is this comparison working ?
+                // TODO - TypeDescriptor - equals and hashCode impl and use
+                // not equals instead of !=
                 if (typeFoundByCustomTransformer != TypeMapping.MAP_TYPE) {
                     // might be that the factory util defines a default implementation for interfaces
                     Class<?> implementation = componentProvider.getImplementation(typeFoundByCustomTransformer.getType());
@@ -204,18 +207,18 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
         if (typeDscr == null || typeDscr.needsDefaultMapping()) {
             if (typeDscr == null) {
-                log.debug("was not able to resolve type for node [{}] will use a map", node);
+                log.debug("Was not able to resolve type for node [{}] will use a map", node);
             }
             typeDscr = TypeMapping.MAP_TYPE;
         }
-
-        log.debug("{} --> {}", node.getPath(), typeDscr.getType());
+        log.debug("Resolved type [{}] for node [{}]", typeDscr.getType(), node.getPath());
 
         return typeDscr;
     }
 
     @Override
     public NodeIterator getChildren(Node node) throws RepositoryException {
+        // TODO create predicate into separate class, <? extends Item> ItemHidingPredicate (regexp)
         return new FilteringNodeIterator(node.getNodes(), new AbstractPredicate<Node>() {
             @Override
             public boolean evaluateTyped(Node t) {
@@ -231,7 +234,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
     }
 
     @Override
-    public Object newBeanInstance(TransformationState state, Map values, ComponentProvider componentProvider) throws Node2BeanException {
+    public Object newBeanInstance(TransformationState state, Map<String, Object> values, ComponentProvider componentProvider) throws Node2BeanException {
         // we try first to use conversion (Map --> primitive type)
         // this is the case when we flattening the hierarchy?
         final Object bean = convertPropertyValue(state.getCurrentType().getType(), values);
@@ -240,8 +243,6 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             try {
                 // is this property remove necessary?
                 values.remove("class");
-                // TODO MAGNOLIA-2569 MAGNOLIA-3525 what is going on here ? (added the following if to avoid permanently
-                // requesting LinkedHashMaps to ComponentFactory)
                 final Class<?> type = state.getCurrentType().getType();
                 if (LinkedHashMap.class.equals(type)) {
                     // TODO - as far as I can tell, "bean" and "properties" are already the same instance of a
@@ -289,7 +290,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             try {
                 return Classes.getClassFactory().forName(value.toString());
             } catch (ClassNotFoundException e) {
-                log.error(e.getMessage());
+                log.error("Can't convert property. Class for type [{}] not found.", propertyType);
                 throw new Node2BeanException(e);
             }
         }
@@ -317,8 +318,8 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
     }
 
     /**
-     * Called once the type should have been resolved. The resolvedType might be null if no type has been resolved.
-     * After the call the FactoryUtil and custom transformers are used to get the final type. TODO - check javadoc
+     * Called once the type should have been resolved. The resolvedType might be
+     * null if no type has been resolved. Every subclass should override this method.
      */
     protected TypeDescriptor onResolveType(TypeMapping typeMapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
         return resolvedType;
@@ -342,22 +343,20 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         }
 
         // do no try to set a bean-property that has no corresponding node-property
-        // else if (!values.containsKey(propertyName)) {
         if (value == null) {
             return;
         }
 
         log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
-
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
             try {
                 PropertyTypeDescriptor dscr = mapping.getPropertyTypeDescriptor(bean.getClass(), propertyName);
                 if (dscr.getType() != null) {
-
-                    // try to use an adder method for a Collection property of the bean
+                    // try to use a setter method for a Collection property of
+                    // the bean
                     if (dscr.isCollection() || dscr.isMap() || dscr.isArray()) {
-                        log.debug("{} is of type collection, map or /array", propertyName);
+                        log.debug("{} is of type collection, map or array", propertyName);
                         Method method = dscr.getWriteMethod();
 
                         if (method != null) {
@@ -399,12 +398,15 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                     }
                 }
             } catch (Exception e) {
-                // do it better
-                e.printStackTrace();
-                log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+                if (log.isDebugEnabled()) {
+                    log.debug("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+                        new Object[] { propertyName, value, bean.getClass().getName(),
+                            state.getCurrentNode().getPath(), e.toString() });
+                } else {
+                    log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
                         new Object[] {propertyName, value, bean.getClass().getName(),
                                 state.getCurrentNode().getPath(), e.toString()});
-                log.debug("stacktrace", e);
+                }
             }
         }
 
@@ -416,15 +418,16 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             // converter.
             // some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
             beanUtilsBean.setProperty(bean, propertyName, value);
-
-            // TODO this also does things we probably don't want/need, i.e nested and indexed properties
-
         } catch (Exception e) {
-            // do it better
-            log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+            if (log.isDebugEnabled()) {
+                log.debug("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
+                    new Object[] { propertyName, value, bean.getClass().getName(),
+                        state.getCurrentNode().getPath(), e.toString() });
+            } else {
+                log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
                     new Object[] {propertyName, value, bean.getClass().getName(),
                             state.getCurrentNode().getPath(), e.toString()});
-            log.debug("stacktrace", e);
+            }
         }
     }
 
@@ -441,20 +444,16 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
      * @param map a map which values will be converted to a collection
      * @param clazz collection type
      * @return Collection of elements or null.
-     * @throws SecurityException
-     * @throws NoSuchMethodException
-     * @throws IllegalArgumentException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
      */
     protected Collection<?> createCollectionFromMap(Map<?, ?> map, Class<?> clazz) throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Collection<?> collection = null;
         Constructor<?> constructor = null;
         if (clazz.isInterface()) {
             // class is an interface, we need to decide which implementation of interface we will use
-            if (List.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(Queue.class)) { // List and Queue can both use LinkedList
+            if (List.class.isAssignableFrom(clazz)) {
                 constructor = defaultListImpl.getConstructor(Collection.class);
+            } else if (clazz.isAssignableFrom(Queue.class)) {
+                constructor = defaultQueueImpl.getConstructor(Collection.class);
             } else if (Set.class.isAssignableFrom(clazz)) {
                 constructor = defaultSetImpl.getConstructor(Collection.class);
             }

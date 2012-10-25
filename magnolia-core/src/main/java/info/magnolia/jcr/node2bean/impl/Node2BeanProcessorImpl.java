@@ -43,11 +43,13 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.ExtendingNodeWrapper;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -73,25 +75,24 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
 
     private final TypeMapping typeMapping;
 
-    private Node2BeanTransformer transformer = Components.getComponent(Node2BeanTransformer.class);
+    private final Node2BeanTransformer defaultTransformer;
 
     private boolean forceCreation = true;
 
-    private boolean recursive = true;
-
     @Inject
-    public Node2BeanProcessorImpl(TypeMapping typeMapping) {
+    public Node2BeanProcessorImpl(TypeMapping typeMapping, Node2BeanTransformer transformer) {
         this.typeMapping = typeMapping;
+        this.defaultTransformer = transformer;
     }
 
     @Override
     public Object toBean(Node node) throws Node2BeanException, RepositoryException {
-        return toBean(new ExtendingNodeWrapper(node), recursive, transformer, transformer.newState(), Components.getComponentProvider());
+        return toBean(node, true, defaultTransformer, defaultTransformer.newState(), Components.getComponentProvider());
     }
 
     @Override
     public Object toBean(Node node, final Class<?> defaultClass) throws Node2BeanException, RepositoryException {
-        return toBean(new ExtendingNodeWrapper(node), true, new Node2BeanTransformerImpl() {
+        return toBean(node, true, new Node2BeanTransformerImpl() {
             @Override
             protected TypeDescriptor onResolveType(TypeMapping mapping, TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
                 if(resolvedType==null && state.getLevel() == 1){
@@ -99,32 +100,32 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                 }
                 return resolvedType;
             }
-        }, transformer.newState(), Components.getComponentProvider());
+        }, defaultTransformer.newState(), Components.getComponentProvider());
     }
 
     @Override
     public Object toBean(Node node, boolean recursive, final Node2BeanTransformer transformer, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException {
-        return toBean(new ExtendingNodeWrapper(node), recursive, transformer, transformer.newState(), componentProvider);
+        return toBean(node, recursive, transformer, transformer.newState(), componentProvider);
     }
 
     protected Object toBean(Node node, boolean recursive, Node2BeanTransformer transformer, TransformationState state, ComponentProvider componentProvider) throws Node2BeanException, RepositoryException{
-
+        if (!NodeUtil.isWrappedWith(node, ExtendingNodeWrapper.class)) {
+            node = new ExtendingNodeWrapper(node);
+        }
         state.pushNode(node);
         TypeDescriptor type = null;
         try {
             type = transformer.resolveType(typeMapping, state, componentProvider);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             if(isForceCreation()){
                 log.warn("can't resolve class for node " +  node.getPath(), e);
-            }
-            else{
+            } else {
                 throw new Node2BeanException("can't resolve class for node " +  node.getPath(), e);
             }
         }
 
         Object bean = null;
-        if(type != null){
+        if (type != null) {
             state.pushType(type);
 
             transformer = resolveTransformer(type, transformer);
@@ -133,17 +134,15 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
 
             try {
                 bean = transformer.newBeanInstance(state, values, componentProvider);
-            }
-            catch (Throwable e) {
+            } catch (Throwable e) {
                 if(isForceCreation()){
                     log.warn("Can't instantiate bean for " +  node.getPath(), e);
-                }
-                else{
+                } else {
                     throw new Node2BeanException("Can't instantiate bean for " +  node.getPath(), e);
                 }
             }
 
-            if(bean != null){
+            if (bean != null) {
                 state.pushBean(bean);
 
                 setProperties(values, transformer, state);
@@ -153,12 +152,10 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                 bean = state.getCurrentBean();
 
                 state.popBean();
-            }
-            else{
+            } else {
                 if(forceCreation){
                     log.warn("can't instantiate bean of type " + type.getType().getName() + " for node " + node.getPath());
-                }
-                else{
+                } else {
                     throw new Node2BeanException("can't instantiate bean of type " + type.getType().getName());
                 }
             }
@@ -179,7 +176,6 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
         state.pushBean(bean);
         state.pushNode(node);
 
-        // TODO -  MAGNOLIA-3525 TypeDescriptor type = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
         TypeDescriptor type = typeMapping.getTypeDescriptor(bean.getClass());
 
         state.pushType(type);
@@ -245,9 +241,15 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                     boolean isEnabled = true;
                     try {
                         Method method = childBean.getClass().getMethod("isEnabled", null);
-                        isEnabled = (Boolean) method.invoke(childBean, new Object[] {});
-                    } catch (Exception e) {
+                        isEnabled = (Boolean) method.invoke(childBean);
+                    } catch (NoSuchMethodException e) {
                         // this is ok, enabled property is optional
+                    } catch (IllegalArgumentException e) {
+                        // this should never happen
+                    } catch (IllegalAccessException e) {
+                        log.warn("Can't access method [{}#isEnabled]. Maybe it's private/protected?", childBean.getClass());
+                    } catch (InvocationTargetException e) {
+                        log.error("An exception was thrown by [{}]#isEnabled method.", childBean.getClass(), e);
                     }
                     if (isEnabled) {
                         map.put(name, childBean);
@@ -263,31 +265,33 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
      * Populates the properties of the bean with values from the map.
      * TODO in case the bean is a map / collection the transfomer.setProperty() method should be called too
      * TODO if the bean has not a certain property but a value is present, transformer.setProperty() should be called with a fake property descriptor
-     * @throws RepositoryException
      */
     protected void setProperties(Map<String, Object> values, final Node2BeanTransformer transformer, TransformationState state) throws Node2BeanException, RepositoryException {
         Object bean = state.getCurrentBean();
         log.debug("will populate bean {} with the values {}", bean.getClass().getName(), values);
 
-        if(bean instanceof Map){
+        if (bean instanceof Map) {
             ((Map<String, Object>)bean).putAll(values);
         }
 
-        if(bean instanceof Collection){
+        if (bean instanceof Collection) {
             ((Collection<Object>)bean).addAll(values.values());
         }
 
-        else{
-            // TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
-            TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
-            final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors(typeMapping).values();
+        TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
+        final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors(typeMapping).values();
 
-            for (PropertyTypeDescriptor descriptor : dscrs) {
-                transformer.setProperty(typeMapping, state, descriptor, values);
-            }
+        for (PropertyTypeDescriptor descriptor : dscrs) {
+            transformer.setProperty(typeMapping, state, descriptor, values);
         }
     }
 
+    /**
+     * @todo javadoc
+     * @param type
+     * @param transformer
+     * @return
+     */
     protected Node2BeanTransformer resolveTransformer(TypeDescriptor type, Node2BeanTransformer transformer) {
         Node2BeanTransformer customTransformer = type.getTransformer();
         if(customTransformer != null){

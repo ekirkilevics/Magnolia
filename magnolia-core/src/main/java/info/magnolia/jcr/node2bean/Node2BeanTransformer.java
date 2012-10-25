@@ -64,12 +64,12 @@ public interface Node2BeanTransformer {
     /**
      * Instantiates the bean.
      */
-    public Object newBeanInstance(TransformationState state, Map values, ComponentProvider componentProvider) throws Node2BeanException;
+    public Object newBeanInstance(TransformationState state, Map<String, Object> values, ComponentProvider componentProvider) throws Node2BeanException;
 
     /**
      * Called after all properties are set.
      */
-    public void initBean(TransformationState state, Map values) throws Node2BeanException;
+    public void initBean(TransformationState state, Map<String, Object> values) throws Node2BeanException;
 
 
     /**

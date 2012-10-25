@@ -33,7 +33,12 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
@@ -73,12 +78,13 @@ import com.google.common.collect.Iterables;
  */
 public class Node2BeanTest {
 
-    private TypeMapping typeMapping = new TypeMappingImpl();
+    private final TypeMapping typeMapping = new TypeMappingImpl();
+
+    private final Node2BeanTransformer transformer = new Node2BeanTransformerImpl();
 
     @Before
     public void setUp() {
         ComponentsTestUtil.setInstance(TypeMapping.class, typeMapping);
-        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
     }
 
     @After
@@ -95,7 +101,7 @@ public class Node2BeanTest {
                 "/test/node.integer=999\n" +
                 "/test/node.string=Hello\n"
                 );
-        Node2BeanProcessorImpl node2bean = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl node2bean = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         Object bean = node2bean.toBean(session.getNode("/test/node"));
@@ -119,7 +125,7 @@ public class Node2BeanTest {
                 "/test/node/sub.string=World\n"
                 );
 
-        Node2BeanProcessorImpl node2bean = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl node2bean = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithSubBean bean = (BeanWithSubBean) node2bean.toBean(session.getNode("/test/node"));
@@ -145,7 +151,7 @@ public class Node2BeanTest {
                 "/parent/beans/sub2.integer=3\n" +
                 "/parent/beans/sub2.string=:)\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/parent"));
 
@@ -171,7 +177,7 @@ public class Node2BeanTest {
                 "/parent/values.val1=test\n" +
                 "/parent/values.val2=str\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithCollectionOfString bean = (BeanWithCollectionOfString) n2b.toBean(session.getNode("/parent"));
@@ -191,7 +197,7 @@ public class Node2BeanTest {
                 "/parent/values.val1=test\n" +
                 "/parent/values.val2=str\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithListOfString bean = (BeanWithListOfString) n2b.toBean(session.getNode("/parent"));
@@ -213,7 +219,7 @@ public class Node2BeanTest {
                 "/parent/values.val1=test\n" +
                 "/parent/values.val2=str\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithSetOfString bean = (BeanWithSetOfString) n2b.toBean(session.getNode("/parent"));
@@ -234,7 +240,7 @@ public class Node2BeanTest {
                 "/parent/values.val1=test\n" +
                 "/parent/values.val2=str\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithArrayListOfString bean = (BeanWithArrayListOfString) n2b.toBean(session.getNode("/parent"));
@@ -256,7 +262,7 @@ public class Node2BeanTest {
                 "/parent/values.val2=str\n"
                 );
 
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithTreeSetOfString bean = (BeanWithTreeSetOfString) n2b.toBean(session.getNode("/parent"));
@@ -281,7 +287,7 @@ public class Node2BeanTest {
                 "/parent/beans/sub2.integer=3\n" +
                 "/parent/beans/sub2.string=:)\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         BeanWithArrayOfSimpleBean bean = (BeanWithArrayOfSimpleBean) n2b.toBean(session.getNode("/parent"));
 
@@ -313,7 +319,7 @@ public class Node2BeanTest {
                 "/parent/beans/sub2.integer=3\n" +
                 "/parent/beans/sub2.string=:)\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithHashMap bean = (BeanWithHashMap) n2b.toBean(session.getNode("/parent"));
@@ -331,7 +337,7 @@ public class Node2BeanTest {
                 "/parent.foo=blah\n" +
                 "/parent.clazz=java.lang.String\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithClass o = (BeanWithClass) n2b.toBean(session.getNode("/parent"));
@@ -349,7 +355,7 @@ public class Node2BeanTest {
                 "/parent.integer=5\n" +
                 "/parent.bool=true\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) n2b.toBean(session.getNode("/parent"));
@@ -367,7 +373,7 @@ public class Node2BeanTest {
             "/parent/values/sub1.value=one\n" +
             "/parent/values/sub2.value=two"
             );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithListOfString bean = (BeanWithListOfString) n2b.toBean(session.getNode("/parent"));
@@ -385,7 +391,7 @@ public class Node2BeanTest {
                 "/parent.value=Hello\n" +
                 "/parent.sample=two\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithEnum bean = (BeanWithEnum) n2b.toBean(session.getNode("/parent"));
@@ -407,7 +413,7 @@ public class Node2BeanTest {
                 "/foo/bar/beans/a.string=Hello",
                 "/foo/bar/beans/b.class=" + SimpleBean.class.getName(),
                 "/foo/bar/beans/b.string=World");
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         final BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/foo/bar"));
 
@@ -434,7 +440,7 @@ public class Node2BeanTest {
                 "/bar/beans/b.string=world"
                 );
 
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
         n2b.setForceCreation(false);
 
         try {
@@ -462,7 +468,7 @@ public class Node2BeanTest {
                 "/sub/bean.value=foo\n" +
                 "/sub/bean.extends=../../parent\n"
                 );
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         OtherSimpleBean bean = (OtherSimpleBean) n2b.toBean(session.getNode("/sub/bean"));
@@ -493,7 +499,7 @@ public class Node2BeanTest {
                         "/another/sub/bean/beans/sub3.string=bla\n" +
                         "/another/sub/bean/beans/sub4.string=blah\n"
                 );
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/another/sub/bean"));
@@ -518,7 +524,7 @@ public class Node2BeanTest {
                 "/parent/beans/sub2.string=World\n" +
                 "/parent/beans/sub2.enabled=false\n"
                 );
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/parent"));
@@ -557,7 +563,7 @@ public class Node2BeanTest {
                         "/another/sub/bean/beans/sub4.string=blah\n" +
                         "/another/sub/bean/beans/sub4.enabled=false\n"
                 );
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/another/sub/bean"));
@@ -579,7 +585,7 @@ public class Node2BeanTest {
                 "/parent/beans/sub1.string=ahoj\n" +
                 "/parent/beans/sub2.string=hello\n"
                 );
-        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(
@@ -600,7 +606,7 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.OtherSimpleBean\n" +
                 "/parent.string=hello\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         OtherSimpleBean bean = (OtherSimpleBean) n2b.toBean(session.getNode("/parent"), false, new ProxyingNode2BeanTransformer(), Components.getComponentProvider());
@@ -621,7 +627,7 @@ public class Node2BeanTest {
                 "/parent/beans/b.class=info.magnolia.jcr.node2bean.SimpleBean\n" +
                 "/parent/beans/b.string=world\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
         final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/parent"));
 
         // WHEN
@@ -647,7 +653,7 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithSimpleUrlPattern\n" +
                 "/parent.myPattern=H?llo*\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         final BeanWithSimpleUrlPattern res = (BeanWithSimpleUrlPattern) n2b.toBean(session.getNode("parent"));
@@ -669,7 +675,7 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithMessageFormat\n" +
                 "/parent.myFormat=plop {0} plop {1} plop\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         final BeanWithMessageFormat res = (BeanWithMessageFormat) n2b.toBean(session.getNode("parent"));
@@ -688,7 +694,7 @@ public class Node2BeanTest {
                 "/parent.class=info.magnolia.jcr.node2bean.BeanWithRegexPattern\n" +
                 "/parent.myPattern=a*b\n"
                 );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping);
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
 
         // WHEN
         final BeanWithRegexPattern res = (BeanWithRegexPattern) n2b.toBean(session.getNode("parent"));

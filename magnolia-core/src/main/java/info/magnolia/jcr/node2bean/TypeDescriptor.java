@@ -33,8 +33,6 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import info.magnolia.cms.core.MgnlNodeType;
-
 import java.beans.PropertyDescriptor;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,15 +43,12 @@ import org.apache.commons.beanutils.PropertyUtils;
 
 /**
  * Describes the type under the transformation. Can be used to customize the output of the transformation.
- * @author philipp
- * @version $Id$
- * @todo
  */
 public class TypeDescriptor {
 
     private Class<?> type;
 
-    private MgnlNodeType itemType;
+    private String itemType;
 
     private Node2BeanTransformer transformer;
 
@@ -65,11 +60,11 @@ public class TypeDescriptor {
 
     private Map<String, PropertyTypeDescriptor> descriptors;
 
-    public MgnlNodeType getItemType() {
+    public String getItemType() {
         return this.itemType;
     }
 
-    public void setItemType(MgnlNodeType itemType) {
+    public void setItemType(String itemType) {
         this.itemType = itemType;
     }
 
