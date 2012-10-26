@@ -43,6 +43,7 @@ import info.magnolia.init.properties.InitPathsPropertySource;
 import info.magnolia.init.properties.ModulePropertiesSource;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
@@ -154,6 +155,7 @@ public abstract class MgnlTestCase {
         configuration.combine(configurationBuilder.getComponentsFromModules("main", mr.getModuleDefinitions()));
 
         configuration.registerInstance(Node2BeanProcessor.class, n2b);
+        configuration.registerInstance(TypeMapping.class, typeMapping);
 
         for (Map.Entry<Class, ComponentConfiguration> entry : configuration.getComponents().entrySet()) {
             ComponentConfiguration value = entry.getValue();

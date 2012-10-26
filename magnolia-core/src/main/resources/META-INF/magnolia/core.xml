@@ -10,22 +10,6 @@
   <components>
     <id>system</id>
     <component>
-      <type>info.magnolia.jcr.node2bean.Node2BeanProcessor</type>
-      <implementation>info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl</implementation>
-    </component>
-    <component>
-      <type>info.magnolia.jcr.node2bean.Node2BeanTransformer</type>
-      <implementation>info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl</implementation>
-    </component>
-    <component>
-      <type>info.magnolia.jcr.node2bean.TransformationState</type>
-      <implementation>info.magnolia.jcr.node2bean.impl.TransformationStateImpl</implementation>
-    </component>
-    <component>
-      <type>info.magnolia.jcr.node2bean.TypeMapping</type>
-      <implementation>info.magnolia.jcr.node2bean.impl.TypeMappingImpl</implementation>
-    </component>
-    <component>
       <type>info.magnolia.cms.i18n.MessagesManager</type>
       <implementation>info.magnolia.cms.i18n.DefaultMessagesManager</implementation>
     </component>
