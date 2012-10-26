@@ -98,6 +98,11 @@ public class DefaultMessagesManager extends MessagesManager {
 
     private final Node2BeanProcessor nodeToBean;
 
+    @Deprecated
+    public DefaultMessagesManager() {
+        this(Components.getComponent(Node2BeanProcessor.class));
+    }
+
     @Inject
     public DefaultMessagesManager(Node2BeanProcessor nodeToBean) {
         this.nodeToBean = nodeToBean;
