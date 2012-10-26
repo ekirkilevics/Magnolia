@@ -33,10 +33,16 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.ComponentsTestUtil;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -141,6 +147,34 @@ public class TypeMappingImplTest {
         // THEN
         assertNotNull(ptd);
         assertEquals(SimpleBean.class, ptd.getCollectionEntryType().getType());
+    }
+
+    @Test
+    public void testBeanPropertyCollectionWithListParameterWithGenerics() {
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(SimpleClass.class, "beans");
+
+        // THEN
+        assertNotNull(ptd);
+        assertEquals(Collection.class, ptd.getCollectionEntryType().getType());
+        assertEquals(List.class, ptd.getCollectionKeyType().getType());
+    }
+
+    private final class SimpleClass {
+
+        private Map<List<SimpleBean>, Collection<String>> beans;
+
+        public Map<List<SimpleBean>, Collection<String>> getBeans() {
+            return beans;
+        }
+
+        public void setBeans(Map<List<SimpleBean>, Collection<String>> beans) {
+            this.beans = beans;
+        }
+
     }
 
 }

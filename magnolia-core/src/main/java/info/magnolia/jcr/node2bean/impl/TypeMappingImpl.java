@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,7 +109,13 @@ public class TypeMappingImpl implements TypeMapping {
                     for (Type genericParameterType : parameterTypes) {
                         if (genericParameterType instanceof ParameterizedType) {
                             ParameterizedType type = (ParameterizedType) genericParameterType;
-                            typeArgs = type.getActualTypeArguments();
+                            for (Type t : type.getActualTypeArguments()) {
+                                if (t instanceof ParameterizedType) {
+                                    typeArgs = (Type[]) ArrayUtils.add(typeArgs, ((ParameterizedType) t).getRawType());
+                                } else {
+                                    typeArgs = (Type[]) ArrayUtils.add(typeArgs, t);
+                                }
+                            }
                         }
                     }
 
