@@ -36,6 +36,10 @@ package info.magnolia.test;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.content2bean.Content2BeanProcessor;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.init.properties.ClasspathPropertySource;
@@ -150,12 +154,19 @@ public abstract class MgnlTestCase {
         ComponentsTestUtil.setImplementation(RepositoryManager.class, DefaultRepositoryManager.class);
         ComponentsTestUtil.setInstance(Node2BeanTransformer.class, transformer);
 
+        // content2bean setup
+        ComponentsTestUtil.setImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
+        final info.magnolia.content2bean.TypeMapping c2bTypeMapping = new info.magnolia.content2bean.impl.TypeMappingImpl();
+
         ComponentProviderConfigurationBuilder configurationBuilder = new ComponentProviderConfigurationBuilder();
         ComponentProviderConfiguration configuration = configurationBuilder.getComponentsFromModules("system", mr.getModuleDefinitions());
         configuration.combine(configurationBuilder.getComponentsFromModules("main", mr.getModuleDefinitions()));
 
         configuration.registerInstance(Node2BeanProcessor.class, n2b);
         configuration.registerInstance(TypeMapping.class, typeMapping);
+
+        configuration.registerInstance(info.magnolia.content2bean.TypeMapping.class, c2bTypeMapping);
+        configuration.registerInstance(Content2BeanProcessor.class, new Content2BeanProcessorImpl(c2bTypeMapping));
 
         for (Map.Entry<Class, ComponentConfiguration> entry : configuration.getComponents().entrySet()) {
             ComponentConfiguration value = entry.getValue();
