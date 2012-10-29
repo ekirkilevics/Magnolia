@@ -250,6 +250,8 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                         log.warn("Can't access method [{}#isEnabled]. Maybe it's private/protected?", childBean.getClass());
                     } catch (InvocationTargetException e) {
                         log.error("An exception was thrown by [{}]#isEnabled method.", childBean.getClass(), e);
+                    } catch (NullPointerException e) {
+                        // TODO log.warn
                     }
                     if (isEnabled) {
                         map.put(name, childBean);
@@ -276,13 +278,13 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
 
         if (bean instanceof Collection) {
             ((Collection<Object>)bean).addAll(values.values());
-        }
+        } else {
+            TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
+            final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors(typeMapping).values();
 
-        TypeDescriptor beanTypeDescriptor = typeMapping.getTypeDescriptor(bean.getClass());
-        final Collection<PropertyTypeDescriptor> dscrs = beanTypeDescriptor.getPropertyDescriptors(typeMapping).values();
-
-        for (PropertyTypeDescriptor descriptor : dscrs) {
-            transformer.setProperty(typeMapping, state, descriptor, values);
+            for (PropertyTypeDescriptor descriptor : dscrs) {
+                transformer.setProperty(typeMapping, state, descriptor, values);
+            }
         }
     }
 

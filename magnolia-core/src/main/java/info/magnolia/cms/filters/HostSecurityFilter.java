@@ -71,7 +71,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
 
-    private ArrayList<String[]> uriToHost;
+    private final ArrayList<String[]> uriToHost;
 
     public HostSecurityFilter() {
         uriToHost = new ArrayList<String[]>();
@@ -84,12 +84,8 @@ public class HostSecurityFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     public void setMappings(List<String> mappings) {
-        String[] pathToHost = null;
         for (String mapping : mappings) {
-            pathToHost = StringUtils.split(mapping, "=");
-            if (pathToHost != null && pathToHost.length == 2) {
-                uriToHost.add(pathToHost);
-            }
+            this.addMapping(mapping);
         }
     }
 

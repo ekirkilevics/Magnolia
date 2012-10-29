@@ -92,12 +92,20 @@ public class ServletDefinition {
         return this.mappings;
     }
 
+    public void setMappings(Collection<String> mappings) {
+        this.mappings = mappings;
+    }
+
     public void addMapping(String mapping) {
         this.mappings.add(mapping);
     }
 
     public Collection<ServletParameterDefinition> getParams() {
         return this.params;
+    }
+
+    public void setParams(Collection<ServletParameterDefinition> params) {
+        this.params = params;
     }
 
     public void addParam(ServletParameterDefinition param) {

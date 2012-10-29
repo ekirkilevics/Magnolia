@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.model;
 
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.module.ModuleVersionHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import info.magnolia.module.ModuleVersionHandler;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Describes a module. Bean representation of a module's xml descriptor.
@@ -128,12 +128,22 @@ public class ModuleDefinition {
         return this.dependencies;
     }
 
+    public void setDependencies(Collection<DependencyDefinition> dependencies) {
+        this.dependencies = dependencies;
+    }
+
     public void addDependency(DependencyDefinition dep) {
         dependencies.add(dep);
     }
 
     public Collection<ServletDefinition> getServlets() {
         return this.servlets;
+    }
+
+    public void setServlets(Collection<ServletDefinition> servlets) {
+        for (ServletDefinition def : servlets) {
+            this.addServlet(def);
+        }
     }
 
     public void addServlet(ServletDefinition def) {
@@ -147,12 +157,20 @@ public class ModuleDefinition {
         return this.repositories;
     }
 
+    public void setRepositories(Collection<RepositoryDefinition> repositories) {
+        this.repositories = repositories;
+    }
+
     public void addRepository(RepositoryDefinition repository) {
         this.repositories.add(repository);
     }
 
     public Collection<PropertyDefinition> getProperties() {
         return properties;
+    }
+
+    public void setProperties(Collection<PropertyDefinition> properties) {
+        this.properties = properties;
     }
 
     public void addProperty(PropertyDefinition property) {

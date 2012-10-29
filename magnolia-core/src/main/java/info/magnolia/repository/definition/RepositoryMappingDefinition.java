@@ -48,11 +48,21 @@ public class RepositoryMappingDefinition {
 
     // TODO thread safety issues here, make immutable?
 
-    private Map<String, WorkspaceMappingDefinition> workspaceMappings = new LinkedHashMap<String, WorkspaceMappingDefinition>();
-    private Map<String, RepositoryDefinition> repositories = new LinkedHashMap<String, RepositoryDefinition>();
+    private final Map<String, WorkspaceMappingDefinition> workspaceMappings = new LinkedHashMap<String, WorkspaceMappingDefinition>();
+    private final Map<String, RepositoryDefinition> repositories = new LinkedHashMap<String, RepositoryDefinition>();
+
+    public void setMappings(Map<String, WorkspaceMappingDefinition> workspaceMappings) {
+        this.workspaceMappings.putAll(workspaceMappings);
+    }
 
     public void addMapping(String logicalWorkspaceName, String repositoryName, String workspaceName) {
         workspaceMappings.put(logicalWorkspaceName, new WorkspaceMappingDefinition(logicalWorkspaceName, repositoryName, workspaceName));
+    }
+
+    public void setRepositories(Collection<RepositoryDefinition> repositories) {
+        for (RepositoryDefinition def : repositories) {
+            this.addRepository(def);
+        }
     }
 
     public void addRepository(RepositoryDefinition repositoryDefinition) {

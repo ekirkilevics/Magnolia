@@ -57,11 +57,11 @@ public class SecurityConfiguration {
      */
     private static Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    private Map repositories = new LinkedHashMap();
+    private Map<String, RepositoryConfiguration> repositories = new LinkedHashMap<String, RepositoryConfiguration>();
 
     private RepositoryConfiguration defaultRepositoryConfiguration;
 
-    private Map systemRepositories = new LinkedHashMap();
+    private Map<String, RepositoryConfiguration> systemRepositories = new LinkedHashMap<String, RepositoryConfiguration>();
 
     public RepositoryConfiguration getDefaultRepositoryConfiguration() {
         return this.defaultRepositoryConfiguration;
@@ -71,11 +71,11 @@ public class SecurityConfiguration {
         this.defaultRepositoryConfiguration = defaultRepositoryConfiguration;
     }
 
-    public Map getRepositories() {
+    public Map<String, RepositoryConfiguration> getRepositories() {
         return this.repositories;
     }
 
-    public void setRepositories(Map repositories) {
+    public void setRepositories(Map<String, RepositoryConfiguration> repositories) {
         this.repositories = repositories;
     }
 
@@ -83,11 +83,11 @@ public class SecurityConfiguration {
         this.repositories.put(name, repositoryConfiguration);
     }
 
-    public Map getSystemRepositories() {
+    public Map<String, RepositoryConfiguration> getSystemRepositories() {
         return this.systemRepositories;
     }
 
-    public void setSystemRepositories(Map systemRepositories) {
+    public void setSystemRepositories(Map<String, RepositoryConfiguration> systemRepositories) {
         this.systemRepositories = systemRepositories;
     }
 

@@ -34,7 +34,9 @@
 package info.magnolia.jcr.node2bean.impl;
 
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
@@ -43,7 +45,6 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.predicate.AbstractPredicate;
-import info.magnolia.jcr.wrapper.SystemNodeWrapper;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
 
@@ -335,7 +336,9 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         Object bean = state.getCurrentBean();
 
         if (propertyName.equals("content") && value == null) {
-            value = new SystemNodeWrapper(state.getCurrentNode());
+            // TODO this should be changed to node but this would require to
+            // rewrite some classes to use node instead of content
+            value = new SystemContentWrapper(ContentUtil.asContent((state.getCurrentNode())));
         } else if (propertyName.equals("name") && value == null) {
             value = state.getCurrentNode().getName();
         } else if (propertyName.equals("className") && value == null) {

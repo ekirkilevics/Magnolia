@@ -41,17 +41,17 @@ import org.apache.commons.lang.StringUtils;
 
 public class RepositoryConfiguration extends BaseConfiguration implements Comparable{
 
-    private List permissions = new ArrayList();
+    private List<PermissionConfiguration> permissions = new ArrayList<PermissionConfiguration>();
 
-    private List aclTypes = new ArrayList();
+    private List<AclTypeConfiguration> aclTypes = new ArrayList<AclTypeConfiguration>();
 
     boolean chooseButton = true;
 
-    public List getPermissions() {
+    public List<PermissionConfiguration> getPermissions() {
         return this.permissions;
     }
 
-    public void setPermissions(List permissions) {
+    public void setPermissions(List<PermissionConfiguration> permissions) {
         this.permissions = permissions;
     }
 
@@ -59,11 +59,11 @@ public class RepositoryConfiguration extends BaseConfiguration implements Compar
         this.permissions.add(permission);
     }
 
-    public List getAclTypes() {
+    public List<AclTypeConfiguration> getAclTypes() {
         return this.aclTypes;
     }
 
-    public void setAclTypes(List patternTypes) {
+    public void setAclTypes(List<AclTypeConfiguration> patternTypes) {
         this.aclTypes = patternTypes;
     }
 

@@ -10,6 +10,22 @@
   <components>
     <id>system</id>
     <component>
+      <type>info.magnolia.content2bean.Content2BeanProcessor</type>
+      <implementation>info.magnolia.content2bean.impl.Content2BeanProcessorImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.Content2BeanTransformer</type>
+      <implementation>info.magnolia.content2bean.impl.Content2BeanTransformerImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.TransformationState</type>
+      <implementation>info.magnolia.content2bean.impl.TransformationStateImpl</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.content2bean.TypeMapping</type>
+      <implementation>info.magnolia.content2bean.impl.TypeMappingImpl</implementation>
+    </component>
+    <component>
       <type>info.magnolia.cms.i18n.MessagesManager</type>
       <implementation>info.magnolia.cms.i18n.DefaultMessagesManager</implementation>
     </component>
@@ -157,6 +173,14 @@
         <type>info.magnolia.cms.filters.CompositeFilterTransformer</type>
         <implementation>info.magnolia.cms.filters.CompositeFilterTransformer</implementation>
     </component>
+    <component>
+      <type>info.magnolia.voting.voters.VoterSetTransformer</type>
+      <implementation>info.magnolia.voting.voters.VoterSetTransformer</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.commands.CommandTransformer</type>
+      <implementation>info.magnolia.commands.CommandTransformer</implementation>
+    </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>
       <implementation>info.magnolia.voting.DefaultVoting</implementation>
@@ -164,10 +188,6 @@
     <type-mapping>
       <type>info.magnolia.voting.Voter</type>
       <implementation>info.magnolia.voting.voters.VoterSet</implementation>
-    </type-mapping>
-    <type-mapping>
-      <type>info.magnolia.commands.CommandTransformer</type>
-      <implementation>info.magnolia.commands.CommandTransformer</implementation>
     </type-mapping>
     <type-mapping>
       <type>info.magnolia.cms.filters.MgnlFilter</type>

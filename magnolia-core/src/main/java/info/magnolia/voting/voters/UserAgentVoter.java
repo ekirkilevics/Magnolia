@@ -37,9 +37,10 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A voter which checks the user agent header in <code>request</code>
@@ -51,19 +52,27 @@ import java.util.List;
 public class UserAgentVoter extends AbstractBoolVoter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserAgentVoter.class);
 
-    private final List allowed = new ArrayList();
-    private final List rejected = new ArrayList();
+    private final List<String> allowed = new ArrayList<String>();
+    private final List<String> rejected = new ArrayList<String>();
 
-    public List getAllowed() {
+    public List<String> getAllowed() {
         return allowed;
+    }
+
+    public void setAllowed(List<String> allowed) {
+        this.allowed.addAll(allowed);
     }
 
     public void addAllowed(String contentType) {
         allowed.add(contentType);
     }
 
-    public List getRejected() {
+    public List<String> getRejected() {
         return rejected;
+    }
+
+    public void setRejected(List<String> rejected) {
+        this.rejected.addAll(rejected);
     }
 
     public void addRejected(String contentType) {
