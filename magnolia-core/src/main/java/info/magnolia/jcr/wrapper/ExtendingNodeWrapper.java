@@ -267,10 +267,6 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
     @Override
     public PropertyIterator getProperties(String namePattern) throws RepositoryException {
         Collection<Property> properties = getPropertiesAsList(getWrappedNode(), namePattern);
-        // extending property should be hidden
-        if(getWrappedNode().hasProperty(EXTENDING_NODE_PROPERTY)) {
-            properties.remove(getWrappedNode().getProperty(EXTENDING_NODE_PROPERTY));
-        }
 
         if (extending) {
             Collection<Property> inheritedProperties = getPropertiesAsList(extendedNode, namePattern);
@@ -363,6 +359,7 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
 
     /**
      * Gets all properties from node and returns them as {@link java.util.List}.
+     * Also filters out "extends" property.
      * @param node
      * @param namePattern
      * @return List of node properties.
@@ -374,7 +371,9 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
 
         while(it.hasNext()) {
             Property prop = (Property) it.next();
-            properties.add(prop);
+            if (!prop.getName().equals(EXTENDING_NODE_PROPERTY)) {
+                properties.add(prop);
+            }
         }
         return properties;
     }
