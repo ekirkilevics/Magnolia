@@ -115,6 +115,12 @@ public class Mapping {
         return mappings;
     }
 
+    public void setMappings(Collection<String> mappings) {
+        for (String mapping : mappings) {
+            this.addMapping(mapping);
+        }
+    }
+
     /**
      * See SRV.11.2 Specification of Mappings in the Servlet Specification for the syntax of
      * mappings. Additionally, you can also use plain regular expressions to map your servlets, by

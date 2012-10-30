@@ -140,6 +140,10 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         return this.bypasses;
     }
 
+    public void setBypasses(Voter[] bypasses) {
+        this.bypasses = (Voter[]) ArrayUtils.addAll(this.bypasses, bypasses);
+    }
+
     public void addBypass(Voter voter) {
         this.bypasses = (Voter[]) ArrayUtils.add(this.bypasses, voter);
     }
@@ -180,6 +184,10 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
 
     protected Mapping getMapping() {
         return mapping;
+    }
+
+    public void setMappings(Collection<String> mappings) {
+        this.getMapping().setMappings(mappings);
     }
 
     public void addMapping(String mapping){

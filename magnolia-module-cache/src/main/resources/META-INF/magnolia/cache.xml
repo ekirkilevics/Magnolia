@@ -22,6 +22,10 @@
       <type>info.magnolia.module.cache.mbean.CacheMonitor</type>
       <implementation>info.magnolia.module.cache.mbean.CacheMonitor</implementation>
     </component>
+    <component>
+        <type>info.magnolia.module.cache.executor.CompositeExecutorTransformer</type>
+        <implementation>info.magnolia.module.cache.executor.CompositeExecutorTransformer</implementation>
+    </component>
     <type-mapping>
       <type>info.magnolia.module.cache.CachePolicyExecutor</type>
       <implementation>info.magnolia.module.cache.executor.CompositeExecutor</implementation>

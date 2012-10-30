@@ -33,19 +33,20 @@
  */
 package info.magnolia.commands;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.PropertyTypeDescriptor;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.TypeDescriptor;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.chain.Catalog;
@@ -55,11 +56,11 @@ import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Command to transform old "impl" reference to implementing class to new "class" node data name for references.
+* Command to transform old "impl" reference to implementing class to new "class" node data name for references.
 * @author gjoseph
 * @version $Revision: $ ($Author: $)
 */
-public class CommandTransformer extends Content2BeanTransformerImpl {
+public class CommandTransformer extends Node2BeanTransformerImpl {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CommandTransformer.class);
 
     private static final String DEPRECATED_CATALOG_NAME_NODE_DATA = "catalogName";
@@ -77,12 +78,12 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
             klass = MgnlCatalog.class;
         }
         else{
-            Content node = state.getCurrentContent();
+            Node node = state.getCurrentNode();
             try {
-                if(node.hasNodeData(DEPRECATED_IMPL_NODE_DATA)){
+                if(node.hasProperty(DEPRECATED_IMPL_NODE_DATA)){
                     log.warn("Rename  '" + DEPRECATED_IMPL_NODE_DATA + "' to 'class' [" + node + "]!");
                     try {
-                        final String className = node.getNodeData(DEPRECATED_IMPL_NODE_DATA).getString();
+                        final String className = node.getProperty(DEPRECATED_IMPL_NODE_DATA).getString();
                         klass = Classes.getClassFactory().forName(className);
                     }
                     catch (ClassNotFoundException e) {
@@ -115,7 +116,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
     }
 
     @Override
-    public void initBean(TransformationState state, Map values) throws Content2BeanException {
+    public void initBean(TransformationState state, Map values) throws Node2BeanException {
         // we add the commands here (reflection does not work)
         if(state.getCurrentBean() instanceof Catalog){
             Catalog catalog = (Catalog) state.getCurrentBean();
@@ -148,7 +149,7 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
         if(state.getCurrentBean() instanceof DelegateCommand){
             DelegateCommand delegateCommand = (DelegateCommand) state.getCurrentBean();
             if(StringUtils.isEmpty(delegateCommand.getCommandName())){
-                log.warn("You should define the commandName property on [{}]", state.getCurrentContent());
+                log.warn("You should define the commandName property on [{}]", state.getCurrentNode());
                 delegateCommand.setCommandName((String) values.get(DEPRECATED_IMPL_NODE_DATA));
             }
         }
@@ -156,21 +157,21 @@ public class CommandTransformer extends Content2BeanTransformerImpl {
     }
 
     @Override
-    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+    public void setProperty(TypeMapping typeMapping, TransformationState state, PropertyTypeDescriptor descriptor, Map values) throws RepositoryException {
         Object bean = state.getCurrentBean();
         if(bean instanceof MgnlCatalog){
             MgnlCatalog catalog = (MgnlCatalog) bean;
             if(values.containsKey(DEPRECATED_CATALOG_NAME_NODE_DATA)){
-                log.warn("Rename the 'catalogName' nodedata to 'name' [" + state.getCurrentContent() + "]");
+                log.warn("Rename the 'catalogName' nodedata to 'name' [" + state.getCurrentNode() + "]");
                 catalog.setName((String)values.get(DEPRECATED_CATALOG_NAME_NODE_DATA));
             }
 
-            if (!values.containsKey("name") && state.getCurrentContent().getName().equals("commands")) {
+            if (!values.containsKey("name") && state.getCurrentNode().getName().equals("commands")) {
                 try {
-                    catalog.setName(state.getCurrentContent().getParent().getName());
+                    catalog.setName(state.getCurrentNode().getParent().getName());
                 }
                 catch (RepositoryException e) {
-                    log.error("Can't resolve catalog name by using parent node [" + state.getCurrentContent() + "]", e);
+                    log.error("Can't resolve catalog name by using parent node [" + state.getCurrentNode() + "]", e);
                 }
             }
         }

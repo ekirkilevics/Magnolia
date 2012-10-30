@@ -362,6 +362,10 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         return this.locales.values();
     }
 
+    public void setLocales(Map<String, Locale> locales) {
+        this.locales.putAll(locales);
+    }
+
     public void addLocale(LocaleDefinition ld) {
         if (ld.isEnabled()) {
             this.locales.put(ld.getId(), ld.getLocale());
@@ -374,7 +378,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
     /**
      * Checks if the nodedata field is empty.
-     * 
+     *
      * @deprecated since 4.5.4. Use {@link #isEmpty(Property)} instead.
      */
     @Deprecated

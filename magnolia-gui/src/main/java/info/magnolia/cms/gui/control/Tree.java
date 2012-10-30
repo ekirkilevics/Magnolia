@@ -84,7 +84,7 @@ public class Tree extends ControlImpl {
     public static final String DEFAULT_ICON_CONTENTNODE = DEFAULT_ICON;
 
     public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
-    
+
     public static final String DEFAULT_ICON_DELETED = ICONDOCROOT + "document_deleted.gif";
 
     /**
@@ -126,13 +126,13 @@ public class Tree extends ControlImpl {
 
     private int indentionWidth = 15;
 
-    private final List<String> itemTypes = new ArrayList<String>();
+    private List<String> itemTypes = new ArrayList<String>();
 
     private final Set<String> strictTypes = new HashSet<String>();
 
     private int height = 400;
 
-    private final Map<String, String> icons = new HashMap<String, String>();
+    private Map<String, String> icons = new HashMap<String, String>();
 
     private String iconOndblclick;
 
@@ -146,7 +146,7 @@ public class Tree extends ControlImpl {
 
     private String javascriptTree = "mgnlTreeControl"; //$NON-NLS-1$
 
-    private List columns = new ArrayList();
+    private List<TreeColumn> columns = new ArrayList<TreeColumn>();
 
     private ContextMenu menu;
 
@@ -265,10 +265,13 @@ public class Tree extends ControlImpl {
         return this.indentionWidth;
     }
 
-    public List getItemTypes() {
+    public List<String> getItemTypes() {
         return this.itemTypes;
     }
 
+    public void setItemTypes(List<String> itemTypes) {
+        this.itemTypes = itemTypes;
+    }
     /**
      * Add a itemType to the itemTypes that will be shown in this branch.
      * @deprecated pass the icon to use as a second parameter
@@ -392,6 +395,10 @@ public class Tree extends ControlImpl {
         addIcon(typeName, icon);
     }
 
+    public void setIcons(Map<String, String> icons) {
+        this.icons = icons;
+    }
+
     public void addIcon(String typeName, String icon) {
         icons.put(typeName, icon);
     }
@@ -466,11 +473,11 @@ public class Tree extends ControlImpl {
      * Set the columns (for pages and content nodes only).
      * @param al list of TreeColumns
      */
-    public void setColums(List al) {
+    public void setColums(List<TreeColumn> al) {
         this.columns = al;
     }
 
-    public List getColumns() {
+    public List<TreeColumn> getColumns() {
         return this.columns;
     }
 

@@ -36,12 +36,12 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.cms.util.SystemContentWrapper;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.TransformationState;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
@@ -50,7 +50,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -69,6 +71,13 @@ public class PageHandlerManager extends ObservedManager {
      * The handlers
      */
     private final Map dialogPageHandlers = new HashMap();
+
+    private final Node2BeanProcessor nodeToBean;
+
+    @Inject
+    public PageHandlerManager(Node2BeanProcessor nodeToBean) {
+        this.nodeToBean = nodeToBean;
+    }
 
     /**
      * Find a handler by name
@@ -99,7 +108,7 @@ public class PageHandlerManager extends ObservedManager {
         for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
             Content pageNode = (Content) iter.next();
 
-            PageDefinition pd = new RepositoryPageDefinition(new SystemContentWrapper(pageNode));
+            PageDefinition pd = new RepositoryPageDefinition(new SystemContentWrapper(pageNode), nodeToBean);
             registerPageDefinition(pd);
         }
 
@@ -112,6 +121,7 @@ public class PageHandlerManager extends ObservedManager {
     /**
      * @deprecated
      */
+    @Deprecated
     public void registerPageDefinition(String name, PageDefinition pageDefinition) {
         dialogPageHandlers.put(name, pageDefinition);
     }
@@ -199,10 +209,13 @@ public class PageHandlerManager extends ObservedManager {
 
     public static class RepositoryPageDefinition implements PageDefinition {
 
-        private Content node;
+        private final Content node;
 
-        public RepositoryPageDefinition(Content node) {
+        private final Node2BeanProcessor nodeToBean;
+
+        public RepositoryPageDefinition(Content node, Node2BeanProcessor nodeToBean) {
             this.node = node;
+            this.nodeToBean = nodeToBean;
         }
 
         @Override
@@ -214,28 +227,26 @@ public class PageHandlerManager extends ObservedManager {
         public PageMVCHandler newInstance(String name, final HttpServletRequest request,
             final HttpServletResponse response) {
             try {
-                return (PageMVCHandler) Content2BeanUtil.toBean(node, true, new Content2BeanTransformerImpl() {
-
+                return (PageMVCHandler) nodeToBean.toBean(node.getJCRNode(), true, new Node2BeanTransformerImpl() {
                     @Override
-                    public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider)
-                        throws Content2BeanException {
+                    public Object newBeanInstance(TransformationState state,Map values, ComponentProvider componentProvider) throws Node2BeanException {
                         if (state.getLevel() == 1) {
                             try {
                                 // TODO - with ioc and a request-scope container, this can go away \o/
                                 return ConstructorUtils.invokeConstructor(
                                     state.getCurrentType().getType(),
                                     new Object[]{getName(), request, response});
-                            }
-                            catch (Exception e) {
-                                throw new Content2BeanException("no proper constructor found", e);
+                            } catch (Exception e) {
+                                throw new Node2BeanException("no proper constructor found", e);
                             }
                         }
-
-                        return super.newBeanInstance(state, properties, componentProvider);
+                        return super.newBeanInstance(state, values, componentProvider);
                     }
-                });
+                }, Components.getComponentProvider());
             }
-            catch (Content2BeanException e) {
+            catch (Node2BeanException e) {
+                throw new InvalidDialogPageHandlerException(this.getName(), e);
+            } catch (RepositoryException e) {
                 throw new InvalidDialogPageHandlerException(this.getName(), e);
             }
         }

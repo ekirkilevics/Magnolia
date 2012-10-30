@@ -33,7 +33,7 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
+import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
  * Omit the voters child node. You can just add the voters under the voterset's node

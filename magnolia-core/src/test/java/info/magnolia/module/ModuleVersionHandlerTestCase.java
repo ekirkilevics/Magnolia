@@ -33,14 +33,23 @@
  */
 package info.magnolia.module;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.logging.AuditLoggingManager;
 import info.magnolia.module.InstallContext.Message;
 import info.magnolia.module.delta.Delta;
@@ -225,6 +234,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
         expect(readerMock.readAll()).andReturn(Collections.singletonMap(moduleDefinition.getName(), moduleDefinition));
         replay(readerMock);
 
+        final Node2BeanProcessor n2b = new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl());
         final ModuleVersionHandler versionHandlerUnderTest = newModuleVersionHandlerForTests();
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
         final DependencyChecker depCheck = new NullDependencyChecker();
@@ -236,7 +246,7 @@ public abstract class ModuleVersionHandlerTestCase extends RepositoryTestCase {
                 fail(message);
             }
         };
-        final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck) {
+        final ModuleManagerImpl mm = new ModuleManagerImpl(ctx, readerMock, moduleRegistry, depCheck, n2b) {
             @Override
             protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
                 assertEquals("this test doesn't behave as expected", moduleDefinition, module);

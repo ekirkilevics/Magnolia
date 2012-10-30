@@ -96,6 +96,12 @@ public class Rule implements Serializable {
         }
     }
 
+    public void setAllowedTypes(String[] types) {
+        for (String t : types) {
+            this.addAllowType(t);
+        }
+    }
+
     /**
      * Add to allow list.
      * @param nodeType

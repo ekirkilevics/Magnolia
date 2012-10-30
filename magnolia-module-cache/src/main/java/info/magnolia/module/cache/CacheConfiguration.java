@@ -35,6 +35,7 @@ package info.magnolia.module.cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Each CacheConfiguration holds a CachePolicy, a FlushPolicy and a
@@ -54,7 +55,7 @@ public class CacheConfiguration {
     private FlushPolicy flushPolicy;
     private BrowserCachePolicy browserCachePolicy;
 
-    private Map executors = new HashMap();
+    private Map<String, CachePolicyExecutor> executors = new HashMap<String, CachePolicyExecutor>();
 
     public CacheConfiguration() {
     }
@@ -104,12 +105,14 @@ public class CacheConfiguration {
         this.browserCachePolicy = browserCachePolicy;
     }
 
-    public Map getExecutors() {
+    public Map<String, CachePolicyExecutor> getExecutors() {
         return executors;
     }
 
-    public void setExecutors(Map executors) {
-        this.executors = executors;
+    public void setExecutors(Map<String, CachePolicyExecutor> executors) {
+        for (Entry<String, CachePolicyExecutor> executor : executors.entrySet()) {
+            this.addExecutor(executor.getKey(), executor.getValue());
+        }
     }
 
     public void addExecutor(String name, CachePolicyExecutor executor){

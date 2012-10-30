@@ -65,7 +65,7 @@ public class RegisterServletTaskTest extends RepositoryTestCase {
     public void setUp() throws Exception {
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
         ComponentsTestUtil.setInstance(ModuleRegistry.class, moduleRegistry);
-        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl(null, null, null, null));
+        ComponentsTestUtil.setInstance(ModuleManager.class, new ModuleManagerImpl(null, null, null, null, null));
         installContext = new InstallContextImpl(moduleRegistry);
         super.setUp();
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager("config");

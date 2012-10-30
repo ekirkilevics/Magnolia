@@ -37,15 +37,16 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.module.ModuleRegistry;
 
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -60,18 +61,18 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractListeningFlushPolicy.class);
 
-    private List repositories = new ArrayList();
-    private final Map registeredListeners = new HashMap();
+    private List<String> repositories = new ArrayList<String>();
+    private Map<String, EventListener> registeredListeners = new HashMap<String, EventListener>();
 
     /**
      * The repositories to which the listener is attached - upon any event on these,
      * the cache is cleared.
      */
-    public List getRepositories() {
+    public List<String> getRepositories() {
         return repositories;
     }
 
-    public void setRepositories(List repositories) {
+    public void setRepositories(List<String> repositories) {
         this.repositories = repositories;
     }
 

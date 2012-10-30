@@ -53,6 +53,7 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.ContentCompression;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.module.cache.executor.Bypass;
+import info.magnolia.module.cache.executor.CompositeExecutor;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
 import info.magnolia.module.cache.mbean.CacheMonitor;
@@ -78,6 +79,8 @@ import java.util.Set;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -610,6 +613,61 @@ public class CacheFilterTest {
         cache.put(eq("/dummy"), isA(ContentCachedEntry.class));
 
         executeCacheFilterAndVerify();
+    }
+
+    @Test
+    public void testIfWeAreNotWriteContentToResponseTwiceWhenTimeToLiveInSecondsIsZero() throws Exception {
+        // GIVEN
+        // let's first assert the Filter did not forget to register itself
+        final ModuleRegistry mr = Components.getSingleton(ModuleRegistry.class);
+        final CacheModule module = (CacheModule) mr.getModuleInstance("cache");
+        final Field field = module.getClass().getDeclaredField("listeners");
+        field.setAccessible(true);
+        final Set listeners = (Set) field.get(module);
+        assertEquals(1, listeners.size());
+        assertEquals(filter, listeners.iterator().next());
+        when(webContext.getAggregationState()).thenReturn(aggregationState);
+
+        // add Store and UseCache executor
+        CompositeExecutor storeAndUseCache = new CompositeExecutor();
+        storeAndUseCache.addExecutor(new Store());
+        storeAndUseCache.addExecutor(new UseCache());
+        module.getConfiguration("my-config").addExecutor(CachePolicyResult.store.getName(), storeAndUseCache);
+
+        when(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).thenReturn(new CachePolicyResult(CachePolicyResult.store, "/test-page", null));
+
+        StringBuffer buffer = new StringBuffer("/test-page");
+        when(request.getRequestURL()).thenReturn(buffer);
+
+        FilterChain filterChain = new FilterChain() {
+
+            @Override
+            public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+                ((CacheResponseWrapper)response).addHeader("Cache-Control", "no-cache");
+                response.getOutputStream().print("Test content");
+            }
+        };
+
+        when(webContext.getResponse()).thenReturn(response);
+        when(request.getHeader("User-Agent")).thenReturn("Mozilla/5.0 Chrome/18.0.1025.151 Safari/535.19");
+        when(response.getContentType()).thenReturn("text/plain");
+        when(response.getCharacterEncoding()).thenReturn("UTF-8");
+        when(request.getHeaders("Accept-Encoding")).thenReturn(enumeration("foo", "gzip", "bar"), enumeration("foo", "gzip", "bar"));
+        when(response.containsHeader("Content-Encoding")).thenReturn(false, true);
+        when(response.containsHeader("Vary")).thenReturn(true);
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        when(response.getOutputStream()).thenReturn(new SimpleServletOutputStream(fakedOut));
+
+        // WHEN
+        filter.doFilter(request, response, filterChain);
+
+        //THEN
+        assertTrue(GZipUtil.isGZipped(fakedOut.toByteArray()));
+        assertEquals(32, fakedOut.size());
+        assertEquals("Test content", new String(GZipUtil.ungzip(fakedOut.toByteArray())));
+
+        verify(cacheFactory).getCache("my-config");
+        verify(cachePolicy).shouldCache(cache, aggregationState, flushPolicy);
     }
 
     private void executeCacheFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {

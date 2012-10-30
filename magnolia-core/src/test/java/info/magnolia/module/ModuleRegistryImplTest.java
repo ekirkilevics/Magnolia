@@ -33,7 +33,12 @@
  */
 package info.magnolia.module;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
@@ -156,7 +161,7 @@ public class ModuleRegistryImplTest {
         // currently ModuleManager loads definitions and registers them in ModuleRegistry - perhaps this should change at some point ...
         // Even if we register/load modules in a bogus order, ModuleRegistry should list them in dependency-order
         final ModuleRegistryImpl moduleRegistry = new ModuleRegistryImpl();
-        final ModuleManagerImpl moduleManager = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(c, b, a), moduleRegistry, new DependencyCheckerImpl());
+        final ModuleManagerImpl moduleManager = new ModuleManagerImpl(null, new FixedModuleDefinitionReader(c, b, a), moduleRegistry, new DependencyCheckerImpl(), null);
         moduleManager.loadDefinitions();
 
         final List<ModuleDefinition> result = moduleRegistry.getModuleDefinitions();

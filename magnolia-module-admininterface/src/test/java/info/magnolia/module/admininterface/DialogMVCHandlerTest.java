@@ -38,7 +38,6 @@ import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -51,14 +50,17 @@ import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.ComponentsTestUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
+
+import org.junit.Test;
 
 
 /**
@@ -164,7 +166,7 @@ public class DialogMVCHandlerTest extends TestCase{
 
     private final class DummyDialogMVCHandler extends DialogMVCHandler {
 
-        private CustomValidatingSaveHandler validSH = new CustomValidatingSaveHandler();
+        private final CustomValidatingSaveHandler validSH = new CustomValidatingSaveHandler();
 
         public DummyDialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
             super(name, request, response);
@@ -213,7 +215,7 @@ public class DialogMVCHandlerTest extends TestCase{
         form.addParameter("mgnlCollectionNodeCreationItemType", "");
         form.addParameter("mgnlCreationItemType", "");
 
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager(new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())));
         ComponentsTestUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
         ComponentsTestUtil.setInstance(I18nAuthoringSupport.class, new DefaultI18nAuthoringSupport());
         MgnlContext.setInstance(context);

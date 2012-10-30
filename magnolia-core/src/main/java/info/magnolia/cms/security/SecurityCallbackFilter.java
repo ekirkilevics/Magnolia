@@ -121,6 +121,10 @@ public class SecurityCallbackFilter extends OncePerRequestAbstractMgnlFilter {
         this.clientCallbacks.add(clientCallback);
     }
 
+    public void setClientCallbacks(List<HttpClientCallback> clientCallbacks) {
+        this.clientCallbacks.addAll(clientCallbacks);
+    }
+
     // TODO needs to be public to be seen by c2b!?
     public List<HttpClientCallback> getClientCallbacks() {
         return clientCallbacks;

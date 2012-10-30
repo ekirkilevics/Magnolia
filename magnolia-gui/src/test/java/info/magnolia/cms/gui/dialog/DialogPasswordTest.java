@@ -33,8 +33,10 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
@@ -42,6 +44,9 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Iterator;
@@ -179,7 +184,7 @@ public class DialogPasswordTest {
 
         SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager(new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())));
         MgnlContext.setInstance(ctx);
 
         when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");
@@ -225,7 +230,7 @@ public class DialogPasswordTest {
         // use nice mock due to issues with MessageManager and its static init block
         SystemContext ctx = mock(SystemContext.class);
         ComponentsTestUtil.setInstance(SystemContext.class, ctx);
-        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager());
+        ComponentsTestUtil.setInstance(MessagesManager.class, new DefaultMessagesManager(new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl())));
         MgnlContext.setInstance(ctx);
 
         when(configNode.getHandle()).thenReturn("/som/dialog/path/pswd");

@@ -33,14 +33,19 @@
  */
 package info.magnolia.objectfactory;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.util.SessionUtil;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import com.google.inject.ProvisionException;
 
 /**
- * Builds a component configured in the repository by using content2bean.
- *
+ * Builds a component configured in the repository by using node2bean.
+ * 
  * @param <T> the components type
  * @version $Id$
  */
@@ -48,7 +53,7 @@ public class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
 
     private final String path;
     private final String workspace;
-    private ComponentProvider componentProvider;
+    private final ComponentProvider componentProvider;
 
     public ConfiguredComponentFactory(String path, String workspace, ComponentProvider componentProvider) {
         this.path = path;
@@ -58,14 +63,16 @@ public class ConfiguredComponentFactory<T> implements ComponentFactory<T> {
 
     @Override
     public T newInstance() {
-        final Content node = ContentUtil.getContent(workspace, path);
+        final Node node = SessionUtil.getNode(workspace, path);
         if (node == null) {
             throw new NullPointerException("Can't find a the node [" + workspace + ":" + path + "] to create an instance");
         }
         try {
-            return (T) Content2BeanUtil.toBean(node, true, componentProvider);
-        } catch (Content2BeanException e) {
+            return (T) Components.getComponent(Node2BeanProcessor.class).toBean(node, true, new Node2BeanTransformerImpl(), componentProvider);
+        } catch (Node2BeanException e) {
             throw new RuntimeException(e);
+        } catch (RepositoryException e) {
+            throw new ProvisionException("Can't read node [" + workspace + ":" + path + "]", e);
         }
     }
 }

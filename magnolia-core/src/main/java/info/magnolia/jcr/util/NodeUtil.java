@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -604,6 +605,15 @@ public class NodeUtil {
     
     public static Collection<Node> getCollectionFromNodeIterator(NodeIterator iterator){
         Collection<Node> nodeCollection = new HashSet<Node>(150);
+        while(iterator.hasNext()){
+            nodeCollection.add(iterator.nextNode());
+        }
+        return nodeCollection;
+    }
+    
+    //for n2b
+    public static Collection<Node> getSortedCollectionFromNodeIterator(NodeIterator iterator){
+        Collection<Node> nodeCollection = new LinkedList<Node>();
         while(iterator.hasNext()){
             nodeCollection.add(iterator.nextNode());
         }

@@ -35,11 +35,19 @@ package info.magnolia.rendering.renderer.registry;
 
 import static org.junit.Assert.assertEquals;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.TypeMapping;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.renderer.Renderer;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.jcr.SessionTestUtil;
@@ -74,13 +82,16 @@ public class ConfiguredRendererProviderTest extends MgnlTestCase {
     }
 
     @Test
-    public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException, RegistrationException {
+    public void testGetDefinition() throws RepositoryException, Content2BeanException, IOException, RegistrationException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/test.class=" + TestRenderer.class.getName(),
                 "/test.someProperty=foobar123"
         );
         MockUtil.setSystemContextSessionAndHierarchyManager(session);
+        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
 
         // WHEN
         ConfiguredRendererProvider provider = new ConfiguredRendererProvider("test", session.getNode("/test"));

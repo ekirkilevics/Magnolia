@@ -85,6 +85,16 @@ public class HostBasedVirtualURIMapping implements VirtualURIMapping {
         return null;
     }
 
+    public void setHosts(List<String> hosts) {
+        String[] hostToPath = null;
+        for (String host : hosts) {
+            hostToPath = StringUtils.split(host, "=");
+            if (hostToPath != null && hostToPath.length == 2) {
+                this.hosts.put(hostToPath[0], hostToPath[1]);
+            }
+        }
+    }
+
     /**
      * Adds a host mapping (used by content2bean).
      * @param mapping in the form host=path

@@ -37,23 +37,22 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.SilentSessionOp;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.proxy.ObjectProvider;
-import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.Node2BeanTransformer;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.util.Map;
+
+import org.apache.commons.proxy.ObjectProvider;
+import org.apache.commons.proxy.factory.cglib.CglibProxyFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic observed singleton factory.
@@ -194,7 +193,8 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
     @Deprecated
     protected void onRegister(Content node) {
         try {
-            final T instance = transformNode(node);
+            Node n = node.getJCRNode();
+            final T instance = transformNode(n);
 
             if (this.observedObject != null) {
                 log.info("Re-loaded {} from {}", interf.getName(), node.getHandle());
@@ -203,28 +203,17 @@ public class ObservedComponentFactory<T> implements ComponentFactory<T>, EventLi
             }
             this.observedObject = instance;
 
-        } catch (Content2BeanException e) {
+        } catch (Exception e) {
             log.error("Can't transform [" + repository + ":" + path + "] to " + interf, e);
         }
     }
 
-    protected T transformNode(Content node) throws Content2BeanException {
-        return (T) Content2BeanUtil.toBean(node, true, getContent2BeanTransformer(), componentProvider);
+    protected T transformNode(Node node) throws Node2BeanException, RepositoryException {
+        return (T) Components.getComponent(Node2BeanProcessor.class).toBean(node, true, getNode2BeanTransformer(), componentProvider);
     }
 
-    protected Content2BeanTransformer getContent2BeanTransformer() {
-        // we can not discover again the same class we are building
-        return new Content2BeanTransformerImpl() {
-            @Override
-            public Object newBeanInstance(TransformationState state, Map properties, ComponentProvider componentProvider) throws Content2BeanException {
-                // TODO here too?
-/*                if (state.getCurrentType().getType().equals(interf)) {
-                    final ClassFactory classFactory = Classes.getClassFactory();
-                    return classFactory.newInstance(interf);
-                }*/
-                return super.newBeanInstance(state, properties, componentProvider);
-            }
-        };
+    protected Node2BeanTransformer getNode2BeanTransformer() {
+        return new Node2BeanTransformerImpl();
     }
 
     protected Class<T> getComponentType() {

@@ -82,6 +82,10 @@ public class RepositoryDefinition {
         return this.workspaces;
     }
 
+    public void setWorkspaces(List<String> workspaces) {
+        this.workspaces = workspaces;
+    }
+
     public void addWorkspace(String workspace) {
         this.workspaces.add(workspace);
     }

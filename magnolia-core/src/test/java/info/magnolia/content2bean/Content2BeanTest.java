@@ -33,11 +33,17 @@
  */
 package info.magnolia.content2bean;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+import info.magnolia.content2bean.impl.TypeMappingImpl;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.MockUtil;
 
@@ -48,12 +54,28 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @version $Id$
  */
-public class Content2BeanTest extends MgnlTestCase {
+public class Content2BeanTest {
+
+    @Before
+    public void setUp() {
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Content2BeanTransformer.class, Content2BeanTransformerImpl.class);
+        ComponentsTestUtil.setImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
+    }
+
+    @After
+    public void tearDown() {
+        ComponentsTestUtil.clear();
+        MgnlContext.setInstance(null);
+    }
+
     @Test
     public void testContentToBeanWithClassDefined() throws Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{

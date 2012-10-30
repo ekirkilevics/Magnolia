@@ -39,9 +39,12 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
@@ -112,10 +115,12 @@ public class ModuleManagerImpl implements ModuleManager {
     private final ModuleRegistry registry;
     private final ModuleDefinitionReader moduleDefinitionReader;
     private final DependencyChecker dependencyChecker;
+    private final Node2BeanProcessor nodeToBean;
 
     /**
      * @deprecated since 4.5 - use IoC - temporarily kept for tests ?
      */
+    @Deprecated
     protected ModuleManagerImpl() {
         this(new InstallContextImpl(ModuleRegistry.Factory.getInstance()), new BetwixtModuleDefinitionReader());
     }
@@ -123,16 +128,18 @@ public class ModuleManagerImpl implements ModuleManager {
     /**
      * @deprecated since 4.5 - use IoC - temporarily kept for tests ?
      */
+    @Deprecated
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
-        this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl());
+        this(installContext, moduleDefinitionReader, ModuleRegistry.Factory.getInstance(), new DependencyCheckerImpl(), new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl()));
     }
 
     @Inject
-    public ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker) {
+    public ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader, ModuleRegistry moduleRegistry, DependencyChecker dependencyChecker, Node2BeanProcessor nodeToBean) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
         this.registry = moduleRegistry;
         this.dependencyChecker = dependencyChecker;
+        this.nodeToBean = nodeToBean;
     }
 
     @Override
@@ -444,12 +451,14 @@ public class ModuleManagerImpl implements ModuleManager {
             log.error("Can't initialize module " + moduleInstance + ": " + e.getMessage(), e);
         }
 
-        if (moduleProperties.get("configNode") != null) {
+        Content content = (Content) moduleProperties.get("configNode");
+        if (content != null) {
             try {
-                Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
-            }
-            catch (Content2BeanException e) {
+                nodeToBean.setProperties(moduleInstance, content.getJCRNode(), true, new Node2BeanTransformerImpl(), Components.getComponentProvider());
+            } catch (Node2BeanException e) {
                 log.error("Wasn't able to configure module " + moduleInstance + ": " + e.getMessage(), e);
+            } catch (RepositoryException e) {
+                log.error("Can't read module configuration " + moduleInstance + ": " + e.getMessage(), e);
             }
         }
     }

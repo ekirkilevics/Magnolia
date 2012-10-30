@@ -131,6 +131,10 @@ public class URI2RepositoryManager {
         return this.getDefaultMapping().getURI(uuidLink);
     }
 
+    public void setMappings(Collection<URI2RepositoryMapping> mappings) {
+        this.mappings.addAll(mappings);
+    }
+
     public void addMapping(URI2RepositoryMapping mapping) {
         mappings.add(mapping);
     }

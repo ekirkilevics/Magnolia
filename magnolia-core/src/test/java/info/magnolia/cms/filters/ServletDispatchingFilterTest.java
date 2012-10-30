@@ -33,10 +33,38 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.getCurrentArguments;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.same;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.util.CustomFilterConfig;
+import info.magnolia.cms.util.ServletUtils;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+import info.magnolia.jcr.node2bean.Node2BeanException;
+import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
+import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
+import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockAggregationState;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.voting.DefaultVoting;
+import info.magnolia.voting.Voting;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.Servlet;
@@ -53,22 +81,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.CustomFilterConfig;
-import info.magnolia.cms.util.ServletUtils;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockAggregationState;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
-import info.magnolia.voting.DefaultVoting;
-import info.magnolia.voting.Voting;
-import static org.easymock.EasyMock.*;
 
 /**
  * @version $Id$
@@ -229,7 +241,7 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
     }
 
     @Test
-    public void testWrapperRespectsForwards() throws RepositoryException, IOException, Content2BeanException, ServletException {
+    public void testWrapperRespectsForwards() throws RepositoryException, IOException, Content2BeanException, ServletException, Node2BeanException {
 
         String testContent = "" +
                 "/server/filters/servlets/test.class=" + ServletDispatchingFilter.class.getName() + "\n" +
@@ -242,7 +254,9 @@ public class ServletDispatchingFilterTest extends MgnlTestCase {
 
         MockHierarchyManager hm = MockUtil.createHierarchyManager(testContent);
 
-        ServletDispatchingFilter filter = (ServletDispatchingFilter) Content2BeanUtil.toBean(hm.getContent("/server/filters/servlets/test"), true, new Content2BeanTransformerImpl());
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(new TypeMappingImpl(), new Node2BeanTransformerImpl());
+
+        ServletDispatchingFilter filter = (ServletDispatchingFilter) n2b.toBean(hm.getContent("/server/filters/servlets/test").getJCRNode());
 
         assertEquals("Wrapper for TestServlet servlet", filter.getName());
         assertEquals("TestComment", filter.getComment());

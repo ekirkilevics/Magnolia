@@ -71,6 +71,10 @@ public class CompositeFilter extends AbstractMgnlFilter {
         return filters;
     }
 
+    public void setFilters(MgnlFilter[] filters) {
+        this.filters = (MgnlFilter[]) ArrayUtils.addAll(this.filters, filters);
+    }
+
     public void addFilter(MgnlFilter filter) {
         this.filters = (MgnlFilter[]) ArrayUtils.add(this.filters, filter);
     }

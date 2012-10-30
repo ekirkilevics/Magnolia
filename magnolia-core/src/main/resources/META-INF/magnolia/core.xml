@@ -169,6 +169,18 @@
       <implementation>info.magnolia.beanmerger.ProxyBasedBeanMerger</implementation>
       <scope>singleton</scope>
     </component>
+    <component>
+        <type>info.magnolia.cms.filters.CompositeFilterTransformer</type>
+        <implementation>info.magnolia.cms.filters.CompositeFilterTransformer</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.voting.voters.VoterSetTransformer</type>
+      <implementation>info.magnolia.voting.voters.VoterSetTransformer</implementation>
+    </component>
+    <component>
+      <type>info.magnolia.commands.CommandTransformer</type>
+      <implementation>info.magnolia.commands.CommandTransformer</implementation>
+    </component>
     <type-mapping>
       <type>info.magnolia.voting.Voting</type>
       <implementation>info.magnolia.voting.DefaultVoting</implementation>
@@ -176,10 +188,6 @@
     <type-mapping>
       <type>info.magnolia.voting.Voter</type>
       <implementation>info.magnolia.voting.voters.VoterSet</implementation>
-    </type-mapping>
-    <type-mapping>
-      <type>info.magnolia.commands.CommandTransformer</type>
-      <implementation>info.magnolia.commands.CommandTransformer</implementation>
     </type-mapping>
     <type-mapping>
       <type>info.magnolia.cms.filters.MgnlFilter</type>

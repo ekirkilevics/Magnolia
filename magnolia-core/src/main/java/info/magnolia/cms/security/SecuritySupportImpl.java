@@ -66,6 +66,10 @@ public class SecuritySupportImpl extends SecuritySupportBase {
         return userManagers;
     }
 
+    public void setUserManagers(Map<String, UserManager> userManagers) {
+        this.userManagers.putAll(userManagers);
+    }
+
     public void addUserManager(String realmName, UserManager delegate) {
         userManagers.put(realmName, delegate);
     }

@@ -72,18 +72,15 @@ public class FreemarkerConfig {
     /**
      * The MagnoliaModelFactory implementations explicitly registered by modules.
      */
-    private final List<MagnoliaModelFactory> registeredModelFactories;
-    private final List<TemplateLoader> templateLoaders;
-    private final Map<String, TemplateModel> sharedVariables;
+    private List<MagnoliaModelFactory> registeredModelFactories = new ArrayList<MagnoliaModelFactory>();
+    private List<TemplateLoader> templateLoaders = new ArrayList<TemplateLoader>();
+    private Map<String, TemplateModel> sharedVariables = new HashMap<String, TemplateModel>();
     private TemplateExceptionHandler templateExceptionHandler = TemplateExceptionHandler.IGNORE_HANDLER;
 
     private ObjectWrapper objectWrapper;
     private TemplateLoader multiTL;
 
     public FreemarkerConfig() {
-        this.registeredModelFactories = new ArrayList<MagnoliaModelFactory>();
-        this.templateLoaders = new ArrayList<TemplateLoader>();
-        this.sharedVariables = new HashMap<String, TemplateModel>();
     }
 
     public ObjectWrapper getObjectWrapper() {
@@ -114,6 +111,10 @@ public class FreemarkerConfig {
         return registeredModelFactories;
     }
 
+    public void setModelFactories(List<MagnoliaModelFactory> registeredModelFactories) {
+        this.registeredModelFactories.addAll(registeredModelFactories);
+    }
+
     public void addModelFactory(MagnoliaModelFactory modelFactory) {
         this.registeredModelFactories.add(modelFactory);
     }
@@ -122,12 +123,20 @@ public class FreemarkerConfig {
         return templateLoaders;
     }
 
+    public void setTemplateLoaders(List<TemplateLoader> templateLoaders) {
+        this.templateLoaders.addAll(templateLoaders);
+    }
+
     public void addTemplateLoader(TemplateLoader templateLoader) {
         this.templateLoaders.add(templateLoader);
     }
 
     public Map<String, TemplateModel> getSharedVariables() {
         return sharedVariables;
+    }
+
+    public void setSharedVariables(Map<String, TemplateModel> sharedVariables) {
+        this.sharedVariables.putAll(sharedVariables);
     }
 
     public void addSharedVariable(String name, Object value) throws TemplateModelException {

@@ -276,10 +276,10 @@ public class GuiceComponentProviderTest extends AbstractMagnoliaTestCase {
     }
 
     private GuiceComponentProvider createComponentProviderWithContent2Bean(ComponentProviderConfiguration configuration, boolean exposeGlobally) {
-        configuration.registerImplementation(info.magnolia.content2bean.Content2BeanProcessor.class, info.magnolia.content2bean.impl.Content2BeanProcessorImpl.class);
-        configuration.registerImplementation(info.magnolia.content2bean.Content2BeanTransformer.class, info.magnolia.content2bean.impl.Content2BeanTransformerImpl.class);
-        configuration.registerImplementation(info.magnolia.content2bean.TransformationState.class, info.magnolia.content2bean.impl.TransformationStateImpl.class);
-        configuration.registerImplementation(info.magnolia.content2bean.TypeMapping.class, info.magnolia.content2bean.impl.TypeMappingImpl.class);
+        configuration.registerImplementation(info.magnolia.jcr.node2bean.Node2BeanProcessor.class, info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl.class);
+        configuration.registerImplementation(info.magnolia.jcr.node2bean.Node2BeanTransformer.class, info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl.class);
+        configuration.registerImplementation(info.magnolia.jcr.node2bean.TransformationState.class, info.magnolia.jcr.node2bean.impl.TransformationStateImpl.class);
+        configuration.registerImplementation(info.magnolia.jcr.node2bean.TypeMapping.class, info.magnolia.jcr.node2bean.impl.TypeMappingImpl.class);
         configuration.registerImplementation(ContextFactory.class, ContextFactory.class);
         configuration.registerInstance(SystemContext.class, mockContext);
         return createComponentProvider(configuration, exposeGlobally);

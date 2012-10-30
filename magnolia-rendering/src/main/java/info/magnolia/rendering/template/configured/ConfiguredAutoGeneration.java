@@ -46,12 +46,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @version $Id$
  *
  */
-public class ConfiguredAutoGeneration implements AutoGenerationConfiguration {
-    private Map<String, Object> content = new HashMap<String, Object>();
+public class ConfiguredAutoGeneration implements AutoGenerationConfiguration<Map<?, ?>> {
+    private Map<String, Map<?, ?>> content = new HashMap<String, Map<?, ?>>();
     private Class<Generator<AutoGenerationConfiguration>> generatorClass;
 
     @Override
-    public Map<String, Object> getContent() {
+    public Map<String, Map<?, ?>> getContent() {
         return content;
     }
 
@@ -60,7 +60,7 @@ public class ConfiguredAutoGeneration implements AutoGenerationConfiguration {
         return generatorClass;
     }
 
-    public void setContent(Map<String, Object> content) {
+    public void setContent(Map<String, Map<?, ?>> content) {
         this.content = content;
     }
 

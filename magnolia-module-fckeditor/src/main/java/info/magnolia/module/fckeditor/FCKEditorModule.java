@@ -48,14 +48,18 @@ public class FCKEditorModule {
 
     public static final String MODULE_FCKEDITOR = "fckEditor";
 
-    private Set browsableRepositories;
+    private Set<BrowsableRepository> browsableRepositories;
 
     public FCKEditorModule() {
-        browsableRepositories = new LinkedHashSet();
+        browsableRepositories = new LinkedHashSet<BrowsableRepository>();
     }
 
-    public Set getBrowsableRepositories() {
+    public Set<BrowsableRepository> getBrowsableRepositories() {
         return browsableRepositories;
+    }
+
+    public void setBrowsableRepositories(Set<BrowsableRepository> browsableRepositories) {
+        this.browsableRepositories = browsableRepositories;
     }
 
     public void addBrowsableRepository(BrowsableRepository repository) {
