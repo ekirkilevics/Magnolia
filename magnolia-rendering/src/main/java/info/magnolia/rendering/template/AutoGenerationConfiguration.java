@@ -40,15 +40,15 @@ import java.util.Map;
 /**
  * AutoGeneration configuration.
  * @version $Id$
- *
+ * @param <V> value type of map.
  */
-public interface AutoGenerationConfiguration {
+public interface AutoGenerationConfiguration<V> {
 
     static final String TEMPLATE_ID = "templateId";
 
     static final String NODE_TYPE = "nodeType";
 
-    Map<String, Object> getContent();
+    Map<String, V> getContent();
 
     Class<Generator<AutoGenerationConfiguration>> getGeneratorClass();
 }
