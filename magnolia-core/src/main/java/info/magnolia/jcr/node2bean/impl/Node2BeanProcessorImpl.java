@@ -49,8 +49,6 @@ import info.magnolia.jcr.wrapper.ExtendingNodeWrapper;
 import info.magnolia.objectfactory.ComponentProvider;
 import info.magnolia.objectfactory.Components;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -238,24 +236,7 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
                     catch (RepositoryException e) {
                         log.error("can't read index of the node [" + childNode + "]", e);
                     }
-                    boolean isEnabled = true;
-                    try {
-                        Method method = childBean.getClass().getMethod("isEnabled", null);
-                        isEnabled = (Boolean) method.invoke(childBean);
-                    } catch (NoSuchMethodException e) {
-                        // this is ok, enabled property is optional
-                    } catch (IllegalArgumentException e) {
-                        // this should never happen
-                    } catch (IllegalAccessException e) {
-                        log.warn("Can't access method [{}#isEnabled]. Maybe it's private/protected?", childBean.getClass());
-                    } catch (InvocationTargetException e) {
-                        log.error("An exception was thrown by [{}]#isEnabled method.", childBean.getClass(), e);
-                    } catch (NullPointerException e) {
-                        // TODO log.warn
-                    }
-                    if (isEnabled) {
-                        map.put(name, childBean);
-                    }
+                    map.put(name, childBean);
                 }
             }
         }
