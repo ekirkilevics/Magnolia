@@ -163,6 +163,49 @@ public class TypeMappingImplTest {
         assertEquals(List.class, ptd.getCollectionKeyType().getType());
     }
 
+    @Test
+    public void testBeanPropertyIsResolvedByAdderMethod1() { // test collection
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithCollectionAndAdder.class, "messages");
+
+        // THEN
+        assertNotNull(ptd);
+        assertNotNull(ptd.getAddMethod());
+        assertEquals(String.class, ptd.getCollectionEntryType().getType());
+    }
+
+    @Test
+    public void testBeanPropertyIsResolvedByAdderMethod2() { // test map
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithMapAndAdder.class, "beans");
+
+        // THEN
+        assertNotNull(ptd);
+        assertNotNull(ptd.getAddMethod());
+        assertEquals(String.class, ptd.getCollectionKeyType().getType());
+        assertEquals(SimpleBean.class, ptd.getCollectionEntryType().getType());
+    }
+
+    @Test
+    public void testBeanPropertyIsResolvedByAdderMethod3() { // test array
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(BeanWithArrayAndAdder.class, "messages");
+
+        // THEN
+        assertNotNull(ptd);
+        assertNotNull(ptd.getAddMethod());
+        assertEquals(String.class, ptd.getCollectionEntryType().getType());
+    }
+
     private final class SimpleClass {
 
         private Map<List<SimpleBean>, Collection<String>> beans;

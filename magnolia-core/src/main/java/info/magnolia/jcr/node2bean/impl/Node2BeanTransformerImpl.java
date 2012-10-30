@@ -55,6 +55,7 @@ import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -360,19 +361,9 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                     // the bean
                     if (dscr.isCollection() || dscr.isMap() || dscr.isArray()) {
                         log.debug("{} is of type collection, map or array", propertyName);
-                        Method method = dscr.getWriteMethod();
-
-                        if (method != null) {
-                            log.debug("clearing the current content of the collection/map");
-                            try {
-                                Object col = PropertyUtils.getProperty(bean, propertyName);
-                                if (col != null) {
-                                    MethodUtils.invokeExactMethod(col, "clear", new Object[] {});
-                                }
-                            } catch (Exception e) {
-                                log.debug("no clear method found on collection {}", propertyName);
-                            }
-
+                        if (dscr.getWriteMethod() != null) {
+                            Method method = dscr.getWriteMethod();
+                            clearCollection(bean, propertyName);
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
                             } else if (dscr.isArray()){
@@ -389,6 +380,27 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                     value = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
                                 }
                                 method.invoke(bean, value);
+                            }
+                            return;
+                        } else if (dscr.getAddMethod() != null) {
+                            Method method = dscr.getAddMethod();
+                            clearCollection(bean, propertyName);
+                            Class<?> entryClass = dscr.getCollectionEntryType().getType();
+
+                            log.warn("Will use deprecated add method [" + method.getName() + "] to populate [" + propertyName + "] in bean class [" + bean.getClass().getName() + "].");
+                            for (Iterator<Object> iter = ((Map<Object, Object>) value).keySet().iterator(); iter.hasNext();) {
+                                Object key = iter.next();
+                                Object entryValue = ((Map<Object, Object>) value).get(key);
+                                entryValue = convertPropertyValue(entryClass, entryValue);
+                                if (dscr.isCollection() || dscr.isArray()) {
+                                    log.debug("will add value {}", entryValue);
+                                    method.invoke(bean, new Object[] { entryValue });
+                                }
+                                // is a map
+                                else {
+                                    log.debug("will add key {} with value {}", key, entryValue);
+                                    method.invoke(bean, new Object[] { key, entryValue });
+                                }
                             }
                             return;
                         }
@@ -431,6 +443,22 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                     new Object[] {propertyName, value, bean.getClass().getName(),
                             state.getCurrentNode().getPath(), e.toString()});
             }
+        }
+    }
+
+    /**
+     * @param bean
+     * @param propertyName
+     */
+    private void clearCollection(Object bean, String propertyName) {
+        log.debug("clearing the current content of the collection/map");
+        try {
+            Object col = PropertyUtils.getProperty(bean, propertyName);
+            if (col != null) {
+                MethodUtils.invokeExactMethod(col, "clear", new Object[] {});
+            }
+        } catch (Exception e) {
+            log.debug("no clear method found on collection {}", propertyName);
         }
     }
 

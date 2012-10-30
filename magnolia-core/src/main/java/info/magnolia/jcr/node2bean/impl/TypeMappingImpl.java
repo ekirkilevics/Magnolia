@@ -49,6 +49,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,11 +79,11 @@ public class TypeMappingImpl implements TypeMapping {
 
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
 
-
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor descriptor = descriptors[i];
             if (descriptor.getName().equals(propName)) {
-                Class<?> propertytype = descriptor.getPropertyType(); // may be null for indexed properties
+                // may be null for indexed properties
+                Class<?> propertytype = descriptor.getPropertyType();
                 if (propertytype != null) {
                     dscr.setType(getTypeDescriptor(propertytype));
                 }
@@ -95,13 +96,14 @@ public class TypeMappingImpl implements TypeMapping {
 
         if (dscr.getType() != null) {
             if (dscr.isMap() || dscr.isCollection() || dscr.isArray()) {
-                Method method = dscr.getWriteMethod();
-                if (method != null) {
+                if (dscr.getWriteMethod() != null) {
+                    Method method = dscr.getWriteMethod();
                     Type[] typeArgs = new Type[] {};
                     Type[] parameterTypes = null;
                     if (dscr.isArray()) {
                         // this is needed because of arrays
-                        // since there is no adder method, we need to determine type being passed by setter
+                        // since there is no adder method, we need to determine
+                        // type being passed by setter
                         typeArgs = method.getParameterTypes();
                     }
 
@@ -123,20 +125,56 @@ public class TypeMappingImpl implements TypeMapping {
                         if (dscr.isMap()) {
                             dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
                             dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
-                        } else if (dscr.isCollection()){
+                        } else if (dscr.isCollection()) {
                             dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
                         } else if (dscr.isArray()) {
-                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>)typeArgs[0]).getComponentType()));
+                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>) typeArgs[0]).getComponentType()));
                         }
                     }
                 } else {
-                    log.debug("Setter method for type [{}] in bean class [{}] doesn't exists.", dscr.getType().getType().getName(), beanClass.getName());
+                    int numberOfParameters = dscr.isMap() ? 2 : 1;
+                    Method method = getAddMethod(beanClass, propName, numberOfParameters);
+                    if (method != null) {
+                        dscr.setAddMethod(method);
+                        if (dscr.isMap()) {
+                            dscr.setCollectionKeyType(getTypeDescriptor(method.getParameterTypes()[0]));
+                            dscr.setCollectionEntryType(getTypeDescriptor(method.getParameterTypes()[1]));
+                        } else {
+                            dscr.setCollectionEntryType(getTypeDescriptor(method.getParameterTypes()[0]));
+                        }
+                    } else {
+                        log.warn("No setter or adder method found for property [{}] in bean class [{}]", propName, beanClass);
+                    }
                 }
             }
         }
         propertyTypes.put(key, dscr);
 
         return dscr;
+    }
+
+    /**
+     * Get a adder method. Transforms name to singular.
+     */
+    public Method getAddMethod(Class<?> type, String name, int numberOfParameters) {
+        name = StringUtils.capitalize(name);
+        Method method = getExactMethod(type, "add" + name, numberOfParameters);
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y", numberOfParameters);
+        }
+        return method;
     }
 
     @Override
@@ -165,6 +203,29 @@ public class TypeMappingImpl implements TypeMapping {
             dscr.setTransformer(transformer);
         }
         return dscr;
+    }
+
+    /**
+     * Find a method.
+     * 
+     * @param numberOfParameters
+     */
+    protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {
+        Method[] methods = type.getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            Method method = methods[i];
+            if (method.getName().equals(name)) {
+                // TODO - CAUTION: in case there's several methods with the same
+                // name and the same numberOfParameters
+                // this method might pick the "wrong" one. We should think about
+                // adding a check and throw an exceptions
+                // if there's more than one match!
+                if (method.getParameterTypes().length == numberOfParameters) {
+                    return method;
+                }
+            }
+        }
+        return null;
     }
 
 }

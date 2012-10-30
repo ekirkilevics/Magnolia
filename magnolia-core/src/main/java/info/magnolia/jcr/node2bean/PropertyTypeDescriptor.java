@@ -44,6 +44,7 @@ public class PropertyTypeDescriptor {
     private TypeDescriptor collectionEntryType;
     private TypeDescriptor collectionKeyType;
     private Method writeMethod;
+    private Method addMethod;
 
     public TypeDescriptor getCollectionEntryType() {
         return this.collectionEntryType;
@@ -95,5 +96,19 @@ public class PropertyTypeDescriptor {
 
     public void setWriteMethod(Method writeMethod) {
         this.writeMethod = writeMethod;
+    }
+
+    /**
+     * @deprecated since 5.0 - use setter instead.
+     */
+    public Method getAddMethod() {
+        return addMethod;
+    }
+
+    /**
+     * @deprecated since 5.0 - use setter instead.
+     */
+    public void setAddMethod(Method addMethod) {
+        this.addMethod = addMethod;
     }
 }
