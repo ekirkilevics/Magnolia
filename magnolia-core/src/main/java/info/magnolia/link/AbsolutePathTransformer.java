@@ -34,8 +34,9 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.objectfactory.Components;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -53,6 +54,9 @@ public class AbsolutePathTransformer implements LinkTransformer {
     boolean useURI2RepositoryMapping = true;
 
     boolean useI18N = true;
+    
+    public AbsolutePathTransformer() {
+    }
 
     /**
      * Creates new transformer.
@@ -80,14 +84,14 @@ public class AbsolutePathTransformer implements LinkTransformer {
         }
         linkStr += getURISuffix(uuidLink);
         if(useI18N){
-            linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);
+            linkStr = Components.getComponent(I18nContentSupport.class).toI18NURI(linkStr);
         }
         linkStr = prefixLink(linkStr);
         return linkStr;
     }
 
     protected URI2RepositoryManager getURI2RepositoryManager() {
-        return URI2RepositoryManager.getInstance();
+        return Components.getComponent(URI2RepositoryManager.class);
     }
 
     protected String prefixLink(String linkStr) {

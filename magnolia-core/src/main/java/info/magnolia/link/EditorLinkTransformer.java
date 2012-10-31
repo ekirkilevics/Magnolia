@@ -42,6 +42,7 @@ package info.magnolia.link;
  * </ul>
  * @author had
  * @version $Id: EditorLinkTransformer.java 21024 2009-01-06 20:58:05Z gjoseph $
+ * @deprecated Since 5.0 use AbsolutePathTransformer directly or register custom editor link transformer.
  */
 public class EditorLinkTransformer implements LinkTransformer {
 
