@@ -35,8 +35,6 @@ package info.magnolia.link;
 
 import java.util.regex.Pattern;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -44,8 +42,6 @@ import info.magnolia.cms.core.NodeData;
  * Factory processing various input into the Link objects and back.
  * For parsing html and converting multiple link instances on the fly use {@link LinkUtil}.
  *
- * @author had
- * @version $Id:$
  * @deprecated Since 5.0 use LinkUtil.
  */
 public class LinkFactory {
@@ -55,10 +51,9 @@ public class LinkFactory {
      * Creates new link from the content node.
      * @param node Target content for the link.
      * @return Link pointing to the provided content
-     * @throws RepositoryException 
      * @deprecated Since 5.0 use LinkUtil.createLinkInstance(Content) instead.
      */
-    public static Link createLink(Content node) throws RepositoryException {
+    public static Link createLink(Content node) {
         return LinkUtil.createLinkInstance(node);
     }
 
@@ -66,10 +61,9 @@ public class LinkFactory {
      * Creates new link from the node data.
      * @param nodeData Target node data for the link.
      * @return Link pointing to the provided node data.
-     * @throws RepositoryException 
      * @deprecated Since 5.0 use LinkUtil.createLinkInstance(NodeData) instead.
      */
-    public static Link createLink(NodeData nodeData) throws LinkException, RepositoryException {
+    public static Link createLink(NodeData nodeData) throws LinkException{
         return LinkUtil.createLinkInstance(nodeData);
     }
 
@@ -141,10 +135,9 @@ public class LinkFactory {
      * Converts provided Link to an UUID link pattern.
      * @param link Link to convert.
      * @return UUID link pattern representation of provided link.
-     * @throws RepositoryException 
      * @deprecated Since 5.0 use info.magnolia.link.LinkUtil.toPattern(Link) instead.
      */
-    public static String toPattern(Link link) throws RepositoryException {
+    public static String toPattern(Link link) {
         return LinkUtil.toPattern(link);
     }
 

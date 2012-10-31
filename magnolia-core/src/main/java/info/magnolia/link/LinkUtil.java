@@ -61,8 +61,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for various operations necessary for link transformations and handling.
- * @author had
- *
  */
 public class LinkUtil {
 
@@ -124,9 +122,8 @@ public class LinkUtil {
     /**
      * Transforms a uuid to a handle beginning with a /. This path is used to get the page from the repository.
      * The editor needs this kind of links.
-     * @throws RepositoryException 
      */
-    public static String convertUUIDtoHandle(String uuid, String repository) throws LinkException, RepositoryException {
+    public static String convertUUIDtoHandle(String uuid, String repository) throws LinkException {
         return createLinkInstance(repository, uuid).getHandle();
     }
 
@@ -143,7 +140,6 @@ public class LinkUtil {
      * Parses provided html and transforms all the links to the magnolia format. Used during storing.
      * @param html html code with links to be converted
      * @return html with changed hrefs
-     * @throws RepositoryException 
      */
     public static String convertAbsoluteLinksToUUIDs(String html) {
         // get all link tags
@@ -289,14 +285,13 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path for provided node data.
-     * 
+     *
      * @param nodedata
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
-     * @throws RepositoryException 
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(NodeData nodedata) throws LinkException, RepositoryException {
+    public static String createAbsoluteLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
             return null;
         }
@@ -305,7 +300,7 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
-     * 
+     *
      * @param uuid
      *            UUID of content to create link to.
      * @param repository
@@ -321,14 +316,13 @@ public class LinkUtil {
 
     /**
      * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales.
-     * 
+     *
      * @param content
      *            content to create link to.
      * @return Absolute link to the provided content.
-     * @throws RepositoryException 
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(Content content) throws RepositoryException {
+    public static String createAbsoluteLink(Content content) {
         if(content == null){
             return null;
         }
@@ -337,11 +331,8 @@ public class LinkUtil {
 
     /**
      * Creates a complete url to access given content from external systems applying all the URI2Repository mappings and locales.
-     * @param content
-     * @return
-     * @throws RepositoryException
      */
-    public static String createExternalLink(Content content) throws RepositoryException {
+    public static String createExternalLink(Content content) {
         if(content == null){
             return null;
         }
@@ -350,14 +341,13 @@ public class LinkUtil {
 
     /**
      * Creates link guessing best possible link format from current site and provided node.
-     * 
+     *
      * @param nodedata
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
-     * @throws RepositoryException 
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createLink(Content node) throws RepositoryException {
+    public static String createLink(Content node) {
         if(node == null){
             return null;
         }
@@ -378,7 +368,7 @@ public class LinkUtil {
 
     /**
      * Creates link guessing best possible link format from current site and provided node data.
-     * 
+     *
      * @param nodedata
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
@@ -397,7 +387,7 @@ public class LinkUtil {
 
     /**
      * Creates link guessing best possible link format from current site and provided content.
-     * 
+     *
      * @param uuid
      *            UUID of content to create link to.
      * @param repository
@@ -410,19 +400,19 @@ public class LinkUtil {
         /*TODO update with Node method*/
         return createLink(ContentUtil.asContent(node));
     }
-    
-    public static Link createLinkInstance(Content node) throws RepositoryException{
+
+    public static Link createLinkInstance(Content node) {
         return new Link(node);
     }
-    
-    public static Link createLinkInstance(NodeData nodeData) throws RepositoryException, LinkException{
+
+    public static Link createLinkInstance(NodeData nodeData) throws LinkException{
         try {
             return new Link(nodeData.getParent().getWorkspace().getName(), nodeData.getParent(), nodeData);
         } catch (RepositoryException e) {
             throw new LinkException("can't find node " + nodeData , e);
         }
     }
-    
+
     /**
      * Creates link to the content denoted by repository and uuid.
      * @param repository Parent repository of the content of interest.
@@ -436,7 +426,7 @@ public class LinkUtil {
             throw new LinkException("can't get node with uuid " + uuid + " and repository " + repository);
         }
     }
-    
+
     /**
      * Creates link to the content identified by the repository and path. Link will use specified extension and will also contain the anchor and parameters if specified.
      * @param repository Source repository for the content.
@@ -500,7 +490,7 @@ public class LinkUtil {
         link.setHandle(path);
         return link;
     }
-    
+
     /**
      * Creates link based on provided parameters. Should the uuid be non existent or the fallback handle invalid, creates nonetheless an <em>"undefined"</em> {@link Link} object,
      * pointing to the non existing uuid so that broken link detection tools can find it.
@@ -541,7 +531,7 @@ public class LinkUtil {
 
         return link;
     }
-    
+
     /**
      * Parses UUID link pattern string and converts it into a Link object.
      * @param uuidLink String containing reference to content as a UUID link pattern.
@@ -554,7 +544,7 @@ public class LinkUtil {
         }
         throw new LinkException("can't parse [ " + uuidLink + "]");
     }
-    
+
     /**
      * Parses provided URI to the link.
      * @param link URI representing path to piece of content
@@ -574,12 +564,12 @@ public class LinkUtil {
         }
         throw new LinkException("can't parse [ " + link + "]");
     }
-    
+
     /**
      * Converts provided Link to an UUID link pattern.
      * @param link Link to convert.
      * @return UUID link pattern representation of provided link.
-     * @throws RepositoryException 
+     * @throws RepositoryException
      */
     public static String toPattern(Link link) {
         return "${link:{"
@@ -592,7 +582,7 @@ public class LinkUtil {
             + (StringUtils.isNotEmpty(link.getAnchor())? "#" + link.getAnchor():"")
             + (StringUtils.isNotEmpty(link.getParameters())? "?" + link.getParameters() : "");
     }
-    
+
     private static URI2RepositoryManager getURI2RepositoryManager(){
         return Components.getComponent(URI2RepositoryManager.class);
     }

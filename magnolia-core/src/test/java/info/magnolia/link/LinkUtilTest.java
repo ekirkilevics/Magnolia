@@ -36,8 +36,6 @@ package info.magnolia.link;
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
@@ -51,7 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class LinkUtilTest extends BaseLinkTest {
 
@@ -161,12 +159,8 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals(htmlAbsoluteWithDollar, res);
     }
 
-    private LinkUtil getLinkUtil(){
-        return Components.getSingleton(LinkUtil.class);
-    }
-
     @Test
-    public void testMakeUUIDFromAbsolutePath() throws LinkException, RepositoryException {
+    public void testMakeUUIDFromAbsolutePath() throws LinkException{
         String uuid = LinkUtil.parseLink("/parent/sub").getUUID();
         assertEquals("2", uuid);
     }
