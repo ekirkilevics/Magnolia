@@ -37,8 +37,11 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 
+import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
@@ -66,7 +69,12 @@ public class Link {
     private String fallbackHandle;
     private String anchor;
     private String parameters;
-
+    
+    private Node jcrNode;
+    private Property property;
+    private String propertyName;
+    private String identifier;
+    
     /**
      * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
      */
@@ -75,6 +83,7 @@ public class Link {
 
     /**
      * @param content
+     * @deprecated since 5.0
      */
     public Link(Content content) {
         setNode(content);
@@ -88,6 +97,23 @@ public class Link {
             setUUID(content.getUUID());
         }
     }
+    
+    /**
+     * @param node
+     * @throws RepositoryException 
+     */
+    public Link(Node node) throws RepositoryException {
+        setJCRNode(node);
+        try {
+            setJCRNode(node);
+            setRepository(node.getSession().getWorkspace().getName());
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
+        if (node.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+            setIdentifier(node.getIdentifier());
+        }
+    }
 
     public Link(String repoName, Content parent, NodeData nodedata) {
         setNode(parent);
@@ -96,14 +122,13 @@ public class Link {
         setNodeDataName(nodedata.getName());
     }
 
-    public String getExtension() {
-        if(StringUtils.isEmpty(this.extension) && this.getNodeData() != null && this.getNodeData().getType() == PropertyType.BINARY){
-            File binary = new File(nodeData);
-            extension = binary.getExtension();
-        }
-        return StringUtils.defaultIfEmpty(this.extension, ServerConfiguration.getInstance().getDefaultExtension());
-    }
-
+     public String getExtension() {
+         if(StringUtils.isEmpty(this.extension) && this.getNodeData() != null && this.getNodeData().getType() == PropertyType.BINARY){
+             File binary = new File(nodeData);
+             extension = binary.getExtension();
+         }
+         return StringUtils.defaultIfEmpty(this.extension, ServerConfiguration.getInstance().getDefaultExtension());
+     }
 
     public void setExtension(String extension) {
         this.extension = extension;
@@ -123,15 +148,40 @@ public class Link {
         this.fileName = fileName;
     }
 
+    /**
+     * @deprecated since 5.0
+     */
     public Content getNode() {
         return this.node;
     }
 
-
+    /**
+     * @deprecated since 5.0
+     */
     public void setNode(Content node) {
         this.node = node;
     }
+    
+    public Node getJCRNode() {
+        return this.jcrNode;
+    }
 
+
+    public void setJCRNode(Node jcrNode) {
+        this.jcrNode = jcrNode;
+    }
+    
+    public Property getProperty(){
+        return this.property;
+    }
+    
+    public void setProperty(Property property){
+        this.property = property;
+    }
+
+    /**
+     * @deprecated since 5.0
+     */
     public NodeData getNodeData() {
         if(this.nodeData == null && StringUtils.isNotEmpty(this.nodeDataName) && this.getNode() != null){
             this.nodeData = this.getNode().getNodeData(this.nodeDataName);
@@ -139,12 +189,23 @@ public class Link {
         return this.nodeData;
     }
 
+    /**
+     * @deprecated since 5.0
+     */
     public void setNodeData(NodeData nodeData) {
         this.nodeData = nodeData;
     }
 
     public boolean isEditorBinaryLink(){
         return getNodeData() != null;
+    }
+    
+    public String getPropertyName() {
+        return this.propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 
     public String getNodeDataName() {
@@ -155,16 +216,16 @@ public class Link {
         this.nodeDataName = nodeDataName;
     }
 
-    public String getHandle() {
-        if(StringUtils.isEmpty(this.handle)){
-            if(getNode() != null){
-                handle = getNode().getHandle();
-            } else {
-                handle = this.getFallbackHandle();
-            }
-        }
-        return this.handle;
-    }
+     public String getHandle() {
+         if(StringUtils.isEmpty(this.handle)){
+             if(getNode() != null){
+                 handle = getNode().getHandle();
+             } else {
+                 handle = this.getFallbackHandle();
+             }
+         }
+         return this.handle;
+     }
 
     public void setHandle(String path) {
         this.handle = path;
@@ -178,12 +239,23 @@ public class Link {
         this.repository = repository;
     }
 
-    public String getUUID() {
-        if(StringUtils.isEmpty(this.uuid) && this.getNode() != null){
-            this.uuid = this.getNode().getUUID();
+    public String getIdentifier() throws RepositoryException {
+        if(StringUtils.isEmpty(this.identifier) && this.getJCRNode() != null){
+            this.identifier = this.getJCRNode().getIdentifier();
         }
         return this.uuid;
     }
+    
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+    
+     public String getUUID() {
+         if(StringUtils.isEmpty(this.uuid) && this.getNode() != null){
+             this.uuid = this.getNode().getUUID();
+         }
+         return this.uuid;
+     }
 
     public void setUUID(String uuid) {
         this.uuid = uuid;
