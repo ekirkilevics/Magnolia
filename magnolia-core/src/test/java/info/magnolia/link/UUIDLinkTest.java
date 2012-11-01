@@ -79,63 +79,63 @@ public class UUIDLinkTest extends BaseLinkTest {
 
     @Test
     public void testParseFromUUIDPattern() throws Exception {
-        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
+        Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_SIMPLE);
 
         assertEquals(HREF_ABSOLUTE_LINK, NOP_TRANSFORMER.transform(link));
-        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
+        assertEquals(UUID_PATTERN_SIMPLE, LinkUtil.toPattern(link));
     }
 
     @Test
     public void testParseLink() throws Exception {
-        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
+        Link link = LinkUtil.parseLink(HREF_ABSOLUTE_LINK);
 
         assertEquals(RepositoryConstants.WEBSITE, link.getRepository());
         assertEquals(HANDLE_PARENT_SUB, link.getHandle());
-        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
+        assertEquals(UUID_PATTERN_SIMPLE, LinkUtil.toPattern(link));
     }
 
     @Test
     public void testParseFromBrowserLink() throws Exception {
-        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
+        Link link = LinkUtil.parseLink(HREF_ABSOLUTE_LINK);
 
         assertEquals(HREF_ABSOLUTE_LINK, NOP_TRANSFORMER.transform(link));
 
-        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
+        assertEquals(UUID_PATTERN_SIMPLE, LinkUtil.toPattern(link));
     }
 
     @Test
     public void testLinkWithAnchor() throws Exception{
-        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "#bar");
-        assertEquals(UUID_PATTERN_SIMPLE + "#bar", LinkFactory.toPattern(link));
+        Link link = LinkUtil.parseLink(HREF_ABSOLUTE_LINK + "#bar");
+        assertEquals(UUID_PATTERN_SIMPLE + "#bar", LinkUtil.toPattern(link));
 
-        link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE + "#bar");
+        link = LinkUtil.parseUUIDLink(UUID_PATTERN_SIMPLE + "#bar");
         assertEquals(HREF_ABSOLUTE_LINK + "#bar", NOP_TRANSFORMER.transform(link));
     }
 
     @Test
     public void testLinkWithParameters() throws Exception {
-        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "?bar=test");
-        assertEquals(UUID_PATTERN_SIMPLE + "?bar=test", LinkFactory.toPattern(link));
+        Link link = LinkUtil.parseLink(HREF_ABSOLUTE_LINK + "?bar=test");
+        assertEquals(UUID_PATTERN_SIMPLE + "?bar=test", LinkUtil.toPattern(link));
 
-        link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE + "?bar=test");
+        link = LinkUtil.parseUUIDLink(UUID_PATTERN_SIMPLE + "?bar=test");
         assertEquals(HREF_ABSOLUTE_LINK + "?bar=test", NOP_TRANSFORMER.transform(link));
     }
 
     @Test
     public void testUUIDToAbsoluteLinksAfterRenaming() throws Exception{
         ((MockContent)ContentUtil.getContent(RepositoryConstants.WEBSITE, "/parent/sub")).setName("subRenamed");
-        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
+        Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
 
     public void doTestParsingInternalLinksToBinaries() throws Exception {
-        Link link = LinkFactory.parseLink(HREF_BINARY);
-        assertEquals(UUID_PATTERN_BINARY, LinkFactory.toPattern(link));
+        Link link = LinkUtil.parseLink(HREF_BINARY);
+        assertEquals(UUID_PATTERN_BINARY, LinkUtil.toPattern(link));
     }
 
     @Test
     public void testUUIDToBinary() throws Exception {
-        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_BINARY);
+        Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(HREF_BINARY, NOP_TRANSFORMER.transform(link));
     }
 
@@ -144,7 +144,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         // now rename the the page
         ((MockContent)ContentUtil.getContent(RepositoryConstants.WEBSITE, "/parent/sub")).setName("subRenamed");
 
-        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_BINARY);
+        Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(StringUtils.replace(HREF_BINARY, "sub", "subRenamed"), NOP_TRANSFORMER.transform(link));
     }
 

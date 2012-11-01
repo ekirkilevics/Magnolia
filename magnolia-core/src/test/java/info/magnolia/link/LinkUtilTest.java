@@ -35,6 +35,7 @@ package info.magnolia.link;
 
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
@@ -48,7 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class LinkUtilTest extends BaseLinkTest {
 
@@ -158,13 +159,9 @@ public class LinkUtilTest extends BaseLinkTest {
         assertEquals(htmlAbsoluteWithDollar, res);
     }
 
-    private LinkUtil getLinkUtil(){
-        return Components.getSingleton(LinkUtil.class);
-    }
-
     @Test
-    public void testMakeUUIDFromAbsolutePath() throws LinkException {
-        String uuid = LinkFactory.parseLink("/parent/sub").getUUID();
+    public void testMakeUUIDFromAbsolutePath() throws LinkException{
+        String uuid = LinkUtil.parseLink("/parent/sub").getUUID();
         assertEquals("2", uuid);
     }
 
@@ -246,7 +243,7 @@ public class LinkUtilTest extends BaseLinkTest {
 
     @Test
     public void testMakeAbsolutePathFromUUID() throws LinkException {
-        String absolutePath = LinkFactory.createLink(RepositoryConstants.WEBSITE, "2").getHandle();
+        String absolutePath = LinkUtil.createLinkInstance(RepositoryConstants.WEBSITE, "2").getHandle();
         assertEquals("/parent/sub", absolutePath);
     }
 
@@ -259,7 +256,7 @@ public class LinkUtilTest extends BaseLinkTest {
         try {
             MockSession session = new MockSession("website");
             MockContent c = new MockContent((MockNode) session.getRootNode());
-            url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkFactory.createLink(c));
+            url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkUtil.createLinkInstance(c));
         } finally {
             // restore
             serverConfiguration.setDefaultBaseUrl(base);

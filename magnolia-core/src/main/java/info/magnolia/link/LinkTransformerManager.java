@@ -33,6 +33,9 @@
  */
 package info.magnolia.link;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +55,24 @@ public class LinkTransformerManager {
 
     private boolean makeBrowserLinksRelative = false;
     private boolean addContextPathToBrowserLinks = false;
+
+    private Map<String, LinkTransformer> transformers;
+    
+    public LinkTransformerManager() {
+        this.transformers = new HashMap<String, LinkTransformer>();
+    }
+    
+    public Map<String, LinkTransformer> getTransformers(){
+        return this.transformers;
+    }
+
+    public void setTransformers(Map<String, LinkTransformer> transformers){
+        this.transformers = transformers;
+    }
+    
+    public void addTransformer(String key, LinkTransformer transformer){
+        this.transformers.put(key, transformer);
+    }
 
     public boolean isAddContextPathToBrowserLinks() {
         return this.addContextPathToBrowserLinks;
@@ -73,7 +94,42 @@ public class LinkTransformerManager {
      * Gets the current singleton instance.
      */
     public static LinkTransformerManager getInstance() {
-        return Components.getSingleton(LinkTransformerManager.class);
+        return Components.getComponent(LinkTransformerManager.class);
+    }
+    
+    /**
+     * Gets registered absolute path transformer. 
+     */
+    public LinkTransformer getAbsoluteTransformer(){
+        return transformers.get("absolute");
+    }
+
+    /**
+     * Gets registered editor link transformer. 
+     */
+    public LinkTransformer getEditorTransformer(){
+        return transformers.get("editor");
+    }
+    
+    /**
+     * Gets registered relative path transformer. 
+     */
+    public LinkTransformer getRelativeTransformer(){
+        return transformers.get("relative");
+    }
+    
+    /**
+     * Gets registered complete URL transformer. 
+     */
+    public LinkTransformer getCompleteURLTransformer(){
+        return transformers.get("completeURL");
+    }
+    
+    /**
+     * Gets registered complete URL transformer. 
+     */
+    public LinkTransformer getI18nTransformer(){
+        return transformers.get("i18n");
     }
 
     /**
@@ -87,35 +143,65 @@ public class LinkTransformerManager {
      * Creates instance of absolute link transformer that will optionally prepend the context path, but will always use URI2Repository mapping while constructing links and will localize the link if localization is set up.
      */
     public AbsolutePathTransformer getAbsolute(boolean addContextPath) {
-        return new AbsolutePathTransformer(addContextPath, true, true);
+        if(getAbsoluteTransformer() == null){
+            return new AbsolutePathTransformer(addContextPath, true, true);
+        }
+        AbsolutePathTransformer transformer = (AbsolutePathTransformer)transformers.get("absolute");
+        transformer.setAddContextPath(addContextPath);
+        transformer.setUseI18N(true);
+        transformer.setUseURI2RepositoryMapping(true);
+        return transformer;
     }
 
     /**
      * Creates instance of Relative link transformer that will translate path to the provided Link relative to the content provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
     public RelativePathTransformer getRelative(Content page) {
-        return new RelativePathTransformer(page, true, true);
+        if(getRelativeTransformer() == null){
+            return new RelativePathTransformer(page.getJCRNode(), true, true);
+        }
+        RelativePathTransformer transformer = (RelativePathTransformer)transformers.get("relative");
+        transformer.setUseI18N(true);
+        transformer.setUseURI2RepositoryMapping(true);
+        transformer.setAbsolutSourcePath(page.getJCRNode());
+        return transformer;
     }
 
     /**
      * Creates instance of Relative link transformer that will translate path to the provided Link relative to path provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
     public RelativePathTransformer getRelative(String absolutePath) {
-        return new RelativePathTransformer(absolutePath, true, true);
+        if(getRelativeTransformer() == null){
+            return new RelativePathTransformer(absolutePath, true, true);
+        }
+        RelativePathTransformer transformer = (RelativePathTransformer)transformers.get("relative");
+        transformer.setUseI18N(true);
+        transformer.setUseURI2RepositoryMapping(true);
+        transformer.setAbsolutSourcePath(absolutePath);
+        return transformer;
     }
 
     /**
      * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by Link provided to its transform method.
      */
     public CompleteUrlPathTransformer getCompleteUrl() {
-        return new CompleteUrlPathTransformer(true, true);
+        if(getCompleteURLTransformer() == null){
+            return new CompleteUrlPathTransformer(true, true);
+        }
+        CompleteUrlPathTransformer transformer = (CompleteUrlPathTransformer)transformers.get("completeURL");
+        transformer.setUseURI2RepositoryMapping(true);
+        transformer.setUseI18N(true);
+        return transformer;
     }
 
     /**
      * @see EditorLinkTransformer
      */
     public EditorLinkTransformer getEditorLink() {
-        return new EditorLinkTransformer();
+        if(getEditorTransformer() == null){
+            return new EditorLinkTransformer();
+        }
+        return (EditorLinkTransformer)transformers.get("editor");
     }
 
     /**

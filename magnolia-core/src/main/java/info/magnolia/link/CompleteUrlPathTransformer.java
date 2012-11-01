@@ -34,6 +34,7 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.objectfactory.Components;
 
 /**
  * Constructs URLs by prefixing the path with <code>Server.getDefaultBaseUrl()</code>.
@@ -43,6 +44,9 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
  * @version $Id$
  */
 public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
+    
+    public CompleteUrlPathTransformer() {
+    }
 
     public CompleteUrlPathTransformer(boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
@@ -50,7 +54,7 @@ public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
 
     @Override
     protected String prefixLink(String linkStr) {
-        final String base = ServerConfiguration.getInstance().getDefaultBaseUrl();
+        final String base = Components.getComponent(ServerConfiguration.class).getDefaultBaseUrl();
         if (base.endsWith("/") && linkStr.startsWith("/")) {
             return base + linkStr.substring(1);
         }

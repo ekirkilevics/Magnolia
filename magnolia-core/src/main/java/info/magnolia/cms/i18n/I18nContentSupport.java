@@ -123,4 +123,5 @@ public interface I18nContentSupport {
 
     public boolean isEnabled();
 
+    public Locale getDefaultLocale();
 }

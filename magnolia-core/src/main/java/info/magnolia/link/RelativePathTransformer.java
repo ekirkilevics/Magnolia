@@ -33,6 +33,7 @@
  */
 package info.magnolia.link;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
@@ -45,18 +46,39 @@ import info.magnolia.cms.core.Content;
 public class RelativePathTransformer extends AbsolutePathTransformer {
 
     protected String absolutSourcePath;
-
-    public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
-        super(false, useURI2RepositoryMapping, useI18N);
-        Link link = new Link(sourcePage);
+    
+    public void setAbsolutSourcePath(Node sourceNode){
         try {
-            // TODO, this should be passed to a constructor
-            link.setRepository(sourcePage.getWorkspace().getName());
+            Link link = new Link(sourceNode);
+            link.setRepository(sourceNode.getSession().getWorkspace().getName());
+            link.setExtension("html");
+            absolutSourcePath = super.transform(link);
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
-        link.setExtension("html");
-        absolutSourcePath = super.transform(link);
+    }
+    
+    public void setAbsolutSourcePath(String absolutSourcePath){
+        this.absolutSourcePath = absolutSourcePath;
+    }
+    
+    public RelativePathTransformer(){
+    }
+
+    public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
+        this(sourcePage.getJCRNode(), useURI2RepositoryMapping, useI18N);
+    }
+    
+    public RelativePathTransformer(Node sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
+        super(false, useURI2RepositoryMapping, useI18N);
+        try {
+            Link link = new Link(sourcePage);
+            link.setRepository(sourcePage.getSession().getWorkspace().getName());
+            link.setExtension("html");
+            absolutSourcePath = super.transform(link);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public RelativePathTransformer(String absoluteSourcePath, boolean useURI2RepositoryMapping, boolean useI18N) {
