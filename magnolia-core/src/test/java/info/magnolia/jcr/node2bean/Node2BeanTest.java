@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -491,8 +492,27 @@ public class Node2BeanTest {
     }
 
     @Test
-    public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
+    public void testPopulateBeanPropertyIfNoGenericsUsedInSetter() throws IOException, RepositoryException, Node2BeanException {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/foo/bar.class=info.magnolia.jcr.node2bean.Node2BeanTest$StupidBean\n" +
+                "/foo/bar/messages/1.string=Hello\n" +
+                "/foo/bar/messages/2.string=World\n"
+                );
+        final Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
+
         // WHEN
+        StupidBean bean = (StupidBean) n2b.toBean(session.getNode("/foo/bar"));
+
+        assertNotNull(bean.getMessages());
+        assertEquals(2, bean.getMessages().size());
+        assertEquals("Hello", ((SimpleBean) bean.getMessages().get(0)).getString());
+        assertEquals("World", ((SimpleBean) bean.getMessages().get(1)).getString());
+    }
+
+    @Test
+    public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
+        // GIVEN
         Session session = SessionTestUtil.createSession("/test",
                 "/bar.class=" + BeanWithMapWithGenerics.class.getName(),
                 "/bar/beans.class=" + StupidMap.class.getName(),
@@ -578,7 +598,7 @@ public class Node2BeanTest {
     }
 
     @Test
-    @Ignore
+    @Ignore // jsimak: MAGNOLIA-4631
     public void testBeansWithEnabledPropertySetToFalseAreExcludedFromCollection() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
@@ -605,7 +625,7 @@ public class Node2BeanTest {
     }
 
     @Test
-    @Ignore
+    @Ignore // jsimak: MAGNOLIA-4631
     public void testBeansWithEnabledPropertySetToFalseAreExcludedFromMap() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
@@ -801,4 +821,20 @@ public class Node2BeanTest {
     }
 
     public abstract static class StupidMap extends AbstractMap {}
+
+    public final class StupidBean {
+        private List messages = new ArrayList();
+
+        public void addMessage(SimpleBean str) {
+            this.messages.add(str);
+        }
+
+        public void setMessages(List messages) {
+            this.messages = messages;
+        }
+
+        public List getMessages() {
+            return this.messages;
+        }
+    }
 }
