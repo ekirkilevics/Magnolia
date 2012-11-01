@@ -1023,12 +1023,8 @@ public class SaveHandlerImpl implements SaveHandler {
             log.debug("Node data updated"); //$NON-NLS-1$
         }
         if (data != null) {
-            if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
-                if (doc != null) {
-                    fileName = doc.getFileName();
-                } else {
-                    fileName = null;
-                }
+            if ( StringUtils.isEmpty(fileName) ) {
+                fileName = (doc == null) ? null : doc.getFileName();
             }
             data.setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
             if (doc != null) {
