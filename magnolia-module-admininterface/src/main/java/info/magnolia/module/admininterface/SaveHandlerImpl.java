@@ -1024,7 +1024,11 @@ public class SaveHandlerImpl implements SaveHandler {
         }
         if (data != null) {
             if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
-                fileName = doc.getFileName();
+                if (doc != null) {
+                    fileName = doc.getFileName();
+                } else {
+                    fileName = null;
+                }
             }
             data.setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
             if (doc != null) {
