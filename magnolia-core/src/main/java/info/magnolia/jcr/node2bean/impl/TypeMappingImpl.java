@@ -78,103 +78,75 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setName(propName);
 
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
-
-        for (int i = 0; i < descriptors.length; i++) {
-            PropertyDescriptor descriptor = descriptors[i];
+        for (PropertyDescriptor descriptor : descriptors) {
             if (descriptor.getName().equals(propName)) {
                 // may be null for indexed properties
-                Class<?> propertytype = descriptor.getPropertyType();
-                if (propertytype != null) {
-                    dscr.setType(getTypeDescriptor(propertytype));
+                Class<?> propertyType = descriptor.getPropertyType();
+                if (propertyType != null) {
+                    dscr.setType(getTypeDescriptor(propertyType));
                 }
-                if (descriptor.getWriteMethod() != null) {
-                    dscr.setWriteMethod(descriptor.getWriteMethod());
-                }
+                // set write method
+                dscr.setWriteMethod(descriptor.getWriteMethod());
+                // set add method
+                int numberOfParameters = dscr.isMap() ? 2 : 1;
+                dscr.setAddMethod(getAddMethod(beanClass, propName, numberOfParameters));
+
                 break;
             }
         }
 
         if (dscr.getType() != null) {
-            if (dscr.isMap() || dscr.isCollection() || dscr.isArray()) {
+            // we have discovered type for property
+            if (dscr.isMap() || dscr.isCollection()) {
+                Type[] typeArgs = new Type[] {}; // this will contain collection types (for map key/value type, for collection value type)
                 if (dscr.getWriteMethod() != null) {
-                    Method method = dscr.getWriteMethod();
-                    Type[] typeArgs = new Type[] {};
-                    Type[] parameterTypes = null;
-                    if (dscr.isArray()) {
-                        // this is needed because of arrays
-                        // since there is no adder method, we need to determine
-                        // type being passed by setter
-                        typeArgs = method.getParameterTypes();
-                    }
-
-                    parameterTypes = method.getGenericParameterTypes();
-                    for (Type genericParameterType : parameterTypes) {
-                        if (genericParameterType instanceof ParameterizedType) {
-                            ParameterizedType type = (ParameterizedType) genericParameterType;
-                            for (Type t : type.getActualTypeArguments()) {
-                                if (t instanceof ParameterizedType) {
-                                    typeArgs = (Type[]) ArrayUtils.add(typeArgs, ((ParameterizedType) t).getRawType());
-                                } else {
-                                    typeArgs = (Type[]) ArrayUtils.add(typeArgs, t);
+                    // now we have to find out if generics are set
+                    Type[] parameterTypes = dscr.getWriteMethod().getGenericParameterTypes();
+                    if (parameterTypes.length > 0) {
+                        // we have parameter with generics
+                        for (Type genericParameterType : parameterTypes) {
+                            // check if we have parameterized type e.g. Collection<String>
+                            if (genericParameterType instanceof ParameterizedType) {
+                                ParameterizedType type = (ParameterizedType) genericParameterType;
+                                for (Type t : type.getActualTypeArguments()) {
+                                    if (t instanceof ParameterizedType) {
+                                        // this the case when parameterized type looks like this: Collection<List<String>>
+                                        // we care only for raw type List
+                                        typeArgs = (Type[]) ArrayUtils.add(typeArgs, ((ParameterizedType) t).getRawType());
+                                    } else {
+                                        typeArgs = (Type[]) ArrayUtils.add(typeArgs, t);
+                                    }
                                 }
                             }
                         }
                     }
-
-                    if (typeArgs.length > 0) {
-                        if (dscr.isMap()) {
-                            dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
-                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
-                        } else if (dscr.isCollection()) {
-                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
-                        } else if (dscr.isArray()) {
-                            dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) ((Class<?>) typeArgs[0]).getComponentType()));
-                        }
-                    }
-                } else {
-                    int numberOfParameters = dscr.isMap() ? 2 : 1;
-                    Method method = getAddMethod(beanClass, propName, numberOfParameters);
-                    if (method != null) {
-                        dscr.setAddMethod(method);
-                        if (dscr.isMap()) {
-                            dscr.setCollectionKeyType(getTypeDescriptor(method.getParameterTypes()[0]));
-                            dscr.setCollectionEntryType(getTypeDescriptor(method.getParameterTypes()[1]));
-                        } else {
-                            dscr.setCollectionEntryType(getTypeDescriptor(method.getParameterTypes()[0]));
-                        }
+                }
+                if (dscr.getAddMethod() != null && typeArgs.length == 0) {
+                    // here we know we don't have setter or setter doesn't have parameterized type
+                    // but we have add method so we take parameters from it
+                    typeArgs = dscr.getAddMethod().getParameterTypes();
+                    // rather set it to null because when we are here we will use add method
+                    dscr.setWriteMethod(null);
+                }
+                if (typeArgs.length > 0) {
+                    // we resolved types
+                    if (dscr.isMap()) {
+                        dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                        dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
                     } else {
-                        log.warn("No setter or adder method found for property [{}] in bean class [{}]", propName, beanClass);
+                        // collection
+                        dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
                     }
                 }
+            } else if (dscr.isArray()) {
+                // for arrays we don't need to discover its parameter from set/add method
+                // we just take it via Class#getComponentType() method
+                dscr.setCollectionEntryType(getTypeDescriptor(dscr.getType().getType().getComponentType()));
             }
         }
         propertyTypes.put(key, dscr);
 
         return dscr;
-    }
-
-    /**
-     * Get a adder method. Transforms name to singular.
-     */
-    public Method getAddMethod(Class<?> type, String name, int numberOfParameters) {
-        name = StringUtils.capitalize(name);
-        Method method = getExactMethod(type, "add" + name, numberOfParameters);
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"), numberOfParameters);
-        }
-
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"), numberOfParameters);
-        }
-
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"), numberOfParameters);
-        }
-
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y", numberOfParameters);
-        }
-        return method;
     }
 
     @Override
@@ -206,9 +178,35 @@ public class TypeMappingImpl implements TypeMapping {
     }
 
     /**
+     * Get a adder method. Transforms name to singular.
+     * @deprecated since 5.0 - use setters
+     */
+    public Method getAddMethod(Class<?> type, String name, int numberOfParameters) {
+        name = StringUtils.capitalize(name);
+        Method method = getExactMethod(type, "add" + name, numberOfParameters);
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"), numberOfParameters);
+        }
+
+        if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y", numberOfParameters);
+        }
+        return method;
+    }
+
+    /**
      * Find a method.
-     * 
+     *
      * @param numberOfParameters
+     * @deprecated since 5.0 - use setters
      */
     protected Method getExactMethod(Class<?> type, String name, int numberOfParameters) {
         Method[] methods = type.getMethods();
