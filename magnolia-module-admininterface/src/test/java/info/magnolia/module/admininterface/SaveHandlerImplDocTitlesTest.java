@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,41 +33,18 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.test.mock.MockContent;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
-import javax.jcr.LoginException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.beans.config.URI2RepositoryMapping;
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
-import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.MockWebContext;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
