@@ -34,8 +34,10 @@
 package info.magnolia.module.admininterface;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -69,7 +71,8 @@ public class SaveHandlerImplDocTitlesTest {
 
         //WHEN
         SaveHandlerImpl.saveDocument(node, doc, name, fileName, template);
-        //THEN any exception occurs
+        //THEN
+        verify(data).setAttribute(FileProperties.PROPERTY_FILENAME, "untitled");
     }
 
     @Test
@@ -87,6 +90,7 @@ public class SaveHandlerImplDocTitlesTest {
 
         //WHEN
         SaveHandlerImpl.saveDocument(node, doc, name, fileName, template);
-        //THEN any exception occurs
+        //THEN
+        verify(data).setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
     }
 }
