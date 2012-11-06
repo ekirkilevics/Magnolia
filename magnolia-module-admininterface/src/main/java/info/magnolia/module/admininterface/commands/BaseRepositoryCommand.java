@@ -40,6 +40,7 @@ import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
@@ -54,6 +55,10 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
 
     private String uuid;
 
+    /**
+     * @deprecated since 4.5.7 use {@link #getJCRNode(Context)} instead
+     */
+    @Deprecated
     protected Content getNode(Context ctx) throws RepositoryException {
         final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(getRepository());
         final Content node;
@@ -63,6 +68,17 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
             node = hm.getContent(getPath());
         }
         PermissionUtil.isGranted(node.getJCRNode().getSession(), node.getHandle(), Session.ACTION_READ);
+        return node;
+    }
+
+    protected Node getJCRNode(Context ctx) throws RepositoryException {
+        final Session hm = MgnlContext.getSystemContext().getJCRSession(getRepository());
+        final Node node;
+        if (StringUtils.isNotEmpty(getUuid())) {
+            node = hm.getNodeByIdentifier(getUuid());
+        } else {
+            node = hm.getNode(getPath());
+        }
         return node;
     }
 
