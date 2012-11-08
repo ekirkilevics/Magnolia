@@ -68,6 +68,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import org.apache.commons.chain.Command;
+import org.apache.commons.chain.impl.ChainBase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -791,6 +793,24 @@ public class Node2BeanTest {
         assertFalse(res.matches("baaaaa"));
     }
 
+    @Test
+    public void testBeanWillUseTransformerFromAnnotatedSetter() throws Exception {
+        // GIVEN
+        Session session = SessionTestUtil.createSession("test",
+                "/listener.class=info.magnolia.jcr.node2bean.Node2BeanTest$BeanWithAnnotation\n" +
+                "/listener/command/version.class=info.magnolia.test.TestCommand\n" +
+                "/listener/command/alert.class=info.magnolia.test.TestCommand\n"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
+
+        // WHEN
+        BeanWithAnnotation bean = (BeanWithAnnotation) n2b.toBean(session.getNode("/listener"));
+
+        // THEN
+        assertTrue(bean.getCommand() instanceof MyChain);
+        assertEquals(2, ((MyChain) bean.getCommand()).getCommands().length);
+    }
+
     private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
 
         @Override
@@ -837,4 +857,26 @@ public class Node2BeanTest {
             return this.messages;
         }
     }
+
+    public class BeanWithAnnotation {
+        private Command command;
+
+        @N2B(transformer = SomeCommandTransformer.class)
+        public void setCommand(Command command) {
+            this.command = command;
+        }
+
+        public Command getCommand() {
+            return command;
+        }
+    }
+
+    public static class MyChain extends ChainBase {
+
+        public Command[] getCommands() {
+            return commands;
+        }
+
+    }
+
 }

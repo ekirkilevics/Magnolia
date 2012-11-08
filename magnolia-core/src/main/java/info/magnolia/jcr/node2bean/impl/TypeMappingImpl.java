@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
+import info.magnolia.jcr.node2bean.N2B;
+import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
@@ -43,12 +45,14 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,15 +82,17 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setName(propName);
 
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
+        Method writeMethod = null;
         for (PropertyDescriptor descriptor : descriptors) {
             if (descriptor.getName().equals(propName)) {
                 // may be null for indexed properties
                 Class<?> propertyType = descriptor.getPropertyType();
+                writeMethod = descriptor.getWriteMethod();
                 if (propertyType != null) {
-                    dscr.setType(getTypeDescriptor(propertyType));
+                    dscr.setType(getTypeDescriptor(propertyType, writeMethod));
                 }
                 // set write method
-                dscr.setWriteMethod(descriptor.getWriteMethod());
+                dscr.setWriteMethod(writeMethod);
                 // set add method
                 int numberOfParameters = dscr.isMap() ? 2 : 1;
                 dscr.setAddMethod(getAddMethod(beanClass, propName, numberOfParameters));
@@ -98,44 +104,25 @@ public class TypeMappingImpl implements TypeMapping {
         if (dscr.getType() != null) {
             // we have discovered type for property
             if (dscr.isMap() || dscr.isCollection()) {
-                Type[] typeArgs = new Type[] {}; // this will contain collection types (for map key/value type, for collection value type)
+                List<Class<?>> parameterTypes = new ArrayList<Class<?>>(); // this will contain collection types (for map key/value type, for collection value type)
                 if (dscr.getWriteMethod() != null) {
-                    // now we have to find out if generics are set
-                    Type[] parameterTypes = dscr.getWriteMethod().getGenericParameterTypes();
-                    if (parameterTypes.length > 0) {
-                        // we have parameter with generics
-                        for (Type genericParameterType : parameterTypes) {
-                            // check if we have parameterized type e.g. Collection<String>
-                            if (genericParameterType instanceof ParameterizedType) {
-                                ParameterizedType type = (ParameterizedType) genericParameterType;
-                                for (Type t : type.getActualTypeArguments()) {
-                                    if (t instanceof ParameterizedType) {
-                                        // this the case when parameterized type looks like this: Collection<List<String>>
-                                        // we care only for raw type List
-                                        typeArgs = (Type[]) ArrayUtils.add(typeArgs, ((ParameterizedType) t).getRawType());
-                                    } else {
-                                        typeArgs = (Type[]) ArrayUtils.add(typeArgs, t);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    parameterTypes = inferGenericTypes(dscr.getWriteMethod());
                 }
-                if (dscr.getAddMethod() != null && typeArgs.length == 0) {
+                if (dscr.getAddMethod() != null && parameterTypes.size() == 0) {
                     // here we know we don't have setter or setter doesn't have parameterized type
                     // but we have add method so we take parameters from it
-                    typeArgs = dscr.getAddMethod().getParameterTypes();
+                    parameterTypes = Arrays.asList(dscr.getAddMethod().getParameterTypes());
                     // rather set it to null because when we are here we will use add method
                     dscr.setWriteMethod(null);
                 }
-                if (typeArgs.length > 0) {
+                if (parameterTypes.size() > 0) {
                     // we resolved types
                     if (dscr.isMap()) {
-                        dscr.setCollectionKeyType(getTypeDescriptor((Class<?>) typeArgs[0]));
-                        dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[1]));
+                        dscr.setCollectionKeyType(getTypeDescriptor(parameterTypes.get(0)));
+                        dscr.setCollectionEntryType(getTypeDescriptor(parameterTypes.get(1)));
                     } else {
                         // collection
-                        dscr.setCollectionEntryType(getTypeDescriptor((Class<?>) typeArgs[0]));
+                        dscr.setCollectionEntryType(getTypeDescriptor(parameterTypes.get(0)));
                     }
                 }
             } else if (dscr.isArray()) {
@@ -149,8 +136,61 @@ public class TypeMappingImpl implements TypeMapping {
         return dscr;
     }
 
-    @Override
-    public TypeDescriptor getTypeDescriptor(Class<?> beanClass) {
+    private List<Class<?>> inferGenericTypes(Method method) {
+        List<Class<?>> inferredTypes = new ArrayList<Class<?>>();
+        Type[] parameterTypes = method.getGenericParameterTypes();
+        for (Type parameterType : parameterTypes) {
+            if (parameterType instanceof ParameterizedType) {
+                ParameterizedType type = (ParameterizedType) parameterType;
+                for (Type t : type.getActualTypeArguments()) {
+                    if (t instanceof ParameterizedType) {
+                        // this the case when parameterized type looks like this: Collection<List<String>>
+                        // we care only for raw type List
+                        inferredTypes.add((Class<?>) ((ParameterizedType) t).getRawType());
+                    } else {
+                        inferredTypes.add((Class<?>) t);
+                    }
+                }
+            }
+        }
+        return inferredTypes;
+    }
+
+    /**
+     * Resolves transformer from bean class or setter.
+     */
+    private Node2BeanTransformer resolveTransformer(Class<?> beanClass, Method writeMethod) throws Node2BeanException {
+        if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type
+            Class<Node2BeanTransformer> transformerClass = null;
+            Node2BeanTransformer transformer = null;
+            if (writeMethod != null) {
+                N2B transformerAnnotation = writeMethod.getAnnotation(N2B.class);
+                transformerClass = transformerAnnotation == null ? null : (Class<Node2BeanTransformer>) transformerAnnotation.transformer();
+                try {
+                    transformer = transformerClass == null ? null : transformerClass.newInstance();
+                } catch (InstantiationException e) {
+                    throw new Node2BeanException("Can't instantiate transformer [" + transformerClass + "]", e);
+                } catch (IllegalAccessException e) {
+                    throw new Node2BeanException("Cant't instantiate transformer [" + transformerClass + "]. Is constructor visible?", e);
+                }
+            }
+            if (transformer == null) {
+                try {
+                    transformerClass = (Class<Node2BeanTransformer>) Class.forName(beanClass.getName() + "Transformer");
+                    transformer = Components.getComponent(transformerClass);
+                } catch (ClassNotFoundException e) {
+                    log.debug("No transformer found for bean [{}]", beanClass);
+                }
+            }
+            return transformer;
+        }
+        return null;
+    }
+
+    /**
+     * Gets type descriptor from bean class.
+     */
+    private TypeDescriptor getTypeDescriptor(Class<?> beanClass, Method method) {
         TypeDescriptor dscr = types.get(beanClass);
         // eh, we know about this type, don't bother resolving any further.
         if(dscr != null){
@@ -161,20 +201,20 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setMap(Map.class.isAssignableFrom(beanClass));
         dscr.setCollection(Collection.class.isAssignableFrom(beanClass));
         dscr.setArray(beanClass.isArray());
+        try {
+            dscr.setTransformer(resolveTransformer(beanClass, method));
+        } catch (Node2BeanException e) {
+            log.error("Can't create transformer for bean [" + beanClass + "]", e);
+        }
+
         types.put(beanClass, dscr);
 
-        if (!beanClass.isArray() && !beanClass.isPrimitive()) { // don't bother looking for a transformer if the property is an array or a primitive type
-            Node2BeanTransformer transformer = null;
-            try {
-                @SuppressWarnings("unchecked")
-                Class<Node2BeanTransformer> clazz = (Class<Node2BeanTransformer>) Class.forName(beanClass.getName() + "Transformer");
-                transformer = Components.getComponent(clazz);
-            } catch (Exception e) {
-                log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
-            }
-            dscr.setTransformer(transformer);
-        }
         return dscr;
+    }
+
+    @Override
+    public TypeDescriptor getTypeDescriptor(Class<?> beanClass) {
+        return getTypeDescriptor(beanClass, null);
     }
 
     /**

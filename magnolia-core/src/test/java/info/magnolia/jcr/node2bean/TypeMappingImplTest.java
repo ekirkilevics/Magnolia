@@ -208,7 +208,7 @@ public class TypeMappingImplTest {
     }
 
     @Test
-    public void testBeanPropertyRawMapIsResolvedByAdderMethod4() {
+    public void testBeanPropertyRawMapIsResolvedByAdderMethod() {
         // GIVEN
         TypeMapping mapping = new TypeMappingImpl();
 
@@ -220,6 +220,19 @@ public class TypeMappingImplTest {
         assertNotNull(ptd.getAddMethod());
         assertEquals(String.class, ptd.getCollectionKeyType().getType());
         assertEquals(String.class, ptd.getCollectionEntryType().getType());
+    }
+
+    @Test
+    public void testBeanHasTransformerSetViaAnnotation() {
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(Node2BeanTest.BeanWithAnnotation.class, "command");
+
+        // THEN
+        assertNotNull(ptd);
+        assertEquals(SomeCommandTransformer.class, ptd.getType().getTransformer().getClass());
     }
 
     public final class SimpleClass {
