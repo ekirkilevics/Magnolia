@@ -400,6 +400,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         return true;
     }
 
+    @Override
     public Locale getDefaultLocale() {
         if(this.defaultLocale == null){
             return getFallbackLocale();
