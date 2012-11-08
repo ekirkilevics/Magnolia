@@ -94,10 +94,18 @@
     <propertyDefinition name="mgnl:template" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
+  <nodeType name="mgnl:created" isMixin="true">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <propertyDefinition name="mgnl:created" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+  </nodeType>
+
   <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
+      <supertype>mgnl:created</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -112,6 +120,7 @@
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
+      <supertype>mgnl:created</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
