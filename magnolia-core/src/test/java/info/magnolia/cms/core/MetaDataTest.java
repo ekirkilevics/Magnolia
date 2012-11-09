@@ -51,7 +51,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class MetaDataTest {
 
@@ -134,8 +134,7 @@ public class MetaDataTest {
         // GIVEN
         final String value = "value";
         final MetaData md = MetaDataUtil.getMetaData(root);
-        final Node mdNode = root.getNode(MetaData.DEFAULT_META_NODE);
-        mdNode.setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + PROPERTY_NAME, value);
+        md.setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + PROPERTY_NAME, value);
 
         // WHEN
         final String result = md.getStringProperty(PROPERTY_NAME);

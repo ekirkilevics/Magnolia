@@ -263,14 +263,14 @@ public class PropertiesImportExport {
                 String baseMetadataPath = getExportPath(metaDataNode);
                 MetaData nodeMetaData = node.getMetaData();
                 // dump each metadata property one by one.
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:template", nodeMetaData.getTemplate());
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:authorid", nodeMetaData.getAuthorId());
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:activatorid", nodeMetaData.getActivatorId());
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:template", node.getNodeData("mgnl:template").getString());
+                addStringProperty(out, baseMetadataPath + ".jcr\\:lastModifiedBy", nodeMetaData.getAuthorId());
+                addStringProperty(out, baseMetadataPath + ".mgnl\\:lastActivatedBy", nodeMetaData.getActivatorId());
                 addStringProperty(out, baseMetadataPath + ".mgnl\\:title", nodeMetaData.getTitle());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:creationdate", nodeMetaData.getCreationDate());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastaction", nodeMetaData.getLastActionDate());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastmodified", nodeMetaData.getLastActionDate());
-                addBooleanProeprty(out, baseMetadataPath + ".mgnl\\:activated", nodeMetaData.getIsActivated());
+                addDateProperty(out, baseMetadataPath + ".mgnl\\:created", nodeMetaData.getCreationDate());
+                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastActivated", nodeMetaData.getLastActionDate());
+                addDateProperty(out, baseMetadataPath + ".jcr\\:last;odified", nodeMetaData.getLastActionDate());
+                addBooleanProeprty(out, baseMetadataPath + ".mgnl\\:activationStatus", nodeMetaData.getIsActivated());
             }
         }
     }

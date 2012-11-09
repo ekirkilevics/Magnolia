@@ -245,7 +245,6 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final MetaData md = f.createMetaData();
         md.setAuthorId("greg");
         md.setActivated();
-        md.setTitle("my test page");
         md.setCreationDate();
         final MockContent c = new MockContent("pouet");
         f.addContent(c);

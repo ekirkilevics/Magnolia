@@ -47,14 +47,14 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Meta data of a content like creation date, modification date, assigned template, ...
+ * CAUTION: since 5.0 this properties are set on the working node itself - not on a MetaData subnode!
  *
- * @version $Id$
+ * @deprecated since 5.0 - this type should no longer be needed as these properties are now hosted on the parent node himself.
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -65,24 +65,26 @@ public class MetaData {
      */
     public static final String TITLE = "title";
 
-    public static final String CREATION_DATE = "creationdate";
+    public static final String CREATION_DATE = "created";
 
-    public static final String LAST_MODIFIED = "lastmodified";
+    public static final String LAST_MODIFIED = "jcr:lastModified";
 
-    public static final String LAST_ACTION = "lastaction";
+    public static final String LAST_ACTION = "lastActivated";
 
-    public static final String AUTHOR_ID = "authorid";
+    public static final String AUTHOR_ID = "jcr:lastModifiedBy";
 
-    public static final String ACTIVATOR_ID = "activatorid";
+    public static final String ACTIVATOR_ID = "lastActivatedBy";
 
+    /**
+     * Caution: this property is now also on the node itself - enforced by mgnl:renderable.
+     */
     public static final String TEMPLATE = "template";
 
-    public static final String TEMPLATE_TYPE = "templatetype";
-
-    public static final String ACTIVATED = "activated";
+    public static final String ACTIVATED = "activationStatus";
 
     /**
      * Name of the Node hosting the MetaData.
+     * @deprecated since 5.0 - there's no longer such a subnode
      */
     public static final String DEFAULT_META_NODE = "MetaData";
 
@@ -93,7 +95,7 @@ public class MetaData {
     public static final int ACTIVATION_STATUS_ACTIVATED = 2;
 
     /**
-     * meta data node.
+     * CAUTION: this is now the working NODE!
      */
     private Node node;
 
@@ -114,42 +116,7 @@ public class MetaData {
      *            current <code>Node</code> on which <code>MetaData</code> is requested
      */
     public MetaData(Node workingNode) {
-        try {
-            this.node = workingNode.getNode(DEFAULT_META_NODE);
-        } catch (PathNotFoundException e) {
-            try {
-                log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(),
-                        workingNode.getPrimaryNodeType().getName());
-            } catch (RepositoryException re) {
-                // should never come here
-            }
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    public String getHandle() throws RepositoryException {
-        return this.node.getPath();
-    }
-
-    /**
-     * Part of metadata, same as name of actual storage node. This value is unique at the hierarchy level context.
-     *
-     * @return String value of the requested metadata
-     */
-    public String getLabel() {
-        if (node == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData");
-            }
-        } else {
-            try {
-                return this.node.getName();
-            } catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return StringUtils.EMPTY;
+        this.node = workingNode;
     }
 
     /**
@@ -158,25 +125,25 @@ public class MetaData {
      * @return name with namespace prefix
      */
     private String getInternalPropertyName(String name) {
-        if (StringUtils.indexOf(name, RepositoryConstants.NAMESPACE_PREFIX + ":") != 0) {
+        if (StringUtils.indexOf(name, ":") < 0) {
             return RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
         }
         return name;
     }
 
     /**
-     * Part of metadata , could be used as html header.
+     * @return value of property TITLE if it's around on working node
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - only for backwards compatibility.
      */
     public String getTitle() {
         return getStringProperty(TITLE);
     }
 
     /**
-     * Part of metadata, could be used as html header.
+     * Will set value of property TITLE on working node.
      *
-     * @param value
+     * @deprecated since 5.0 - only for backwards compatibility.
      */
     public void setTitle(String value) {
         setProperty(TITLE, value);
@@ -288,8 +255,6 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who did some action on this page.
-     *
-     * @param value
      */
     public void setAuthorId(String value) {
         setProperty(AUTHOR_ID, value);
@@ -306,8 +271,6 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who last activated this page.
-     *
-     * @param value
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);
@@ -324,8 +287,6 @@ public class MetaData {
 
     /**
      * Part of metadata, template which will be used to render content of this node.
-     *
-     * @param value
      */
     public void setTemplate(String value) {
         setProperty(TEMPLATE, value);
@@ -353,15 +314,10 @@ public class MetaData {
 
     private void setJCRProperty(String name, Object value) {
         final String propName = this.getInternalPropertyName(name);
-        if (node == null) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
-                    propName);
-        } else {
-            try {
-                PropertyUtil.setProperty(node, propName, value);
-            } catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
+        try {
+            PropertyUtil.setProperty(node, propName, value);
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
         }
     }
 
@@ -441,43 +397,11 @@ public class MetaData {
 
     private Property getJCRProperty(String name) throws RepositoryException {
         final String propName = this.getInternalPropertyName(name);
-        if (node == null) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
-                    propName);
-        } else {
-            try {
-                return node.getProperty(propName);
-            } catch (PathNotFoundException re) {
-                log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
-            }
+        try {
+            return node.getProperty(propName);
+        } catch (PathNotFoundException re) {
+            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
         }
         return null;
-    }
-
-    /**
-     * check if property exists.
-     *
-     * @param name
-     * @return true if the specified property exist
-     *
-     * @deprecated since 4.0 - not used
-     */
-    @Deprecated
-    public boolean hasProperty(String name) {
-        try {
-            return this.node.hasProperty(this.getInternalPropertyName(name));
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("title", this.getTitle()).append("template", this.getTemplate())
-                .append("authorId", this.getAuthorId()).append("label", this.getLabel())
-                .append("activatorId", this.getActivatorId()).append("isActivated", this.getIsActivated())
-                .append("creationDate", this.getCreationDate()).append("lastActionDate", this.getLastActionDate())
-                .append("modificationDate", this.getModificationDate()).toString();
     }
 }
