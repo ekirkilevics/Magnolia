@@ -40,15 +40,17 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.importexport.DataTransporter;
 import info.magnolia.repository.RepositoryConstants;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.text.MessageFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.text.MessageFormat;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 /**
@@ -159,7 +161,8 @@ public class ImportPage extends ExportPage {
 
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
 
-            AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
+            //escape to prevent XSS attack
+            AlertUtil.setMessage("Write permission needed for import. User not allowed to WRITE path [" + StringEscapeUtils.escapeHtml(mgnlPath) + "]");
 
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for import. User not allowed to WRITE path ["
