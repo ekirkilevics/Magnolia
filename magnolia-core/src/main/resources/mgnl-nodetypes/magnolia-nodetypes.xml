@@ -99,6 +99,7 @@
       <supertype>nt:base</supertype>
     </supertypes>
     <propertyDefinition name="mgnl:created" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    <propertyDefinition name="mgnl:createdBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
   <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
