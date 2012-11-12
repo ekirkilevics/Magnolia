@@ -53,7 +53,7 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
     private final HashMap<String, String> propertyNameMapping = new HashMap<String, String>();
 
     public MetaDataImportPostProcessor() {
-        propertyNameMapping.put("mgnl:creationdate", "jcr:created");
+        propertyNameMapping.put("mgnl:creationdate", "mgnl:created");
         propertyNameMapping.put("mgnl:lastaction", "mgnl:lastActivated");
         propertyNameMapping.put("mgnl:activatorid", "mgnl:lastActivatedBy");
         propertyNameMapping.put("mgnl:activated", "mgnl:activationStatus");
