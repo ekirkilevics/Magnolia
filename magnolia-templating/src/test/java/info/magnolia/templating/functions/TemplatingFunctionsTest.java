@@ -1530,11 +1530,13 @@ public class TemplatingFunctionsTest {
     public void testMetaDataProperty() throws RepositoryException{
         // GIVEN
         Node myNode = new MockNode();
-        MetaDataUtil.getMetaData(myNode).setTemplate("foo");
+        MetaDataUtil.getMetaData(myNode).setProperty("foo", "bar");
         // WHEN
-        String property = functions.metaData(myNode, "template");
+        String property = functions.metaData(myNode, "foo");
         //THEN
-        assertEquals("foo", property);
+        assertEquals("bar", property);
+        assertTrue(myNode.hasProperty("mgnl:foo"));
+        assertFalse(myNode.hasProperty("foo"));
     }
 
     @Test
