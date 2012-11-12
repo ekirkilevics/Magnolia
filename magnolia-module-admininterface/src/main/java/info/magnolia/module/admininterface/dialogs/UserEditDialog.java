@@ -53,6 +53,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,6 +211,7 @@ public class UserEditDialog extends ConfiguredDialog {
             List values = getDialog().getSub(nodeName).getValues();
             String path = null;
             for (int index = 0; index < values.size(); index++) {
+                values.set(index, StringEscapeUtils.escapeHtml((String)(values.get(index)))); //escape to prevent XSS attack
                 try {
                     path = (String) values.get(index);
                     if (StringUtils.isNotEmpty(path)) {
