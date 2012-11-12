@@ -90,7 +90,7 @@ public class ModelExecutionFilterTest extends ComponentProviderBasedMagnoliaTest
         MockContext ctx = (MockContext) MgnlContext.getInstance();
         ctx.addSession(RepositoryConstants.WEBSITE, SessionTestUtil.createSession(RepositoryConstants.WEBSITE,
                 StringUtils.join(new String[] { "/foo.@uuid=12345",
-                        "/foo/MetaData.mgnl\\:template=some-template" }, "\n")
+                        "/foo.mgnl\\:template=some-template" }, "\n")
         ));
 
         TemplateDefinitionRegistry templateDefinitionRegistry = Components.getComponent(TemplateDefinitionRegistry.class);

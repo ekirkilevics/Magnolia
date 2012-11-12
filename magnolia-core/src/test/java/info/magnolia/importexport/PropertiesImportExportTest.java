@@ -109,7 +109,7 @@ public class PropertiesImportExportTest {
 
         Properties legacyExportedProperties = PropertiesImportExport.toProperties(hm);
         assertEquals("Legacy mode export doesn't contain @uuid, metadata, or @type nodes",
-                6, legacyExportedProperties.keySet().size()
+                10, legacyExportedProperties.keySet().size()
         );
     }
 

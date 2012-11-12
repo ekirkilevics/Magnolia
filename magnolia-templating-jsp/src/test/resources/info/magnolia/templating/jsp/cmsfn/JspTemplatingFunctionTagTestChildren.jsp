@@ -12,7 +12,7 @@
     res=${(cmsfn:children(content,''))[1]['@path']}
 </div>
 <div id="3">
-    res=${(cmsfn:children(content,null))[2]['@path']}
+    res=${(cmsfn:children(content,null))[1]['@path']}
 </div>
 
 </body>

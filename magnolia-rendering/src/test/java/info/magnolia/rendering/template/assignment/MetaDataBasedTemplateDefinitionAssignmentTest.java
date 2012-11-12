@@ -37,7 +37,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -48,11 +47,11 @@ import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
 import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
-import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockUtil;
@@ -67,6 +66,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -100,6 +100,14 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         }
     }
 
+    @Before
+    public void setUp() {
+        ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
+        ComponentsTestUtil.setImplementation(Node2BeanProcessor.class, Node2BeanProcessorImpl.class);
+        ComponentsTestUtil.setImplementation(TypeMapping.class, TypeMappingImpl.class);
+        ComponentsTestUtil.setImplementation(Node2BeanTransformer.class, Node2BeanTransformerImpl.class);
+    }
+
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
@@ -111,8 +119,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // GIVEN
         final String templateId = "id";
         MockNode node = new MockNode();
-        MockNode metaData = (MockNode) node.addNode(MetaData.DEFAULT_META_NODE);
-        metaData.setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, templateId);
+        MetaDataUtil.getMetaData(node).setTemplate(templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
@@ -195,7 +202,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
         MockNode parentNode = new MockNode(session);
-        parentNode.addNode("MetaData", MgnlNodeType.NT_METADATA).setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, "module:pages/template1");
+        MetaDataUtil.getMetaData(parentNode).setTemplate("module:pages/template1");
         Node mockNode = parentNode.addNode("child");
 
         TemplateDefinition template1 = mock(TemplateDefinition.class);
@@ -212,7 +219,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         assertSame(template1, assignment.getDefaultTemplate(mockNode));
 
         // change template on the parent
-        mockNode.getParent().getNode("MetaData").setProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.TEMPLATE, "module:pages/template2");
+        MetaDataUtil.getMetaData(parentNode).setTemplate("module:pages/template2");
 
         // test that it changes the returned template
         assertSame(template2, assignment.getDefaultTemplate(mockNode));

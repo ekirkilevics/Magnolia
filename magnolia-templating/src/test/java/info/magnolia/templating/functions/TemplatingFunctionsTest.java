@@ -40,7 +40,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -1531,13 +1530,11 @@ public class TemplatingFunctionsTest {
     public void testMetaDataProperty() throws RepositoryException{
         // GIVEN
         Node myNode = new MockNode();
-        myNode.addNode(MetaData.DEFAULT_META_NODE);
-        MetaData md = MetaDataUtil.getMetaData(myNode);
-        md.setProperty("foo", "bar");
+        MetaDataUtil.getMetaData(myNode).setTemplate("foo");
         // WHEN
-        String property = functions.metaData(myNode, "foo");
+        String property = functions.metaData(myNode, "template");
         //THEN
-        assertEquals("bar", property);
+        assertEquals("foo", property);
     }
 
     @Test

@@ -35,7 +35,6 @@ package info.magnolia.templating.functions;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
@@ -44,6 +43,7 @@ import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.util.SessionUtil;
@@ -619,19 +619,7 @@ public class TemplatingFunctions {
      * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
      */
     public String metaData(Node content, String property){
-        try {
-            if(content.hasNode(MetaData.DEFAULT_META_NODE)){
-                Node node = content.getNode(MetaData.DEFAULT_META_NODE);
-                if(node.hasProperty(property)) {
-                    return PropertyUtil.getPropertyOrNull(node, property).getString();
-                } else if(node.hasProperty(RepositoryConstants.NAMESPACE_PREFIX + ":" + property)) {
-                    return PropertyUtil.getPropertyOrNull(node, RepositoryConstants.NAMESPACE_PREFIX + ":" + property).getString();
-                }
-            }
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
+        return MetaDataUtil.getMetaData(content).getStringProperty(property);
     }
 
     /**
