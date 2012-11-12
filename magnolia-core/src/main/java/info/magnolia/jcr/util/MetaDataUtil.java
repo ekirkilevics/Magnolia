@@ -33,12 +33,16 @@
  */
 package info.magnolia.jcr.util;
 
+import java.util.Calendar;
+
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.ValueFormatException;
 
 /**
  * Collection of utilities to simplify working with the JCR API. In contrast to info.magnolia.cms.core.Content it is -
@@ -57,6 +61,18 @@ public class MetaDataUtil {
         md.setAuthorId(MgnlContext.getUser().getName());
         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
                 .getPrimaryNodeType().getName(), node.getName());
+    }
+
+    /**
+     * @return the lastModification or null it it was not set in JCR.
+     */
+    public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
+        MetaData metaData = getMetaData(node);
+        Calendar modDate = metaData.getDateProperty(MetaData.LAST_MODIFIED);
+        if (modDate == null) {
+            modDate = metaData.getCreationDate();
+        }
+        return modDate;
     }
 
     public static String getTemplate(Node node) {
