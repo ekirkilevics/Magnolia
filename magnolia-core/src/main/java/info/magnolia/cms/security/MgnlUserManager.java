@@ -599,7 +599,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             public Void exec(Session session) throws RepositoryException {
                 for (PropertyIterator props = node.getProperties(); props.hasNext();) {
                     Property property = props.nextProperty();
-                    if (property.getName().startsWith(MgnlNodeType.JCR_PREFIX)) {
+                    if (property.getName().startsWith(MgnlNodeType.JCR_PREFIX) || property.getName().startsWith(MgnlNodeType.MGNL_PREFIX)) {
+                        // skip special props
                         continue;
                     }
                     final String uuid = property.getString();
