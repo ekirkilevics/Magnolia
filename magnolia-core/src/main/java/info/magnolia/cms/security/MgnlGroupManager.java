@@ -36,9 +36,10 @@ package info.magnolia.cms.security;
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
-import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         // remove duplicates
         Collection<String> groups = new HashSet<String>();
         if (node.hasNode(NODE_GROUPS)) {
-            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), new JcrAndMgnlPropertyHidingPredicate()); iter.hasNext();) {
                 Property subgroup = iter.nextProperty();
                 String resources = getResourceName(subgroup.getString());
                 if(resources != null){
@@ -180,7 +181,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         Collection<String> roles = new HashSet<String>();
         if (node.hasNode(NODE_ROLES)) {
             RoleManager roleMan = SecuritySupport.Factory.getInstance().getRoleManager();
-            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_ROLES).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_ROLES).getProperties(), new JcrAndMgnlPropertyHidingPredicate()); iter.hasNext();) {
                 Property role = iter.nextProperty();
                 try {
                     String roleName = roleMan.getRoleNameById(role.getString());
@@ -244,5 +245,22 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
             return null;
         }
         return getGroup(groupName);
+    }
+
+    /**
+     * Predicate hiding properties prefixed with jcr or mgnl.
+     */
+    private static class JcrAndMgnlPropertyHidingPredicate extends AbstractPredicate<Property> {
+
+        @Override
+        public boolean evaluateTyped(Property property) {
+            try {
+                String name = property.getName();
+                return !name.startsWith(MgnlNodeType.JCR_PREFIX) && !name.startsWith(MgnlNodeType.MGNL_PREFIX);
+            } catch (RepositoryException e) {
+                // either invalid or not accessible to the current user
+                return false;
+            }
+        }
     }
 }
