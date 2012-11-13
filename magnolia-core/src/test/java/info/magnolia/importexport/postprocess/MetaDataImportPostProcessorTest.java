@@ -63,7 +63,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         md.setProperty("mgnl:creationdate", calendar);
         md.setProperty("mgnl:lastaction", calendar);
         md.setProperty("mgnl:activatorid", "superuser");
-        md.setProperty("mgnl:activated", "true");
+        md.setProperty("mgnl:activated", "2");
         md.setProperty("mgnl:template", "samples:pages/some/page");
         md.setProperty("mgnl:authorid", "hyperuser");
         md.setProperty("mgnl:lastmodified", calendar);
@@ -75,7 +75,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         assertPropertyEquals(node, "mgnl:created", calendar);
         assertPropertyEquals(node, "mgnl:lastActivated", calendar);
         assertPropertyEquals(node, "mgnl:lastActivatedBy", "superuser");
-        assertPropertyEquals(node, "mgnl:activationStatus", "true");
+        assertPropertyEquals(node, "mgnl:activationStatus", "2");
         assertPropertyEquals(node, "mgnl:template", "samples:pages/some/page");
         assertPropertyEquals(node, "jcr:lastModifiedBy", "hyperuser");
         assertPropertyEquals(node, "jcr:lastModified", calendar);
