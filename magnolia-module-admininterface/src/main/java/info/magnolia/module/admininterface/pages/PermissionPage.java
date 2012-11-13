@@ -33,18 +33,6 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Group;
@@ -54,6 +42,19 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tools for simple show of all groups, roles or permissions assigned to user.
@@ -69,7 +70,7 @@ public class PermissionPage extends TemplatedMVCHandler {
     private String mgnlUser;
     private String mgnlGroup;
     private Boolean mgnlACLs = false;
-    private Collection<String> permissionList = new ArrayList<String>();
+    private final Collection<String> permissionList = new ArrayList<String>();
     private boolean createPermissionList;
 
     private static Map<Long, String> mapNamePermissionURL = new Hashtable<Long, String>();
@@ -189,9 +190,9 @@ public class PermissionPage extends TemplatedMVCHandler {
                 iterRoles = user.getRoles().iterator();
             }else{
                 log.error("User " + mgnlUser + " doesn't exist");
-                AlertUtil.setMessage(getMessages().get("permissionlist.user.error", new String[]{mgnlUser}));
+                AlertUtil.setMessage(getMessages().get("permissionlist.user.error", new String[]{StringEscapeUtils.escapeHtml(mgnlUser)}));
                 return VIEW_ERROR;
-            }        
+            }
         }else if(!mgnlGroup.isEmpty()){
             Group group = Security.getGroupManager().getGroup(mgnlGroup);
             if(group != null){
@@ -200,7 +201,7 @@ public class PermissionPage extends TemplatedMVCHandler {
                 iterRoles = group.getRoles().iterator();
             }else{
                 log.error("Group " + mgnlGroup + " doesn't exist");
-                AlertUtil.setMessage(getMessages().get("permissionlist.group.error", new String[]{mgnlGroup}));
+                AlertUtil.setMessage(getMessages().get("permissionlist.group.error", new String[]{StringEscapeUtils.escapeHtml(mgnlGroup)}));
                 return VIEW_ERROR;
             }
         }else{
@@ -218,7 +219,7 @@ public class PermissionPage extends TemplatedMVCHandler {
 
         return this.show();
     }
-    
+
     /**
      * Finding and adding subgroups to permission list.
      * @throws Exception
@@ -236,7 +237,7 @@ public class PermissionPage extends TemplatedMVCHandler {
                 getRole(iterRoles);
                 permissionList.add("</ul>");
             }
-        }        
+        }
     }
 
     /**
@@ -250,7 +251,7 @@ public class PermissionPage extends TemplatedMVCHandler {
             if(mgnlACLs){
                 getPermission(role);
             }
-        }   
+        }
     }
 
     /**
@@ -262,13 +263,13 @@ public class PermissionPage extends TemplatedMVCHandler {
         permissionList.add("<ul>");
         while(iterPermission.hasNext()){
             ACL acl = iterPermission.next();
-            if(!acl.getList().isEmpty()){   
+            if(!acl.getList().isEmpty()){
                 for (Permission permission : acl.getList()) {
                     String repoName = acl.getName();
                     String message = getMessages().get("permissionlist.permission", new String[]{getPermissionAsName(repoName, permission), repoName, permission.getPattern().getPatternString()});
                     permissionList.add("<li>" + message + "</li>");
                 }
-            } 
+            }
         }
         permissionList.add("</ul>");
     }
@@ -294,7 +295,7 @@ public class PermissionPage extends TemplatedMVCHandler {
 
         return MessagesManager.getMessages(msgModule).get(msgName);
     }
-    
+
     public Messages getMessages() {
         return MessagesManager.getMessages();
     }
