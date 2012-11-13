@@ -37,6 +37,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
 import info.magnolia.jcr.predicate.AbstractPredicate;
@@ -44,11 +45,14 @@ import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -618,5 +622,96 @@ public class NodeUtil {
             nodeCollection.add(iterator.nextNode());
         }
         return nodeCollection;
+    }
+
+    /**
+     * Returns the creation date of a node or null if creation date isn't set.
+     */
+    public static Calendar getCreated(Node node) throws RepositoryException {
+        if (!node.hasProperty(MgnlPropertyNames.CREATED))
+            return null;
+        return node.getProperty(MgnlPropertyNames.CREATED).getDate();
+    }
+
+    /**
+     * Returns the name of the user that created a node.
+     */
+    public static String getCreatedBy(Node node) throws RepositoryException {
+        if (!node.hasProperty(MgnlPropertyNames.CREATED_BY))
+            return null;
+        return node.getProperty(MgnlPropertyNames.CREATED_BY).getString();
+    }
+
+    /**
+     * Sets the current date as the node's creation date and uses {@link MgnlContext} to set the name of the creating
+     * user. Used with nodes having the <code>mgnl:created</code> mixin.
+     */
+    public static void setCreation(Node node) throws RepositoryException {
+        setCreation(node, MgnlContext.getUser().getName());
+    }
+
+    /**
+     * Sets the current date as the node's creation date and sets the name of creating user. Also sets the date of
+     * modification and the user last having modified the node to the same values. Used with nodes having the
+     * <code>mgnl:created</code> mixin.
+     */
+    public static void setCreation(Node node, String userName) throws RepositoryException {
+        GregorianCalendar now = new GregorianCalendar(TimeZone.getDefault());
+        node.setProperty(MgnlPropertyNames.CREATED, now);
+        node.setProperty(MgnlPropertyNames.CREATED_BY, userName);
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, now);
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+    }
+
+    /**
+     * Returns the date when this node was last modified. If the no modification date has been stored on the node this
+     * method return the creation date if set, otherwise null is returned.
+     */
+    public static Calendar getLastModified(Node node) throws RepositoryException {
+        if (!node.hasProperty(MgnlPropertyNames.LAST_MODIFIED))
+            return getCreated(node);
+        return node.getProperty(MgnlPropertyNames.LAST_MODIFIED).getDate();
+    }
+
+    /**
+     * Returns the user name of the user that last modified the node. If no modification has been stored on the node
+     * this method return the name of the user that created the node if set, otherwise null is returned.
+     */
+    public static String getLastModifiedBy(Node node) throws RepositoryException {
+        if (!node.hasProperty(MgnlPropertyNames.LAST_MODIFIED_BY))
+            return getCreatedBy(node);
+        return node.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString();
+    }
+
+    /**
+     * Sets the date of modification and uses {@link MgnlContext} to set the name of the user modifying a node.
+     */
+    public static void updateModification(Node node) throws RepositoryException {
+        updateModification(node, MgnlContext.getUser().getName());
+    }
+
+    /**
+     * Sets the date of modification and the name of the user modifying a node.
+     */
+    public static void updateModification(Node node, String userName) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, new GregorianCalendar(TimeZone.getDefault()));
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+    }
+
+    /**
+     * Returns the template assigned to the node or null of none has been assigned. Used with nodes having the
+     * <code>mgnl:renderable</code> mixin.
+     */
+    public static String getTemplate(Node node) throws RepositoryException {
+        if (!node.hasProperty(MgnlPropertyNames.TEMPLATE))
+            return null;
+        return node.getProperty(MgnlPropertyNames.TEMPLATE).getString();
+    }
+
+    /**
+     * Sets the template assigned to the node. Used with nodes having the <code>mgnl:renderable</code> mixin.
+     */
+    public static void setTemplate(Node node, String template) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.TEMPLATE, template);
     }
 }
