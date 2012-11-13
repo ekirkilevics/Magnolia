@@ -34,39 +34,45 @@
 package info.magnolia.jcr;
 
 /**
- * Keeps constants for frequently used nodeTypes and mixin names (both - mgnl or jcr defined).
- * All mixins are prefixed with MIX.
+ * Defines constants for frequently used node types and mixin names, both those defined by JCR and the custom ones
+ * defined by Magnolia. All mixins are prefixed with MIX.
  *
  * Does not use {@link org.apache.jackrabbit.JcrConstants} from Jackrabbit's common-jar as these
- * are jcr 1.0 and are to be replaced by the extended forms placed on the jcr interfaces (https://issues.apache.org/jira/browse/JCR-3059).
+ * are JCR 1.0 and are to be replaced by the extended forms placed on the JCR interfaces (https://issues.apache.org/jira/browse/JCR-3059).
  */
 public final class MgnlNodeTypeNames {
 
     /**
-     * Prefix for mgnl nodetypes or properties.
+     * Prefix for JCR node types and properties.
+     */
+    public static final String JCR_PREFIX = "jcr:";
+
+    /**
+     * Prefix for mgnl node types and properties.
      */
     public static final String MGNL_PREFIX = "mgnl:";
 
     /**
-     * Prefix for jcr defined mixins.
+     * Prefix for JCR defined mixins.
      */
     public static final String MIX_PREFIX = "mix:";
 
     /**
-     * Prefix for jcr defined nodeTypes.
+     * Prefix for JCR defined node types.
      */
     public static final String NT_PREFIX = "nt:";
 
-    // jcr defined nodetypes
+    // JCR defined node types
     public static final String BASE = NT_PREFIX + "base";
     public static final String UNSTRUCTURED = NT_PREFIX + "unstructured";
-    public static final String NT_ = NT_PREFIX + "hierarchyNode";
-    public static final String FOLDER = NT_PREFIX + "folder";
+    public static final String HIERARCHY_NODE = NT_PREFIX + "hierarchyNode";
     public static final String FILE = NT_PREFIX + "file";
-    public static final String RESOURCE = NT_PREFIX + "resource";
     public static final String FROZEN_NODE = NT_PREFIX + "frozenNode";
 
-    // mgnl defined nodetypes
+    // Magnolia defined node types
+    public static final String FOLDER = MGNL_PREFIX + "folder";
+    public static final String RESOURCE = MGNL_PREFIX + "resource";
+
     public static final String CONTENT = MGNL_PREFIX + "content";
     public static final String CONTENT_NODE = MGNL_PREFIX + "contentNode";
     public static final String NODE_DATA = MGNL_PREFIX + "nodeData";
@@ -82,13 +88,13 @@ public final class MgnlNodeTypeNames {
 
     public static final String METADATA = MGNL_PREFIX + "metaData";
 
-    // mgnl mixins
+    // Magnolia defined mixins
     public static final String MIX_DELETED = MGNL_PREFIX + "deleted";
     public static final String MIX_ACTIVATABLE = MGNL_PREFIX + "activatable";
     public static final String MIX_RENDERABLE = MGNL_PREFIX + "renderable";
     public static final String MIX_CREATED = MGNL_PREFIX + "created";
 
-    // jcr mixins.
+    // JCR defined mixins
     public static final String MIX_REFERENCEABLE = MIX_PREFIX + "referenceable";
     public static final String MIX_VERSIONABLE = MIX_PREFIX + "versionable";
     public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";

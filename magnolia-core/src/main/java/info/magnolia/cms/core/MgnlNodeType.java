@@ -40,7 +40,7 @@ import info.magnolia.jcr.MgnlPropertyNames;
  * Keeps constants for node-types used within Magnolia. {@link org.apache.jackrabbit.JcrConstants} is not used as it only contains jcr 1.0 constants and is to be
  * replaced by the extended forms hosted on the jcr 2.0 interfaces (e.g. NodeType).
  *
- * @deprecated since 5.0 use {@link info.magnolia.jcr.MgnlNodeTypeNames} for mgnl nodetypes or {@link info.magnolia.jcr.MgnlPropertyNames} for mgnl property names.
+ * @deprecated since 5.0 use {@link info.magnolia.jcr.MgnlNodeTypeNames} for mgnl node types or {@link info.magnolia.jcr.MgnlPropertyNames} for mgnl property names.
  */
 public final class MgnlNodeType {
 
@@ -62,7 +62,7 @@ public final class MgnlNodeType {
     /**
      * Prefix for jcr-properties.
      */
-    public static final String JCR_PREFIX = MgnlPropertyNames.JCR_PREFIX;
+    public static final String JCR_PREFIX = MgnlNodeTypeNames.JCR_PREFIX;
 
     /**
      * Node type: base.
@@ -77,7 +77,7 @@ public final class MgnlNodeType {
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = MgnlNodeTypeNames.NT_;
+    public static final String NT_HIERARCHY = MgnlNodeTypeNames.HIERARCHY_NODE;
 
     /**
      * Node type: folder.

@@ -33,17 +33,15 @@
  */
 package info.magnolia.jcr;
 
-
 /**
- * Keeps constants for frequently used jcr property names (both - mgnl or jcr defined).
+ * Defines constants for frequently used JCR property names, both those defined by JCR and the custom ones defined by Magnolia.
  */
 public final class MgnlPropertyNames {
 
-    /** Prefix for jcr properties. */
-    public static final String JCR_PREFIX = "jcr:";
-
-    /** Suffix for property names keeping userids. */
-    public static final String BY = "By";
+    /**
+     * Suffix for property names keeping user ids.
+     */
+    private static final String BY = "By";
 
     // from mgnl:created (mixin)
     public static final String CREATED = MgnlNodeTypeNames.MGNL_PREFIX + "created";
@@ -57,24 +55,23 @@ public final class MgnlPropertyNames {
     // from mgnl:renderable (mixin)
     public static final String TEMPLATE = MgnlNodeTypeNames.MGNL_PREFIX + "template";
 
-    // Properties defined on jcr nodeTypes
     // from nt:base
-    public static final String PRIMARY_TYPE = JCR_PREFIX + "primaryType";
+    public static final String PRIMARY_TYPE = MgnlNodeTypeNames.JCR_PREFIX + "primaryType";
 
     // from nt:resource
-    public static final String DATA = JCR_PREFIX + "data";
+    public static final String DATA = MgnlNodeTypeNames.JCR_PREFIX + "data";
 
     // from nt:file
-    public static final String CONTENT = JCR_PREFIX + "content";
+    public static final String CONTENT = MgnlNodeTypeNames.JCR_PREFIX + "content";
 
     // from nt:version
-    public static final String FROZEN_NODE = JCR_PREFIX + "frozenNode";
+    public static final String FROZEN_NODE = MgnlNodeTypeNames.JCR_PREFIX + "frozenNode";
 
     // from nt:frozenNode
-    public static final String FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
+    public static final String FROZEN_PRIMARY_TYPE = MgnlNodeTypeNames.JCR_PREFIX + "frozenPrimaryType";
 
     // from mix:lastModified
-    public static final String LAST_MODIFIED = JCR_PREFIX + "lastModified";
+    public static final String LAST_MODIFIED = MgnlNodeTypeNames.JCR_PREFIX + "lastModified";
     public static final String LAST_MODIFIED_BY = LAST_MODIFIED + BY;
 
 }
