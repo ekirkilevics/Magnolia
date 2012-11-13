@@ -43,11 +43,6 @@ package info.magnolia.jcr;
 public final class MgnlNodeTypeNames {
 
     /**
-     * Prefix for JCR node types and properties.
-     */
-    public static final String JCR_PREFIX = "jcr:";
-
-    /**
      * Prefix for mgnl node types and properties.
      */
     public static final String MGNL_PREFIX = "mgnl:";

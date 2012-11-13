@@ -39,6 +39,11 @@ package info.magnolia.jcr;
 public final class MgnlPropertyNames {
 
     /**
+     * Prefix for JCR properties.
+     */
+    public static final String JCR_PREFIX = "jcr:";
+
+    /**
      * Suffix for property names keeping user ids.
      */
     private static final String BY = "By";
@@ -56,22 +61,22 @@ public final class MgnlPropertyNames {
     public static final String TEMPLATE = MgnlNodeTypeNames.MGNL_PREFIX + "template";
 
     // from nt:base
-    public static final String PRIMARY_TYPE = MgnlNodeTypeNames.JCR_PREFIX + "primaryType";
+    public static final String PRIMARY_TYPE = JCR_PREFIX + "primaryType";
 
     // from nt:resource
-    public static final String DATA = MgnlNodeTypeNames.JCR_PREFIX + "data";
+    public static final String DATA = JCR_PREFIX + "data";
 
     // from nt:file
-    public static final String CONTENT = MgnlNodeTypeNames.JCR_PREFIX + "content";
+    public static final String CONTENT = JCR_PREFIX + "content";
 
     // from nt:version
-    public static final String FROZEN_NODE = MgnlNodeTypeNames.JCR_PREFIX + "frozenNode";
+    public static final String FROZEN_NODE = JCR_PREFIX + "frozenNode";
 
     // from nt:frozenNode
-    public static final String FROZEN_PRIMARY_TYPE = MgnlNodeTypeNames.JCR_PREFIX + "frozenPrimaryType";
+    public static final String FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
 
     // from mix:lastModified
-    public static final String LAST_MODIFIED = MgnlNodeTypeNames.JCR_PREFIX + "lastModified";
+    public static final String LAST_MODIFIED = JCR_PREFIX + "lastModified";
     public static final String LAST_MODIFIED_BY = LAST_MODIFIED + BY;
 
 }
