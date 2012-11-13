@@ -77,7 +77,7 @@ public final class MgnlNodeType {
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = MgnlNodeTypeNames.NT_;
+    public static final String NT_HIERARCHY = MgnlNodeTypeNames.NT_HIERARCHY_NODE;
 
     /**
      * Node type: folder.

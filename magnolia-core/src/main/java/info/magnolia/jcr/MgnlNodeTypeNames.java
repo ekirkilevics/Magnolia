@@ -60,7 +60,7 @@ public final class MgnlNodeTypeNames {
     // jcr defined nodetypes
     public static final String BASE = NT_PREFIX + "base";
     public static final String UNSTRUCTURED = NT_PREFIX + "unstructured";
-    public static final String NT_ = NT_PREFIX + "hierarchyNode";
+    public static final String NT_HIERARCHY_NODE = NT_PREFIX + "hierarchyNode";
     public static final String FOLDER = NT_PREFIX + "folder";
     public static final String FILE = NT_PREFIX + "file";
     public static final String RESOURCE = NT_PREFIX + "resource";
