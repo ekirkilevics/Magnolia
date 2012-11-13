@@ -34,10 +34,7 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.jcr.JcrLastModifiedNodeType;
-import info.magnolia.jcr.MgnlActivatableNodeType;
-import info.magnolia.jcr.MgnlCreatedNodeType;
-import info.magnolia.jcr.MgnlRenderableNodeType;
+import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -69,22 +66,22 @@ public class MetaData {
      */
     public static final String TITLE = "title";
 
-    public static final String CREATION_DATE = MgnlCreatedNodeType.CREATED;
+    public static final String CREATION_DATE = MgnlPropertyNames.CREATED;
 
-    public static final String LAST_MODIFIED = JcrLastModifiedNodeType.JCR_LAST_MODIFIED;
+    public static final String LAST_MODIFIED = MgnlPropertyNames.LAST_MODIFIED;
 
-    public static final String LAST_ACTION = MgnlActivatableNodeType.LAST_ACTIVATED;
+    public static final String LAST_ACTION = MgnlPropertyNames.LAST_ACTIVATED;
 
-    public static final String AUTHOR_ID = JcrLastModifiedNodeType.JCR_LAST_MODIFIED_BY;
+    public static final String AUTHOR_ID = MgnlPropertyNames.LAST_MODIFIED_BY;
 
-    public static final String ACTIVATOR_ID = MgnlActivatableNodeType.LAST_ACTIVATED_BY;
+    public static final String ACTIVATOR_ID = MgnlPropertyNames.LAST_ACTIVATED_BY;
 
     /**
      * Caution: this property is now also on the node itself - enforced by mgnl:renderable.
      */
-    public static final String TEMPLATE = MgnlRenderableNodeType.TEMPLATE;
+    public static final String TEMPLATE = MgnlPropertyNames.TEMPLATE;
 
-    public static final String ACTIVATED = MgnlActivatableNodeType.ACTIVATION_STATUS;
+    public static final String ACTIVATED = MgnlPropertyNames.ACTIVATION_STATUS;
 
     /**
      * Name of the Node hosting the MetaData.

@@ -33,126 +33,129 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.jcr.MgnlNodeTypeNames;
+import info.magnolia.jcr.MgnlPropertyNames;
 
 /**
- * Constant for node-types used within Magnolia. Does not use {@link org.apache.jackrabbit.JcrConstants} from Jackrabbit's common-jar as these
- * are not composed out of prefix and suffix so it would not be conveniently possible to query e.g. if a NodeType starts with
- * MgnlNodeType.JCR_PREFIX.
+ * Keeps constants for node-types used within Magnolia. {@link org.apache.jackrabbit.JcrConstants} is not used as it only contains jcr 1.0 constants and is to be
+ * replaced by the extended forms hosted on the jcr 2.0 interfaces (e.g. NodeType).
+ *
+ * @deprecated since 5.0 use {@link info.magnolia.jcr.MgnlNodeTypeNames} for mgnl nodetypes or {@link info.magnolia.jcr.MgnlPropertyNames} for mgnl property names.
  */
 public final class MgnlNodeType {
 
     /**
      * Prefix for our nodeTypes.
      */
-    public static final String NT_PREFIX = "nt:";
+    public static final String NT_PREFIX = MgnlNodeTypeNames.NT_PREFIX;
 
     /**
-     * Prefix for our mixin's.
+     * Prefix for jcr mixin's.
      */
-    public static final String MIX_PREFIX = "mix:";
+    public static final String MIX_PREFIX = MgnlNodeTypeNames.MIX_PREFIX;
 
     /**
      * Prefix for mgnl-properties.
      */
-    public static final String MGNL_PREFIX = "mgnl:";
+    public static final String MGNL_PREFIX = MgnlNodeTypeNames.MGNL_PREFIX;
 
     /**
      * Prefix for jcr-properties.
      */
-    public static final String JCR_PREFIX = "jcr:";
+    public static final String JCR_PREFIX = MgnlPropertyNames.JCR_PREFIX;
 
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = NT_PREFIX + "base";
+    public static final String NT_BASE = MgnlNodeTypeNames.BASE;
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = NT_PREFIX + "unstructured";
+    public static final String NT_UNSTRUCTURED = MgnlNodeTypeNames.UNSTRUCTURED;
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = NT_PREFIX + "hierarchyNode";
+    public static final String NT_HIERARCHY = MgnlNodeTypeNames.NT_;
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = MGNL_PREFIX + "folder";
+    public static final String NT_FOLDER = MgnlNodeTypeNames.FOLDER;
 
     /**
      * Node type: file.
      */
-    public static final String NT_FILE = NT_PREFIX + "file";
+    public static final String NT_FILE = MgnlNodeTypeNames.FILE;
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = MGNL_PREFIX + "resource";
+    public static final String NT_RESOURCE = MgnlNodeTypeNames.RESOURCE;
 
     /**
      * Node type: metadata.
      */
-    public static final String NT_METADATA = MGNL_PREFIX + "metaData";
+    public static final String NT_METADATA = MgnlNodeTypeNames.METADATA;
 
     /**
      * Node type: content.
      */
-    public static final String NT_CONTENT = MGNL_PREFIX + "content";
+    public static final String NT_CONTENT = MgnlNodeTypeNames.CONTENT;
 
     /**
      * Node type: content node.
      */
-    public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
+    public static final String NT_CONTENTNODE = MgnlNodeTypeNames.CONTENT_NODE;
 
-    public static final String NT_PAGE = MGNL_PREFIX + "page";
-    public static final String NT_AREA = MGNL_PREFIX + "area";
-    public static final String NT_COMPONENT = MGNL_PREFIX + "component";
+    public static final String NT_PAGE = MgnlNodeTypeNames.PAGE;
+    public static final String NT_AREA = MgnlNodeTypeNames.AREA;
+    public static final String NT_COMPONENT = MgnlNodeTypeNames.COMPONENT;
 
-    public static final String MGNL_NODE_DATA = MGNL_PREFIX + "nodeData";
+    public static final String MGNL_NODE_DATA = MgnlNodeTypeNames.NODE_DATA;
 
-    public static final String NT_FROZENNODE = NT_PREFIX + "frozenNode";
+    public static final String NT_FROZENNODE = MgnlNodeTypeNames.FROZEN_NODE;
 
-    public static final String USER = MGNL_PREFIX + "user";
+    public static final String USER = MgnlNodeTypeNames.USER;
 
-    public static final String ROLE = MGNL_PREFIX + "role";
+    public static final String ROLE = MgnlNodeTypeNames.ROLE;
 
-    public static final String GROUP = MGNL_PREFIX + "group";
+    public static final String GROUP = MgnlNodeTypeNames.GROUP;
 
-    public static final String SYSTEM = MGNL_PREFIX + "reserve";
+    public static final String SYSTEM = MgnlNodeTypeNames.SYSTEM;
 
     // Mixins
 
     /**
      * Mixin: node has access control.
      */
-    public static final String MIX_ACCESSCONTROLLABLE = MIX_PREFIX + "accessControllable";
+    public static final String MIX_ACCESSCONTROLLABLE = MgnlNodeTypeNames.MIX_ACCESS_CONTROLLABLE;
 
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = MIX_PREFIX + "referenceable";
+    public static final String MIX_REFERENCEABLE = MgnlNodeTypeNames.MIX_REFERENCEABLE;
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = MIX_PREFIX + "versionable";
+    public static final String MIX_VERSIONABLE = MgnlNodeTypeNames.MIX_VERSIONABLE;
 
-    public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";
+    public static final String MIX_LOCKABLE = MgnlNodeTypeNames.MIX_LOCKABLE;
 
-    public static final String MIX_DELETED = MGNL_PREFIX + "deleted";
+    public static final String MIX_DELETED = MgnlNodeTypeNames.MIX_DELETED;
 
     // JCR properties.
 
-    public static final String JCR_FROZENNODE = JCR_PREFIX + "frozenNode";
+    public static final String JCR_FROZENNODE = MgnlPropertyNames.FROZEN_NODE;
 
-    public static final String JCR_FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
+    public static final String JCR_FROZEN_PRIMARY_TYPE = MgnlPropertyNames.FROZEN_PRIMARY_TYPE;
 
-    public static final String JCR_PRIMARY_TYPE = JCR_PREFIX + "primaryType";
+    public static final String JCR_PRIMARY_TYPE = MgnlPropertyNames.PRIMARY_TYPE;
 
-    public static final String JCR_DATA = JCR_PREFIX + "data";
+    public static final String JCR_DATA = MgnlPropertyNames.DATA;
 
-    public static final String JCR_CONTENT = JCR_PREFIX + "content";
+    public static final String JCR_CONTENT = MgnlPropertyNames.CONTENT;
 
 }

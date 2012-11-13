@@ -42,6 +42,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.util.NodeUtil;
 
 /**
@@ -53,13 +54,13 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
     private final HashMap<String, String> propertyNameMapping = new HashMap<String, String>();
 
     public MetaDataImportPostProcessor() {
-        propertyNameMapping.put("mgnl:creationdate", "mgnl:created");
-        propertyNameMapping.put("mgnl:lastaction", "mgnl:lastActivated");
-        propertyNameMapping.put("mgnl:activatorid", "mgnl:lastActivatedBy");
-        propertyNameMapping.put("mgnl:activated", "mgnl:activationStatus");
-        propertyNameMapping.put("mgnl:template", "mgnl:template");
-        propertyNameMapping.put("mgnl:authorid", "jcr:lastModifiedBy");
-        propertyNameMapping.put("mgnl:lastmodified", "jcr:lastModified");
+        propertyNameMapping.put("mgnl:creationdate", MgnlPropertyNames.CREATED);
+        propertyNameMapping.put("mgnl:lastaction", MgnlPropertyNames.LAST_ACTIVATED);
+        propertyNameMapping.put("mgnl:activatorid", MgnlPropertyNames.LAST_ACTIVATED_BY);
+        propertyNameMapping.put("mgnl:activated", MgnlPropertyNames.ACTIVATION_STATUS);
+        propertyNameMapping.put("mgnl:template", MgnlPropertyNames.TEMPLATE);
+        propertyNameMapping.put("mgnl:authorid", MgnlPropertyNames.LAST_MODIFIED_BY);
+        propertyNameMapping.put("mgnl:lastmodified", MgnlPropertyNames.LAST_MODIFIED);
     }
 
     @Override
