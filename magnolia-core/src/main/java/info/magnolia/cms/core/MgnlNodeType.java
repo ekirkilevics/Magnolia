@@ -62,7 +62,7 @@ public final class MgnlNodeType {
     /**
      * Prefix for jcr-properties.
      */
-    public static final String JCR_PREFIX = MgnlNodeTypeNames.JCR_PREFIX;
+    public static final String JCR_PREFIX = MgnlPropertyNames.JCR_PREFIX;
 
     /**
      * Node type: base.
