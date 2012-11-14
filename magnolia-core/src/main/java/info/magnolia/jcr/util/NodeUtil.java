@@ -33,10 +33,10 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.MgnlNodeTypeNames;
 import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
@@ -47,12 +47,10 @@ import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -72,8 +70,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Various utility methods to collect data from JCR repository.
- *
- * @version $Id$
  */
 public class NodeUtil {
 
@@ -86,8 +82,9 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+                return !node.getName().startsWith(MgnlPropertyNames.JCR_PREFIX);
             } catch (RepositoryException e) {
+                log.error("Unable to read name for node {}", getNodePathIfPossible(node));
                 return false;
             }
         }
@@ -101,9 +98,10 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX)
-                && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+                return !node.getName().startsWith(MgnlPropertyNames.JCR_PREFIX)
+                && !NodeUtil.isNodeType(node, MgnlNodeTypeNames.METADATA);
             } catch (RepositoryException e) {
+                log.error("Unable to read name or nodeType for node {}", getNodePathIfPossible(node));
                 return false;
             }
         }
@@ -120,10 +118,9 @@ public class NodeUtil {
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
                 // accept only "magnolia" nodes
-                return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
+                return nodeTypeName.startsWith(MgnlNodeTypeNames.MGNL_PREFIX);
             } catch (RepositoryException e) {
-                // TODO should we really mask this error? shouldn't it be thrown instead?
-                log.error("Unable to read nodetype for node {}", getNodePathIfPossible(node));
+                log.error("Unable to read nodeType for node {}", getNodePathIfPossible(node));
             }
             return false;
         }
@@ -162,16 +159,16 @@ public class NodeUtil {
     }
 
     /**
-     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param! TODO cringele :
-     * shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
+     * TODO dlipp: better name? Clear javadoc! Do not assign method-param!
+     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
-        final String actualType = node.getProperty(MgnlNodeType.JCR_PRIMARY_TYPE).getString();
+        final String actualType = node.getProperty(MgnlPropertyNames.PRIMARY_TYPE).getString();
         // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
         // node type
-        if (MgnlNodeType.NT_FROZENNODE.equals(actualType) && !(MgnlNodeType.NT_FROZENNODE.equals(type))) {
-            final Property p = node.getProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE);
+        if (MgnlNodeTypeNames.FROZEN_NODE.equals(actualType) && !(MgnlNodeTypeNames.FROZEN_NODE.equals(type))) {
+            final Property p = node.getProperty(MgnlPropertyNames.FROZEN_PRIMARY_TYPE);
             final String s = p.getString();
             NodeTypeManager ntManager = node.getSession().getWorkspace().getNodeTypeManager();
             NodeType primaryNodeType = ntManager.getNodeType(s);
@@ -377,15 +374,13 @@ public class NodeUtil {
 
     /**
      * @return Whether the provided node as the provided permission or not.
-     * @throws RuntimeException
-     *             in case of RepositoryException.
+     * @throws RuntimeRepositoryException in case of RepositoryException.
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
             return PermissionUtil.isGranted(node, permissions);
         } catch (RepositoryException e) {
-            // TODO dlipp - apply consistent ExceptionHandling
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -628,18 +623,14 @@ public class NodeUtil {
      * Returns the creation date of a node or null if creation date isn't set.
      */
     public static Calendar getCreated(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.CREATED))
-            return null;
-        return node.getProperty(MgnlPropertyNames.CREATED).getDate();
+        return node.hasProperty(MgnlPropertyNames.CREATED) ? node.getProperty(MgnlPropertyNames.CREATED).getDate() : null;
     }
 
     /**
      * Returns the name of the user that created a node.
      */
     public static String getCreatedBy(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.CREATED_BY))
-            return null;
-        return node.getProperty(MgnlPropertyNames.CREATED_BY).getString();
+        return node.hasProperty(MgnlPropertyNames.CREATED_BY) ? node.getProperty(MgnlPropertyNames.CREATED_BY).getString() : null;
     }
 
     /**
@@ -656,7 +647,7 @@ public class NodeUtil {
      * <code>mgnl:created</code> mixin.
      */
     public static void setCreation(Node node, String userName) throws RepositoryException {
-        GregorianCalendar now = new GregorianCalendar(TimeZone.getDefault());
+        Calendar now = Calendar.getInstance();
         node.setProperty(MgnlPropertyNames.CREATED, now);
         node.setProperty(MgnlPropertyNames.CREATED_BY, userName);
         node.setProperty(MgnlPropertyNames.LAST_MODIFIED, now);
@@ -668,9 +659,7 @@ public class NodeUtil {
      * method return the creation date if set, otherwise null is returned.
      */
     public static Calendar getLastModified(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.LAST_MODIFIED))
-            return getCreated(node);
-        return node.getProperty(MgnlPropertyNames.LAST_MODIFIED).getDate();
+        return node.hasProperty(MgnlPropertyNames.LAST_MODIFIED) ? node.getProperty(MgnlPropertyNames.LAST_MODIFIED).getDate() : getCreated(node);
     }
 
     /**
@@ -678,9 +667,7 @@ public class NodeUtil {
      * this method return the name of the user that created the node if set, otherwise null is returned.
      */
     public static String getLastModifiedBy(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.LAST_MODIFIED_BY))
-            return getCreatedBy(node);
-        return node.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString();
+        return node.hasProperty(MgnlPropertyNames.LAST_MODIFIED_BY) ? node.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString() : getCreatedBy(node);
     }
 
     /**
@@ -694,7 +681,7 @@ public class NodeUtil {
      * Sets the date of modification and the name of the user modifying a node.
      */
     public static void updateModification(Node node, String userName) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, new GregorianCalendar(TimeZone.getDefault()));
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, Calendar.getInstance());
         node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
     }
 
@@ -703,9 +690,7 @@ public class NodeUtil {
      * <code>mgnl:renderable</code> mixin.
      */
     public static String getTemplate(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.TEMPLATE))
-            return null;
-        return node.getProperty(MgnlPropertyNames.TEMPLATE).getString();
+        return node.hasProperty(MgnlPropertyNames.TEMPLATE) ? node.getProperty(MgnlPropertyNames.TEMPLATE).getString() : null;
     }
 
     /**
