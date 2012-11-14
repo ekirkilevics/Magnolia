@@ -40,8 +40,7 @@ import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.MgnlNodeTypeNames;
 import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.util.NodeUtil;
 
@@ -50,6 +49,9 @@ import info.magnolia.jcr.util.NodeUtil;
  * <code>mgnl:activatable</code>. The MetaData node itself is removed.
  */
 public class MetaDataImportPostProcessor implements ImportPostProcessor {
+
+    private static final String METADATA_NODE_NAME = "MetaData";
+    private static final String METADATA_NODE_TYPE = MgnlNodeTypeNames.METADATA;
 
     private final HashMap<String, String> propertyNameMapping = new HashMap<String, String>();
 
@@ -67,9 +69,9 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
     public void postProcessNode(Node node) throws RepositoryException {
 
         // Transfer properties from the MetaData node
-        if (node.hasNode(MetaData.DEFAULT_META_NODE)) {
-            Node metaDataNode = node.getNode(MetaData.DEFAULT_META_NODE);
-            if (NodeUtil.isNodeType(metaDataNode, MgnlNodeType.NT_METADATA)) {
+        if (node.hasNode(METADATA_NODE_NAME)) {
+            Node metaDataNode = node.getNode(METADATA_NODE_NAME);
+            if (NodeUtil.isNodeType(metaDataNode, METADATA_NODE_TYPE)) {
                 moveProperties(node, metaDataNode, propertyNameMapping);
             }
 
@@ -80,7 +82,7 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
         NodeIterator children = node.getNodes();
         while (children.hasNext()) {
             Node child = children.nextNode();
-            if (!(child.getName().equals(MetaData.DEFAULT_META_NODE) && NodeUtil.isNodeType(child, MgnlNodeType.NT_METADATA))) {
+            if (!(child.getName().equals(METADATA_NODE_NAME) && NodeUtil.isNodeType(child, METADATA_NODE_TYPE))) {
                 postProcessNode(child);
             }
         }
@@ -96,29 +98,32 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
      */
     private void moveProperties(Node dstNode, Node srcNode, Map<String, String> nameMappings) throws RepositoryException {
         for (Map.Entry<String, String> entry : nameMappings.entrySet()) {
-            moveProperty(srcNode, entry.getKey(), dstNode, entry.getValue());
+            String srcPropertyName = entry.getKey();
+            String dstPropertyName = entry.getValue();
+            if (!dstNode.hasProperty(dstPropertyName) && srcNode.hasProperty(srcPropertyName)) {
+                moveProperty(srcNode, srcPropertyName, dstNode, dstPropertyName);
+            }
         }
     }
 
     /**
      * Moves a property from a node to another node and changes its name in the process. If a property already exists on
-     * the destination node it will not be overwritten.
+     * the destination node it will be overwritten.
      *
      * @param srcNode         node containing the property
      * @param srcPropertyName name of the property
      * @param dstNode         node to which the property should be moved
      * @param dstPropertyName new name after the move
      * @throws RepositoryException
+     * @throws javax.jcr.PathNotFoundException if the source property does not exist
      */
     private void moveProperty(Node srcNode, String srcPropertyName, Node dstNode, String dstPropertyName) throws RepositoryException {
-        if (!dstNode.hasProperty(dstPropertyName) && srcNode.hasProperty(srcPropertyName)) {
-            Property srcProperty = srcNode.getProperty(srcPropertyName);
-            if (srcProperty.isMultiple()) {
-                dstNode.setProperty(dstPropertyName, srcProperty.getValues());
-            } else {
-                dstNode.setProperty(dstPropertyName, srcProperty.getValue());
-            }
-            srcProperty.remove();
+        Property srcProperty = srcNode.getProperty(srcPropertyName);
+        if (srcProperty.isMultiple()) {
+            dstNode.setProperty(dstPropertyName, srcProperty.getValues());
+        } else {
+            dstNode.setProperty(dstPropertyName, srcProperty.getValue());
         }
+        srcProperty.remove();
     }
 }
