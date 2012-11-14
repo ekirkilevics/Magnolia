@@ -39,6 +39,7 @@ import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -47,6 +48,11 @@ import javax.jcr.Node;
  * @version $Id$
  */
 public interface TemplateDefinitionAssignment {
+
+    /**
+     * Returns the id of the template assigned to a node or null if none has been assigned.
+     */
+    String getAssignedTemplate(Node content) throws RepositoryException;
 
     TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException;
 

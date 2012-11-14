@@ -51,7 +51,6 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateAvailability;
@@ -78,9 +77,21 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
         this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 
+    public String getAssignedTemplate(Node content) throws RepositoryException {
+        return NodeUtil.getTemplate(content);
+    }
+
     @Override
     public TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException {
-        final String templateId = MetaDataUtil.getMetaData(content).getTemplate();
+        final String templateId;
+        try {
+            templateId = getAssignedTemplate(content);
+        } catch (RepositoryException e) {
+            throw new RegistrationException("Could not determine assigned template", e);
+        }
+        if (templateId == null) {
+            throw new RegistrationException("No template definition assigned");
+        }
         return templateDefinitionRegistry.getTemplateDefinition(templateId);
     }
 
