@@ -33,8 +33,13 @@
  */
 package info.magnolia.module.admininterface;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
@@ -245,5 +250,6 @@ public class AdminTreeMVCHandlerTest {
     @After
     public void tearDown() {
         MgnlContext.setInstance(null);
+        ComponentsTestUtil.clear();
     }
 }
