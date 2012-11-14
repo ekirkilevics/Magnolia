@@ -38,7 +38,6 @@ import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
@@ -396,8 +395,6 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                 addWrite(handle, PROPERTY_LASTACCESS, acls);
                 addWrite(handle, PROPERTY_PASSWORD, acls);
                 addWrite(handle, PROPERTY_TITLE, acls);
-                // and of course the meta data
-                addWrite(handle, MetaData.DEFAULT_META_NODE, acls);
                 session.save();
                 return new MgnlUser(userNode.getName(), getRealmName(), Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_MAP,  NodeUtil.getPathIfPossible(userNode), NodeUtil.getNodeIdentifierIfPossible(userNode));
             }

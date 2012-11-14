@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -299,7 +300,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         imageFile.delete();
 
         // update modification date and save the new image node
-        imageNode.getMetaData().setModificationDate();
+        NodeUtil.setLastModified(imageNode.getJCRNode());
         imageNode.getParent().save();
     }
 }

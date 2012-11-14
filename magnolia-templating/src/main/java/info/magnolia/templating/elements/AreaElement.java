@@ -34,7 +34,6 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -207,7 +206,6 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 public Void exec() throws RepositoryException {
                     Node parentNodeInSystemSession = NodeUtil.getNodeByIdentifier(workspaceName, parentId);
                     Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, MgnlNodeType.NT_AREA);
-                    NodeUtil.createPath(newAreaNode, MetaData.DEFAULT_META_NODE, MgnlNodeType.NT_METADATA);
                     newAreaNode.getSession().save();
                     return null;
                 }

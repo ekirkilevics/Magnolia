@@ -169,8 +169,7 @@ public class DefaultContent extends AbstractContent {
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
         Content content = wrapAsContent(this.node, name, contentType);
-        MetaData metaData = content.getMetaData();
-        metaData.setCreationDate();
+        NodeUtil.setCreated(content.getJCRNode());
         return content;
     }
 
@@ -651,13 +650,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public boolean hasMetaData() {
-        try {
-            return this.node.hasNode(MetaData.DEFAULT_META_NODE);
-        }
-        catch (RepositoryException re) {
-            log.debug(re.getMessage(), re);
-        }
-        return false;
+        return true;
     }
 
     @Override

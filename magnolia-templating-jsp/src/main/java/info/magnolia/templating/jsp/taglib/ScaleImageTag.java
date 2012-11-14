@@ -38,6 +38,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.awt.Graphics2D;
@@ -250,23 +251,23 @@ public class ScaleImageTag extends BaseImageTag {
      * @return
      */
     protected boolean rescale(Content parentContentNode, Content imageContentNode) {
-        Calendar parentModified = parentContentNode.getMetaData().getModificationDate() != null ? parentContentNode
-            .getMetaData()
-            .getModificationDate() : parentContentNode.getMetaData().getCreationDate();
 
-        Calendar imageModified = imageContentNode.getMetaData().getModificationDate() != null ? imageContentNode
-            .getMetaData()
-            .getModificationDate() : imageContentNode.getMetaData().getCreationDate();
+        try {
+            Calendar parentModified = NodeUtil.getLastModified(parentContentNode.getJCRNode());
+            Calendar imageModified = NodeUtil.getLastModified(imageContentNode.getJCRNode());
 
-        if (parentModified.after(imageModified)) {
+            if (parentModified.after(imageModified)) {
+                return true;
+            }
+        } catch (RepositoryException e) {
+            // if we can't determine last modification of the nodes then do the safe thing and go for rescaling
             return true;
         }
-        else {
-            int originalHeight = (int) imageContentNode.getNodeData("maxHeight").getLong();
-            int originalWidth = (int) imageContentNode.getNodeData("maxWidth").getLong();
 
-            return originalHeight != maxHeight || originalWidth != maxWidth;
-        }
+        int originalHeight = (int) imageContentNode.getNodeData("maxHeight").getLong();
+        int originalWidth = (int) imageContentNode.getNodeData("maxWidth").getLong();
+
+        return originalHeight != maxHeight || originalWidth != maxWidth;
     }
 
     /**

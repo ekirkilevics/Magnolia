@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -55,7 +56,7 @@ import org.slf4j.LoggerFactory;
  * Meta data of a content like creation date, modification date, assigned template, ...
  * CAUTION: since 5.0 this properties are set on the working node itself - not on a MetaData subnode!
  *
- * @deprecated since 5.0 - this type should no longer be needed as these properties are now hosted on the parent node himself.
+ * @deprecated since 5.0 - this type should no longer be needed as these properties are now hosted on the parent node itself
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -89,14 +90,23 @@ public class MetaData {
      */
     public static final String DEFAULT_META_NODE = "MetaData";
 
-    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
-
-    public static final int ACTIVATION_STATUS_MODIFIED = 1;
-
-    public static final int ACTIVATION_STATUS_ACTIVATED = 2;
+    /**
+     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_NOT_ACTIVATED} instead
+     */
+    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = ActivationUtil.ACTIVATION_STATUS_NOT_ACTIVATED;
 
     /**
-     * CAUTION: this is now the working NODE!
+     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_MODIFIED} instead
+     */
+    public static final int ACTIVATION_STATUS_MODIFIED = ActivationUtil.ACTIVATION_STATUS_MODIFIED;
+
+    /**
+     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_ACTIVATED} instead
+     */
+    public static final int ACTIVATION_STATUS_ACTIVATED = ActivationUtil.ACTIVATION_STATUS_ACTIVATED;
+
+    /**
+     * Since 5.0 this is the working node itself.
      */
     private Node node;
 

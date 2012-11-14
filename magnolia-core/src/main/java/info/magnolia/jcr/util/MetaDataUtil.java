@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import java.util.Calendar;
 
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.jcr.Node;
@@ -48,35 +47,37 @@ import javax.jcr.ValueFormatException;
  * Collection of utilities to simplify working with the JCR API. In contrast to info.magnolia.cms.core.Content it is -
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
+ *
+ * @deprecated since 5.0 - use {@link NodeUtil} instead
  */
 public class MetaDataUtil {
 
+    @Deprecated
     public static MetaData getMetaData(Node node) {
         return new MetaData(node);
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {
-        MetaData md = getMetaData(node);
-        md.setModificationDate();
-        md.setAuthorId(MgnlContext.getUser().getName());
+        NodeUtil.updateModification(node);
         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
                 .getPrimaryNodeType().getName(), node.getName());
     }
 
     /**
      * @return the lastModification or null it it was not set in JCR.
+     * @deprecated since 5.0 - use {@link NodeUtil#getLastModified(javax.jcr.Node)}
      */
+    @Deprecated
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
-        MetaData metaData = getMetaData(node);
-        Calendar modDate = metaData.getDateProperty(MetaData.LAST_MODIFIED);
-        if (modDate == null) {
-            modDate = metaData.getCreationDate();
-        }
-        return modDate;
+        return NodeUtil.getLastModified(node);
     }
 
-    public static String getTemplate(Node node) {
-        return getMetaData(node).getTemplate();
+    /**
+     * @deprecated since 5.0 - use {@link NodeUtil#getTemplate(javax.jcr.Node)}
+     */
+    @Deprecated
+    public static String getTemplate(Node node) throws RepositoryException {
+        return NodeUtil.getTemplate(node);
     }
 
 }

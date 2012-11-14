@@ -665,6 +665,13 @@ public class NodeUtil {
     }
 
     /**
+     * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
+     */
+    public static void setCreated(Node node) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.CREATED, new GregorianCalendar(TimeZone.getDefault()));
+    }
+
+    /**
      * Returns the date when this node was last modified. If the no modification date has been stored on the node this
      * method return the creation date if set, otherwise null is returned.
      */

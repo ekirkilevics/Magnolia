@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.InputStream;
 
@@ -98,7 +99,7 @@ public class ContentOps {
 
             @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                context.getMetaData().setTemplate(template);
+                NodeUtil.setTemplate(context.getJCRNode(), template);
                 return context;
             }
         };

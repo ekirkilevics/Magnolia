@@ -61,7 +61,6 @@ public class MetaDataTest {
     @Before
     public void setUp() throws Exception {
         root = new MockNode();
-        root.addNode(MetaData.DEFAULT_META_NODE);
     }
 
     @Test
@@ -228,7 +227,6 @@ public class MetaDataTest {
     @Test
     public void testSetPropertyWithStringWhenAlreadyExisting() throws RepositoryException{
         // GIVEN
-        root.addNode(MetaData.DEFAULT_META_NODE);
         final MetaData md = MetaDataUtil.getMetaData(root);
         final String name = "name";
         final String value = "value";
