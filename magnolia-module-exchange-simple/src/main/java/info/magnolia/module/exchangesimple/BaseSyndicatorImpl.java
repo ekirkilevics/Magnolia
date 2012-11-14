@@ -36,9 +36,9 @@ package info.magnolia.module.exchangesimple;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.ContentVersion;
+import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
@@ -51,6 +51,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.File;
@@ -622,25 +623,34 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @param type (activate / deactivate)
      */
     protected void updateMetaData(Content node, String type) throws AccessDeniedException {
+
         // update the passed node
-        MetaData md = node.getMetaData();
-        if (type.equals(ACTIVATE)) {
-            md.setActivated();
+        try {
+            if (type.equals(ACTIVATE)) {
+                ActivationUtil.setActivated(node.getJCRNode());
+            }
+            else {
+                ActivationUtil.setUnactivated(node.getJCRNode());
+            }
+            ActivationUtil.setLastActivated(node.getJCRNode());
+            ActivationUtil.setLastActivatedBy(node.getJCRNode(), this.user.getName());
+        } catch (RepositoryException e) {
+            log.error("Failed to update activation status on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);
         }
-        else {
-            md.setUnActivated();
-        }
-        md.setActivatorId(this.user.getName());
-        md.setLastActivationActionDate();
 
         if(type.equals(ACTIVATE)){
-            if(md.getModificationDate() != null && md.getModificationDate().after(contentVersionDate)){
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            try {
+                Calendar lastModified = NodeUtil.getLastModified(node.getJCRNode());
+                if (lastModified != null && lastModified.after(contentVersionDate)){
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        log.warn("Thread interrupted while sleeping", e);
+                    }
+                        NodeUtil.setLastModified(node.getJCRNode());
                 }
-                md.setModificationDate();
+            } catch (RepositoryException e) {
+                log.error("Failed to update modification date on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);
             }
         }
 

@@ -39,7 +39,7 @@ import java.util.Calendar;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.SecurityUtil;
@@ -83,33 +83,29 @@ public class BaseSyndicatorImplTest extends TestCase {
         Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        MetaData md = content.getMetaData();
-        md.setLastActivationActionDate();
+        ActivationUtil.setLastActivated(content.getJCRNode());
 
-        MetaData childsMetaData = child.getMetaData();
-        childsMetaData.setLastActivationActionDate();
+        ActivationUtil.setLastActivated(child.getJCRNode());
 
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(10);
 
-        assertFalse(md.getIsActivated());
-        Calendar lastAction = md.getLastActionDate();
+        assertFalse(ActivationUtil.isActivated(content.getJCRNode()));
+        Calendar lastAction = ActivationUtil.getLastActivated(content.getJCRNode());
 
         // WHEN
         bsi.updateMetaData(content, BaseSyndicatorImpl.ACTIVATE);
 
         // THEN - verify metaData got updated
         verify(user);
-        md = content.getMetaData();
-        assertTrue(md.getIsActivated());
-        assertEquals(activator, md.getActivatorId());
-        assertTrue(md.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+        assertTrue(ActivationUtil.isActivated(content.getJCRNode()));
+        assertEquals(activator, ActivationUtil.getLastActivatedBy(content.getJCRNode()));
+        assertTrue(ActivationUtil.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
 
         // ...and know the kid's metadata
-        childsMetaData = child.getMetaData();
-        assertTrue(childsMetaData.getIsActivated());
-        assertEquals(activator, childsMetaData.getActivatorId());
-        assertTrue(childsMetaData.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+        assertTrue(ActivationUtil.isActivated(child.getJCRNode()));
+        assertEquals(activator, ActivationUtil.getLastActivatedBy(child.getJCRNode()));
+        assertTrue(ActivationUtil.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
     public void testUpdateMetaDataWhenDeactivating() throws Exception {
@@ -127,33 +123,29 @@ public class BaseSyndicatorImplTest extends TestCase {
         Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        MetaData md = content.getMetaData();
-        md.setUnActivated();
-        md.setLastActivationActionDate();
+        ActivationUtil.setUnactivated(content.getJCRNode());
+        ActivationUtil.setLastActivated(content.getJCRNode());
 
-        MetaData childsMetaData = child.getMetaData();
-        childsMetaData.setUnActivated();
-        childsMetaData.setLastActivationActionDate();
+        ActivationUtil.setUnactivated(child.getJCRNode());
+        ActivationUtil.setLastActivated(child.getJCRNode());
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(1);
 
-        Calendar lastAction = md.getLastActionDate();
+        Calendar lastAction = ActivationUtil.getLastActivated(content.getJCRNode());
 
         // WHEN
         bsi.updateMetaData(content, BaseSyndicatorImpl.DEACTIVATE);
 
         // THEN - verify metaData got updated
         verify(user);
-        md = content.getMetaData();
-        assertFalse(md.getIsActivated());
-        assertEquals(activator, md.getActivatorId());
-        assertTrue(md.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+        assertFalse(ActivationUtil.isActivated(content.getJCRNode()));
+        assertEquals(activator, ActivationUtil.getLastActivatedBy(content.getJCRNode()));
+        assertTrue(ActivationUtil.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
 
         // ...and know the kid's metadata
-        childsMetaData = child.getMetaData();
-        assertFalse(childsMetaData.getIsActivated());
-        assertEquals(activator, childsMetaData.getActivatorId());
-        assertTrue(childsMetaData.getLastActionDate().getTimeInMillis() > lastAction.getTimeInMillis());
+        assertFalse(ActivationUtil.isActivated(child.getJCRNode()));
+        assertEquals(activator, ActivationUtil.getLastActivatedBy(child.getJCRNode()));
+        assertTrue(ActivationUtil.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
     public void testStripPassword() throws Exception {
