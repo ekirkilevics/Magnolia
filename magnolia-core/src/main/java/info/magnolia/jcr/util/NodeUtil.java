@@ -47,10 +47,12 @@ import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -642,15 +644,23 @@ public class NodeUtil {
     }
 
     /**
-     * Sets the current date as the node's creation date and sets the name of creating user. Also sets the date of
+     * Sets the current date as the node's creation date and sets the name of the creating user. Also sets the date of
      * modification and the user last having modified the node to the same values. Used with nodes having the
      * <code>mgnl:created</code> mixin.
      */
     public static void setCreation(Node node, String userName) throws RepositoryException {
-        Calendar now = Calendar.getInstance();
-        node.setProperty(MgnlPropertyNames.CREATED, now);
+        setCreation(node, userName, new GregorianCalendar(TimeZone.getDefault()));
+    }
+
+    /**
+     * Sets the supplied date as the node's creation date and sets the name of the creating user. Also sets the date of
+     * modification and the user last having modified the node to the same values. Used with nodes having the
+     * <code>mgnl:created</code> mixin.
+     */
+    public static void setCreation(Node node, String userName, Calendar created) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.CREATED, created);
         node.setProperty(MgnlPropertyNames.CREATED_BY, userName);
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, now);
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, created);
         node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
     }
 
@@ -663,7 +673,7 @@ public class NodeUtil {
     }
 
     /**
-     * Returns the user name of the user that last modified the node. If no modification has been stored on the node
+     * Returns the name of the user that last modified the node. If no modification has been stored on the node
      * this method return the name of the user that created the node if set, otherwise null is returned.
      */
     public static String getLastModifiedBy(Node node) throws RepositoryException {
@@ -678,11 +688,25 @@ public class NodeUtil {
     }
 
     /**
-     * Sets the date of modification and the name of the user modifying a node.
+     * Sets the current date as date of modification and the name of the user modifying a node.
      */
     public static void updateModification(Node node, String userName) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, Calendar.getInstance());
+        updateModification(node, userName, new GregorianCalendar(TimeZone.getDefault()));
+    }
+
+    /**
+     * Sets the date of modification and the name of the user modifying a node.
+     */
+    public static void updateModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, lastModified);
         node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+    }
+
+    /**
+     * Sets the date of modification for a node.
+     */
+    public static void setLastModified(Node node) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, new GregorianCalendar(TimeZone.getDefault()));
     }
 
     /**
