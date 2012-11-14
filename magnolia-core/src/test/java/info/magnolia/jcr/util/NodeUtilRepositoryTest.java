@@ -34,15 +34,13 @@
 package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
+
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -50,7 +48,6 @@ import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
-import sun.util.BuddhistCalendar;
 
 /**
  * NodeUtil test class used to test methods that needs repository definition.
@@ -167,25 +164,6 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         assertEquals("Should no more exist ",rootNode.hasNode("nodeToRename"), false);
         assertNodeExistWithProperty(rootNode, "newName", "propertyString", "hello");
         assertNodeExistWithProperty(rootNode, "newName/child1", "propertyString", "sourceChild1");
-    }
-
-
-    @Test
-    public void testCalendar() throws Exception {
-        // GIVEN
-        String nodeProperties = "/node.@type=mgnl:content";
-
-        Node rootNode = addNodeToRoot(nodeProperties);
-        final Calendar now = new BuddhistCalendar(TimeZone.getDefault());
-        rootNode.setProperty(MgnlPropertyNames.LAST_MODIFIED, now);
-
-        // WHEN
-        final Calendar result = NodeUtil.getLastModified(rootNode);
-
-        // THEN
-        assertEquals(now.getTimeInMillis(), result.getTimeInMillis());
-
-
     }
 
     /**

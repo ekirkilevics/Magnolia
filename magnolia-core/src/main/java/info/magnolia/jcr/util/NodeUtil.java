@@ -691,7 +691,7 @@ public class NodeUtil {
      * Sets the current date as date of modification and the name of the user modifying a node.
      */
     public static void updateModification(Node node, String userName) throws RepositoryException {
-        updateModification(node, userName, new GregorianCalendar(TimeZone.getDefault()));
+        updateModification(node, userName, Calendar.getInstance());
     }
 
     /**
@@ -706,7 +706,7 @@ public class NodeUtil {
      * Sets the date of modification for a node.
      */
     public static void setLastModified(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, new GregorianCalendar(TimeZone.getDefault()));
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, Calendar.getInstance());
     }
 
     /**
