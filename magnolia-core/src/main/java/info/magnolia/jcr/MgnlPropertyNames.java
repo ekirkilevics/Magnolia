@@ -79,4 +79,7 @@ public final class MgnlPropertyNames {
     public static final String LAST_MODIFIED = JCR_PREFIX + "lastModified";
     public static final String LAST_MODIFIED_BY = LAST_MODIFIED + BY;
 
+    // from mgnl:deleted
+    public static final String DELETED_BY = "mgnl:deletedBy";
+    public static final String DELETED_ON = "mgnl:deletedOn";
 }
