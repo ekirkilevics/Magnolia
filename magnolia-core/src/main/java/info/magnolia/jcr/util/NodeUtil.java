@@ -100,8 +100,8 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX)
-                && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+                return !node.getName().startsWith(MgnlPropertyNames.JCR_PREFIX)
+                && !NodeUtil.isNodeType(node, MgnlNodeTypeNames.METADATA);
             } catch (RepositoryException e) {
                 log.error("Unable to read name or nodeType for node {}", getNodePathIfPossible(node));
                 return false;
