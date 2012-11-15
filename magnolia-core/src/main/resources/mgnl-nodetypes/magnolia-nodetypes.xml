@@ -221,6 +221,8 @@
     <supertypes>
       <supertype>nt:base</supertype>
     </supertypes>
+    <propertyDefinition name="mgnl:deletedOn" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    <propertyDefinition name="mgnl:deletedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
 </nodeTypes>
