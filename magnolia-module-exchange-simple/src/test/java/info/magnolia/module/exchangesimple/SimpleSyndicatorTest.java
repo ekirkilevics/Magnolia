@@ -105,7 +105,6 @@ public class SimpleSyndicatorTest {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, ".");
         final Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
         syndicator.contentFilterRule = rule;
     }
@@ -131,10 +130,7 @@ public class SimpleSyndicatorTest {
                     expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(content.getJCRNode()).andReturn(new MockNode());
-                    //meta.setUnActivated();
                     expect(user.getName()).andReturn("Dummy");
-                    //meta.setActivatorId("Dummy");
-                    //meta.setLastActivationActionDate();
                     expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     content.save();
                     expect(content.getItemType()).andReturn(ItemType.CONTENT);
@@ -163,10 +159,7 @@ public class SimpleSyndicatorTest {
                     expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(content.getJCRNode()).andReturn(new MockNode());
-                    //meta.setUnActivated();
                     expect(user.getName()).andReturn("Dummy");
-                    //meta.setActivatorId("Dummy");
-                    //meta.setLastActivationActionDate();
                     expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     content.save();
                     expect(content.getItemType()).andReturn(ItemType.CONTENT);
