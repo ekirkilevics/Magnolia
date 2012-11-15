@@ -79,6 +79,7 @@ public class NodeUtil {
 
     /**
      * Node filter accepting everything except nodes with namespace jcr (version and system store).
+     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr
      */
     public static Predicate ALL_NODES_EXCEPT_JCR_FILTER = new AbstractPredicate<Node>() {
         @Override
@@ -94,6 +95,7 @@ public class NodeUtil {
 
     /**
      * Node filter accepting everything except meta data and jcr types.
+     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr and because of MAGNOLIA-4640
      */
     public static AbstractPredicate<Node> EXCLUDE_META_DATA_FILTER = new AbstractPredicate<Node>() {
 
