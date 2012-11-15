@@ -39,6 +39,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.i18n.I18nAuthoringSupport;
@@ -49,6 +50,7 @@ import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.util.EscapeUtil;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -56,11 +58,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.chain.Command;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Test;
 
 /**
@@ -74,10 +76,10 @@ public class UserEditDialogXssTest extends TestCase {
     private WebContext context;
     private CommandsManager cm;
     private Command command;
+    private MultipartForm form;
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     final String xssCode = "{{\"/><img src=x onerror=alert(/xss/)> }}";
-    final String escapedXssCode = StringEscapeUtils.escapeHtml("{{\"/><img src=x onerror=alert(/xss/)> }}");
-    final String commandName = "send";
+    final String escapedXssCode = EscapeUtil.escapeXss("{{\"/><img src=x onerror=alert(/xss/)> }}");
 
     @Override
     protected void setUp() throws Exception {
@@ -96,8 +98,7 @@ public class UserEditDialogXssTest extends TestCase {
         dialog.addSub(dci2);
         NodeData nodeData = mock(NodeData.class);
 
-        MultipartForm form = new MultipartForm();
-        form.addParameter("mgnlPath", "");
+        form = new MultipartForm();
 
         ComponentsTestUtil.setInstance(CommandsManager.class, cm);
         ComponentsTestUtil.setInstance(SystemContext.class, mock(SystemContext.class));
@@ -115,12 +116,13 @@ public class UserEditDialogXssTest extends TestCase {
         when(parentContent.getNodeDataCollection()).thenReturn(collection);
         when(hm.getContent("")).thenReturn(parentContent);
         when(hm.getContent(escapedXssCode)).thenReturn(parentContent);
+        when(hm.getContent(xssCode)).thenReturn(parentContent);
         when(request.getMethod()).thenReturn("POST");
+        when(request.getParameter("saveName")).thenReturn("title");
         when(cm.getCommand(null, "")).thenReturn(command);
         when(context.getHierarchyManager(RepositoryConstants.USER_GROUPS)).thenReturn(hm);
         when(context.getHierarchyManager(RepositoryConstants.USER_ROLES)).thenReturn(hm);
         when(context.getHierarchyManager("website")).thenReturn(hm);
-        when(context.getPostedForm()).thenReturn(form);
 
         MgnlContext.setInstance(context);
     }
@@ -131,17 +133,26 @@ public class UserEditDialogXssTest extends TestCase {
         ComponentsTestUtil.clear();
     }
 
-    @Test
-    public void testUserEditDialogXSS() {
+    @Test //the parameters can be set via UserEditDialog...
+    public void testUserEditDialogXss() {
         //GIVEN
+        when(context.getPostedForm()).thenReturn(form);
+
+        form.addparameterValues("title", new String[]{xssCode});
+        form.addparameterValues("email", new String[]{xssCode});
+        form.addparameterValues("groups", new String[]{xssCode});
+        form.addparameterValues("roles", new String[]{xssCode});
+
         UserEditDialog ued = new UserEditDialog(null, request, null, null);
-        ued.setDialog(dialog);
-        groupPath.add(xssCode);
-        rolesPath.add(xssCode);
+
         //WHEN
-        ued.onPostSave(null);
+        ued.onPreSave(null);
+        ued.onPreSave(null); //do it again and check if parameters aren't escaped twice
+
         //THEN
-        assertEquals(escapedXssCode, groupPath.get(0));
-        assertEquals(escapedXssCode, rolesPath.get(0));
+        assertEquals(escapedXssCode,form.getParameterValues("title")[0]);
+        assertEquals(escapedXssCode,form.getParameterValues("email")[0]);
+        assertEquals(escapedXssCode,form.getParameterValues("groups")[0]);
+        assertEquals(escapedXssCode,form.getParameterValues("roles")[0]);
     }
 }

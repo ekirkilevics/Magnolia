@@ -42,6 +42,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.util.EscapeUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +54,6 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,6 +172,27 @@ public class UserEditDialog extends ConfiguredDialog {
         // still keeping method as a hook for changing permissions directly on user node if ever needed
     }
 
+    private boolean escapeFormParam(String name) {
+        String[] oldValue = this.form.getParameterValues(name);
+        if (oldValue == null) {
+            return false;
+        }
+        //unescape first (don't allow to be escaped twice)
+        String[] newValue = EscapeUtil.escapeXss(EscapeUtil.unescapeXss(oldValue));
+        this.form.addparameterValues(name, newValue);
+        return true;
+    }
+
+    @Override
+    protected boolean onPreSave(SaveHandler control) {
+        //escape to prevent XSS attack
+        escapeFormParam("title");
+        escapeFormParam("email");
+        escapeFormParam("groups");
+        escapeFormParam("roles");
+        return true;
+    }
+
     @Override
     protected boolean onPostSave(SaveHandler saveControl) {
 
@@ -211,7 +232,6 @@ public class UserEditDialog extends ConfiguredDialog {
             List values = getDialog().getSub(nodeName).getValues();
             String path = null;
             for (int index = 0; index < values.size(); index++) {
-                values.set(index, StringEscapeUtils.escapeHtml((String)(values.get(index)))); //escape to prevent XSS attack
                 try {
                     path = (String) values.get(index);
                     if (StringUtils.isNotEmpty(path)) {
