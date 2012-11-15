@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2012 Magnolia International
+ * This file Copyright (c) 2012-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -41,6 +41,7 @@ import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
 import info.magnolia.test.ComponentsTestUtil;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -164,7 +165,7 @@ public class TypeMappingImplTest {
     }
 
     @Test
-    public void testBeanPropertyIsResolvedByAdderMethod1() { // test collection
+    public void testBeanPropertyCollectionIsResolvedByAdderMethod() {
         // GIVEN
         TypeMapping mapping = new TypeMappingImpl();
 
@@ -178,7 +179,7 @@ public class TypeMappingImplTest {
     }
 
     @Test
-    public void testBeanPropertyIsResolvedByAdderMethod2() { // test map
+    public void testBeanPropertyMapIsResolvedByAdderMethod() {
         // GIVEN
         TypeMapping mapping = new TypeMappingImpl();
 
@@ -193,7 +194,7 @@ public class TypeMappingImplTest {
     }
 
     @Test
-    public void testBeanPropertyIsResolvedByAdderMethod3() { // test array
+    public void testBeanPropertyArrayIsResolvedByAdderMethod() {
         // GIVEN
         TypeMapping mapping = new TypeMappingImpl();
 
@@ -206,7 +207,35 @@ public class TypeMappingImplTest {
         assertEquals(String.class, ptd.getCollectionEntryType().getType());
     }
 
-    private final class SimpleClass {
+    @Test
+    public void testBeanPropertyRawMapIsResolvedByAdderMethod() {
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(SimpleClassWithRawMap.class, "beans");
+
+        // THEN
+        assertNotNull(ptd);
+        assertNotNull(ptd.getAddMethod());
+        assertEquals(String.class, ptd.getCollectionKeyType().getType());
+        assertEquals(String.class, ptd.getCollectionEntryType().getType());
+    }
+
+    @Test
+    public void testBeanHasTransformerSetViaAnnotation() {
+        // GIVEN
+        TypeMapping mapping = new TypeMappingImpl();
+
+        // WHEN
+        PropertyTypeDescriptor ptd = mapping.getPropertyTypeDescriptor(Node2BeanTest.BeanWithAnnotation.class, "command");
+
+        // THEN
+        assertNotNull(ptd);
+        assertEquals(SomeCommandTransformer.class, ptd.getType().getTransformer().getClass());
+    }
+
+    public final class SimpleClass {
 
         private Map<List<SimpleBean>, Collection<String>> beans;
 
@@ -218,6 +247,22 @@ public class TypeMappingImplTest {
             this.beans = beans;
         }
 
+    }
+
+    public final class SimpleClassWithRawMap {
+        private Map beans = new HashMap();
+
+        public Map getBeans() {
+            return this.beans;
+        }
+
+        public void setBeans(Map beans) {
+            this.beans = beans;
+        }
+
+        public void addBean(String key, String value) {
+            this.beans.put(key, value);
+        }
     }
 
 }

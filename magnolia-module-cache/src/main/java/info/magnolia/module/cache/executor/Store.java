@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2011 Magnolia International
+ * This file Copyright (c) 2008-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -117,6 +117,7 @@ public class Store extends AbstractExecutor {
             return;
         }
 
+        //store cachedEntry to cachePolicyResult only when cachedEntry timeToLiveInSeconds is not 0, because when it is, Store will replay response directly (see code above)
         cachePolicyResult.setCachedEntry(cachedEntry);
 
         if (timeToLiveInSeconds == -1) {

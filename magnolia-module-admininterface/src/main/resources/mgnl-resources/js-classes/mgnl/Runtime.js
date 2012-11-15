@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 1993-2009 Magnolia International
+ * This file Copyright (c) 1993-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *

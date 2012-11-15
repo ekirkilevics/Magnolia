@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     private String itemType = "nt:base";
 
-    private List<String> repositories = new ArrayList<String>();
+    private final List<String> repositories = new ArrayList<String>();
 
     public JCRUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
@@ -143,7 +144,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         }
 
         sb.insert(0, Integer.toString(count) + " nodes returned in " + Long.toString((System.currentTimeMillis() - start)) + "ms\n");
-        
+
         this.result = sb.toString();
         return VIEW_SHOW;
     }
@@ -181,7 +182,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
 
     public void setPath(String path) {
-        this.path = path;
+        this.path = StringEscapeUtils.escapeHtml(path);
     }
 
 

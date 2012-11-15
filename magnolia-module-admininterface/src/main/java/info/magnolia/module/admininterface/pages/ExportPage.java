@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -56,6 +56,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,7 +241,7 @@ public class ExportPage extends TemplatedMVCHandler {
 
         if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
 
-            AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + mgnlPath + "]");
+            AlertUtil.setMessage("Write permission needed for export. User not allowed to WRITE path [" + StringEscapeUtils.escapeHtml(mgnlPath) + "]");
 
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for export. User not allowed to WRITE path ["

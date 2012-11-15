@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2011 Magnolia International
+ * This file Copyright (c) 2010-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -52,6 +52,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  * Tools page to show cache info and flush caches.
@@ -109,7 +111,7 @@ public class CacheToolsPage extends TemplatedMVCHandler {
         } catch (Exception e) {
             return "Error occurred during command execution. (" + e.getMessage() +")";
         }
-        return "UUID \"" + MgnlContext.getParameter(FlushFromCachesByUUIDCommand.UUID) + "\" is flushed from cache.";
+        return "UUID \"" + StringEscapeUtils.escapeHtml(MgnlContext.getParameter(FlushFromCachesByUUIDCommand.UUID)) + "\" is flushed from cache.";
     }
 
     public String flushAllCaches() {

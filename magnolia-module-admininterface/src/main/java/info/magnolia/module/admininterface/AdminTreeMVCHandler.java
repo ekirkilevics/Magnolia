@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -111,6 +111,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     protected static final String VIEW_NOTHING = "nothing"; //$NON-NLS-1$
 
     protected static final String VIEW_COPY_MOVE = "copymove"; //$NON-NLS-1$
+
+    /**
+     * The default title
+     */
+    protected static final String defaultTitle = "untitled"; //the defaultTitle is used, when the title is not explicitly specified or removed
 
     /**
      * Log
@@ -598,6 +603,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         boolean isNodeDataType = "true".equals(this.getRequest().getParameter("isNodeDataType")); //$NON-NLS-1$ //$NON-NLS-2$
 
         String value = StringUtils.defaultString(this.getRequest().getParameter("saveValue")); //$NON-NLS-1$
+        if (StringUtils.isEmpty(value) && saveName != null && saveName.equals("title")) {
+            value = this.defaultTitle;
+        }
         displayValue = StringUtils.EMPTY;
         // value to save is a content's meta information
         boolean isMeta = "true".equals(this.getRequest().getParameter("isMeta")); //$NON-NLS-1$ //$NON-NLS-2$

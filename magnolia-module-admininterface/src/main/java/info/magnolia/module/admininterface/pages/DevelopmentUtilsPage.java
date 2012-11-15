@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2011 Magnolia International
+ * This file Copyright (c) 2003-2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -68,6 +68,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -263,7 +264,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      * @param rootdir The rootdir to set.
      */
     public void setRootdir(String rootdir) {
-        this.rootdir = rootdir;
+        this.rootdir = StringEscapeUtils.escapeHtml(rootdir); //escape to prevent XSS attack
     }
 
     /**

@@ -1001,7 +1001,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * the mime type is stored.
      * @param node the node under which the data is stored
      * @param name the name of the nodedata to store the data into
-     * @param fileName If empty the original filename is used
+     * @param fileName If empty the original or default title is used
      * @param template can be empty
      * @throws PathNotFoundException
      * @throws RepositoryException
@@ -1023,12 +1023,8 @@ public class SaveHandlerImpl implements SaveHandler {
             log.debug("Node data updated"); //$NON-NLS-1$
         }
         if (data != null) {
-            if (fileName == null || fileName.equals(StringUtils.EMPTY)) {
-                if (doc != null) {
-                    fileName = doc.getFileName();
-                } else {
-                    fileName = null;
-                }
+            if ( StringUtils.isEmpty(fileName) ) {
+                fileName = (doc == null) ? AdminTreeMVCHandler.defaultTitle : doc.getFileName();
             }
             data.setAttribute(FileProperties.PROPERTY_FILENAME, fileName);
             if (doc != null) {
