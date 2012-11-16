@@ -58,26 +58,26 @@ public class MetaDataUtil {
     }
 
     public static void updateMetaData(Node node) throws RepositoryException {
-        NodeUtil.updateModification(node);
+        NodeTypes.LastModifiedMixin.updateModification(node);
         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
                 .getPrimaryNodeType().getName(), node.getName());
     }
 
     /**
      * @return the lastModification or null it it was not set in JCR.
-     * @deprecated since 5.0 - use {@link NodeUtil#getLastModified(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#getLastModified(javax.jcr.Node)}
      */
     @Deprecated
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
-        return NodeUtil.getLastModified(node);
+        return NodeTypes.LastModifiedMixin.getLastModified(node);
     }
 
     /**
-     * @deprecated since 5.0 - use {@link NodeUtil#getTemplate(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.RenderableMixin#getTemplate(javax.jcr.Node)}
      */
     @Deprecated
     public static String getTemplate(Node node) throws RepositoryException {
-        return NodeUtil.getTemplate(node);
+        return NodeTypes.RenderableMixin.getTemplate(node);
     }
 
 }

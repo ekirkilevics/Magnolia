@@ -38,12 +38,13 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.MgnlNodeTypeNames;
 import info.magnolia.test.RepositoryTestCase;
 
 /**
@@ -57,7 +58,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         // GIVEN
         Session session = MgnlContext.getJCRSession("config");
         Node node = session.getRootNode().addNode("test");
-        Node md = node.addNode("MetaData", MgnlNodeTypeNames.METADATA);
+        Node md = node.addNode("MetaData", MgnlNodeType.NT_METADATA);
         Calendar calendar = Calendar.getInstance();
         md.setProperty("mgnl:creationdate", calendar);
         md.setProperty("mgnl:lastaction", calendar);
@@ -72,14 +73,14 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         new MetaDataImportPostProcessor().postProcessNode(node);
 
         // THEN
-        assertPropertyEquals(node, "mgnl:created", calendar);
-        assertPropertyEquals(node, "mgnl:lastActivated", calendar);
-        assertPropertyEquals(node, "mgnl:lastActivatedBy", "superuser");
-        assertPropertyEquals(node, "mgnl:activationStatus", "2");
-        assertPropertyEquals(node, "mgnl:template", "samples:pages/some/page");
-        assertPropertyEquals(node, "jcr:lastModifiedBy", "hyperuser");
-        assertPropertyEquals(node, "jcr:lastModified", calendar);
-        assertPropertyEquals(node, "mgnl:deleted", calendar);
+        assertPropertyEquals(node, NodeTypes.CreatedMixin.CREATED, calendar);
+        assertPropertyEquals(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED, calendar);
+        assertPropertyEquals(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "superuser");
+        assertPropertyEquals(node, NodeTypes.ActivatableMixin.ACTIVATION_STATUS, "2");
+        assertPropertyEquals(node, NodeTypes.RenderableMixin.TEMPLATE, "samples:pages/some/page");
+        assertPropertyEquals(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "hyperuser");
+        assertPropertyEquals(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
+        assertPropertyEquals(node, NodeTypes.DeletedMixin.DELETED, calendar);
     }
 
     private void assertPropertyEquals(Node node, String relPath, String expectedValue) throws RepositoryException {

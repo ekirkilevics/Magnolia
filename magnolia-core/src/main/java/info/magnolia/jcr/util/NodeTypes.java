@@ -49,6 +49,9 @@ public class NodeTypes {
     /** Namespace for Magnolia extensions. */
     public static final String MGNL_PREFIX = "mgnl:";
 
+    /** Namespace for jcr properties. */
+    public static final String JCR_PREFIX = "jcr:";
+
     /** Default suffix for userName keeping properties. */
     public static final String BY = "By";
 
@@ -56,7 +59,8 @@ public class NodeTypes {
      * Represents the mixin mgnl:lastModified.
      */
     public static class LastModifiedMixin {
-        public static final String LAST_MODIFIED = MGNL_PREFIX + "lastModified";
+        public static final String NAME = MGNL_PREFIX + "lastModified";
+        public static final String LAST_MODIFIED = NAME;
         public static final String LAST_MODIFIED_BY = LAST_MODIFIED + BY;
 
         /**
@@ -116,6 +120,7 @@ public class NodeTypes {
      * Represents the mixin mgnl:activatable.
      */
     public static class ActivatableMixin {
+        public static final String NAME = MGNL_PREFIX + "activatable";
         public static final String LAST_ACTIVATED = MGNL_PREFIX + "lastActivated";
         public static final String LAST_ACTIVATED_BY = LAST_ACTIVATED + BY;
         public static final String ACTIVATION_STATUS = MGNL_PREFIX + "activationStatus";
@@ -125,7 +130,8 @@ public class NodeTypes {
      * Represents the mixin mgnl:created.
      */
     public static class CreatedMixin {
-        public static final String CREATED = MGNL_PREFIX + "created";
+        public static final String NAME = MGNL_PREFIX + "created";
+        public static final String CREATED = NAME;
         public static final String CREATED_BY = CREATED + BY;
 
         /**
@@ -183,6 +189,7 @@ public class NodeTypes {
      * Represents the mixin mgnl:renderable.
      */
     public static class RenderableMixin {
+        public static final String NAME = MGNL_PREFIX + "renderable";
         public static final String TEMPLATE = MGNL_PREFIX + "template";
 
         /**
@@ -205,7 +212,92 @@ public class NodeTypes {
      * Represents the mixin mgnl:deleted.
      */
     public static class DeletedMixin {
-        public static final String DELETED = MGNL_PREFIX + "deleted";
+        public static final String NAME = MGNL_PREFIX + "deleted";
+        public static final String DELETED = NAME;
         public static final String DELETED_BY = DELETED + BY;
+    }
+
+    /**
+     * Represents the nodeType mgnl:folder.
+     */
+    public static class Folder {
+        public static final String NAME = MGNL_PREFIX + "folder";
+    }
+
+    /**
+     * Represents the nodeType mgnl:resource.
+     */
+    public static class Resource {
+        public static final String NAME = MGNL_PREFIX + "resource";
+    }
+
+    /**
+     * Represents the nodeType mgnl:content.
+     */
+    public static class Content {
+        public static final String NAME = MGNL_PREFIX + "content";
+    }
+
+    /**
+     * Represents the nodeType mgnl:contentNode.
+     */
+    public static class ContentNode {
+        public static final String NAME = MGNL_PREFIX + "contentNode";
+    }
+
+    /**
+     * Represents the nodeType mgnl:nodeData.
+     */
+    public static class NodeData {
+        public static final String NAME = MGNL_PREFIX + "nodeData";
+    }
+
+    /**
+     * Represents the nodeType mgnl:page.
+     */
+    public static class Page {
+        public static final String NAME = MGNL_PREFIX + "page";
+    }
+
+    /**
+     * Represents the nodeType mgnl:area.
+     */
+    public static class Area {
+        public static final String NAME = MGNL_PREFIX + "area";
+    }
+
+    /**
+     * Represents the nodeType mgnl:component.
+     */
+    public static class Component {
+        public static final String NAME = MGNL_PREFIX + "component";
+    }
+
+    /**
+     * Represents the nodeType mgnl:user.
+     */
+    public static class User {
+        public static final String NAME = MGNL_PREFIX + "user";
+    }
+
+    /**
+     * Represents the nodeType mgnl:role.
+     */
+    public static class Role {
+        public static final String NAME = MGNL_PREFIX + "role";
+    }
+
+    /**
+     * Represents the nodeType mgnl:group.
+     */
+    public static class Group {
+        public static final String NAME = MGNL_PREFIX + "group";
+    }
+
+    /**
+     * Represents the nodeType mgnl:reserve.
+     */
+    public static class System {
+        public static final String NAME = MGNL_PREFIX + "reserve";
     }
 }

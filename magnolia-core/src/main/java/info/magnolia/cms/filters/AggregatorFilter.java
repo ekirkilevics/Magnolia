@@ -41,7 +41,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 
 import java.io.IOException;
 
@@ -142,7 +142,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             }
 
             try {
-                templateName = NodeUtil.getTemplate(requestedPage.getJCRNode());
+                templateName = NodeTypes.RenderableMixin.getTemplate(requestedPage.getJCRNode());
             } catch (RepositoryException e) {
                 templateName = null;
             }

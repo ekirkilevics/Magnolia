@@ -40,8 +40,8 @@ import javax.jcr.NodeIterator;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.MgnlNodeTypeNames;
-import info.magnolia.jcr.MgnlPropertyNames;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 
 /**
@@ -51,18 +51,18 @@ import info.magnolia.jcr.util.NodeUtil;
 public class MetaDataImportPostProcessor implements ImportPostProcessor {
 
     private static final String METADATA_NODE_NAME = "MetaData";
-    private static final String METADATA_NODE_TYPE = MgnlNodeTypeNames.METADATA;
+    private static final String METADATA_NODE_TYPE = MgnlNodeType.NT_METADATA;
 
     private final HashMap<String, String> propertyNameMapping = new HashMap<String, String>();
 
     public MetaDataImportPostProcessor() {
-        propertyNameMapping.put("mgnl:creationdate", MgnlPropertyNames.CREATED);
-        propertyNameMapping.put("mgnl:lastaction", MgnlPropertyNames.LAST_ACTIVATED);
-        propertyNameMapping.put("mgnl:activatorid", MgnlPropertyNames.LAST_ACTIVATED_BY);
-        propertyNameMapping.put("mgnl:activated", MgnlPropertyNames.ACTIVATION_STATUS);
-        propertyNameMapping.put("mgnl:template", MgnlPropertyNames.TEMPLATE);
-        propertyNameMapping.put("mgnl:authorid", MgnlPropertyNames.LAST_MODIFIED_BY);
-        propertyNameMapping.put("mgnl:lastmodified", MgnlPropertyNames.LAST_MODIFIED);
+        propertyNameMapping.put("mgnl:creationdate", NodeTypes.CreatedMixin.CREATED);
+        propertyNameMapping.put("mgnl:lastaction", NodeTypes.ActivatableMixin.LAST_ACTIVATED);
+        propertyNameMapping.put("mgnl:activatorid", NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
+        propertyNameMapping.put("mgnl:activated", NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
+        propertyNameMapping.put("mgnl:template", NodeTypes.RenderableMixin.TEMPLATE);
+        propertyNameMapping.put("mgnl:authorid", NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
+        propertyNameMapping.put("mgnl:lastmodified", NodeTypes.LastModifiedMixin.LAST_MODIFIED);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
 
         // Rename mgnl:deletedOn to mgnl:deleted
         if (node.hasProperty("mgnl:deletedOn")) {
-            moveProperty(node, "mgnl:deletedOn", node, MgnlPropertyNames.DELETED);
+            moveProperty(node, "mgnl:deletedOn", node, NodeTypes.DeletedMixin.DELETED);
         }
 
         // Transfer properties from the MetaData node

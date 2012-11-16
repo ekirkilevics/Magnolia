@@ -36,10 +36,10 @@ package info.magnolia.cms.security;
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
@@ -256,7 +256,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         public boolean evaluateTyped(Property property) {
             try {
                 String name = property.getName();
-                return !name.startsWith(MgnlNodeType.JCR_PREFIX) && !name.startsWith(MgnlNodeType.MGNL_PREFIX);
+                return !name.startsWith(NodeTypes.JCR_PREFIX) && !name.startsWith(NodeTypes.MGNL_PREFIX);
             } catch (RepositoryException e) {
                 // either invalid or not accessible to the current user
                 return false;

@@ -34,13 +34,10 @@
 package info.magnolia.cms.exchange;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.MgnlPropertyNames;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 
 /**
  * Utility class for setting and querying activation meta data on nodes. Used for nodes having the
@@ -69,7 +66,7 @@ public class ActivationUtil {
             return ACTIVATION_STATUS_NOT_ACTIVATED;
         }
 
-        Calendar lastModified = NodeUtil.getLastModified(node);
+        Calendar lastModified = NodeTypes.LastModifiedMixin.getLastModified(node);
         Calendar lastActivated = getLastActivated(node);
 
         if (lastModified != null && lastModified.after(lastActivated)) {
@@ -85,48 +82,48 @@ public class ActivationUtil {
      * Returns true if the node has been activated.
      */
     public static boolean isActivated(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.ACTIVATION_STATUS) && node.getProperty(MgnlPropertyNames.ACTIVATION_STATUS).getBoolean();
+        return node.hasProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS) && node.getProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS).getBoolean();
     }
 
     /**
      * Flags the node as activated.
      */
     public static void setActivated(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.ACTIVATION_STATUS, true);
+        node.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
     }
 
     /**
      * Flags the node has not activated.
      */
     public static void setUnactivated(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.ACTIVATION_STATUS, false);
+        node.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, false);
     }
 
     /**
      * Returns the date when the node was last activated or null if no activation date has been stored on the node.
      */
     public static Calendar getLastActivated(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED) ? node.getProperty(MgnlPropertyNames.LAST_ACTIVATED).getDate() : null;
+        return node.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED) ? node.getProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED).getDate() : null;
     }
 
     /**
      * Returns the name of the user that last activated the node or null if no activating user has been stored on the node.
      */
     public static String getLastActivatedBy(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED_BY) ? node.getProperty(MgnlPropertyNames.LAST_ACTIVATED_BY).getString() : null;
+        return node.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY) ? node.getProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY).getString() : null;
     }
 
     /**
      * Sets the time when the node was most recently activated.
      */
     public static void setLastActivated(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_ACTIVATED, new GregorianCalendar(TimeZone.getDefault()));
+        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, Calendar.getInstance());
     }
 
     /**
      * Sets the name of the user that performed the most recent activation.
      */
     public static void setLastActivatedBy(Node node, String userName) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_ACTIVATED_BY, userName);
+        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, userName);
     }
 }

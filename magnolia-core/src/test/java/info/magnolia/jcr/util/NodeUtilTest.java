@@ -39,7 +39,6 @@ import static org.mockito.Mockito.when;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.test.mock.MockUtil;
@@ -47,7 +46,6 @@ import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -472,75 +470,5 @@ public class NodeUtilTest {
 
         // THEN
         assertEquals("Should not be Siblings  ", false, areSiblings);
-    }
-
-    @Test
-    public void testGetCreated() throws RepositoryException {
-        // GIVEN
-        final Calendar now =  Calendar.getInstance();
-        first.setProperty(MgnlPropertyNames.CREATED, now);
-
-        // WHEN
-        final Calendar result = NodeUtil.getCreated(first);
-
-        // THEN
-        assertEquals(now, result);
-    }
-
-    @Test
-    public void testGetCreatedWhenNotSet() throws RepositoryException {
-        assertNull("Should not be set", NodeUtil.getCreated(first));
-    }
-
-    @Test
-    public void testGetCreatedBy() throws RepositoryException {
-        // GIVEN
-        final String userName = "Junit";
-        first.setProperty(MgnlPropertyNames.CREATED_BY, userName);
-
-        // WHEN
-        final String result = NodeUtil.getCreatedBy(first);
-
-        // THEN
-        assertEquals(userName, result);
-    }
-
-    @Test
-    public void testGetCreatedByWhenNotSet() throws RepositoryException {
-        assertNull("Should not be set", NodeUtil.getCreatedBy(first));
-    }
-
-    @Test
-    public void testSetCreation() throws RepositoryException {
-        // GIVEN
-        final String userName = "Junit";
-
-        // WHEN
-        NodeUtil.setCreation(first, userName);
-
-        // THEN
-        assertTrue("Created should just have been set", (Calendar.getInstance().getTimeInMillis() - first.getProperty(MgnlPropertyNames.CREATED).getDate().getTimeInMillis()) < 1000);
-        assertEquals(first.getProperty(MgnlPropertyNames.CREATED).getString(), first.getProperty(MgnlPropertyNames.LAST_MODIFIED).getString());
-        assertEquals(userName, first.getProperty(MgnlPropertyNames.CREATED_BY).getString());
-        assertEquals(userName, first.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString());
-    }
-
-    @Test
-    public void testUpdateModification() throws Exception {
-        // GIVEN
-        final String oldUser = "someone";
-        final Calendar longAgo = Calendar.getInstance();
-        longAgo.set(Calendar.YEAR, 1924);
-        first.setProperty(MgnlPropertyNames.LAST_MODIFIED, longAgo);
-        first.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, oldUser);
-
-        final String newUser = "Junit";
-
-        // WHEN
-        NodeUtil.updateModification(first, newUser);
-
-        // THEN
-        assertTrue("Lastmodified should just have been set", (Calendar.getInstance().getTimeInMillis() - first.getProperty(MgnlPropertyNames.LAST_MODIFIED).getDate().getTimeInMillis()) < 1000);
-        assertEquals(newUser, first.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString());
     }
 }

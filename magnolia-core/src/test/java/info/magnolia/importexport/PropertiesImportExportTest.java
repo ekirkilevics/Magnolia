@@ -40,7 +40,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
@@ -125,7 +125,7 @@ public class PropertiesImportExportTest {
         assertNotNull("Content retrievable by its UUID", uuidLinkNode);
         MetaData nodeMetaData = uuidLinkNode.getMetaData();
         assertNotNull("Metadata of node should not be null when it is set explicitly in the properties", nodeMetaData);
-        assertEquals("Template node is populated properly", "someParagraphName", NodeUtil.getTemplate(uuidLinkNode.getJCRNode()));
+        assertEquals("Template node is populated properly", "someParagraphName", NodeTypes.RenderableMixin.getTemplate(uuidLinkNode.getJCRNode()));
         assertTrue("activation matches status set in the properties", ActivationUtil.isActivated(uuidLinkNode.getJCRNode()));
 
     }

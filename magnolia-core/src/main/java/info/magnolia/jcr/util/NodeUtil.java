@@ -33,11 +33,10 @@
  */
 package info.magnolia.jcr.util;
 
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.MgnlNodeTypeNames;
-import info.magnolia.jcr.MgnlPropertyNames;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.NodeIterableAdapter;
 import info.magnolia.jcr.predicate.AbstractPredicate;
@@ -62,6 +61,7 @@ import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.NodeTypeManager;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
 import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
 import org.apache.jackrabbit.commons.predicate.Predicate;
@@ -83,7 +83,7 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlPropertyNames.JCR_PREFIX);
+                return !node.getName().startsWith(NodeTypes.JCR_PREFIX);
             } catch (RepositoryException e) {
                 log.error("Unable to read name for node {}", getNodePathIfPossible(node));
                 return false;
@@ -100,8 +100,8 @@ public class NodeUtil {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlPropertyNames.JCR_PREFIX)
-                && !NodeUtil.isNodeType(node, MgnlNodeTypeNames.METADATA);
+                return !node.getName().startsWith(NodeTypes.JCR_PREFIX)
+                && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
             } catch (RepositoryException e) {
                 log.error("Unable to read name or nodeType for node {}", getNodePathIfPossible(node));
                 return false;
@@ -120,7 +120,7 @@ public class NodeUtil {
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
                 // accept only "magnolia" nodes
-                return nodeTypeName.startsWith(MgnlNodeTypeNames.MGNL_PREFIX);
+                return nodeTypeName.startsWith(NodeTypes.MGNL_PREFIX);
             } catch (RepositoryException e) {
                 log.error("Unable to read nodeType for node {}", getNodePathIfPossible(node));
             }
@@ -166,11 +166,11 @@ public class NodeUtil {
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
-        final String actualType = node.getProperty(MgnlPropertyNames.PRIMARY_TYPE).getString();
+        final String actualType = node.getProperty(JcrConstants.JCR_PRIMARYTYPE).getString();
         // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
         // node type
-        if (MgnlNodeTypeNames.FROZEN_NODE.equals(actualType) && !(MgnlNodeTypeNames.FROZEN_NODE.equals(type))) {
-            final Property p = node.getProperty(MgnlPropertyNames.FROZEN_PRIMARY_TYPE);
+        if (JcrConstants.NT_FROZENNODE.equals(actualType) && !(JcrConstants.NT_FROZENNODE.equals(type))) {
+            final Property p = node.getProperty(JcrConstants.JCR_FROZENPRIMARYTYPE);
             final String s = p.getString();
             NodeTypeManager ntManager = node.getSession().getWorkspace().getNodeTypeManager();
             NodeType primaryNodeType = ntManager.getNodeType(s);
@@ -576,15 +576,15 @@ public class NodeUtil {
             return StringUtils.EMPTY;
         }
     }
-    
+
     public static NodeIterator filterNodeType(NodeIterator iterator, String nodeType){
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypePredicate(nodeType));
     }
-    
+
     public static NodeIterator filterDuplicates(NodeIterator iterator){
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.DuplicateNodePredicate());
     }
-    
+
     public static NodeIterator filterParentNodeType(NodeIterator iterator, final String nodeType) throws RepositoryException{
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypeParentPredicate(nodeType)) {
             @Override
@@ -603,7 +603,7 @@ public class NodeUtil {
             }
         };
     }
-    
+
     public static Collection<Node> getCollectionFromNodeIterator(NodeIterator iterator){
         Collection<Node> nodeCollection = new HashSet<Node>(150);
         while(iterator.hasNext()){
@@ -611,7 +611,7 @@ public class NodeUtil {
         }
         return nodeCollection;
     }
-    
+
     //for n2b
     public static Collection<Node> getSortedCollectionFromNodeIterator(NodeIterator iterator){
         Collection<Node> nodeCollection = new LinkedList<Node>();
@@ -625,14 +625,14 @@ public class NodeUtil {
      * Returns the creation date of a node or null if creation date isn't set.
      */
     public static Calendar getCreated(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.CREATED) ? node.getProperty(MgnlPropertyNames.CREATED).getDate() : null;
+        return node.hasProperty(NodeTypes.CreatedMixin.CREATED) ? node.getProperty(NodeTypes.CreatedMixin.CREATED).getDate() : null;
     }
 
     /**
      * Returns the name of the user that created a node.
      */
     public static String getCreatedBy(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.CREATED_BY) ? node.getProperty(MgnlPropertyNames.CREATED_BY).getString() : null;
+        return node.hasProperty(NodeTypes.CreatedMixin.CREATED_BY) ? node.getProperty(NodeTypes.CreatedMixin.CREATED_BY).getString() : null;
     }
 
     /**
@@ -658,17 +658,17 @@ public class NodeUtil {
      * <code>mgnl:created</code> mixin.
      */
     public static void setCreation(Node node, String userName, Calendar created) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.CREATED, created);
-        node.setProperty(MgnlPropertyNames.CREATED_BY, userName);
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, created);
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+        node.setProperty(NodeTypes.CreatedMixin.CREATED, created);
+        node.setProperty(NodeTypes.CreatedMixin.CREATED_BY, userName);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, created);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, userName);
     }
 
     /**
      * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
      */
     public static void setCreated(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.CREATED, Calendar.getInstance());
+        node.setProperty(NodeTypes.CreatedMixin.CREATED, Calendar.getInstance());
     }
 
     /**
@@ -676,7 +676,7 @@ public class NodeUtil {
      * method return the creation date if set, otherwise null is returned.
      */
     public static Calendar getLastModified(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.LAST_MODIFIED) ? node.getProperty(MgnlPropertyNames.LAST_MODIFIED).getDate() : getCreated(node);
+        return node.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED) ? node.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED).getDate() : getCreated(node);
     }
 
     /**
@@ -684,7 +684,7 @@ public class NodeUtil {
      * this method return the name of the user that created the node if set, otherwise null is returned.
      */
     public static String getLastModifiedBy(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.LAST_MODIFIED_BY) ? node.getProperty(MgnlPropertyNames.LAST_MODIFIED_BY).getString() : getCreatedBy(node);
+        return node.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY) ? node.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY).getString() : getCreatedBy(node);
     }
 
     /**
@@ -705,8 +705,8 @@ public class NodeUtil {
      * Sets the date of modification and the name of the user modifying a node.
      */
     public static void updateModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, lastModified);
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, lastModified);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, userName);
     }
 
     /**
@@ -720,14 +720,14 @@ public class NodeUtil {
      * Sets the date of modification for a node.
      */
     public static void setLastModified(Node node, Calendar modified) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED, modified);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, modified);
     }
 
     /**
      * Sets the name of the user that last modified a node.
      */
     public static void setLastModifiedBy(Node node, String userName) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, userName);
     }
 
     /**
@@ -735,13 +735,13 @@ public class NodeUtil {
      * <code>mgnl:renderable</code> mixin.
      */
     public static String getTemplate(Node node) throws RepositoryException {
-        return node.hasProperty(MgnlPropertyNames.TEMPLATE) ? node.getProperty(MgnlPropertyNames.TEMPLATE).getString() : null;
+        return node.hasProperty(NodeTypes.RenderableMixin.TEMPLATE) ? node.getProperty(NodeTypes.RenderableMixin.TEMPLATE).getString() : null;
     }
 
     /**
      * Sets the template assigned to the node. Used with nodes having the <code>mgnl:renderable</code> mixin.
      */
     public static void setTemplate(Node node, String template) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.TEMPLATE, template);
+        node.setProperty(NodeTypes.RenderableMixin.TEMPLATE, template);
     }
 }

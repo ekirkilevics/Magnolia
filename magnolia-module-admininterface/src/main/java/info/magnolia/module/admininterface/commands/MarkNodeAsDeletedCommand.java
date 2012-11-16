@@ -49,15 +49,15 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.MgnlPropertyNames;
+import info.magnolia.jcr.util.NodeTypes;
 
 
 public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
 
     public static final String DELETED_NODE_TEMPLATE = "adminInterface:mgnlDeleted";
 
-    public static final String DELETED_NODE_DELETED_BY = MgnlPropertyNames.DELETED_BY;
-    public static final String DELETED_NODE_DELETED_ON = MgnlPropertyNames.DELETED;
+    public static final String DELETED_NODE_DELETED_BY = NodeTypes.DeletedMixin.DELETED_BY;
+    public static final String DELETED_NODE_DELETED_ON = NodeTypes.DeletedMixin.DELETED;
 
     private static final String DELETED_NODE_PROP_NAME = "deleteNode";
 
@@ -101,8 +101,8 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
     }
 
     private void storeDeletionInfo(Content node, Context context) throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.setNodeData(MgnlPropertyNames.DELETED_BY, MgnlContext.getUser().getName());
-        node.setNodeData(MgnlPropertyNames.DELETED, Calendar.getInstance());
+        node.setNodeData(NodeTypes.DeletedMixin.DELETED_BY, MgnlContext.getUser().getName());
+        node.setNodeData(NodeTypes.DeletedMixin.DELETED, Calendar.getInstance());
         String comment = (String) context.get("comment");
         if (comment == null) {
             comment = MessagesManager.get("versions.comment.restore");
