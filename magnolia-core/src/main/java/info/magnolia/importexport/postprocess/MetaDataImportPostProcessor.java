@@ -68,6 +68,11 @@ public class MetaDataImportPostProcessor implements ImportPostProcessor {
     @Override
     public void postProcessNode(Node node) throws RepositoryException {
 
+        // Rename mgnl:deletedOn to mgnl:deleted
+        if (node.hasProperty("mgnl:deletedOn")) {
+            moveProperty(node, "mgnl:deletedOn", node, MgnlPropertyNames.DELETED);
+        }
+
         // Transfer properties from the MetaData node
         if (node.hasNode(METADATA_NODE_NAME)) {
             Node metaDataNode = node.getNode(METADATA_NODE_NAME);

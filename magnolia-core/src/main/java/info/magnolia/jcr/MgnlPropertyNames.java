@@ -81,5 +81,5 @@ public final class MgnlPropertyNames {
 
     // from mgnl:deleted
     public static final String DELETED_BY = "mgnl:deletedBy";
-    public static final String DELETED_ON = "mgnl:deletedOn";
+    public static final String DELETED = "mgnl:deleted";
 }

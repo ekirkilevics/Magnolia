@@ -66,6 +66,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         md.setProperty("mgnl:template", "samples:pages/some/page");
         md.setProperty("mgnl:authorid", "hyperuser");
         md.setProperty("mgnl:lastmodified", calendar);
+        node.setProperty("mgnl:deletedOn", calendar);
 
         // WHEN
         new MetaDataImportPostProcessor().postProcessNode(node);
@@ -78,6 +79,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         assertPropertyEquals(node, "mgnl:template", "samples:pages/some/page");
         assertPropertyEquals(node, "jcr:lastModifiedBy", "hyperuser");
         assertPropertyEquals(node, "jcr:lastModified", calendar);
+        assertPropertyEquals(node, "mgnl:deleted", calendar);
     }
 
     private void assertPropertyEquals(Node node, String relPath, String expectedValue) throws RepositoryException {
