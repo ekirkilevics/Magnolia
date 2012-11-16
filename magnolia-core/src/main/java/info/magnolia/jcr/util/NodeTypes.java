@@ -42,16 +42,19 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
- * Magnolia NodeTypes,
+ * Magnolia defined NodeTypes together with their properties and some convenience methods.
  */
 public class NodeTypes {
 
-    /** Namespace for Magnolia extensions */
+    /** Namespace for Magnolia extensions. */
     public static final String MGNL_PREFIX = "mgnl:";
 
-    /** Default suffix for userName keeping properties */
+    /** Default suffix for userName keeping properties. */
     public static final String BY = "By";
 
+    /**
+     * Represents the mixin mgnl:lastModified.
+     */
     public static class LastModifiedMixin {
         public static final String LAST_MODIFIED = MGNL_PREFIX + "lastModified";
         public static final String LAST_MODIFIED_BY = LAST_MODIFIED + BY;
@@ -108,13 +111,19 @@ public class NodeTypes {
             node.setProperty(LAST_MODIFIED_BY, userName);
         }
     }
-    
+
+    /**
+     * Represents the mixin mgnl:activatable.
+     */
     public static class ActivatableMixin {
         public static final String LAST_ACTIVATED = MGNL_PREFIX + "lastActivated";
         public static final String LAST_ACTIVATED_BY = LAST_ACTIVATED + BY;
         public static final String ACTIVATION_STATUS = MGNL_PREFIX + "activationStatus";
     }
 
+    /**
+     * Represents the mixin mgnl:created.
+     */
     public static class CreatedMixin {
         public static final String CREATED = MGNL_PREFIX + "created";
         public static final String CREATED_BY = CREATED + BY;
@@ -170,6 +179,9 @@ public class NodeTypes {
         }
     }
 
+    /**
+     * Represents the mixin mgnl:renderable.
+     */
     public static class RenderableMixin {
         public static final String TEMPLATE = MGNL_PREFIX + "template";
 
@@ -189,6 +201,9 @@ public class NodeTypes {
         }
     }
 
+    /**
+     * Represents the mixin mgnl:deleted.
+     */
     public static class DeletedMixin {
         public static final String DELETED = MGNL_PREFIX + "deleted";
         public static final String DELETED_BY = DELETED + BY;
