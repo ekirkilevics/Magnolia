@@ -41,7 +41,9 @@ import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -53,10 +55,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Meta data of a content like creation date, modification date, assigned template, ...
- * CAUTION: since 5.0 this properties are set on the working node itself - not on a MetaData subnode!
+ * Represents the meta data of a node, its creation date, modification date, assigned template etc.
  *
- * @deprecated since 5.0 - this type should no longer be needed as these properties are now hosted on the parent node itself
+ * As of 5.0 the meta data is stored directly on the node itself using mixins rather than in a subnode named MetaData.
+ * With this change this class was deprecated and replaced with corresponding methods in
+ * {@link info.magnolia.jcr.util.NodeUtil}.
+ *
+ * @deprecated since 5.0 - use instead the corresponding methods in NodeUtil
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -65,27 +70,57 @@ public class MetaData {
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
      * could be changed via custom templates if necessary.
      */
+
+    /**
+     * @deprecated since 5.0 - no longer supported
+     */
     public static final String TITLE = "title";
 
-    public static final String CREATION_DATE = MgnlPropertyNames.CREATED;
-
-    public static final String LAST_MODIFIED = MgnlPropertyNames.LAST_MODIFIED;
-
-    public static final String LAST_ACTION = MgnlPropertyNames.LAST_ACTIVATED;
-
-    public static final String AUTHOR_ID = MgnlPropertyNames.LAST_MODIFIED_BY;
-
-    public static final String ACTIVATOR_ID = MgnlPropertyNames.LAST_ACTIVATED_BY;
-
     /**
-     * Caution: this property is now also on the node itself - enforced by mgnl:renderable.
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#CREATED} instead
      */
-    public static final String TEMPLATE = MgnlPropertyNames.TEMPLATE;
-
-    public static final String ACTIVATED = MgnlPropertyNames.ACTIVATION_STATUS;
+    public static final String CREATION_DATE = "creationdate";
 
     /**
-     * Name of the Node hosting the MetaData.
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#LAST_MODIFIED} instead
+     */
+    public static final String LAST_MODIFIED = "lastmodified";
+
+    /**
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#LAST_ACTIVATED} instead
+     */
+    public static final String LAST_ACTION = "lastaction";
+
+    /**
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#LAST_MODIFIED_BY} instead
+     */
+    public static final String AUTHOR_ID = "authorid";
+
+    /**
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#LAST_ACTIVATED_BY} instead
+     */
+    public static final String ACTIVATOR_ID = "activatorid";
+
+    /**
+     * Template assigned to the node.
+     *
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#TEMPLATE} instead
+     */
+    public static final String TEMPLATE = "template";
+
+    /**
+     * @deprecated since 5.0 - no longer supported
+     */
+    public static final String TEMPLATE_TYPE = "templatetype";
+
+    /**
+     * @deprecated since 5.0 - use {@link MgnlPropertyNames#ACTIVATION_STATUS} instead
+     */
+    public static final String ACTIVATED = "activated";
+
+    /**
+     * Name of the node hosting the MetaData.
+     *
      * @deprecated since 5.0 - there's no longer such a subnode
      */
     public static final String DEFAULT_META_NODE = "MetaData";
@@ -130,16 +165,35 @@ public class MetaData {
         this.node = workingNode;
     }
 
+    private static Map<String, String> propertyMappings = new ConcurrentHashMap<String, String>();
+
+    static {
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + CREATION_DATE, MgnlPropertyNames.CREATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_MODIFIED, MgnlPropertyNames.LAST_MODIFIED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_ACTION, MgnlPropertyNames.LAST_ACTIVATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + AUTHOR_ID, MgnlPropertyNames.LAST_MODIFIED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATOR_ID, MgnlPropertyNames.LAST_ACTIVATED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + TEMPLATE, MgnlPropertyNames.TEMPLATE);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATED, MgnlPropertyNames.ACTIVATION_STATUS);
+    }
+
     /**
-     * get property name with the prefix.
+     * Returns the property name to use including its prefix.
      *
      * @return name with namespace prefix
      */
     private String getInternalPropertyName(String name) {
         if (StringUtils.indexOf(name, ":") < 0) {
-            return RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
+            name = RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
         }
-        return name;
+
+        String newName = propertyMappings.get(name);
+
+        if (newName == null) {
+            throw new IllegalArgumentException("Unsupported meta data property: " + name);
+        }
+
+        return newName;
     }
 
     /**
@@ -162,6 +216,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds creation date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#setCreated(Node)}
      */
     public void setCreationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -171,7 +227,7 @@ public class MetaData {
     /**
      * Part of metadata, get creation date of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#getCreated(Node)}
      */
     public Calendar getCreationDate() {
         return this.getDateProperty(CREATION_DATE);
@@ -179,6 +235,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated status of the current node.
+     *
+     * @deprecated since 5.0 - use {@link ActivationUtil#setActivated(javax.jcr.Node)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -186,6 +244,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated status of the current node.
+     *
+     * @deprecated since 5.0 - use {@link ActivationUtil#setUnactivated(javax.jcr.Node)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);
@@ -194,7 +254,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated status of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link ActivationUtil#isActivated(javax.jcr.Node)}
      */
     public boolean getIsActivated() {
         return getBooleanProperty(ACTIVATED);
@@ -202,6 +262,8 @@ public class MetaData {
 
     /**
      * Returns one of the ACTIVATION_STATUS_* constants.
+     *
+     * @deprecated since 5.0 - use {@link ActivationUtil#getActivationStatus(javax.jcr.Node)}
      */
     public int getActivationStatus() {
         if (getIsActivated()) {
@@ -218,6 +280,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link ActivationUtil#setLastActivated(javax.jcr.Node)}
      */
     public void setLastActivationActionDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -227,7 +291,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated/de- date of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link ActivationUtil#getLastActivated(javax.jcr.Node)}
      */
     public Calendar getLastActionDate() {
         return getDateProperty(LAST_ACTION);
@@ -235,6 +299,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds modification date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#setLastModified(Node)}
      */
     public void setModificationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -245,7 +311,7 @@ public class MetaData {
      * Get last modified date of the node to which this meta data belongs or creation date in case content was not
      * modified since.
      *
-     * @return Calendar when last modification date can't be found.
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#getLastModified(Node)}
      */
     public Calendar getModificationDate() {
         Calendar modDate = getDateProperty(LAST_MODIFIED);
@@ -258,7 +324,7 @@ public class MetaData {
     /**
      * Part of metadata, last known author of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#getLastModifiedBy(javax.jcr.Node)}
      */
     public String getAuthorId() {
         return getStringProperty(AUTHOR_ID);
@@ -266,6 +332,8 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who did some action on this page.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#setLastModifiedBy(javax.jcr.Node, String)}
      */
     public void setAuthorId(String value) {
         setProperty(AUTHOR_ID, value);
@@ -274,7 +342,7 @@ public class MetaData {
     /**
      * Part of metadata, last known activator of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link ActivationUtil#getLastActivatedBy(javax.jcr.Node)}
      */
     public String getActivatorId() {
         return getStringProperty(ACTIVATOR_ID);
@@ -282,6 +350,8 @@ public class MetaData {
 
     /**
      * Part of metadata, current logged-in author who last activated this page.
+     *
+     * @deprecated since 5.0 - use {@link ActivationUtil#setLastActivatedBy(javax.jcr.Node, String)}
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);
@@ -290,7 +360,7 @@ public class MetaData {
     /**
      * Part of metadata, template which will be used to render content of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#getTemplate(javax.jcr.Node)}
      */
     public String getTemplate() {
         return getStringProperty(TEMPLATE);
@@ -298,6 +368,8 @@ public class MetaData {
 
     /**
      * Part of metadata, template which will be used to render content of this node.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil#setTemplate(javax.jcr.Node, String)}
      */
     public void setTemplate(String value) {
         setProperty(TEMPLATE, value);

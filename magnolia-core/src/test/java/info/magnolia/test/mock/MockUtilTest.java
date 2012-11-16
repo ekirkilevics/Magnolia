@@ -113,7 +113,6 @@ public class MockUtilTest {
         assertEquals("greg", metaData.getAuthorId());
         assertEquals("bozo", metaData.getActivatorId());
         assertEquals("someParagraphName", metaData.getTemplate());
-        assertEquals("myTitle", metaData.getTitle());
     }
 
     @Test

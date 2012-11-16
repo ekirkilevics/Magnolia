@@ -47,12 +47,10 @@ import info.magnolia.jcr.wrapper.JCRPropertiesFilteringNodeWrapper;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -651,7 +649,7 @@ public class NodeUtil {
      * <code>mgnl:created</code> mixin.
      */
     public static void setCreation(Node node, String userName) throws RepositoryException {
-        setCreation(node, userName, new GregorianCalendar(TimeZone.getDefault()));
+        setCreation(node, userName, Calendar.getInstance());
     }
 
     /**
@@ -670,7 +668,7 @@ public class NodeUtil {
      * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
      */
     public static void setCreated(Node node) throws RepositoryException {
-        node.setProperty(MgnlPropertyNames.CREATED, new GregorianCalendar(TimeZone.getDefault()));
+        node.setProperty(MgnlPropertyNames.CREATED, Calendar.getInstance());
     }
 
     /**
@@ -723,6 +721,13 @@ public class NodeUtil {
      */
     public static void setLastModified(Node node, Calendar modified) throws RepositoryException {
         node.setProperty(MgnlPropertyNames.LAST_MODIFIED, modified);
+    }
+
+    /**
+     * Sets the name of the user that last modified a node.
+     */
+    public static void setLastModifiedBy(Node node, String userName) throws RepositoryException {
+        node.setProperty(MgnlPropertyNames.LAST_MODIFIED_BY, userName);
     }
 
     /**

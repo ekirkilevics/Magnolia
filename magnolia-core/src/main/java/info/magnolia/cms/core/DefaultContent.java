@@ -169,7 +169,8 @@ public class DefaultContent extends AbstractContent {
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
     AccessDeniedException {
         Content content = wrapAsContent(this.node, name, contentType);
-        NodeUtil.setCreated(content.getJCRNode());
+        MetaData metaData = content.getMetaData();
+        metaData.setCreationDate();
         return content;
     }
 

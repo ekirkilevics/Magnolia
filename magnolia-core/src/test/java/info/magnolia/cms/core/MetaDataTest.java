@@ -48,11 +48,13 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Tests.
  */
+@Ignore
 public class MetaDataTest {
 
     private static final String PROPERTY_NAME = "testProperty";

@@ -106,20 +106,14 @@ public class ActivationUtil {
      * Returns the date when the node was last activated or null if no activation date has been stored on the node.
      */
     public static Calendar getLastActivated(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED)) {
-            return null;
-        }
-        return node.getProperty(MgnlPropertyNames.LAST_ACTIVATED).getDate();
+        return node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED) ? node.getProperty(MgnlPropertyNames.LAST_ACTIVATED).getDate() : null;
     }
 
     /**
      * Returns the name of the user that last activated the node or null if no activating user has been stored on the node.
      */
     public static String getLastActivatedBy(Node node) throws RepositoryException {
-        if (!node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED_BY)) {
-            return null;
-        }
-        return node.getProperty(MgnlPropertyNames.LAST_ACTIVATED_BY).getString();
+        return node.hasProperty(MgnlPropertyNames.LAST_ACTIVATED_BY) ? node.getProperty(MgnlPropertyNames.LAST_ACTIVATED_BY).getString() : null;
     }
 
     /**
