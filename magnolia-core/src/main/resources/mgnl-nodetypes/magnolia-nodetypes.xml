@@ -226,12 +226,4 @@
     <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
-  <!-- magnolia versionable node type -->
-  <nodeType name="mgnl:versionable" isMixin="true">
-    <supertypes>
-      <supertype>nt:base</supertype>
-    </supertypes>
-    <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-  </nodeType>
-
 </nodeTypes>
