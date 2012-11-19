@@ -37,6 +37,7 @@ import static info.magnolia.rendering.template.AutoGenerationConfiguration.NODE_
 import static info.magnolia.rendering.template.AutoGenerationConfiguration.TEMPLATE_ID;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.rendering.engine.RenderException;
@@ -110,7 +111,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
                 String template = (String) newNodeConfig.get(TEMPLATE_ID);
                 if (template != null) {
-                    NodeUtil.setTemplate(newNode, template);
+                    NodeTypes.RenderableMixin.setTemplate(newNode, template);
                     MetaDataUtil.updateMetaData(newNode);
                 }
 

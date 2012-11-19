@@ -51,6 +51,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -640,14 +641,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
         if(type.equals(ACTIVATE)){
             try {
-                Calendar lastModified = NodeUtil.getLastModified(node.getJCRNode());
+                Calendar lastModified = NodeTypes.LastModifiedMixin.getLastModified(node.getJCRNode());
                 if (lastModified != null && lastModified.after(contentVersionDate)){
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException e) {
                         log.warn("Thread interrupted while sleeping", e);
                     }
-                        NodeUtil.setLastModified(node.getJCRNode());
+                        NodeTypes.LastModifiedMixin.setLastModified(node.getJCRNode());
                 }
             } catch (RepositoryException e) {
                 log.error("Failed to update modification date on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);

@@ -38,7 +38,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.awt.Graphics2D;
@@ -253,8 +253,8 @@ public class ScaleImageTag extends BaseImageTag {
     protected boolean rescale(Content parentContentNode, Content imageContentNode) {
 
         try {
-            Calendar parentModified = NodeUtil.getLastModified(parentContentNode.getJCRNode());
-            Calendar imageModified = NodeUtil.getLastModified(imageContentNode.getJCRNode());
+            Calendar parentModified = NodeTypes.LastModifiedMixin.getLastModified(parentContentNode.getJCRNode());
+            Calendar imageModified = NodeTypes.LastModifiedMixin.getLastModified(imageContentNode.getJCRNode());
 
             if (parentModified.after(imageModified)) {
                 return true;
@@ -282,7 +282,7 @@ public class ScaleImageTag extends BaseImageTag {
 
     /**
      * Create an image file that is a scaled version of the original image.
-     * @param image node
+     * @param imageContentNode node
      */
     private void createImageNodeData(Content parentContentNode, Content imageContentNode) throws PathNotFoundException,
         RepositoryException, IOException {
@@ -304,7 +304,7 @@ public class ScaleImageTag extends BaseImageTag {
 
     /**
      * Create an image file that is a scaled version of the original image.
-     * @param the original image file
+     * @param oriImgBuff the original image file
      * @return the new image file
      */
     private File scaleImage(BufferedImage oriImgBuff) throws IOException {

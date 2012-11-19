@@ -43,6 +43,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
+import info.magnolia.jcr.util.NodeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,8 +61,6 @@ import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
 
 /**
  * Uses the template id stored in the node's meta data.
- *
- * @version $Id$
  */
 @Singleton
 public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefinitionAssignment {
@@ -77,8 +76,9 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
         this.templateDefinitionRegistry = templateDefinitionRegistry;
     }
 
+    @Override
     public String getAssignedTemplate(Node content) throws RepositoryException {
-        return NodeUtil.getTemplate(content);
+        return NodeTypes.RenderableMixin.getTemplate(content);
     }
 
     @Override

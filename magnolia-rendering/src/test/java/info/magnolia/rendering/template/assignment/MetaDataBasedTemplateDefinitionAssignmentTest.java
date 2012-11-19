@@ -47,7 +47,7 @@ import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.jcr.node2bean.impl.TypeMappingImpl;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.registry.TemplateDefinitionProvider;
@@ -70,7 +70,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class MetaDataBasedTemplateDefinitionAssignmentTest {
 
@@ -119,7 +119,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // GIVEN
         final String templateId = "id";
         MockNode node = new MockNode();
-        NodeUtil.setTemplate(node, templateId);
+        NodeTypes.RenderableMixin.setTemplate(node, templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
@@ -202,7 +202,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
         MockNode parentNode = new MockNode(session);
-        NodeUtil.setTemplate(parentNode, "module:pages/template1");
+        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template1");
         Node mockNode = parentNode.addNode("child");
 
         TemplateDefinition template1 = mock(TemplateDefinition.class);
@@ -219,7 +219,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         assertSame(template1, assignment.getDefaultTemplate(mockNode));
 
         // change template on the parent
-        NodeUtil.setTemplate(parentNode, "module:pages/template2");
+        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template2");
 
         // test that it changes the returned template
         assertSame(template2, assignment.getDefaultTemplate(mockNode));

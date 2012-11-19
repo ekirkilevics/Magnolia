@@ -52,15 +52,13 @@ import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.NodeUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.RepositoryTestCase;
 
 import org.junit.Test;
 
 /**
  * Basic test for checking indication status.
- * @author mdivilek
- * @version $Id:$
  */
 public class IndicationStatusTest extends RepositoryTestCase{
 
@@ -106,23 +104,23 @@ public class IndicationStatusTest extends RepositoryTestCase{
         ContentVersion versionedHomePage = homePage.getVersionedContent("1.0");
 
         Thread.sleep(1);
-        NodeUtil.setLastModified(homePage.getJCRNode());
-        NodeUtil.setLastModified(subPage2.getJCRNode());
+        NodeTypes.LastModifiedMixin.setLastModified(homePage.getJCRNode());
+        NodeTypes.LastModifiedMixin.setLastModified(subPage2.getJCRNode());
 
         assertFalse(ActivationUtil.isActivated(homePage.getJCRNode()));
 
         bsi.activate("/", versionedHomePage);
 
         assertTrue(ActivationUtil.isActivated(homePage.getJCRNode()));
-        assertTrue(NodeUtil.getLastModified(homePage.getJCRNode()).after(ActivationUtil.getLastActivated(homePage.getJCRNode())));
+        assertTrue(NodeTypes.LastModifiedMixin.getLastModified(homePage.getJCRNode()).after(ActivationUtil.getLastActivated(homePage.getJCRNode())));
         assertEquals(ActivationUtil.ACTIVATION_STATUS_MODIFIED, ActivationUtil.getActivationStatus(homePage.getJCRNode()));
 
         assertTrue(ActivationUtil.isActivated(subPage1.getJCRNode()));
-        assertFalse(NodeUtil.getLastModified(subPage1.getJCRNode()).after(ActivationUtil.getLastActivated(subPage1.getJCRNode())));
+        assertFalse(NodeTypes.LastModifiedMixin.getLastModified(subPage1.getJCRNode()).after(ActivationUtil.getLastActivated(subPage1.getJCRNode())));
         assertEquals(ActivationUtil.ACTIVATION_STATUS_ACTIVATED, ActivationUtil.getActivationStatus(subPage1.getJCRNode()));
 
         assertTrue(ActivationUtil.isActivated(subPage2.getJCRNode()));
-        assertTrue(NodeUtil.getLastModified(subPage2.getJCRNode()).after(ActivationUtil.getLastActivated(subPage2.getJCRNode())));
+        assertTrue(NodeTypes.LastModifiedMixin.getLastModified(subPage2.getJCRNode()).after(ActivationUtil.getLastActivated(subPage2.getJCRNode())));
         assertEquals(ActivationUtil.ACTIVATION_STATUS_MODIFIED, ActivationUtil.getActivationStatus(subPage2.getJCRNode()));
     }
 
@@ -156,7 +154,7 @@ public class IndicationStatusTest extends RepositoryTestCase{
         bsi.activate("/", versionedHomePage);
 
         assertTrue(ActivationUtil.isActivated(homePage.getJCRNode()));
-        assertFalse(NodeUtil.getLastModified(homePage.getJCRNode()).after(ActivationUtil.getLastActivated(homePage.getJCRNode())));
+        assertFalse(NodeTypes.LastModifiedMixin.getLastModified(homePage.getJCRNode()).after(ActivationUtil.getLastActivated(homePage.getJCRNode())));
         assertEquals(ActivationUtil.ACTIVATION_STATUS_ACTIVATED, ActivationUtil.getActivationStatus(homePage.getJCRNode()));
 
         assertFalse(ActivationUtil.isActivated(anotherPage.getJCRNode()));

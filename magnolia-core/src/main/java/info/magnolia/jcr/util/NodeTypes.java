@@ -102,10 +102,17 @@ public class NodeTypes {
         }
 
         /**
-         * Sets the date of modification for a node.
+         * Sets the current date as date of modification for a node.
          */
         public static void setLastModified(Node node) throws RepositoryException {
-            node.setProperty(LAST_MODIFIED, Calendar.getInstance());
+            setLastModified(node, Calendar.getInstance());
+        }
+
+        /**
+         * Sets the date of modification for a node.
+         */
+        public static void setLastModified(Node node, Calendar modified) throws RepositoryException {
+            node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, modified);
         }
 
         /**
