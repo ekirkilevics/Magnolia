@@ -42,6 +42,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.util.EscapeUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -169,6 +170,25 @@ public class UserEditDialog extends ConfiguredDialog {
         // this silly method was rewriting some basic ACLs for user on every update while removing all others. Completely pointless and unnecessary.
         // required permissions are now assigned at user creation time by the MgnlUserManager if necessary and are left untouched by this dialog.
         // still keeping method as a hook for changing permissions directly on user node if ever needed
+    }
+
+    private boolean escapeFormParam(String name) {
+        String[] oldValue = this.form.getParameterValues(name);
+        if (oldValue == null) {
+            return false;
+        }
+        //unescape first (don't allow to be escaped twice)
+        String[] newValue = EscapeUtil.escapeXss(EscapeUtil.unescapeXss(oldValue));
+        this.form.addparameterValues(name, newValue);
+        return true;
+    }
+
+    @Override
+    protected boolean onPreSave(SaveHandler control) {
+        //escape to prevent XSS attack
+        escapeFormParam("groups");
+        escapeFormParam("roles");
+        return true;
     }
 
     @Override
