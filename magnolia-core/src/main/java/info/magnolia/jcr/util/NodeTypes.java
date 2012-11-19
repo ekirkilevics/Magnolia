@@ -218,6 +218,14 @@ public class NodeTypes {
     }
 
     /**
+     * Represents the mixin mgnl:versionable.
+     */
+    public static class VersionableMixin {
+        public static final String NAME = MGNL_PREFIX + "versionable";
+        public static final String COMMENT = MGNL_PREFIX + "comment";
+    }
+
+    /**
      * Represents the nodeType mgnl:folder.
      */
     public static class Folder {
