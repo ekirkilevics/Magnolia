@@ -186,8 +186,6 @@ public class UserEditDialog extends ConfiguredDialog {
     @Override
     protected boolean onPreSave(SaveHandler control) {
         //escape to prevent XSS attack
-        escapeFormParam("title");
-        escapeFormParam("email");
         escapeFormParam("groups");
         escapeFormParam("roles");
         return true;

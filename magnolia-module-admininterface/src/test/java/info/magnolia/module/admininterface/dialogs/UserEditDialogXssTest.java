@@ -138,8 +138,6 @@ public class UserEditDialogXssTest extends TestCase {
         //GIVEN
         when(context.getPostedForm()).thenReturn(form);
 
-        form.addparameterValues("title", new String[]{xssCode});
-        form.addparameterValues("email", new String[]{xssCode});
         form.addparameterValues("groups", new String[]{xssCode});
         form.addparameterValues("roles", new String[]{xssCode});
 
@@ -150,8 +148,6 @@ public class UserEditDialogXssTest extends TestCase {
         ued.onPreSave(null); //do it again and check if parameters aren't escaped twice
 
         //THEN
-        assertEquals(escapedXssCode,form.getParameterValues("title")[0]);
-        assertEquals(escapedXssCode,form.getParameterValues("email")[0]);
         assertEquals(escapedXssCode,form.getParameterValues("groups")[0]);
         assertEquals(escapedXssCode,form.getParameterValues("roles")[0]);
     }
