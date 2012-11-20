@@ -35,6 +35,8 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.jcr.util.NodeTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -45,6 +47,8 @@ import javax.jcr.RepositoryException;
  */
 public class CreationDateComparator implements Comparator<Content> {
 
+    private static final Logger log = LoggerFactory.getLogger(CreationDateComparator.class);
+
     @Override
     public int compare(Content c1, Content c2) {
         try {
@@ -52,6 +56,7 @@ public class CreationDateComparator implements Comparator<Content> {
             final Date date2 = NodeTypes.CreatedMixin.getCreated(c2.getJCRNode()).getTime();
             return date1.compareTo(date2);
         } catch (RepositoryException e) {
+            log.error("Error retrieving Data from jcr node.", e);
             return 0;
         }
     }
