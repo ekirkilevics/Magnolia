@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.importexport.postprocess;
+package info.magnolia.importexport.postprocessors;
 
 import java.util.Calendar;
 import javax.jcr.Node;

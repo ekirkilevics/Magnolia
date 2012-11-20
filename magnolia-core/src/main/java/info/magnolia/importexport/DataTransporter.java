@@ -46,7 +46,7 @@ import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
 import info.magnolia.importexport.filters.RemoveMixversionableFilter;
 import info.magnolia.importexport.filters.VersionFilter;
-import info.magnolia.importexport.postprocess.MetaDataImportPostProcessor;
+import info.magnolia.importexport.postprocessors.MetaDataImportPostProcessor;
 import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.File;
