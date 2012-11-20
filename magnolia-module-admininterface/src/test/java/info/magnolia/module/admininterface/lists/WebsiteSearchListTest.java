@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admiminterface.lists;
+package info.magnolia.module.admininterface.lists;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
