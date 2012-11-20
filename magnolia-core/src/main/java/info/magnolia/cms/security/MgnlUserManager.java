@@ -211,7 +211,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
      * @return the user object
      */
     @Override
-    public User getUserById(final String id){  
+    public User getUserById(final String id){
         try {
             return MgnlContext.doInSystemContext(new JCRSessionOp<User>(getRepositoryName()) {
                 @Override
@@ -449,6 +449,9 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     protected void validateUsername(String name) {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException(name + " is not a valid username.");
+        }
+        if (Security.getUserManager().getUser(name) != null) {
+            throw new IllegalArgumentException("User with name " + name + " already exists.");
         }
     }
 
