@@ -239,7 +239,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -248,7 +248,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setUnactivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);

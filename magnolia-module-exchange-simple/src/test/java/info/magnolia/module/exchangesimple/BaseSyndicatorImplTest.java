@@ -117,16 +117,16 @@ public class BaseSyndicatorImplTest extends TestCase {
         expect(user.getName()).andReturn(activator).anyTimes();
         replay(user);
 
-        Rule rule = new Rule(new String[] {ItemType.CONTENT.getSystemName()});
+        Rule rule = new Rule(new String[] {NodeTypes.Content.NAME});
 
         bsi.init(user, "repo", "workspace", rule);
         Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        NodeTypes.ActivatableMixin.setUnactivated(content.getJCRNode());
+        NodeTypes.ActivatableMixin.setActivated(content.getJCRNode(), false);
         NodeTypes.ActivatableMixin.setLastActivated(content.getJCRNode());
 
-        NodeTypes.ActivatableMixin.setUnactivated(child.getJCRNode());
+        NodeTypes.ActivatableMixin.setActivated(child.getJCRNode(), false);
         NodeTypes.ActivatableMixin.setLastActivated(child.getJCRNode());
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(1);

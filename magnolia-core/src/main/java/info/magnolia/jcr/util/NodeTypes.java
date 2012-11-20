@@ -176,17 +176,10 @@ public class NodeTypes {
         }
 
         /**
-         * Flags the node as activated.
+         * Set whether the node is activated or not.
          */
-        public static void setActivated(Node node) throws RepositoryException {
-            node.setProperty(ACTIVATION_STATUS, true);
-        }
-
-        /**
-         * Flags the node has not activated.
-         */
-        public static void setUnactivated(Node node) throws RepositoryException {
-            node.setProperty(ACTIVATION_STATUS, false);
+        public static void setActivated(Node node, boolean isActivated) throws RepositoryException {
+            node.setProperty(ACTIVATION_STATUS, isActivated);
         }
 
         /**
