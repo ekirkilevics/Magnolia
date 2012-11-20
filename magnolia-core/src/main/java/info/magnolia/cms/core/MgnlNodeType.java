@@ -56,12 +56,12 @@ public final class MgnlNodeType {
     /**
      * Prefix for mgnl-properties.
      */
-    public static final String MGNL_PREFIX = "mgnl:";
+    public static final String MGNL_PREFIX = NodeTypes.MGNL_PREFIX;
 
     /**
      * Prefix for jcr-properties.
      */
-    public static final String JCR_PREFIX = "jcr:";
+    public static final String JCR_PREFIX = NodeTypes.JCR_PREFIX;
 
     /**
      * Node type: base.
