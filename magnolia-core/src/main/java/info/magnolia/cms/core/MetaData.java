@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -126,19 +125,19 @@ public class MetaData {
     public static final String DEFAULT_META_NODE = "MetaData";
 
     /**
-     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_NOT_ACTIVATED} instead
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_NOT_ACTIVATED} instead
      */
-    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = ActivationUtil.ACTIVATION_STATUS_NOT_ACTIVATED;
+    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
 
     /**
-     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_MODIFIED} instead
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_MODIFIED} instead
      */
-    public static final int ACTIVATION_STATUS_MODIFIED = ActivationUtil.ACTIVATION_STATUS_MODIFIED;
+    public static final int ACTIVATION_STATUS_MODIFIED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED;
 
     /**
-     * @deprecated since 5.0 - use {@link ActivationUtil#ACTIVATION_STATUS_ACTIVATED} instead
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_ACTIVATED} instead
      */
-    public static final int ACTIVATION_STATUS_ACTIVATED = ActivationUtil.ACTIVATION_STATUS_ACTIVATED;
+    public static final int ACTIVATION_STATUS_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED;
 
     /**
      * Since 5.0 this is the working node itself.
@@ -236,7 +235,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#setActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -245,7 +244,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#setUnactivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setUnactivated(javax.jcr.Node)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);
@@ -254,7 +253,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#isActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#isActivated(javax.jcr.Node)}
      */
     public boolean getIsActivated() {
         return getBooleanProperty(ACTIVATED);
@@ -263,7 +262,7 @@ public class MetaData {
     /**
      * Returns one of the ACTIVATION_STATUS_* constants.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#getActivationStatus(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getActivationStatus(javax.jcr.Node)}
      */
     public int getActivationStatus() {
         if (getIsActivated()) {
@@ -281,7 +280,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated date of the current node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#setLastActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivated(javax.jcr.Node)}
      */
     public void setLastActivationActionDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -291,7 +290,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated/de- date of the current node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#getLastActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivated(javax.jcr.Node)}
      */
     public Calendar getLastActionDate() {
         return getDateProperty(LAST_ACTION);
@@ -342,7 +341,7 @@ public class MetaData {
     /**
      * Part of metadata, last known activator of this node.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#getLastActivatedBy(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivatedBy(javax.jcr.Node)}
      */
     public String getActivatorId() {
         return getStringProperty(ACTIVATOR_ID);
@@ -351,7 +350,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who last activated this page.
      *
-     * @deprecated since 5.0 - use {@link ActivationUtil#setLastActivatedBy(javax.jcr.Node, String)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivatedBy(javax.jcr.Node, String)}
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);

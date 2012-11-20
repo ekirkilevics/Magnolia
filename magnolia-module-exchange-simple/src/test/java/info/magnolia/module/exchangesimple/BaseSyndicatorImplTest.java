@@ -39,17 +39,17 @@ import java.util.Calendar;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class BaseSyndicatorImplTest extends TestCase {
 
@@ -83,29 +83,29 @@ public class BaseSyndicatorImplTest extends TestCase {
         Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        ActivationUtil.setLastActivated(content.getJCRNode());
+        NodeTypes.ActivatableMixin.setLastActivated(content.getJCRNode());
 
-        ActivationUtil.setLastActivated(child.getJCRNode());
+        NodeTypes.ActivatableMixin.setLastActivated(child.getJCRNode());
 
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(10);
 
-        assertFalse(ActivationUtil.isActivated(content.getJCRNode()));
-        Calendar lastAction = ActivationUtil.getLastActivated(content.getJCRNode());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(content.getJCRNode()));
+        Calendar lastAction = NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode());
 
         // WHEN
         bsi.updateMetaData(content, BaseSyndicatorImpl.ACTIVATE);
 
         // THEN - verify metaData got updated
         verify(user);
-        assertTrue(ActivationUtil.isActivated(content.getJCRNode()));
-        assertEquals(activator, ActivationUtil.getLastActivatedBy(content.getJCRNode()));
-        assertTrue(ActivationUtil.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(content.getJCRNode()));
+        assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(content.getJCRNode()));
+        assertTrue(NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
 
         // ...and know the kid's metadata
-        assertTrue(ActivationUtil.isActivated(child.getJCRNode()));
-        assertEquals(activator, ActivationUtil.getLastActivatedBy(child.getJCRNode()));
-        assertTrue(ActivationUtil.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(child.getJCRNode()));
+        assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(child.getJCRNode()));
+        assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
     public void testUpdateMetaDataWhenDeactivating() throws Exception {
@@ -123,29 +123,29 @@ public class BaseSyndicatorImplTest extends TestCase {
         Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        ActivationUtil.setUnactivated(content.getJCRNode());
-        ActivationUtil.setLastActivated(content.getJCRNode());
+        NodeTypes.ActivatableMixin.setUnactivated(content.getJCRNode());
+        NodeTypes.ActivatableMixin.setLastActivated(content.getJCRNode());
 
-        ActivationUtil.setUnactivated(child.getJCRNode());
-        ActivationUtil.setLastActivated(child.getJCRNode());
+        NodeTypes.ActivatableMixin.setUnactivated(child.getJCRNode());
+        NodeTypes.ActivatableMixin.setLastActivated(child.getJCRNode());
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(1);
 
-        Calendar lastAction = ActivationUtil.getLastActivated(content.getJCRNode());
+        Calendar lastAction = NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode());
 
         // WHEN
         bsi.updateMetaData(content, BaseSyndicatorImpl.DEACTIVATE);
 
         // THEN - verify metaData got updated
         verify(user);
-        assertFalse(ActivationUtil.isActivated(content.getJCRNode()));
-        assertEquals(activator, ActivationUtil.getLastActivatedBy(content.getJCRNode()));
-        assertTrue(ActivationUtil.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(content.getJCRNode()));
+        assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(content.getJCRNode()));
+        assertTrue(NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
 
         // ...and know the kid's metadata
-        assertFalse(ActivationUtil.isActivated(child.getJCRNode()));
-        assertEquals(activator, ActivationUtil.getLastActivatedBy(child.getJCRNode()));
-        assertTrue(ActivationUtil.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(child.getJCRNode()));
+        assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(child.getJCRNode()));
+        assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
     public void testStripPassword() throws Exception {

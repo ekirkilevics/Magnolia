@@ -131,6 +131,89 @@ public class NodeTypes {
         public static final String LAST_ACTIVATED = MGNL_PREFIX + "lastActivated";
         public static final String LAST_ACTIVATED_BY = LAST_ACTIVATED + BY;
         public static final String ACTIVATION_STATUS = MGNL_PREFIX + "activationStatus";
+
+        public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
+
+        public static final int ACTIVATION_STATUS_MODIFIED = 1;
+
+        public static final int ACTIVATION_STATUS_ACTIVATED = 2;
+
+        /**
+         * Returns the activation status of the node. Returns one of the constants:
+         * <ul>
+         * <li>{@link #ACTIVATION_STATUS_NOT_ACTIVATED} if the node has not been activated</li>
+         * <li>{@link #ACTIVATION_STATUS_MODIFIED} has been activated and subsequently modified</li>
+         * <li>{@link #ACTIVATION_STATUS_ACTIVATED} has been activated and not modified since</li>
+         * </ul>
+         */
+        public static int getActivationStatus(Node node) throws RepositoryException {
+
+            if (!isActivated(node)) {
+                // never activated or deactivated
+                return ACTIVATION_STATUS_NOT_ACTIVATED;
+            }
+
+            Calendar lastModified = LastModifiedMixin.getLastModified(node);
+            Calendar lastActivated = getLastActivated(node);
+
+            if (lastModified != null && lastModified.after(lastActivated)) {
+                // node has been modified after last activation
+                return ACTIVATION_STATUS_MODIFIED;
+            }
+
+            // activated and not modified ever since
+            return ACTIVATION_STATUS_ACTIVATED;
+        }
+
+        /**
+         * Returns true if the node has been activated.
+         */
+        public static boolean isActivated(Node node) throws RepositoryException {
+            return node.hasProperty(ACTIVATION_STATUS) && node.getProperty(ACTIVATION_STATUS).getBoolean();
+        }
+
+        /**
+         * Flags the node as activated.
+         */
+        public static void setActivated(Node node) throws RepositoryException {
+            node.setProperty(ACTIVATION_STATUS, true);
+        }
+
+        /**
+         * Flags the node has not activated.
+         */
+        public static void setUnactivated(Node node) throws RepositoryException {
+            node.setProperty(ACTIVATION_STATUS, false);
+        }
+
+        /**
+         * Returns the date when the node was last activated or null if no activation date has been stored on the node.
+         */
+        public static Calendar getLastActivated(Node node) throws RepositoryException {
+            return node.hasProperty(LAST_ACTIVATED) ? node.getProperty(LAST_ACTIVATED).getDate() : null;
+        }
+
+        /**
+         * Returns the name of the user that last activated the node or null if no activating user has been stored on the node.
+         */
+        public static String getLastActivatedBy(Node node) throws RepositoryException {
+            return node.hasProperty(LAST_ACTIVATED_BY) ? node.getProperty(LAST_ACTIVATED_BY).getString() : null;
+        }
+
+        /**
+         * Sets the time when the node was most recently activated.
+         */
+        public static void setLastActivated(Node node) throws RepositoryException {
+            node.setProperty(LAST_ACTIVATED, Calendar.getInstance());
+        }
+
+        /**
+         * Sets the name of the user that performed the most recent activation.
+         */
+        public static void setLastActivatedBy(Node node, String userName) throws RepositoryException {
+            node.setProperty(LAST_ACTIVATED_BY, userName);
+        }
+
     }
 
     /**

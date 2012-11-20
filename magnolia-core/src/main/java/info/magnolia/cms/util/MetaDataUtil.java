@@ -35,13 +35,13 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.exchange.ActivationUtil;
 
 import java.util.Calendar;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.jcr.util.NodeTypes;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,15 +120,15 @@ public class MetaDataUtil {
 
         int activationStatus;
         try {
-            activationStatus = ActivationUtil.getActivationStatus(node);
+            activationStatus = NodeTypes.ActivatableMixin.getActivationStatus(node);
         } catch (RepositoryException e) {
-            activationStatus = ActivationUtil.ACTIVATION_STATUS_NOT_ACTIVATED;
+            activationStatus = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
         }
 
         switch (activationStatus) {
-            case ActivationUtil.ACTIVATION_STATUS_MODIFIED:
+            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED:
                 return "indicator_yellow.gif";
-            case ActivationUtil.ACTIVATION_STATUS_ACTIVATED:
+            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED:
                 return "indicator_green.gif";
             default:
                 return "indicator_red.gif";

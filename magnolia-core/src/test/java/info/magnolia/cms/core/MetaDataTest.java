@@ -49,7 +49,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 
 /**
@@ -110,13 +109,13 @@ public class MetaDataTest {
 
     @Test
     public void testGetActivationStatusReturnsNotActivatedWhenNotActivated() {
-        assertEquals(ActivationUtil.ACTIVATION_STATUS_NOT_ACTIVATED, new MetaData(root).getActivationStatus());
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
     public void testGetActivationStatusReturnsActivatedWhenActivatedAndNeverModified() throws RepositoryException {
         root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
-        assertEquals(ActivationUtil.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class MetaDataTest {
         root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
         root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, today);
         root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, yesterday);
-        assertEquals(ActivationUtil.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
@@ -140,7 +139,7 @@ public class MetaDataTest {
         root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
         root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, yesterday);
         root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, today);
-        assertEquals(ActivationUtil.ACTIVATION_STATUS_MODIFIED, new MetaData(root).getActivationStatus());
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED, new MetaData(root).getActivationStatus());
     }
 
     @Test

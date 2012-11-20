@@ -38,7 +38,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.exchange.ActivationUtil;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
@@ -628,13 +627,13 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         // update the passed node
         try {
             if (type.equals(ACTIVATE)) {
-                ActivationUtil.setActivated(node.getJCRNode());
+                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode());
             }
             else {
-                ActivationUtil.setUnactivated(node.getJCRNode());
+                NodeTypes.ActivatableMixin.setUnactivated(node.getJCRNode());
             }
-            ActivationUtil.setLastActivated(node.getJCRNode());
-            ActivationUtil.setLastActivatedBy(node.getJCRNode(), this.user.getName());
+            NodeTypes.ActivatableMixin.setLastActivated(node.getJCRNode());
+            NodeTypes.ActivatableMixin.setLastActivatedBy(node.getJCRNode(), this.user.getName());
         } catch (RepositoryException e) {
             log.error("Failed to update activation status on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);
         }
