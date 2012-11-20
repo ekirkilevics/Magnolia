@@ -36,7 +36,6 @@ package info.magnolia.jcr.util;
 import java.util.Calendar;
 
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -48,7 +47,7 @@ import javax.jcr.ValueFormatException;
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
  *
- * @deprecated since 5.0 - use {@link NodeUtil} instead
+ * @deprecated since 5.0 - use {@link NodeTypes} instead
  */
 public class MetaDataUtil {
 
@@ -59,8 +58,6 @@ public class MetaDataUtil {
 
     public static void updateMetaData(Node node) throws RepositoryException {
         NodeTypes.LastModifiedMixin.updateModification(node);
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
-                .getPrimaryNodeType().getName(), node.getName());
     }
 
     /**

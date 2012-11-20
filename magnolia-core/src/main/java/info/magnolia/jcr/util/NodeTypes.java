@@ -34,6 +34,7 @@
 package info.magnolia.jcr.util;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -89,16 +90,18 @@ public class NodeTypes {
         /**
          * Sets the current date as date of modification and the name of the user modifying a node.
          */
-        public static void updateModification(Node node, String userName) throws RepositoryException {
+        static void updateModification(Node node, String userName) throws RepositoryException {
             updateModification(node, userName, Calendar.getInstance());
         }
 
         /**
          * Sets the date of modification and the name of the user modifying a node.
          */
-        public static void updateModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
+        static void updateModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
             node.setProperty(LAST_MODIFIED, lastModified);
             node.setProperty(LAST_MODIFIED_BY, userName);
+            AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
+                    .getPrimaryNodeType().getName(), node.getName());
         }
 
         /**

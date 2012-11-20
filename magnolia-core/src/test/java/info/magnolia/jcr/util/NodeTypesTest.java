@@ -34,6 +34,7 @@
 package info.magnolia.jcr.util;
 
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +60,7 @@ public class NodeTypesTest {
 
     @Before
     public void setUpTestStructure() throws RepositoryException {
-        root = new MockNode();
+        root = new MockNode(new MockSession("test"));
         first = root.addNode(FIRST_CHILD);
         second = root.addNode(SECOND_CHILD);
         third = root.addNode(THIRD_CHILD);
