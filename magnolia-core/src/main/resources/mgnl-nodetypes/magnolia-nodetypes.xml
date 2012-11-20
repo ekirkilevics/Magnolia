@@ -78,9 +78,17 @@
     <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
+  <nodeType name="mgnl:lastModified" isMixin="true">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <propertyDefinition name="mgnl:lastModified" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    <propertyDefinition name="mgnl:lastModifiedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+  </nodeType>
+
   <nodeType name="mgnl:activatable" isMixin="true">
     <supertypes>
-      <supertype>mix:lastModified</supertype>
+      <supertype>mgnl:lastModified</supertype>
     </supertypes>
     <propertyDefinition name="mgnl:lastActivated" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     <propertyDefinition name="mgnl:lastActivatedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
