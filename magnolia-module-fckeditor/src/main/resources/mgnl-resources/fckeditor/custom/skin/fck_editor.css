@@ -1,9 +1,0 @@
-/*
- * import the default skin style and override a few attributes, mostly colors.
- */
-
-@import "../../editor/skins/default/fck_editor.css";
-
-.TB_ToolbarSet, .TB_Expand, .TB_Collapse {
-    background-color: #F0F2E6;
-}
