@@ -301,6 +301,49 @@ public class NodeTypes {
         public static final String NAME = MGNL_PREFIX + "deleted";
         public static final String DELETED = NAME;
         public static final String DELETED_BY = DELETED + BY;
+        public static final String COMMENT = MGNL_PREFIX + "comment";
+
+        /**
+         * Returns the date when the node was deleted or null if no deletion date has been stored on the node.
+         */
+        public static Calendar getDeleted(Node node) throws RepositoryException {
+            return node.hasProperty(DELETED) ? node.getProperty(DELETED).getDate() : null;
+        }
+
+        /**
+         * Returns the name of the user that deleted the node or null if no deleting user has been stored on the node.
+         */
+        public static String getDeletedBy(Node node) throws RepositoryException {
+            return node.hasProperty(DELETED_BY) ? node.getProperty(DELETED_BY).getString() : null;
+        }
+
+        /**
+         * Sets the time when the node was deleted.
+         */
+        public static void setDeleted(Node node) throws RepositoryException {
+            node.setProperty(DELETED, Calendar.getInstance());
+        }
+
+        /**
+         * Sets the name of the user that deleted the node.
+         */
+        public static void setDeletedBy(Node node, String userName) throws RepositoryException {
+            node.setProperty(DELETED_BY, userName);
+        }
+
+        /**
+         * Returns the comment set when then node was deleted or null if no comment has been set.
+         */
+        public static String getComment(Node node) throws RepositoryException {
+            return node.hasProperty(COMMENT) ? node.getProperty(COMMENT).getString() : null;
+        }
+
+        /**
+         * Sets a comment on the node during deletion.
+         */
+        public static void setComment(Node node, String comment) throws RepositoryException {
+            node.setProperty(COMMENT, comment);
+        }
     }
 
     /**
@@ -309,6 +352,20 @@ public class NodeTypes {
     public static class VersionableMixin {
         public static final String NAME = MGNL_PREFIX + "versionable";
         public static final String COMMENT = MGNL_PREFIX + "comment";
+
+        /**
+         * Returns the comment set when then node was last versioned or null if no comment has been set.
+         */
+        public static String getComment(Node node) throws RepositoryException {
+            return node.hasProperty(COMMENT) ? node.getProperty(COMMENT).getString() : null;
+        }
+
+        /**
+         * Sets a comment on the node during versioning.
+         */
+        public static void setComment(Node node, String comment) throws RepositoryException {
+            node.setProperty(COMMENT, comment);
+        }
     }
 
     /**
