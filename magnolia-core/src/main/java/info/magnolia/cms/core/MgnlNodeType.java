@@ -40,7 +40,8 @@ import org.apache.jackrabbit.JcrConstants;
  * Keeps constants for node-types used within Magnolia.
  * Only when converting MetaData to mixin(s) (MAGNOLIA-4640) we realized that we could benefit a lot from something
  * more powerful than just a few constants. We wanted to model what properties are defined on what nodeTypes and also host the related utility methods at the same place.
- * That's how {@link info.magnolia.jcr.util.NodeTypes} was born. As this type was only introduced with Magnolia 4.5 we'll not drop it in the near future.
+ * That's how {@link info.magnolia.jcr.util.NodeTypes} was born. As this type was only introduced with Magnolia 4.5 we'll not drop it we'll not drop it in the near future,
+ * even though we deprecated it in 5.0 release.
  *
  * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes} for mgnl nodeType or property names or {@link org.apache.jackrabbit.JcrConstants} for jcr ones.
  */
