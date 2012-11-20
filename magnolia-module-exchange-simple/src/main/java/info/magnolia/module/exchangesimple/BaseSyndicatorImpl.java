@@ -619,7 +619,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
     }
 
     /**
-     * @param node
      * @param type (activate / deactivate)
      */
     protected void updateMetaData(Content node, String type) throws AccessDeniedException {
@@ -627,10 +626,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
         // update the passed node
         try {
             if (type.equals(ACTIVATE)) {
-                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode());
+                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode(), true);
             }
             else {
-                NodeTypes.ActivatableMixin.setUnactivated(node.getJCRNode());
+                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode(), false);
             }
             NodeTypes.ActivatableMixin.setLastActivated(node.getJCRNode());
             NodeTypes.ActivatableMixin.setLastActivatedBy(node.getJCRNode(), this.user.getName());
