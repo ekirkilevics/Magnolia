@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface;
+package info.magnolia.module.admininterface.pages;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
