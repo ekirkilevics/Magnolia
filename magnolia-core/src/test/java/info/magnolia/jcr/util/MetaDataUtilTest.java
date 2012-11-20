@@ -65,8 +65,6 @@ public class MetaDataUtilTest {
     }
     @Test
     public void testGetMetaData() throws Exception {
-        // GIVEN
-        root.addNode(MetaData.DEFAULT_META_NODE);
 
         // WHEN
         MetaData md = MetaDataUtil.getMetaData(root);
@@ -86,7 +84,6 @@ public class MetaDataUtilTest {
         when(ctx.getUser()).thenReturn(user);
         when(user.getName()).thenReturn(testUserName);
 
-        root.addNode(MetaData.DEFAULT_META_NODE);
         MetaData metaData = MetaDataUtil.getMetaData(root);
 
         // WHEN

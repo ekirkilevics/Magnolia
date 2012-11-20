@@ -34,6 +34,7 @@
 package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
@@ -47,13 +48,11 @@ import javax.jcr.Session;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
 /**
  * NodeUtil test class used to test methods that needs repository definition.
- * @version $Id$
  */
 public class NodeUtilRepositoryTest extends RepositoryTestCase {
-
-
 
     @Test
     public void testMoveNode() throws IOException, RepositoryException{
@@ -61,12 +60,12 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         String nodeProperties =
             "/nodeToMove.@type=mgnl:content\n" +
             "/nodeToMove.propertyString=hello\n" +
-            "/nodeToMove/chield1.@type=mgnl:content\n" +
-            "/nodeToMove/chield1.propertyString=sourceChield1\n" +
+            "/nodeToMove/child1.@type=mgnl:content\n" +
+            "/nodeToMove/child1.propertyString=sourceChild1\n" +
             "/dest.@type=mgnl:content\n" +
             "/newParent.propertyString=dest\n" +
-            "/newParent/chield2.@type=mgnl:content\n" +
-            "/newParent/chield2.propertyString=newParentChield2\n";
+            "/newParent/child2.@type=mgnl:content\n" +
+            "/newParent/child2.propertyString=newParentChild2\n";
 
         Node rootNode = addNodeToRoot(nodeProperties);
         Node nodeToMove = rootNode.getNode("nodeToMove");
@@ -77,9 +76,9 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("nodeToMove"), false);
-        assertNodeExistWithProperty(rootNode, "newParent/chield2", "propertyString", "newParentChield2");
+        assertNodeExistWithProperty(rootNode, "newParent/child2", "propertyString", "newParentChild2");
         assertNodeExistWithProperty(rootNode, "newParent/nodeToMove", "propertyString", "hello");
-        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/chield1", "propertyString", "sourceChield1");
+        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/child1", "propertyString", "sourceChild1");
     }
 
     @Test
@@ -88,29 +87,29 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         String nodeProperties =
             "/nodeToMove.@type=mgnl:content\n" +
             "/nodeToMove.propertyString=hello\n" +
-            "/nodeToMove/chield1.@type=mgnl:content\n" +
-            "/nodeToMove/chield1.propertyString=sourceChield1\n" +
+            "/nodeToMove/child1.@type=mgnl:content\n" +
+            "/nodeToMove/child1.propertyString=sourceChild1\n" +
             "/dest.@type=mgnl:content\n" +
             "/newParent.propertyString=dest\n" +
-            "/newParent/chield2.@type=mgnl:content\n" +
-            "/newParent/chield2.propertyString=newParentChield2\n";
+            "/newParent/child2.@type=mgnl:content\n" +
+            "/newParent/child2.propertyString=newParentChild2\n";
 
         Node rootNode = addNodeToRoot(nodeProperties);
         Node nodeToMove = rootNode.getNode("nodeToMove");
-        Node newParent = rootNode.getNode("newParent/chield2");
+        Node newParent = rootNode.getNode("newParent/child2");
 
         // WHEN
         NodeUtil.moveNodeBefore(nodeToMove, newParent);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("nodeToMove"), false);
-        assertNodeExistWithProperty(rootNode, "newParent/chield2", "propertyString", "newParentChield2");
+        assertNodeExistWithProperty(rootNode, "newParent/child2", "propertyString", "newParentChild2");
         assertNodeExistWithProperty(rootNode, "newParent/nodeToMove", "propertyString", "hello");
-        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/chield1", "propertyString", "sourceChield1");
+        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/child1", "propertyString", "sourceChild1");
 
-        List<Node> chields = NodeUtil.asList(NodeUtil.collectAllChildren(rootNode.getNode("newParent"),NodeUtil.EXCLUDE_META_DATA_FILTER));
-        assertEquals("Should be first ",chields.get(0).getProperty("propertyString").getString(), "hello");
-        assertEquals("Should be second ",chields.get(1).getProperty("propertyString").getString(), "newParentChield2");
+        List<Node> children = NodeUtil.asList(NodeUtil.collectAllChildren(rootNode.getNode("newParent"),NodeUtil.EXCLUDE_META_DATA_FILTER));
+        assertEquals("Should be first ", children.get(0).getProperty("propertyString").getString(), "hello");
+        assertEquals("Should be second ", children.get(1).getProperty("propertyString").getString(), "newParentChild2");
     }
 
 
@@ -120,29 +119,29 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         String nodeProperties =
             "/nodeToMove.@type=mgnl:content\n" +
             "/nodeToMove.propertyString=hello\n" +
-            "/nodeToMove/chield1.@type=mgnl:content\n" +
-            "/nodeToMove/chield1.propertyString=sourceChield1\n" +
+            "/nodeToMove/child1.@type=mgnl:content\n" +
+            "/nodeToMove/child1.propertyString=sourceChild1\n" +
             "/dest.@type=mgnl:content\n" +
             "/newParent.propertyString=dest\n" +
-            "/newParent/chield2.@type=mgnl:content\n" +
-            "/newParent/chield2.propertyString=newParentChield2\n";
+            "/newParent/child2.@type=mgnl:content\n" +
+            "/newParent/child2.propertyString=newParentChild2\n";
 
         Node rootNode = addNodeToRoot(nodeProperties);
         Node nodeToMove = rootNode.getNode("nodeToMove");
-        Node newParent = rootNode.getNode("newParent/chield2");
+        Node newParent = rootNode.getNode("newParent/child2");
 
         // WHEN
         NodeUtil.moveNodeAfter(nodeToMove, newParent);
 
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("nodeToMove"), false);
-        assertNodeExistWithProperty(rootNode, "newParent/chield2", "propertyString", "newParentChield2");
+        assertNodeExistWithProperty(rootNode, "newParent/child2", "propertyString", "newParentChild2");
         assertNodeExistWithProperty(rootNode, "newParent/nodeToMove", "propertyString", "hello");
-        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/chield1", "propertyString", "sourceChield1");
+        assertNodeExistWithProperty(rootNode, "newParent/nodeToMove/child1", "propertyString", "sourceChild1");
 
-        List<Node> chields = NodeUtil.asList(NodeUtil.collectAllChildren(rootNode.getNode("newParent"),NodeUtil.EXCLUDE_META_DATA_FILTER));
-        assertEquals("Should be first ",chields.get(0).getProperty("propertyString").getString(), "newParentChield2");
-        assertEquals("Should be second ",chields.get(1).getProperty("propertyString").getString(), "hello");
+        List<Node> children = NodeUtil.asList(NodeUtil.collectAllChildren(rootNode.getNode("newParent"),NodeUtil.EXCLUDE_META_DATA_FILTER));
+        assertEquals("Should be first ",children.get(0).getProperty("propertyString").getString(), "newParentChild2");
+        assertEquals("Should be second ",children.get(1).getProperty("propertyString").getString(), "hello");
     }
 
 
@@ -152,8 +151,8 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         String nodeProperties =
             "/nodeToRename.@type=mgnl:content\n" +
             "/nodeToRename.propertyString=hello\n" +
-            "/nodeToRename/chield1.@type=mgnl:content\n" +
-            "/nodeToRename/chield1.propertyString=sourceChield1\n";
+            "/nodeToRename/child1.@type=mgnl:content\n" +
+            "/nodeToRename/child1.propertyString=sourceChild1\n";
 
         Node rootNode = addNodeToRoot(nodeProperties);
         Node nodeToRename = rootNode.getNode("nodeToRename");
@@ -164,9 +163,8 @@ public class NodeUtilRepositoryTest extends RepositoryTestCase {
         // THEN
         assertEquals("Should no more exist ",rootNode.hasNode("nodeToRename"), false);
         assertNodeExistWithProperty(rootNode, "newName", "propertyString", "hello");
-        assertNodeExistWithProperty(rootNode, "newName/chield1", "propertyString", "sourceChield1");
+        assertNodeExistWithProperty(rootNode, "newName/child1", "propertyString", "sourceChild1");
     }
-
 
     /**
      * Common check.

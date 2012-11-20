@@ -39,7 +39,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -82,7 +81,6 @@ public class SimpleSyndicatorTest {
     private User user;
     private Content content;
     private HierarchyManager hm;
-    private MetaData meta;
     private Collection<Subscriber> subscribers;
     private List<Object> allMocks;
 
@@ -101,16 +99,12 @@ public class SimpleSyndicatorTest {
         syndicator.user = user;
         content = createStrictMock(Content.class);
         hm = createStrictMock(HierarchyManager.class);
-        MockNode workingNode = new MockNode("working");
-        workingNode.addNode(MetaData.DEFAULT_META_NODE);
-        meta = new MetaData(workingNode);
         subscribers = new ArrayList<Subscriber>();
         allMocks = new ArrayList<Object>();
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, ".");
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, ".");
         final Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
         syndicator.contentFilterRule = rule;
     }
@@ -133,11 +127,10 @@ public class SimpleSyndicatorTest {
                     // TODO: shouldn't repo be set even tho there is no  subscriber???
                     expect(sysctx.getHierarchyManager(null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
-                    expect(content.getMetaData()).andReturn(meta);
-                    //meta.setUnActivated();
+                    expect(content.getJCRNode()).andReturn(new MockNode());
+                    expect(content.getJCRNode()).andReturn(new MockNode());
+                    expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(user.getName()).andReturn("Dummy");
-                    //meta.setActivatorId("Dummy");
-                    //meta.setLastActivationActionDate();
                     expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     content.save();
                     expect(content.getItemType()).andReturn(ItemType.CONTENT);
@@ -163,11 +156,10 @@ public class SimpleSyndicatorTest {
                     expect(sysctx.getHierarchyManager(null)).andReturn(hm);
                     expect(hm.getContentByUUID("some-real-uuid")).andReturn(content);
                     expect(subscriber.isActive()).andReturn(false);
-                    expect(content.getMetaData()).andReturn(meta);
-                    //meta.setUnActivated();
+                    expect(content.getJCRNode()).andReturn(new MockNode());
+                    expect(content.getJCRNode()).andReturn(new MockNode());
+                    expect(content.getJCRNode()).andReturn(new MockNode());
                     expect(user.getName()).andReturn("Dummy");
-                    //meta.setActivatorId("Dummy");
-                    //meta.setLastActivationActionDate();
                     expect(content.getChildren((ContentFilter) anyObject())).andReturn(CollectionUtils.EMPTY_COLLECTION);
                     content.save();
                     expect(content.getItemType()).andReturn(ItemType.CONTENT);
@@ -238,7 +230,6 @@ public class SimpleSyndicatorTest {
         try {
             syndicator.activate("/", content);
         } catch (ExchangeException e) {
-            e.printStackTrace();
             // and fail because the activation target doesn't exist.
             assertEquals("info.magnolia.cms.exchange.ExchangeException: 1 error detected: \nIncorrect URL for subscriber EasyMock for interface info.magnolia.cms.exchange.Subscriber[prot://dummyURL/.magnolia/activation]", e.getMessage());
         }

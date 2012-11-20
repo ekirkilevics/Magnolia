@@ -39,7 +39,9 @@ import info.magnolia.cms.core.MetaData;
 import java.util.Calendar;
 
 import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
+import info.magnolia.jcr.util.NodeTypes;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +50,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Util to work with {@link info.magnolia.cms.core.MetaData}.
  *
- * @version $Revision$ ($Author$)
- *
- * @deprecated since 4.5 as it operates on deprecated Content - use {@link info.magnolia.jcr.util.MetaDataUtil} instead.
+ * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil} instead.
  */
 public class MetaDataUtil {
     private static final Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
@@ -118,20 +118,20 @@ public class MetaDataUtil {
      */
     public static String getActivationStatusIcon(Node node) {
 
-        MetaData metaData = info.magnolia.jcr.util.MetaDataUtil.getMetaData(node);
-        String iconFileName;
-        switch (metaData.getActivationStatus()) {
-        case MetaData.ACTIVATION_STATUS_MODIFIED:
-            iconFileName = "indicator_yellow.gif";
-            break;
-        case MetaData.ACTIVATION_STATUS_ACTIVATED:
-            iconFileName = "indicator_green.gif";
-            break;
-        default:
-            iconFileName = "indicator_red.gif";
+        int activationStatus;
+        try {
+            activationStatus = NodeTypes.ActivatableMixin.getActivationStatus(node);
+        } catch (RepositoryException e) {
+            activationStatus = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
         }
 
-        return iconFileName;
+        switch (activationStatus) {
+            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED:
+                return "indicator_yellow.gif";
+            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED:
+                return "indicator_green.gif";
+            default:
+                return "indicator_red.gif";
+        }
     }
-
 }

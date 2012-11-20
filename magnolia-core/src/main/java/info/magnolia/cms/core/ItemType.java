@@ -33,46 +33,47 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.jcr.util.NodeTypes;
+import org.apache.jackrabbit.JcrConstants;
+
 import java.io.Serializable;
 
 /**
  * The Magnolia equivalent to {@link javax.jcr.nodetype.NodeType}.
  *
- * @version $Id$
- *
- * @deprecated since 4.5 - use {@link MgnlNodeType}}.
+ * @deprecated since 4.5 - directly use {@link info.magnolia.jcr.util.NodeTypes} or {@link org.apache.jackrabbit.JcrConstants}.
  */
 public final class ItemType implements Serializable {
 
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = MgnlNodeType.NT_BASE;
+    public static final String NT_BASE = JcrConstants.NT_BASE;
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = MgnlNodeType.NT_UNSTRUCTURED;
+    public static final String NT_UNSTRUCTURED = JcrConstants.NT_UNSTRUCTURED;
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = MgnlNodeType.NT_HIERARCHY;
+    public static final String NT_HIERARCHY = JcrConstants.NT_HIERARCHYNODE;
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = MgnlNodeType.NT_FOLDER;
+    public static final String NT_FOLDER = NodeTypes.Folder.NAME;
 
     /**
      * Node type: base.
      */
-    public static final String NT_FILE = MgnlNodeType.NT_FILE;
+    public static final String NT_FILE = JcrConstants.NT_FILE;
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = MgnlNodeType.NT_RESOURCE;
+    public static final String NT_RESOURCE = NodeTypes.Resource.NAME;
 
     /**
      * Node type: metadata.
@@ -97,61 +98,60 @@ public final class ItemType implements Serializable {
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = MgnlNodeType.MIX_REFERENCEABLE;
+    public static final String MIX_REFERENCEABLE = JcrConstants.MIX_REFERENCEABLE;
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = MgnlNodeType.MIX_VERSIONABLE;
+    public static final String MIX_VERSIONABLE = JcrConstants.MIX_VERSIONABLE;
 
-    public static final String MIX_LOCKABLE = MgnlNodeType.MIX_LOCKABLE;
+    public static final String MIX_LOCKABLE = JcrConstants.MIX_LOCKABLE;
 
-    public static final String DELETED_NODE_MIXIN = MgnlNodeType.MIX_DELETED;
+    public static final String DELETED_NODE_MIXIN = NodeTypes.DeletedMixin.NAME;
 
     /**
      * Magnolia content.
-     * @deprecated use ItemType.CONTENT
      */
-    public static final String NT_CONTENT = "mgnl:content";
+    public static final String NT_CONTENT = NodeTypes.Content.NAME;
 
     public static final String MGNL_NODE_DATA = MgnlNodeType.MGNL_NODE_DATA;
 
-    public static final String NT_FROZENNODE = MgnlNodeType.NT_FROZENNODE;
+    public static final String NT_FROZENNODE = JcrConstants.NT_FROZENNODE;
 
-    public static final String JCR_FROZENNODE = MgnlNodeType.JCR_FROZENNODE;
+    public static final String JCR_FROZENNODE = JcrConstants.JCR_FROZENNODE;
 
-    public static final String JCR_FROZEN_PRIMARY_TYPE = MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE;
+    public static final String JCR_FROZEN_PRIMARY_TYPE = JcrConstants.JCR_FROZENPRIMARYTYPE;
 
-    public static final String JCR_PRIMARY_TYPE = MgnlNodeType.JCR_PRIMARY_TYPE;
+    public static final String JCR_PRIMARY_TYPE = JcrConstants.JCR_PRIMARYTYPE;
 
-    public static final String JCR_DATA = MgnlNodeType.JCR_DATA;
+    public static final String JCR_DATA = JcrConstants.JCR_DATA;
 
     /**
      * Magnolia content node.
      * @deprecated use ItemType.CONTENTNODE
      */
     @Deprecated
-    public static final String NT_CONTENTNODE = MgnlNodeType.NT_CONTENTNODE;
+    public static final String NT_CONTENTNODE = NodeTypes.ContentNode.NAME;
 
-    public static final ItemType CONTENT = new ItemType(MgnlNodeType.NT_CONTENT);
+    public static final ItemType CONTENT = new ItemType(NT_CONTENT);
 
-    public static final ItemType CONTENTNODE = new ItemType(MgnlNodeType.NT_CONTENTNODE);
+    public static final ItemType CONTENTNODE = new ItemType(NT_CONTENTNODE);
 
-    public static final ItemType USER = new ItemType(MgnlNodeType.USER);
+    public static final ItemType USER = new ItemType(NodeTypes.User.NAME);
 
-    public static final ItemType ROLE = new ItemType(MgnlNodeType.ROLE);
+    public static final ItemType ROLE = new ItemType(NodeTypes.Role.NAME);
 
-    public static final ItemType GROUP = new ItemType(MgnlNodeType.GROUP);
+    public static final ItemType GROUP = new ItemType(NodeTypes.Group.NAME);
 
-    public static final ItemType SYSTEM = new ItemType(MgnlNodeType.SYSTEM);
+    public static final ItemType SYSTEM = new ItemType(NodeTypes.System.NAME);
 
-    public static final ItemType JCR_CONTENT = new ItemType(MgnlNodeType.JCR_CONTENT);
+    public static final ItemType JCR_CONTENT = new ItemType(JcrConstants.JCR_CONTENT);
 
     public static final ItemType FOLDER = new ItemType(NT_FOLDER);
 
-    public static final ItemType PAGE = new ItemType(MgnlNodeType.NT_PAGE);
-    public static final ItemType AREA = new ItemType(MgnlNodeType.NT_AREA);
-    public static final ItemType COMPONENT = new ItemType(MgnlNodeType.NT_COMPONENT);
+    public static final ItemType PAGE = new ItemType(NodeTypes.Page.NAME);
+    public static final ItemType AREA = new ItemType(NodeTypes.Area.NAME);
+    public static final ItemType COMPONENT = new ItemType(NodeTypes.Component.NAME);
 
     /**
      * Stable serialVersionUID.

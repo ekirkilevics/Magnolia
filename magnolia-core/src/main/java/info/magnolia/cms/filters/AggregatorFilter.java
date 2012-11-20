@@ -41,6 +41,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 
 import java.io.IOException;
 
@@ -119,7 +120,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
 
         Content requestedPage = null;
         NodeData requestedData = null;
-        final String templateName;
+        String templateName;
 
         if (!isJcrPathValid(handle)) {
             // avoid calling isExist if the path can't be valid
@@ -140,7 +141,11 @@ public class AggregatorFilter extends AbstractMgnlFilter{
                 }
             }
 
-            templateName = requestedPage.getMetaData().getTemplate();
+            try {
+                templateName = NodeTypes.RenderableMixin.getTemplate(requestedPage.getJCRNode());
+            } catch (RepositoryException e) {
+                templateName = null;
+            }
 
             if (StringUtils.isBlank(templateName)) {
                 log.error("No template configured for page [{}].", requestedPage.getHandle());

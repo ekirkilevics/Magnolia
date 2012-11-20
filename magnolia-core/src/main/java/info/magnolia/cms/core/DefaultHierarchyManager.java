@@ -206,7 +206,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         md.setCreationDate();
         md.setModificationDate();
         md.setAuthorId(this.jcrSession.getUserID());
-        md.setTitle(StringUtils.EMPTY);
     }
 
     /**

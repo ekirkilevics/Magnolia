@@ -162,7 +162,7 @@ public class JspTemplatingFunctionTagTest extends AbstractTagTestCase {
         //Check the content with repository
         assertThat(responseStr, containsString("<div id=\"1\">\n    res=/foo/bar/paragraphs\n</div>"));
         //Check the content with repository = ''
-        assertThat(responseStr, containsString("<div id=\"2\">\n    res=/foo/bar/MetaData\n</div>"));
+        assertThat(responseStr, containsString("<div id=\"2\">\n    res=/foo/bar/paragraphs\n</div>"));
         //Check the content with repository = null
         assertThat(responseStr, containsString("<div id=\"3\">\n    res=/foo/bar/paragraphs\n</div>"));
     }

@@ -38,9 +38,7 @@ import static org.junit.Assert.*;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -58,8 +56,6 @@ import info.magnolia.test.model.Pair;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -222,36 +218,6 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     //        tplLoader.putTemplate("test2.ftl", "${flebele['foo'].@handle} ${flebele['foo'].name}");// ${flebele.foo.@handle}");
     //        assertRendereredContent("/root/flebele/foo", c, "test2.ftl");
     //    }
-
-    @Test
-    public void testCanRenderMetaData() throws TemplateException, IOException, AccessDeniedException {
-        final MockContent f = new MockContent("foo");
-        final MetaData md = f.createMetaData();
-        md.setAuthorId("greg");
-        md.setActivated();
-        md.setTitle("my test page");
-        md.setCreationDate();
-        final MockContent c = new MockContent("root");
-        c.addContent(f);
-        // skipping the time in the datetime format, cause i'm lazy: MetaData currently does not let me set the activation datetime as i want it
-        String expectedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        tplLoader.putTemplate("test.ftl", "${foo.MetaData.authorId}:${foo.MetaData.isActivated?string('yes','no')}:${foo.MetaData.title}:${foo.MetaData.creationDate?string('yyyy-MM-dd')}");
-        assertRendereredContent("greg:yes:my test page:" + expectedDate, c, "test.ftl");
-    }
-
-    @Test
-    public void testMetaDataIsOneOfTheChildrenRetrievedByTheChildrenBuiltIn() throws TemplateException, IOException, AccessDeniedException {
-        final MockContent f = new MockContent("foo");
-        final MetaData md = f.createMetaData();
-        md.setAuthorId("greg");
-        md.setActivated();
-        md.setTitle("my test page");
-        md.setCreationDate();
-        final MockContent c = new MockContent("pouet");
-        f.addContent(c);
-        tplLoader.putTemplate("test.ftl", "[#list c?children as n]${n},[/#list]");
-        assertRendereredContent("MetaData,pouet,", createSingleValueMap("c", f), "test.ftl");
-    }
 
     @Test
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {

@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockUtil;
 
@@ -109,7 +110,7 @@ public class PropertiesImportExportTest {
 
         Properties legacyExportedProperties = PropertiesImportExport.toProperties(hm);
         assertEquals("Legacy mode export doesn't contain @uuid, metadata, or @type nodes",
-                6, legacyExportedProperties.keySet().size()
+                10, legacyExportedProperties.keySet().size()
         );
     }
 
@@ -123,8 +124,8 @@ public class PropertiesImportExportTest {
         assertNotNull("Content retrievable by its UUID", uuidLinkNode);
         MetaData nodeMetaData = uuidLinkNode.getMetaData();
         assertNotNull("Metadata of node should not be null when it is set explicitly in the properties", nodeMetaData);
-        assertEquals("Template node is populated properly", "someParagraphName", nodeMetaData.getTemplate());
-        assertTrue("activation matches status set in the properties", nodeMetaData.getIsActivated());
+        assertEquals("Template node is populated properly", "someParagraphName", NodeTypes.RenderableMixin.getTemplate(uuidLinkNode.getJCRNode()));
+        assertTrue("activation matches status set in the properties", NodeTypes.ActivatableMixin.isActivated(uuidLinkNode.getJCRNode()));
 
     }
 

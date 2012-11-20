@@ -45,21 +45,19 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.RepositoryTestCase;
 
 import org.junit.Test;
 
 /**
  * Basic test for checking indication status.
- * @author mdivilek
- * @version $Id:$
  */
 public class IndicationStatusTest extends RepositoryTestCase{
 
@@ -99,34 +97,30 @@ public class IndicationStatusTest extends RepositoryTestCase{
         Content subPage2 = homePage.createContent("subpage2", CONTENT.getSystemName());
         hm.save();
 
-        MetaData homepageMetaData = homePage.getMetaData();
-        MetaData subpage1MetaData = subPage1.getMetaData();
-        MetaData subpage2MetaData = subPage2.getMetaData();
-
         homePage.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
         subPage1.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
         subPage2.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
         ContentVersion versionedHomePage = homePage.getVersionedContent("1.0");
 
         Thread.sleep(1);
-        homepageMetaData.setModificationDate();
-        subpage2MetaData.setModificationDate();
+        NodeTypes.LastModifiedMixin.setLastModified(homePage.getJCRNode());
+        NodeTypes.LastModifiedMixin.setLastModified(subPage2.getJCRNode());
 
-        assertFalse(homepageMetaData.getIsActivated());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(homePage.getJCRNode()));
 
         bsi.activate("/", versionedHomePage);
 
-        assertTrue(homepageMetaData.getIsActivated());
-        assertTrue(homepageMetaData.getModificationDate().after(homepageMetaData.getLastActionDate()));
-        assertEquals(MetaData.ACTIVATION_STATUS_MODIFIED, homepageMetaData.getActivationStatus());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(homePage.getJCRNode()));
+        assertTrue(NodeTypes.LastModifiedMixin.getLastModified(homePage.getJCRNode()).after(NodeTypes.ActivatableMixin.getLastActivated(homePage.getJCRNode())));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED, NodeTypes.ActivatableMixin.getActivationStatus(homePage.getJCRNode()));
 
-        assertTrue(subpage1MetaData.getIsActivated());
-        assertFalse(subpage1MetaData.getModificationDate().after(subpage1MetaData.getLastActionDate()));
-        assertEquals(MetaData.ACTIVATION_STATUS_ACTIVATED, subpage1MetaData.getActivationStatus());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(subPage1.getJCRNode()));
+        assertFalse(NodeTypes.LastModifiedMixin.getLastModified(subPage1.getJCRNode()).after(NodeTypes.ActivatableMixin.getLastActivated(subPage1.getJCRNode())));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, NodeTypes.ActivatableMixin.getActivationStatus(subPage1.getJCRNode()));
 
-        assertTrue(subpage2MetaData.getIsActivated());
-        assertTrue(subpage2MetaData.getModificationDate().after(subpage2MetaData.getLastActionDate()));
-        assertEquals(MetaData.ACTIVATION_STATUS_MODIFIED, subpage2MetaData.getActivationStatus());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(subPage2.getJCRNode()));
+        assertTrue(NodeTypes.LastModifiedMixin.getLastModified(subPage2.getJCRNode()).after(NodeTypes.ActivatableMixin.getLastActivated(subPage2.getJCRNode())));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED, NodeTypes.ActivatableMixin.getActivationStatus(subPage2.getJCRNode()));
     }
 
     @Test
@@ -150,27 +144,24 @@ public class IndicationStatusTest extends RepositoryTestCase{
         Content anotherPage = hm.createContent("/", "page", CONTENT.getSystemName());
         hm.save();
 
-        MetaData homepageMetaData = homePage.getMetaData();
-        MetaData anotherpageMetaData = anotherPage.getMetaData();
-
         homePage.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
         anotherPage.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
         ContentVersion versionedHomePage = homePage.getVersionedContent("1.0");
 
-        assertFalse(homepageMetaData.getIsActivated());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(homePage.getJCRNode()));
 
         bsi.activate("/", versionedHomePage);
 
-        assertTrue(homepageMetaData.getIsActivated());
-        assertFalse(homepageMetaData.getModificationDate().after(homepageMetaData.getLastActionDate()));
-        assertEquals(MetaData.ACTIVATION_STATUS_ACTIVATED, homepageMetaData.getActivationStatus());
+        assertTrue(NodeTypes.ActivatableMixin.isActivated(homePage.getJCRNode()));
+        assertFalse(NodeTypes.LastModifiedMixin.getLastModified(homePage.getJCRNode()).after(NodeTypes.ActivatableMixin.getLastActivated(homePage.getJCRNode())));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, NodeTypes.ActivatableMixin.getActivationStatus(homePage.getJCRNode()));
 
-        assertFalse(anotherpageMetaData.getIsActivated());
-        assertEquals(MetaData.ACTIVATION_STATUS_NOT_ACTIVATED, anotherpageMetaData.getActivationStatus());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(anotherPage.getJCRNode()));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED, NodeTypes.ActivatableMixin.getActivationStatus(anotherPage.getJCRNode()));
 
         bsi.deactivate(versionedHomePage);
 
-        assertFalse(homepageMetaData.getIsActivated());
-        assertEquals(MetaData.ACTIVATION_STATUS_NOT_ACTIVATED, homepageMetaData.getActivationStatus());
+        assertFalse(NodeTypes.ActivatableMixin.isActivated(homePage.getJCRNode()));
+        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED, NodeTypes.ActivatableMixin.getActivationStatus(homePage.getJCRNode()));
     }
 }

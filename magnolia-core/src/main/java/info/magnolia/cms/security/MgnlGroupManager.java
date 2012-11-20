@@ -38,7 +38,7 @@ import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
-import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
+import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.ArrayList;
@@ -169,7 +169,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         // remove duplicates
         Collection<String> groups = new HashSet<String>();
         if (node.hasNode(NODE_GROUPS)) {
-            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_GROUPS).getProperties(), NodeUtil.ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER); iter.hasNext();) {
                 Property subgroup = iter.nextProperty();
                 String resources = getResourceName(subgroup.getString());
                 if(resources != null){
@@ -180,7 +180,7 @@ public class MgnlGroupManager extends RepositoryBackedSecurityManager implements
         Collection<String> roles = new HashSet<String>();
         if (node.hasNode(NODE_ROLES)) {
             RoleManager roleMan = SecuritySupport.Factory.getInstance().getRoleManager();
-            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_ROLES).getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
+            for (PropertyIterator iter = new FilteringPropertyIterator(node.getNode(NODE_ROLES).getProperties(), NodeUtil.ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER); iter.hasNext();) {
                 Property role = iter.nextProperty();
                 try {
                     String roleName = roleMan.getRoleNameById(role.getString());

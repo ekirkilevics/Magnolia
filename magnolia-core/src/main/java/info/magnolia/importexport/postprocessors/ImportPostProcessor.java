@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,32 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.rendering.template.assignment;
-
-import java.util.Collection;
-
-import info.magnolia.registry.RegistrationException;
-import info.magnolia.rendering.template.TemplateDefinition;
+package info.magnolia.importexport.postprocessors;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-
 /**
- * Knows which template to use for the rendering of the content.
+ * Post processor used to transform nodes following an import operation. Commonly used for migration.
  *
- * @version $Id$
+ * @see info.magnolia.importexport.DataTransporter
  */
-public interface TemplateDefinitionAssignment {
+public interface ImportPostProcessor {
 
-    /**
-     * Returns the id of the template assigned to a node or null if none has been assigned.
-     */
-    String getAssignedTemplate(Node content) throws RepositoryException;
-
-    TemplateDefinition getAssignedTemplateDefinition(Node content) throws RegistrationException;
-
-    TemplateDefinition getDefaultTemplate(Node content);
-
-    Collection<TemplateDefinition> getAvailableTemplates(Node content);
+    void postProcessNode(Node node) throws RepositoryException;
 }
