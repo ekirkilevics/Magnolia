@@ -41,10 +41,11 @@
       <artifactId>magnolia-core</artifactId>
       <version>5.0-SNAPSHOT</version>
     </dependency>
+    <!-- temporary dep as old UI will be dropped soon -->
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>4.5.6</version>
     </dependency>
     <!-- dependency TODO needed for ParagraphSelectDialog - but currently
       circular, so see note in info.magnolia.module.templatingcomponentsomponents.EditBar
