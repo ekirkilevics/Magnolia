@@ -54,7 +54,7 @@ public class NodeTypes {
     public static final String JCR_PREFIX = "jcr:";
 
     /** Default suffix for userName keeping properties. */
-    public static final String BY = "By";
+    private static final String BY = "By";
 
     /**
      * Represents the mixin mgnl:lastModified.
