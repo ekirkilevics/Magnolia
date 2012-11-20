@@ -164,6 +164,10 @@ public class MetaData {
         this.node = workingNode;
     }
 
+    /**
+     * Maps property names from the names used when we had a MetaData sub node to their replacements on mixins on the
+     * working node itself.
+     */
     private static Map<String, String> propertyMappings = new ConcurrentHashMap<String, String>();
 
     static {

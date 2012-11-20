@@ -42,6 +42,7 @@ import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
@@ -529,12 +530,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         Set<String> groups = collectUniquePropertyNames(privilegedUserNode, "groups", RepositoryConstants.USER_GROUPS, false);
 
         Map<String, String> properties = new HashMap<String, String>();
-        for (PropertyIterator iter = privilegedUserNode.getProperties(); iter.hasNext(); ) {
+        for (PropertyIterator iter = new FilteringPropertyIterator(privilegedUserNode.getProperties(), NodeUtil.ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER); iter.hasNext();) {
             Property prop = iter.nextProperty();
-            if (prop.getName().startsWith(MgnlNodeType.JCR_PREFIX) || prop.getName().startsWith(MgnlNodeType.MGNL_PREFIX)) {
-                // skip special props
-                continue;
-            }
             //TODO: should we check and skip binary props in case someone adds image to the user?
             properties.put(prop.getName(), prop.getString());
         }
@@ -594,12 +591,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
             @Override
             public Void exec(Session session) throws RepositoryException {
-                for (PropertyIterator props = node.getProperties(); props.hasNext();) {
-                    Property property = props.nextProperty();
-                    if (property.getName().startsWith(MgnlNodeType.JCR_PREFIX) || property.getName().startsWith(MgnlNodeType.MGNL_PREFIX)) {
-                        // skip special props
-                        continue;
-                    }
+                for (PropertyIterator iter = new FilteringPropertyIterator(node.getProperties(), NodeUtil.ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER); iter.hasNext();) {
+                    Property property = iter.nextProperty();
                     final String uuid = property.getString();
                     try {
                         final Node targetNode = session.getNodeByIdentifier(uuid);

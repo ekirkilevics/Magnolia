@@ -75,6 +75,30 @@ public class NodeUtil {
     private static final Logger log = LoggerFactory.getLogger(NodeUtil.class);
 
     /**
+     * Predicate hiding properties prefixed with jcr or mgnl.
+     */
+    public static AbstractPredicate<Property> ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER = new AbstractPredicate<Property>() {
+
+        @Override
+        public boolean evaluateTyped(Property property) {
+            try {
+                String name = property.getName();
+                return !name.startsWith(NodeTypes.JCR_PREFIX) && !name.startsWith(NodeTypes.MGNL_PREFIX);
+            } catch (RepositoryException e) {
+                String path;
+                try {
+                    path = property.getPath();
+                } catch (RepositoryException e1) {
+                    path = "<path not available>";
+                }
+                log.error("Unable to read name of property {}", path);
+                // either invalid or not accessible to the current user
+                return false;
+            }
+        }
+    };
+
+    /**
      * Node filter accepting everything except nodes with namespace jcr (version and system store).
      * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr
      */
