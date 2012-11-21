@@ -33,11 +33,17 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.jcr.util.NodeTypes;
+import org.apache.jackrabbit.JcrConstants;
 
 /**
- * Constant for node-types used within Magnolia. Does not use {@link org.apache.jackrabbit.JcrConstants} from Jackrabbit's common-jar as these
- * are not composed out of prefix and suffix so it would not be conveniently possible to query e.g. if a NodeType starts with
- * MgnlNodeType.JCR_PREFIX.
+ * Keeps constants for node-types used within Magnolia.
+ * Only when converting MetaData to mixin(s) (MAGNOLIA-4640) we realized that we could benefit a lot from something
+ * more powerful than just a few constants. We wanted to model what properties are defined on what nodeTypes and also host the related utility methods at the same place.
+ * That's how {@link info.magnolia.jcr.util.NodeTypes} was born. As this type was only introduced with Magnolia 4.5 we'll not drop it we'll not drop it in the near future,
+ * even though we deprecated it in 5.0 release.
+ *
+ * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes} for mgnl nodeType or property names or {@link org.apache.jackrabbit.JcrConstants} for jcr ones.
  */
 public final class MgnlNodeType {
 
@@ -47,49 +53,49 @@ public final class MgnlNodeType {
     public static final String NT_PREFIX = "nt:";
 
     /**
-     * Prefix for our mixin's.
+     * Prefix for jcr mixin's.
      */
     public static final String MIX_PREFIX = "mix:";
 
     /**
      * Prefix for mgnl-properties.
      */
-    public static final String MGNL_PREFIX = "mgnl:";
+    public static final String MGNL_PREFIX = NodeTypes.MGNL_PREFIX;
 
     /**
      * Prefix for jcr-properties.
      */
-    public static final String JCR_PREFIX = "jcr:";
+    public static final String JCR_PREFIX = NodeTypes.JCR_PREFIX;
 
     /**
      * Node type: base.
      */
-    public static final String NT_BASE = NT_PREFIX + "base";
+    public static final String NT_BASE = JcrConstants.NT_BASE;
 
     /**
      * Node type: unstructured.
      */
-    public static final String NT_UNSTRUCTURED = NT_PREFIX + "unstructured";
+    public static final String NT_UNSTRUCTURED = JcrConstants.NT_UNSTRUCTURED;
 
     /**
      * Node type: hierarchyNode.
      */
-    public static final String NT_HIERARCHY = NT_PREFIX + "hierarchyNode";
+    public static final String NT_HIERARCHY = JcrConstants.NT_HIERARCHYNODE;
 
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = MGNL_PREFIX + "folder";
+    public static final String NT_FOLDER = NodeTypes.Folder.NAME;
 
     /**
      * Node type: file.
      */
-    public static final String NT_FILE = NT_PREFIX + "file";
+    public static final String NT_FILE = JcrConstants.NT_FILE;
 
     /**
      * Node type: resource.
      */
-    public static final String NT_RESOURCE = MGNL_PREFIX + "resource";
+    public static final String NT_RESOURCE = NodeTypes.Resource.NAME;
 
     /**
      * Node type: metadata.
@@ -99,28 +105,28 @@ public final class MgnlNodeType {
     /**
      * Node type: content.
      */
-    public static final String NT_CONTENT = MGNL_PREFIX + "content";
+    public static final String NT_CONTENT = NodeTypes.Content.NAME;
 
     /**
      * Node type: content node.
      */
-    public static final String NT_CONTENTNODE = MGNL_PREFIX + "contentNode";
+    public static final String NT_CONTENTNODE = NodeTypes.ContentNode.NAME;
 
-    public static final String NT_PAGE = MGNL_PREFIX + "page";
-    public static final String NT_AREA = MGNL_PREFIX + "area";
-    public static final String NT_COMPONENT = MGNL_PREFIX + "component";
+    public static final String NT_PAGE = NodeTypes.Page.NAME;
+    public static final String NT_AREA = NodeTypes.Area.NAME;
+    public static final String NT_COMPONENT = NodeTypes.Component.NAME;
 
-    public static final String MGNL_NODE_DATA = MGNL_PREFIX + "nodeData";
+    public static final String MGNL_NODE_DATA = NodeTypes.NodeData.NAME;
 
-    public static final String NT_FROZENNODE = NT_PREFIX + "frozenNode";
+    public static final String NT_FROZENNODE = JcrConstants.NT_FROZENNODE;
 
-    public static final String USER = MGNL_PREFIX + "user";
+    public static final String USER = NodeTypes.User.NAME;
 
-    public static final String ROLE = MGNL_PREFIX + "role";
+    public static final String ROLE = NodeTypes.Role.NAME;
 
-    public static final String GROUP = MGNL_PREFIX + "group";
+    public static final String GROUP = NodeTypes.Group.NAME;
 
-    public static final String SYSTEM = MGNL_PREFIX + "reserve";
+    public static final String SYSTEM = NodeTypes.System.NAME;
 
     // Mixins
 
@@ -132,27 +138,27 @@ public final class MgnlNodeType {
     /**
      * Mixin: node can be referenced.
      */
-    public static final String MIX_REFERENCEABLE = MIX_PREFIX + "referenceable";
+    public static final String MIX_REFERENCEABLE = JcrConstants.MIX_REFERENCEABLE;
 
     /**
      * Mixin: node can be versioned.
      */
-    public static final String MIX_VERSIONABLE = MIX_PREFIX + "versionable";
+    public static final String MIX_VERSIONABLE = JcrConstants.MIX_VERSIONABLE;
 
-    public static final String MIX_LOCKABLE = MIX_PREFIX + "lockable";
+    public static final String MIX_LOCKABLE = JcrConstants.MIX_LOCKABLE;
 
-    public static final String MIX_DELETED = MGNL_PREFIX + "deleted";
+    public static final String MIX_DELETED = NodeTypes.DeletedMixin.NAME;
 
     // JCR properties.
 
-    public static final String JCR_FROZENNODE = JCR_PREFIX + "frozenNode";
+    public static final String JCR_FROZENNODE = JcrConstants.JCR_FROZENNODE;
 
-    public static final String JCR_FROZEN_PRIMARY_TYPE = JCR_PREFIX + "frozenPrimaryType";
+    public static final String JCR_FROZEN_PRIMARY_TYPE = JcrConstants.JCR_FROZENPRIMARYTYPE;
 
-    public static final String JCR_PRIMARY_TYPE = JCR_PREFIX + "primaryType";
+    public static final String JCR_PRIMARY_TYPE = JcrConstants.JCR_PRIMARYTYPE;
 
-    public static final String JCR_DATA = JCR_PREFIX + "data";
+    public static final String JCR_DATA = JcrConstants.JCR_DATA;
 
-    public static final String JCR_CONTENT = JCR_PREFIX + "content";
+    public static final String JCR_CONTENT = JcrConstants.JCR_CONTENT;
 
 }

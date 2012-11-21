@@ -35,12 +35,10 @@ package info.magnolia.rendering.model;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.RequestDispatchUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.engine.RenderException;
@@ -49,7 +47,7 @@ import info.magnolia.rendering.renderer.RenderingModelBasedRenderer;
 import info.magnolia.rendering.renderer.registry.RendererRegistry;
 import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.rendering.template.TemplateDefinition;
-import info.magnolia.rendering.template.registry.TemplateDefinitionRegistry;
+import info.magnolia.rendering.template.assignment.TemplateDefinitionAssignment;
 
 import java.io.IOException;
 
@@ -60,8 +58,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Filter that executes the model for a renderable before template rendering. Looks for a request parameter containing
@@ -90,7 +86,7 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
     @Inject
     private RendererRegistry rendererRegistry;
     @Inject
-    private TemplateDefinitionRegistry templateDefinitionRegistry;
+    private TemplateDefinitionAssignment templateDefinitionAssignment;
 
     private String attributeName = DEFAULT_MODEL_EXECUTION_ATTRIBUTE_NAME;
 
@@ -196,17 +192,16 @@ public class ModelExecutionFilter extends OncePerRequestAbstractMgnlFilter {
      * Returns the TemplateDefinition for the supplied content. Never returns null.
      */
     protected TemplateDefinition getTemplateDefinition(Node content) throws ServletException {
-        MetaData metaData = MetaDataUtil.getMetaData(content);
-
-        if (metaData == null || StringUtils.isEmpty(metaData.getTemplate())) {
-            throw new ServletException("No template name set for node with identifier: " + NodeUtil.getNodeIdentifierIfPossible(content));
-        }
 
         TemplateDefinition templateDefinition;
         try {
-            templateDefinition = templateDefinitionRegistry.getTemplateDefinition(metaData.getTemplate());
+            templateDefinition = templateDefinitionAssignment.getAssignedTemplateDefinition(content);
         } catch (RegistrationException e) {
-            throw new ServletException(e);
+            throw new ServletException("No template set or template not available for node with identifier: " + NodeUtil.getNodeIdentifierIfPossible(content));
+        }
+
+        if (templateDefinition == null) {
+            throw new ServletException("Template not available for node with identifier: " + NodeUtil.getNodeIdentifierIfPossible(content));
         }
 
         return templateDefinition;

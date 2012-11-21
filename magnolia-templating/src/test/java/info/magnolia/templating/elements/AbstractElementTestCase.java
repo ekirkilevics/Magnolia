@@ -89,25 +89,20 @@ public abstract class AbstractElementTestCase {
 
     private static final String CONTENT = StringUtils.join(Arrays.asList(
             "/foo/bar.@type=mgnl:content",
-            "/foo/bar/MetaData.@type=mgnl:metadata",
-            "/foo/bar/MetaData.mgnl\\:template=testPageTemplate0",
+            "/foo/bar.mgnl\\:template=testPageTemplate0",
             "/foo/bar/paragraphs.@type=mgnl:contentNode",
             "/foo/bar/paragraphs/0.@type=mgnl:contentNode",
             "/foo/bar/paragraphs/0.text=hello 0",
-            "/foo/bar/paragraphs/0/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/0/MetaData.mgnl\\:template=testParagraph0",
+            "/foo/bar/paragraphs/0.mgnl\\:template=testParagraph0",
             "/foo/bar/paragraphs/1.@type=mgnl:contentNode",
             "/foo/bar/paragraphs/1.text=hello 1",
-            "/foo/bar/paragraphs/1/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/1/MetaData.mgnl\\:template=testParagraph1",
+            "/foo/bar/paragraphs/1.mgnl\\:template=testParagraph1",
             "/foo/bar/paragraphs/2.@type=mgnl:contentNode",
             "/foo/bar/paragraphs/2.text=hello 2",
-            "/foo/bar/paragraphs/2/MetaData.@type=mgnl:metadata",
-            "/foo/bar/paragraphs/2/MetaData.mgnl\\:template=testParagraph2",
+            "/foo/bar/paragraphs/2.mgnl\\:template=testParagraph2",
             "/foo/bar/paragraphs/stage.text=stage",
             "/pouet/lol.@type=mgnl:content",
-            "/pouet/lol/MetaData.@type=mgnl:metadata",
-            "/pouet/lol/MetaData.mgnl\\:template=testPageTemplate1",
+            "/pouet/lol.mgnl\\:template=testPageTemplate1",
             "/no/metadata/here.@type=mgnl:content", ""), "\n");
 
     private MockSession session;

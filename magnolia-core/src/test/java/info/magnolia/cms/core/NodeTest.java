@@ -47,6 +47,7 @@ import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertiesImportExport;
 import info.magnolia.repository.Provider;
@@ -72,6 +73,7 @@ import javax.jcr.ValueFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.easymock.IAnswer;
 import org.junit.Test;
 
@@ -303,24 +305,24 @@ public class NodeTest extends RepositoryTestCase {
     public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws Exception {
         // GIVEN
         final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_CONTENTNODE);
-        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        node.addMixin(JcrConstants.MIX_VERSIONABLE);
         node.getSession().save();
-        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(NodeTypes.ContentNode.NAME, ",")).getFrozenNode();
 
         // WHEN-THEN
-        assertTrue(NodeUtil.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
+        assertTrue(NodeUtil.isNodeType(version, NodeTypes.ContentNode.NAME));
     }
 
     @Test
     public void testIsNodeTypeForNodeCheckFrozenTypeForSupertypesIfWereNotLookingForFrozenNodes() throws Exception {
         // GIVEN
-        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_AREA);
-        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", NodeTypes.Area.NAME);
+        node.addMixin(JcrConstants.MIX_VERSIONABLE);
         node.getSession().save();
-        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(NodeTypes.ContentNode.NAME, ",")).getFrozenNode();
 
         // WHEN-THEN
-        assertTrue(NodeUtil.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
+        assertTrue(NodeUtil.isNodeType(version, NodeTypes.ContentNode.NAME));
     }
 
     @Test

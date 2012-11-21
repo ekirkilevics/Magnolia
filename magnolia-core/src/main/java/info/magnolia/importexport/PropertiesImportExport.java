@@ -36,7 +36,6 @@ package info.magnolia.importexport;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.OrderedProperties;
@@ -251,27 +250,6 @@ public class PropertiesImportExport {
         String nodeUUID = node.getUUID();
         if (nodeUUID != null && StringUtils.isNotEmpty(nodeUUID)) {
             out.put(path + "@uuid", node.getUUID());
-        }
-
-        // dumping the metaData of a MetaData node is silly
-        if (dumpMetaData && !(nodeTypeName.equals("mgnl:metaData"))) {
-            Content metaDataNode = (node.getChildByName(MetaData.DEFAULT_META_NODE));
-            if (metaDataNode != null) {
-                // append the UUID and the type with a single recursive call
-                appendNodeTypeAndUUID(metaDataNode, out, false);
-
-                String baseMetadataPath = getExportPath(metaDataNode);
-                MetaData nodeMetaData = node.getMetaData();
-                // dump each metadata property one by one.
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:template", nodeMetaData.getTemplate());
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:authorid", nodeMetaData.getAuthorId());
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:activatorid", nodeMetaData.getActivatorId());
-                addStringProperty(out, baseMetadataPath + ".mgnl\\:title", nodeMetaData.getTitle());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:creationdate", nodeMetaData.getCreationDate());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastaction", nodeMetaData.getLastActionDate());
-                addDateProperty(out, baseMetadataPath + ".mgnl\\:lastmodified", nodeMetaData.getLastActionDate());
-                addBooleanProeprty(out, baseMetadataPath + ".mgnl\\:activated", nodeMetaData.getIsActivated());
-            }
         }
     }
 

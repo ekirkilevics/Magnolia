@@ -34,12 +34,15 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -47,14 +50,17 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Meta data of a content like creation date, modification date, assigned template, ...
+ * Represents the meta data of a node, its creation date, modification date, assigned template etc.
  *
- * @version $Id$
+ * As of 5.0 the meta data is stored directly on the node itself using mixins rather than in a subnode named MetaData.
+ * With this change this class was deprecated and replaced with corresponding methods in
+ * {@link info.magnolia.jcr.util.NodeUtil}.
+ *
+ * @deprecated since 5.0 - use instead the corresponding methods in NodeUtil
  */
 public class MetaData {
     private static final Logger log = LoggerFactory.getLogger(MetaData.class);
@@ -63,37 +69,78 @@ public class MetaData {
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
      * could be changed via custom templates if necessary.
      */
+
+    /**
+     * @deprecated since 5.0 - no longer supported
+     */
     public static final String TITLE = "title";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.CreatedMixin#CREATED} instead
+     */
     public static final String CREATION_DATE = "creationdate";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#LAST_MODIFIED} instead
+     */
     public static final String LAST_MODIFIED = "lastmodified";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#LAST_ACTIVATED} instead
+     */
     public static final String LAST_ACTION = "lastaction";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#LAST_MODIFIED_BY} instead
+     */
     public static final String AUTHOR_ID = "authorid";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#LAST_ACTIVATED_BY} instead
+     */
     public static final String ACTIVATOR_ID = "activatorid";
 
+    /**
+     * Template assigned to the node.
+     *
+     * @deprecated since 5.0 - use {@link NodeTypes.RenderableMixin#TEMPLATE} instead
+     */
     public static final String TEMPLATE = "template";
 
+    /**
+     * @deprecated since 5.0 - no longer supported
+     */
     public static final String TEMPLATE_TYPE = "templatetype";
 
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS} instead
+     */
     public static final String ACTIVATED = "activated";
 
     /**
-     * Name of the Node hosting the MetaData.
+     * Name of the node hosting the MetaData.
+     *
+     * @deprecated since 5.0 - there's no longer such a subnode
      */
     public static final String DEFAULT_META_NODE = "MetaData";
 
-    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
-
-    public static final int ACTIVATION_STATUS_MODIFIED = 1;
-
-    public static final int ACTIVATION_STATUS_ACTIVATED = 2;
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_NOT_ACTIVATED} instead
+     */
+    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
 
     /**
-     * meta data node.
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_MODIFIED} instead
+     */
+    public static final int ACTIVATION_STATUS_MODIFIED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED;
+
+    /**
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_ACTIVATED} instead
+     */
+    public static final int ACTIVATION_STATUS_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED;
+
+    /**
+     * Since 5.0 this is the working node itself.
      */
     private Node node;
 
@@ -114,69 +161,58 @@ public class MetaData {
      *            current <code>Node</code> on which <code>MetaData</code> is requested
      */
     public MetaData(Node workingNode) {
-        try {
-            this.node = workingNode.getNode(DEFAULT_META_NODE);
-        } catch (PathNotFoundException e) {
-            try {
-                log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(),
-                        workingNode.getPrimaryNodeType().getName());
-            } catch (RepositoryException re) {
-                // should never come here
-            }
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    public String getHandle() throws RepositoryException {
-        return this.node.getPath();
+        this.node = workingNode;
     }
 
     /**
-     * Part of metadata, same as name of actual storage node. This value is unique at the hierarchy level context.
-     *
-     * @return String value of the requested metadata
+     * Maps property names from the names used when we had a MetaData sub node to their replacements on mixins on the
+     * working node itself.
      */
-    public String getLabel() {
-        if (node == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData");
-            }
-        } else {
-            try {
-                return this.node.getName();
-            } catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-            }
-        }
-        return StringUtils.EMPTY;
+    private static Map<String, String> propertyMappings = new ConcurrentHashMap<String, String>();
+
+    static {
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + CREATION_DATE, NodeTypes.CreatedMixin.CREATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_MODIFIED, NodeTypes.LastModifiedMixin.LAST_MODIFIED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_ACTION, NodeTypes.ActivatableMixin.LAST_ACTIVATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + AUTHOR_ID, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATOR_ID, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + TEMPLATE, NodeTypes.RenderableMixin.TEMPLATE);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATED, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":comment", NodeTypes.VersionableMixin.COMMENT);
     }
 
     /**
-     * get property name with the prefix.
+     * Returns the property name to use including its prefix.
      *
      * @return name with namespace prefix
      */
     private String getInternalPropertyName(String name) {
-        if (StringUtils.indexOf(name, RepositoryConstants.NAMESPACE_PREFIX + ":") != 0) {
-            return RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
+        if (StringUtils.indexOf(name, ":") < 0) {
+            name = RepositoryConstants.NAMESPACE_PREFIX + ":" + name;
         }
-        return name;
+
+        String newName = propertyMappings.get(name);
+
+        if (newName == null) {
+            throw new IllegalArgumentException("Unsupported meta data property: " + name);
+        }
+
+        return newName;
     }
 
     /**
-     * Part of metadata , could be used as html header.
+     * @return value of property TITLE if it's around on working node
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - only for backwards compatibility.
      */
     public String getTitle() {
         return getStringProperty(TITLE);
     }
 
     /**
-     * Part of metadata, could be used as html header.
+     * Will set value of property TITLE on working node.
      *
-     * @param value
+     * @deprecated since 5.0 - only for backwards compatibility.
      */
     public void setTitle(String value) {
         setProperty(TITLE, value);
@@ -184,6 +220,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds creation date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#setCreated(Node)}
      */
     public void setCreationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -193,7 +231,7 @@ public class MetaData {
     /**
      * Part of metadata, get creation date of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#getCreated(Node)}
      */
     public Calendar getCreationDate() {
         return this.getDateProperty(CREATION_DATE);
@@ -201,6 +239,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated status of the current node.
+     *
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -208,6 +248,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated status of the current node.
+     *
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);
@@ -216,7 +258,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated status of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#isActivated(javax.jcr.Node)}
      */
     public boolean getIsActivated() {
         return getBooleanProperty(ACTIVATED);
@@ -224,6 +266,8 @@ public class MetaData {
 
     /**
      * Returns one of the ACTIVATION_STATUS_* constants.
+     *
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getActivationStatus(javax.jcr.Node)}
      */
     public int getActivationStatus() {
         if (getIsActivated()) {
@@ -240,6 +284,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds activated date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivated(javax.jcr.Node)}
      */
     public void setLastActivationActionDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -249,7 +295,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated/de- date of the current node.
      *
-     * @return Calendar
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivated(javax.jcr.Node)}
      */
     public Calendar getLastActionDate() {
         return getDateProperty(LAST_ACTION);
@@ -257,6 +303,8 @@ public class MetaData {
 
     /**
      * Part of metadata, adds modification date of the current node.
+     *
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModified(Node)}
      */
     public void setModificationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -267,7 +315,7 @@ public class MetaData {
      * Get last modified date of the node to which this meta data belongs or creation date in case content was not
      * modified since.
      *
-     * @return Calendar when last modification date can't be found.
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModified(Node)}
      */
     public Calendar getModificationDate() {
         Calendar modDate = getDateProperty(LAST_MODIFIED);
@@ -280,7 +328,7 @@ public class MetaData {
     /**
      * Part of metadata, last known author of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModifiedBy(javax.jcr.Node)}
      */
     public String getAuthorId() {
         return getStringProperty(AUTHOR_ID);
@@ -289,7 +337,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who did some action on this page.
      *
-     * @param value
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModifiedBy(javax.jcr.Node, String)}
      */
     public void setAuthorId(String value) {
         setProperty(AUTHOR_ID, value);
@@ -298,7 +346,7 @@ public class MetaData {
     /**
      * Part of metadata, last known activator of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivatedBy(javax.jcr.Node)}
      */
     public String getActivatorId() {
         return getStringProperty(ACTIVATOR_ID);
@@ -307,7 +355,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who last activated this page.
      *
-     * @param value
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivatedBy(javax.jcr.Node, String)}
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);
@@ -316,7 +364,7 @@ public class MetaData {
     /**
      * Part of metadata, template which will be used to render content of this node.
      *
-     * @return String value of the requested metadata
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.RenderableMixin#getTemplate(javax.jcr.Node)}
      */
     public String getTemplate() {
         return getStringProperty(TEMPLATE);
@@ -325,7 +373,7 @@ public class MetaData {
     /**
      * Part of metadata, template which will be used to render content of this node.
      *
-     * @param value
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.RenderableMixin#setTemplate(javax.jcr.Node, String)}
      */
     public void setTemplate(String value) {
         setProperty(TEMPLATE, value);
@@ -353,15 +401,10 @@ public class MetaData {
 
     private void setJCRProperty(String name, Object value) {
         final String propName = this.getInternalPropertyName(name);
-        if (node == null) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
-                    propName);
-        } else {
-            try {
-                PropertyUtil.setProperty(node, propName, value);
-            } catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
+        try {
+            PropertyUtil.setProperty(node, propName, value);
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
         }
     }
 
@@ -441,43 +484,11 @@ public class MetaData {
 
     private Property getJCRProperty(String name) throws RepositoryException {
         final String propName = this.getInternalPropertyName(name);
-        if (node == null) {
-            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}",
-                    propName);
-        } else {
-            try {
-                return node.getProperty(propName);
-            } catch (PathNotFoundException re) {
-                log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
-            }
+        try {
+            return node.getProperty(propName);
+        } catch (PathNotFoundException re) {
+            log.debug("PathNotFoundException for property [{}] in node {}", propName, node);
         }
         return null;
-    }
-
-    /**
-     * check if property exists.
-     *
-     * @param name
-     * @return true if the specified property exist
-     *
-     * @deprecated since 4.0 - not used
-     */
-    @Deprecated
-    public boolean hasProperty(String name) {
-        try {
-            return this.node.hasProperty(this.getInternalPropertyName(name));
-        } catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-        return false;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append("title", this.getTitle()).append("template", this.getTemplate())
-                .append("authorId", this.getAuthorId()).append("label", this.getLabel())
-                .append("activatorId", this.getActivatorId()).append("isActivated", this.getIsActivated())
-                .append("creationDate", this.getCreationDate()).append("lastActionDate", this.getLastActionDate())
-                .append("modificationDate", this.getModificationDate()).toString();
     }
 }

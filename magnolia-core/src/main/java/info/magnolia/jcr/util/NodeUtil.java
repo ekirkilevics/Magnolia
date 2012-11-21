@@ -60,6 +60,7 @@ import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.NodeTypeManager;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
 import org.apache.jackrabbit.commons.predicate.NodeTypePredicate;
 import org.apache.jackrabbit.commons.predicate.Predicate;
@@ -68,22 +69,46 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Various utility methods to collect data from JCR repository.
- *
- * @version $Id$
  */
 public class NodeUtil {
 
     private static final Logger log = LoggerFactory.getLogger(NodeUtil.class);
 
     /**
+     * Predicate hiding properties prefixed with jcr or mgnl.
+     */
+    public static AbstractPredicate<Property> ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER = new AbstractPredicate<Property>() {
+
+        @Override
+        public boolean evaluateTyped(Property property) {
+            try {
+                String name = property.getName();
+                return !name.startsWith(NodeTypes.JCR_PREFIX) && !name.startsWith(NodeTypes.MGNL_PREFIX);
+            } catch (RepositoryException e) {
+                String path;
+                try {
+                    path = property.getPath();
+                } catch (RepositoryException e1) {
+                    path = "<path not available>";
+                }
+                log.error("Unable to read name of property {}", path);
+                // either invalid or not accessible to the current user
+                return false;
+            }
+        }
+    };
+
+    /**
      * Node filter accepting everything except nodes with namespace jcr (version and system store).
+     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr
      */
     public static Predicate ALL_NODES_EXCEPT_JCR_FILTER = new AbstractPredicate<Node>() {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+                return !node.getName().startsWith(NodeTypes.JCR_PREFIX);
             } catch (RepositoryException e) {
+                log.error("Unable to read name for node {}", getNodePathIfPossible(node));
                 return false;
             }
         }
@@ -91,15 +116,17 @@ public class NodeUtil {
 
     /**
      * Node filter accepting everything except meta data and jcr types.
+     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr and because of MAGNOLIA-4640
      */
     public static AbstractPredicate<Node> EXCLUDE_META_DATA_FILTER = new AbstractPredicate<Node>() {
 
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return !node.getName().startsWith(MgnlNodeType.JCR_PREFIX)
+                return !node.getName().startsWith(NodeTypes.JCR_PREFIX)
                 && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
             } catch (RepositoryException e) {
+                log.error("Unable to read name or nodeType for node {}", getNodePathIfPossible(node));
                 return false;
             }
         }
@@ -116,10 +143,9 @@ public class NodeUtil {
             try {
                 String nodeTypeName = node.getPrimaryNodeType().getName();
                 // accept only "magnolia" nodes
-                return nodeTypeName.startsWith(MgnlNodeType.MGNL_PREFIX);
+                return nodeTypeName.startsWith(NodeTypes.MGNL_PREFIX);
             } catch (RepositoryException e) {
-                // TODO should we really mask this error? shouldn't it be thrown instead?
-                log.error("Unable to read nodetype for node {}", getNodePathIfPossible(node));
+                log.error("Unable to read nodeType for node {}", getNodePathIfPossible(node));
             }
             return false;
         }
@@ -158,16 +184,16 @@ public class NodeUtil {
     }
 
     /**
-     * TODO dlipp: better name? Clear javadoc! Move to MetaDataUtil, do not assign method-param! TODO cringele :
-     * shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
+     * TODO dlipp: better name? Clear javadoc! Do not assign method-param!
+     * TODO cringele : shouldn't @param nodeType be aligned to JCR API? There it is nodeTypeName, nodeType is used for NodeType object
      */
     public static boolean isNodeType(Node node, String type) throws RepositoryException {
         node = NodeUtil.deepUnwrap(node, JCRPropertiesFilteringNodeWrapper.class);
-        final String actualType = node.getProperty(MgnlNodeType.JCR_PRIMARY_TYPE).getString();
+        final String actualType = node.getProperty(JcrConstants.JCR_PRIMARYTYPE).getString();
         // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original
         // node type
-        if (MgnlNodeType.NT_FROZENNODE.equals(actualType) && !(MgnlNodeType.NT_FROZENNODE.equals(type))) {
-            final Property p = node.getProperty(MgnlNodeType.JCR_FROZEN_PRIMARY_TYPE);
+        if (JcrConstants.NT_FROZENNODE.equals(actualType) && !(JcrConstants.NT_FROZENNODE.equals(type))) {
+            final Property p = node.getProperty(JcrConstants.JCR_FROZENPRIMARYTYPE);
             final String s = p.getString();
             NodeTypeManager ntManager = node.getSession().getWorkspace().getNodeTypeManager();
             NodeType primaryNodeType = ntManager.getNodeType(s);
@@ -373,15 +399,13 @@ public class NodeUtil {
 
     /**
      * @return Whether the provided node as the provided permission or not.
-     * @throws RuntimeException
-     *             in case of RepositoryException.
+     * @throws RuntimeRepositoryException in case of RepositoryException.
      */
     public static boolean isGranted(Node node, long permissions) {
         try {
             return PermissionUtil.isGranted(node, permissions);
         } catch (RepositoryException e) {
-            // TODO dlipp - apply consistent ExceptionHandling
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -575,15 +599,15 @@ public class NodeUtil {
             return StringUtils.EMPTY;
         }
     }
-    
+
     public static NodeIterator filterNodeType(NodeIterator iterator, String nodeType){
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypePredicate(nodeType));
     }
-    
+
     public static NodeIterator filterDuplicates(NodeIterator iterator){
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.DuplicateNodePredicate());
     }
-    
+
     public static NodeIterator filterParentNodeType(NodeIterator iterator, final String nodeType) throws RepositoryException{
         return new FilteringNodeIterator(iterator, new info.magnolia.jcr.predicate.NodeTypeParentPredicate(nodeType)) {
             @Override
@@ -602,7 +626,7 @@ public class NodeUtil {
             }
         };
     }
-    
+
     public static Collection<Node> getCollectionFromNodeIterator(NodeIterator iterator){
         Collection<Node> nodeCollection = new HashSet<Node>(150);
         while(iterator.hasNext()){
@@ -610,7 +634,7 @@ public class NodeUtil {
         }
         return nodeCollection;
     }
-    
+
     //for n2b
     public static Collection<Node> getSortedCollectionFromNodeIterator(NodeIterator iterator){
         Collection<Node> nodeCollection = new LinkedList<Node>();
@@ -619,4 +643,5 @@ public class NodeUtil {
         }
         return nodeCollection;
     }
+
 }

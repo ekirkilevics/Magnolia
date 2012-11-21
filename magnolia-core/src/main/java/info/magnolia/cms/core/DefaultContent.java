@@ -651,13 +651,7 @@ public class DefaultContent extends AbstractContent {
 
     @Override
     public boolean hasMetaData() {
-        try {
-            return this.node.hasNode(MetaData.DEFAULT_META_NODE);
-        }
-        catch (RepositoryException re) {
-            log.debug(re.getMessage(), re);
-        }
-        return false;
+        return true;
     }
 
     @Override

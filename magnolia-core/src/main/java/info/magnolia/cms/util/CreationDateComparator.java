@@ -34,23 +34,30 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.jcr.util.NodeTypes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Date;
+import javax.jcr.RepositoryException;
 
 /**
  * Compares the creation date of 2 nodes. (using {@link info.magnolia.cms.core.MetaData})
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
 public class CreationDateComparator implements Comparator<Content> {
 
+    private static final Logger log = LoggerFactory.getLogger(CreationDateComparator.class);
+
     @Override
     public int compare(Content c1, Content c2) {
-        final Date date1 = c1.getMetaData().getCreationDate().getTime();
-        final Date date2 = c2.getMetaData().getCreationDate().getTime();
-        return date1.compareTo(date2);
+        try {
+            final Date date1 = NodeTypes.CreatedMixin.getCreated(c1.getJCRNode()).getTime();
+            final Date date2 = NodeTypes.CreatedMixin.getCreated(c2.getJCRNode()).getTime();
+            return date1.compareTo(date2);
+        } catch (RepositoryException e) {
+            log.error("Error retrieving Data from jcr node.", e);
+            return 0;
+        }
     }
-
 }

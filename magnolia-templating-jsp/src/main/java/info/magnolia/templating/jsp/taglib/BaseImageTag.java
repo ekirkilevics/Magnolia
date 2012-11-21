@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -247,8 +248,8 @@ public abstract class BaseImageTag extends SimpleTagSupport {
      * name is set to the value of the attribute imageContentNodeName. The name of the node will be set to a name that
      * is unique for the image. The property that stores the image will be set to the value of
      * PROPERTIES_FILENAME_VALUE. A sub-node is also created that stores the image properties.
-     * @param subString The text.
-     * @param textImageNode The node that will contain the text images.
+     * @param imageFile the file
+     * @param imageNode The node that will contain the text images.
      */
     protected void createImageNode(File imageFile, Content imageNode) throws PathNotFoundException,
         AccessDeniedException, RepositoryException, FileNotFoundException, IOException {
@@ -299,7 +300,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         imageFile.delete();
 
         // update modification date and save the new image node
-        imageNode.getMetaData().setModificationDate();
+        NodeTypes.LastModifiedMixin.setLastModified(imageNode.getJCRNode());
         imageNode.getParent().save();
     }
 }

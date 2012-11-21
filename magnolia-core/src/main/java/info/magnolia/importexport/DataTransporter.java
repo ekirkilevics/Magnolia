@@ -46,6 +46,8 @@ import info.magnolia.importexport.filters.MagnoliaV2Filter;
 import info.magnolia.importexport.filters.MetadataUuidFilter;
 import info.magnolia.importexport.filters.RemoveMixversionableFilter;
 import info.magnolia.importexport.filters.VersionFilter;
+import info.magnolia.importexport.postprocessors.MetaDataImportPostProcessor;
+import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -59,6 +61,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,6 +73,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -276,6 +280,10 @@ public class DataTransporter {
         Session session = ws.getSession();
 
         try {
+
+            // Collects a list with all nodes at the basepath before import so we can see exactly which nodes were imported afterwards
+            List<Node> nodesBeforeImport = NodeUtil.asList(NodeUtil.asIterable(session.getNode(basepath).getNodes()));
+
             if (keepVersionHistory) {
                 // do not manipulate
                 session.importXML(basepath, xmlStream, importMode);
@@ -347,6 +355,22 @@ public class DataTransporter {
                     // delete the dummy node
                     dummyRoot.remove();
                 }
+
+                // Post process all nodes that were imported
+                NodeIterator nodesAfterImport = session.getNode(basepath).getNodes();
+                while (nodesAfterImport.hasNext()) {
+                    Node nodeAfterImport = nodesAfterImport.nextNode();
+                    boolean existedBeforeImport = false;
+                    for (Node nodeBeforeImport : nodesBeforeImport) {
+                        if (NodeUtil.isSame(nodeAfterImport, nodeBeforeImport)) {
+                            existedBeforeImport = true;
+                            break;
+                        }
+                    }
+                    if (!existedBeforeImport) {
+                        postProcessAfterImport(nodeAfterImport);
+                    }
+                }
             }
         }
         catch (Exception e) {
@@ -366,6 +390,14 @@ public class DataTransporter {
                     "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.",
                     new Object[]{repositoryName, e.getClass().getName(), e.getMessage()}), e);
             throw new IOException(e.getMessage());
+        }
+    }
+
+    private static void postProcessAfterImport(Node node) throws RepositoryException {
+        try {
+            new MetaDataImportPostProcessor().postProcessNode(node);
+        } catch (RepositoryException e) {
+            throw new RepositoryException("Failed to post process imported nodes at path " + NodeUtil.getNodePathIfPossible(node) + ": " + e.getMessage(), e);
         }
     }
 

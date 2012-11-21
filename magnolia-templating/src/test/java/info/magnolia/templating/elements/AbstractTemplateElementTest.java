@@ -38,6 +38,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.context.RenderingContext;
@@ -58,8 +59,6 @@ import org.junit.Test;
 
 /**
  * Tests for AbstractAuthoringUiComponent.
- *
- * @version $Id$
  */
 public class AbstractTemplateElementTest extends AbstractElementTestCase {
 
@@ -169,7 +168,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
         Node content = getSession().getNode(contentPath);
 
         TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
-        String template = info.magnolia.jcr.util.MetaDataUtil.getMetaData(content).getTemplate();
+        String template = NodeTypes.RenderableMixin.getTemplate(content);
         TemplateDefinition definition = registry.getTemplateDefinition(template);
 
         assertEquals(expected, compo.getDefinitionMessage(definition, key));
