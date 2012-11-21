@@ -40,7 +40,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
@@ -48,7 +47,6 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
-import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.rendering.template.configured.ConfiguredInheritance;
@@ -1525,17 +1523,6 @@ public class TemplatingFunctionsTest {
         s.next();
         s.next();
         assertEquals("Should have skipped nodes of different type.",2, s.getIndex());
-    }
-
-    @Test
-    public void testMetaDataProperty() throws RepositoryException{
-        // GIVEN
-        Node myNode = new MockNode();
-        MetaDataUtil.getMetaData(myNode).setProperty(MetaData.TEMPLATE, "bar");
-        // WHEN
-        String property = functions.metaData(myNode, MetaData.TEMPLATE);
-        //THEN
-        assertEquals("bar", property);
     }
 
     @Test
