@@ -33,7 +33,8 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 
@@ -46,12 +47,12 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.MockContent;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Tests.
  */
-public class BaseSyndicatorImplTest extends TestCase {
+public class BaseSyndicatorImplTest {
 
     private final class DummySyndicator extends BaseSyndicatorImpl {
         @Override
@@ -68,14 +69,14 @@ public class BaseSyndicatorImplTest extends TestCase {
         }
     }
 
+    @Test
     public void testUpdateMetaDataWhenActivating() throws Exception {
         // GIVEN
         BaseSyndicatorImpl bsi = new DummySyndicator();
 
-        User user = createNiceMock(User.class);
+        User user = mock(User.class);
         final String activator = "batman";
-        expect(user.getName()).andReturn(activator).anyTimes();
-        replay(user);
+        when(user.getName()).thenReturn(activator);
 
         Rule rule = new Rule(new String[] {ItemType.CONTENT.getSystemName()});
 
@@ -97,7 +98,6 @@ public class BaseSyndicatorImplTest extends TestCase {
         bsi.updateMetaData(content, BaseSyndicatorImpl.ACTIVATE);
 
         // THEN - verify metaData got updated
-        verify(user);
         assertTrue(NodeTypes.ActivatableMixin.isActivated(content.getJCRNode()));
         assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(content.getJCRNode()));
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
@@ -108,14 +108,14 @@ public class BaseSyndicatorImplTest extends TestCase {
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
+    @Test
     public void testUpdateMetaDataWhenDeactivating() throws Exception {
         // GIVEN
         BaseSyndicatorImpl bsi = new DummySyndicator();
 
-        User user = createNiceMock(User.class);
+        User user = mock(User.class);
         final String activator = "batman";
-        expect(user.getName()).andReturn(activator).anyTimes();
-        replay(user);
+        when(user.getName()).thenReturn(activator);
 
         Rule rule = new Rule(new String[] {NodeTypes.Content.NAME});
 
@@ -148,6 +148,7 @@ public class BaseSyndicatorImplTest extends TestCase {
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
+    @Test
     public void testStripPassword() throws Exception {
         // GIVEM
         BaseSyndicatorImpl bsi = new DummySyndicator();
@@ -162,6 +163,7 @@ public class BaseSyndicatorImplTest extends TestCase {
         assertEquals(strippedOfURL, result);
     }
 
+    @Test
     public void testStripPasswordWithAdditionalParam() throws Exception {
         // GIVEM
         BaseSyndicatorImpl bsi = new DummySyndicator();
