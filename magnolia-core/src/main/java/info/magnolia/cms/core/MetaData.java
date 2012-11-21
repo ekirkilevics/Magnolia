@@ -178,6 +178,7 @@ public class MetaData {
         propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATOR_ID, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
         propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + TEMPLATE, NodeTypes.RenderableMixin.TEMPLATE);
         propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATED, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":comment", NodeTypes.VersionableMixin.COMMENT);
     }
 
     /**

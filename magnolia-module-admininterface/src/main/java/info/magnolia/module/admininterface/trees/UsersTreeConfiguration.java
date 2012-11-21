@@ -203,7 +203,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
     @Override
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
         tree.addFunctionBarItemFromContextMenu("edit");
-        if(!tree.getRootPath().equals("/system")){
+        if(tree.getRootPath() != null && !tree.getRootPath().equals("/system")) {
             tree.addFunctionBarItemFromContextMenu("new");
             tree.addFunctionBarItemFromContextMenu("newFolder");
         }
