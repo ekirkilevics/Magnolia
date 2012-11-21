@@ -54,6 +54,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.nodetype.NodeType;
 
+import info.magnolia.jcr.util.NodeTypes;
+import org.apache.jackrabbit.JcrConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -478,5 +480,57 @@ public class MockNodeTest {
         assertEquals(1, it.getSize());
         assertEquals("prop", property.getName());
         assertEquals("val", property.getString());
+    }
+
+    @Test
+    public void testIsNodeType() throws RepositoryException {
+        // GIVEN
+        final String nodeType = NodeTypes.ContentNode.NAME;
+        final Node newNode  = new MockNode("test", nodeType);
+
+        // WHEN
+        final boolean result = newNode.isNodeType(nodeType);
+
+        // THEN
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsNodeTypeWithSupertype() throws RepositoryException {
+        // GIVEN
+        final Node newNode  = new MockNode("test");
+
+        // WHEN
+        final boolean result = newNode.isNodeType(JcrConstants.NT_BASE);
+
+        // THEN
+        assertTrue(result);
+    }
+
+    @Test
+    public void testIsNodeTypeWithSetMixin() throws RepositoryException {
+        // GIVEN
+        final Node newNode  = new MockNode();
+        final String mixin = NodeTypes.ActivatableMixin.NAME;
+        newNode.addMixin(mixin);
+
+        // WHEN
+        final boolean result = newNode.isNodeType(mixin);
+
+        // THEN
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void testIsNodeTypeWithUnsetMixin() throws RepositoryException {
+        // GIVEN
+        Node newNode  = new MockNode();
+
+        // WHEN
+        final boolean result = newNode.isNodeType(NodeTypes.ActivatableMixin.NAME);
+
+        // THEN
+        assertFalse(result);
     }
 }

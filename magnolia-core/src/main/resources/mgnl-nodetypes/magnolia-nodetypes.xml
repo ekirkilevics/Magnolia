@@ -115,6 +115,8 @@
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
       <supertype>mgnl:created</supertype>
+      <supertype>mgnl:renderable</supertype>
+      <supertype>mgnl:activatable</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -130,6 +132,8 @@
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
       <supertype>mgnl:created</supertype>
+      <supertype>mgnl:renderable</supertype>
+      <supertype>mgnl:activatable</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -179,8 +183,6 @@
   <nodeType name="mgnl:page" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
-      <supertype>mgnl:activatable</supertype>
-      <supertype>mgnl:renderable</supertype>
     </supertypes>
   </nodeType>
 
@@ -188,7 +190,6 @@
   <nodeType name="mgnl:area" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:contentNode</supertype>
-      <supertype>mgnl:renderable</supertype>
     </supertypes>
   </nodeType>
 
@@ -196,7 +197,6 @@
   <nodeType name="mgnl:component" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:contentNode</supertype>
-      <supertype>mgnl:renderable</supertype>
     </supertypes>
   </nodeType>
 
@@ -204,7 +204,6 @@
   <nodeType name="mgnl:user" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
-      <supertype>mgnl:activatable</supertype>
     </supertypes>
   </nodeType>
 
@@ -212,7 +211,6 @@
   <nodeType name="mgnl:role" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
-      <supertype>mgnl:activatable</supertype>
     </supertypes>
   </nodeType>
 
@@ -220,7 +218,6 @@
   <nodeType name="mgnl:group" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
-      <supertype>mgnl:activatable</supertype>
     </supertypes>
   </nodeType>
 
