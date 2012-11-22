@@ -48,6 +48,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
+import info.magnolia.jcr.util.NodeTypes;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +56,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Creates a version for the passed path in the website repository.
- * @author Philipp Bracher
- * @version $Id$
  */
 public class VersionCommand extends RuleBasedCommand {
 
@@ -95,7 +94,7 @@ public class VersionCommand extends RuleBasedCommand {
     protected void addComment(final Content node) throws AccessDeniedException, RepositoryException {
         if(getComment() != null){
             synchronized (ExclusiveWrite.getInstance()) {
-                node.getMetaData().setProperty(Context.ATTRIBUTE_COMMENT, getComment());
+                NodeTypes.VersionableMixin.setComment(node.getJCRNode(), getComment());
                 node.save();
             }
         }

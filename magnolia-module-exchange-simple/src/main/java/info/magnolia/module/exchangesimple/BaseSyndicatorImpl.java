@@ -625,14 +625,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
         // update the passed node
         try {
-            if (type.equals(ACTIVATE)) {
-                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode(), true);
-            }
-            else {
-                NodeTypes.ActivatableMixin.setActivated(node.getJCRNode(), false);
-            }
-            NodeTypes.ActivatableMixin.setLastActivated(node.getJCRNode());
-            NodeTypes.ActivatableMixin.setLastActivatedBy(node.getJCRNode(), this.user.getName());
+            NodeTypes.ActivatableMixin.setLastActivation(node.getJCRNode(), this.user.getName(), type.equals(ACTIVATE));
         } catch (RepositoryException e) {
             log.error("Failed to update activation status on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);
         }
@@ -646,7 +639,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
                     } catch (InterruptedException e) {
                         log.warn("Thread interrupted while sleeping", e);
                     }
-                        NodeTypes.LastModifiedMixin.setLastModified(node.getJCRNode());
+                    NodeTypes.LastModifiedMixin.setLastModified(node.getJCRNode());
                 }
             } catch (RepositoryException e) {
                 log.error("Failed to update modification date on node: " + NodeUtil.getNodePathIfPossible(node.getJCRNode()), e);

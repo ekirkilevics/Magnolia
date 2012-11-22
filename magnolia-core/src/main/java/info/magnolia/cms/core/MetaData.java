@@ -355,7 +355,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who last activated this page.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivatedBy(javax.jcr.Node, String)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)} to directly set userName and true false.
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);

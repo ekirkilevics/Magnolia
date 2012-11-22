@@ -62,6 +62,8 @@ public class NodeTypesTest {
     public void setUpTestStructure() throws RepositoryException {
         root = new MockNode(new MockSession("test"));
         first = root.addNode(FIRST_CHILD);
+        first.addMixin(NodeTypes.CreatedMixin.NAME);
+        first.addMixin(NodeTypes.LastModifiedMixin.NAME);
         second = root.addNode(SECOND_CHILD);
         third = root.addNode(THIRD_CHILD);
     }
