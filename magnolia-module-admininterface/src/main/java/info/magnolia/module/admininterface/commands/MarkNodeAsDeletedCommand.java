@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.admininterface.commands;
 
+import java.util.Calendar;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -47,6 +48,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeTypes;
 
 
@@ -54,13 +56,7 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
 
     public static final String DELETED_NODE_TEMPLATE = "adminInterface:mgnlDeleted";
 
-    /**
-     * @deprecated since 5.0 - directly use {@link NodeTypes.DeletedMixin#DELETED_BY}
-     */
     public static final String DELETED_NODE_DELETED_BY = NodeTypes.DeletedMixin.DELETED_BY;
-    /**
-     * @deprecated since 5.0 - directly use {@link NodeTypes.DeletedMixin#DELETED}
-     */
     public static final String DELETED_NODE_DELETED_ON = NodeTypes.DeletedMixin.DELETED;
 
     private static final String DELETED_NODE_PROP_NAME = "deleteNode";
@@ -105,11 +101,13 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
     }
 
     private void storeDeletionInfo(Content node, Context context) throws AccessDeniedException, PathNotFoundException, RepositoryException {
+        node.setNodeData(NodeTypes.DeletedMixin.DELETED_BY, MgnlContext.getUser().getName());
+        node.setNodeData(NodeTypes.DeletedMixin.DELETED, Calendar.getInstance());
         String comment = (String) context.get("comment");
         if (comment == null) {
             comment = MessagesManager.get("versions.comment.restore");
         }
-        NodeTypes.DeletedMixin.setDeleted(node.getJCRNode(), comment);
+        node.getMetaData().setProperty(Context.ATTRIBUTE_COMMENT, comment);
     }
 
     private void version(Content node, Context context) throws UnsupportedRepositoryOperationException, RepositoryException {
@@ -119,7 +117,7 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
                 if (comment == null) {
                     comment = MessagesManager.get("versions.comment.deleted");
                 }
-                NodeTypes.VersionableMixin.setComment(node.getJCRNode(), comment);
+                node.getMetaData().setProperty(Context.ATTRIBUTE_COMMENT, comment);
                 node.save();
             }
             node.addVersion();

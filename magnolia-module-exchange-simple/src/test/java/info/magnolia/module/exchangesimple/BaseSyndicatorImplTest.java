@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
 
 import java.util.Calendar;
 
@@ -44,20 +43,15 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeTypes;
-import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.test.RepositoryTestCase;
-import org.junit.Test;
-
-import javax.jcr.Session;
+import info.magnolia.test.mock.MockContent;
+import junit.framework.TestCase;
 
 /**
  * Tests.
  */
-public class BaseSyndicatorImplTest extends RepositoryTestCase {
+public class BaseSyndicatorImplTest extends TestCase {
 
     private final class DummySyndicator extends BaseSyndicatorImpl {
         @Override
@@ -74,28 +68,24 @@ public class BaseSyndicatorImplTest extends RepositoryTestCase {
         }
     }
 
-    @Test
     public void testUpdateMetaDataWhenActivating() throws Exception {
         // GIVEN
         BaseSyndicatorImpl bsi = new DummySyndicator();
 
-        User user = mock(User.class);
+        User user = createNiceMock(User.class);
         final String activator = "batman";
-        when(user.getName()).thenReturn(activator);
+        expect(user.getName()).andReturn(activator).anyTimes();
+        replay(user);
 
         Rule rule = new Rule(new String[] {ItemType.CONTENT.getSystemName()});
 
         bsi.init(user, "repo", "workspace", rule);
-
-        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        Content root = ContentUtil.asContent(session.getRootNode());
-
-        Content content = root.createContent("test");
+        Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        NodeTypes.ActivatableMixin.setLastActivation(content.getJCRNode(), activator, false);
+        NodeTypes.ActivatableMixin.setLastActivated(content.getJCRNode());
 
-        NodeTypes.ActivatableMixin.setLastActivation(child.getJCRNode(), activator, false);
+        NodeTypes.ActivatableMixin.setLastActivated(child.getJCRNode());
 
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(10);
@@ -107,6 +97,7 @@ public class BaseSyndicatorImplTest extends RepositoryTestCase {
         bsi.updateMetaData(content, BaseSyndicatorImpl.ACTIVATE);
 
         // THEN - verify metaData got updated
+        verify(user);
         assertTrue(NodeTypes.ActivatableMixin.isActivated(content.getJCRNode()));
         assertEquals(activator, NodeTypes.ActivatableMixin.getLastActivatedBy(content.getJCRNode()));
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(content.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
@@ -117,28 +108,26 @@ public class BaseSyndicatorImplTest extends RepositoryTestCase {
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
-    @Test
     public void testUpdateMetaDataWhenDeactivating() throws Exception {
         // GIVEN
         BaseSyndicatorImpl bsi = new DummySyndicator();
 
-        User user = mock(User.class);
+        User user = createNiceMock(User.class);
         final String activator = "batman";
-        when(user.getName()).thenReturn(activator);
+        expect(user.getName()).andReturn(activator).anyTimes();
+        replay(user);
 
         Rule rule = new Rule(new String[] {NodeTypes.Content.NAME});
 
         bsi.init(user, "repo", "workspace", rule);
-
-        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        Content root = ContentUtil.asContent(session.getRootNode());
-
-        Content content = root.createContent("test");
+        Content content = new MockContent("test");
         Content child = content.createContent("childOfTest");
 
-        NodeTypes.ActivatableMixin.setLastActivation(content.getJCRNode(), activator, false);
+        NodeTypes.ActivatableMixin.setActivated(content.getJCRNode(), false);
+        NodeTypes.ActivatableMixin.setLastActivated(content.getJCRNode());
 
-        NodeTypes.ActivatableMixin.setLastActivation(child.getJCRNode(), activator, false);
+        NodeTypes.ActivatableMixin.setActivated(child.getJCRNode(), false);
+        NodeTypes.ActivatableMixin.setLastActivated(child.getJCRNode());
         // make sure there's a time difference in between the initial setting of the MetaData's and the implicit ones from call to updateMetaData
         Thread.sleep(1);
 
@@ -159,7 +148,6 @@ public class BaseSyndicatorImplTest extends RepositoryTestCase {
         assertTrue(NodeTypes.ActivatableMixin.getLastActivated(child.getJCRNode()).getTimeInMillis() > lastAction.getTimeInMillis());
     }
 
-    @Test
     public void testStripPassword() throws Exception {
         // GIVEM
         BaseSyndicatorImpl bsi = new DummySyndicator();
@@ -174,7 +162,6 @@ public class BaseSyndicatorImplTest extends RepositoryTestCase {
         assertEquals(strippedOfURL, result);
     }
 
-    @Test
     public void testStripPasswordWithAdditionalParam() throws Exception {
         // GIVEM
         BaseSyndicatorImpl bsi = new DummySyndicator();
