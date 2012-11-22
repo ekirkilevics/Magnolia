@@ -110,7 +110,7 @@ public class NodeTypesTest {
         final String userName = "Junit";
 
         // WHEN
-        NodeTypes.CreatedMixin.setCreation(first, userName);
+        NodeTypes.CreatedMixin.setCreation(first, userName, Calendar.getInstance());
 
         // THEN
         assertTrue("Created should just have been set", (Calendar.getInstance().getTimeInMillis() - first.getProperty(NodeTypes.CreatedMixin.CREATED).getDate().getTimeInMillis()) < 1000);
@@ -127,14 +127,16 @@ public class NodeTypesTest {
         longAgo.set(Calendar.YEAR, 1924);
         first.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, longAgo);
         first.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, oldUser);
+        assertEquals(longAgo.getTime(), first.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED).getDate().getTime());
 
         final String newUser = "Junit";
 
+        final Calendar now = Calendar.getInstance();
         // WHEN
-        NodeTypes.LastModifiedMixin.updateModification(first, newUser);
+        NodeTypes.LastModifiedMixin.setLastModification(first, newUser, now);
 
         // THEN
-        assertTrue("Lastmodified should just have been set", (Calendar.getInstance().getTimeInMillis() - first.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED).getDate().getTimeInMillis()) < 1000);
+        assertEquals(now.getTime(), first.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED).getDate().getTime());
         assertEquals(newUser, first.getProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY).getString());
     }
 }

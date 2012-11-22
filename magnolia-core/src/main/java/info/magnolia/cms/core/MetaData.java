@@ -221,7 +221,7 @@ public class MetaData {
     /**
      * Part of metadata, adds creation date of the current node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#setCreated(Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#setCreation(Node)}
      */
     public void setCreationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -240,7 +240,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -249,7 +249,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setActivated(javax.jcr.Node, boolean)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);
@@ -285,7 +285,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated date of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
      */
     public void setLastActivationActionDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -337,7 +337,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who did some action on this page.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModifiedBy(javax.jcr.Node, String)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModification(javax.jcr.Node, String, java.util.Calendar)}
      */
     public void setAuthorId(String value) {
         setProperty(AUTHOR_ID, value);

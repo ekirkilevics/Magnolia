@@ -84,25 +84,19 @@ public class NodeTypes {
         }
 
         /**
-         * Sets the date of modification and uses {@link info.magnolia.context.MgnlContext} to set the name of the user modifying a node.
+         * Sets the date of modification to current Calendar and uses {@link info.magnolia.context.MgnlContext} to set the name of the user.
          */
-        public static void updateModification(Node node) throws RepositoryException {
-            updateModification(node, getUserName());
-        }
-
-        /**
-         * Sets the current date as date of modification and the name of the user modifying a node.
-         */
-        static void updateModification(Node node, String userName) throws RepositoryException {
-            updateModification(node, userName, getCurrentCalendar());
+        public static void setLastModification(Node node) throws RepositoryException {
+            setLastModification(node, getUserName(), getCurrentCalendar());
         }
 
         /**
          * Sets the date of modification and the name of the user modifying a node.
          */
-        static void updateModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
-            setLastModified(node, lastModified);
-            setLastModifiedBy(node, userName);
+        public static void setLastModification(Node node, String userName, Calendar lastModified) throws RepositoryException {
+            checkNodeType(node, LastModifiedMixin.NAME, LAST_MODIFIED, LAST_MODIFIED_BY);
+            node.setProperty(LAST_MODIFIED, lastModified);
+            node.setProperty(LAST_MODIFIED_BY, userName);
             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
                     .getPrimaryNodeType().getName(), node.getName());
         }
@@ -111,23 +105,7 @@ public class NodeTypes {
          * Sets the current date as date of modification for a node.
          */
         public static void setLastModified(Node node) throws RepositoryException {
-            setLastModified(node, getCurrentCalendar());
-        }
-
-        /**
-         * Sets the date of modification for a node.
-         */
-        public static void setLastModified(Node node, Calendar modified) throws RepositoryException {
-            checkNodeType(node, LastModifiedMixin.NAME, LAST_MODIFIED);
-            node.setProperty(LAST_MODIFIED, modified);
-        }
-
-        /**
-         * Sets the name of the user that last modified a node.
-         */
-        public static void setLastModifiedBy(Node node, String userName) throws RepositoryException {
-            checkNodeType(node, LastModifiedMixin.NAME, LAST_MODIFIED_BY);
-            node.setProperty(LAST_MODIFIED_BY, userName);
+            setLastModification(node, getUserName(), getCurrentCalendar());
         }
     }
 
@@ -204,29 +182,6 @@ public class NodeTypes {
             node.setProperty(ACTIVATION_STATUS, isActivated);
         }
 
-        /**
-         * Set whether the node is activated or not.
-         */
-        public static void setActivated(Node node, boolean isActivated) throws RepositoryException {
-            checkNodeType(node, ActivatableMixin.NAME, ACTIVATION_STATUS);
-            node.setProperty(ACTIVATION_STATUS, isActivated);
-        }
-
-        /**
-         * Sets the time when the node was most recently activated.
-         */
-        public static void setLastActivated(Node node, Calendar calendar) throws RepositoryException {
-            checkNodeType(node, ActivatableMixin.NAME, LAST_ACTIVATED);
-            node.setProperty(LAST_ACTIVATED, calendar);
-        }
-
-        /**
-         * Sets the name of the user that performed the most recent activation.
-         */
-        public static void setLastActivatedBy(Node node, String userName) throws RepositoryException {
-            checkNodeType(node, ActivatableMixin.NAME, LAST_ACTIVATED_BY);
-            node.setProperty(LAST_ACTIVATED_BY, userName);
-        }
     }
 
     /**
@@ -256,16 +211,7 @@ public class NodeTypes {
          * user. Used with nodes having the <code>mgnl:created</code> mixin.
          */
         public static void setCreation(Node node) throws RepositoryException {
-            setCreation(node, getUserName());
-        }
-
-        /**
-         * Sets the current date as the node's creation date and sets the name of the creating user. Also sets the date of
-         * modification and the user last having modified the node to the same values. Used with nodes having the
-         * <code>mgnl:created</code> mixin.
-         */
-        public static void setCreation(Node node, String userName) throws RepositoryException {
-            setCreation(node, userName, getCurrentCalendar());
+            setCreation(node, getUserName(), getCurrentCalendar());
         }
 
         /**
@@ -273,29 +219,12 @@ public class NodeTypes {
          * modification and the user last having modified the node to the same values. Used with nodes having the
          * <code>mgnl:created</code> mixin.
          */
-        public static void setCreation(Node node, String userName, Calendar created) throws RepositoryException {
+        static void setCreation(Node node, String userName, Calendar created) throws RepositoryException {
             checkNodeType(node, NAME, CREATED, CREATED_BY);
             node.setProperty(CREATED, created);
             node.setProperty(CREATED_BY, userName);
 
-            // TODO dlipp: re-use by forwarding to existing method: caution - will trigger AuditLog...
-            LastModifiedMixin.updateModification(node, userName, created);
-        }
-
-        /**
-         * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
-         */
-        public void setCreated(Node node) throws RepositoryException {
-            checkNodeType(node, NAME, CREATED);
-            node.setProperty(CREATED, getCurrentCalendar());
-        }
-
-        /**
-         * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
-         */
-        public void setCreatedBy(Node node) throws RepositoryException {
-            checkNodeType(node, NAME, CREATED_BY);
-            node.setProperty(CREATED_BY, getUserName());
+            LastModifiedMixin.setLastModification(node, userName, created);
         }
     }
 
@@ -353,7 +282,7 @@ public class NodeTypes {
             return node.hasProperty(COMMENT) ? node.getProperty(COMMENT).getString() : null;
         }
 
-        public static void setDeleted(Node node, String comment) throws RepositoryException {
+        public static void setDeletion(Node node, String comment) throws RepositoryException {
             checkNodeType(node, NAME, DELETED, DELETED_BY, COMMENT);
             node.setProperty(DELETED, getCurrentCalendar());
             node.setProperty(DELETED_BY, getUserName());
@@ -478,7 +407,7 @@ public class NodeTypes {
 
     static final void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
         if (!node.isNodeType(nodeType)) {
-            throw new RepositoryException("Trying to set property/ies '" + StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' with PrimaryType '" + node.getPrimaryNodeType().getName() + "' is not of type '" + nodeType + "'!");
+            log.warn("Trying to set property/ies '" + StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' with PrimaryType '" + node.getPrimaryNodeType().getName() + "' is not of type '" + nodeType + "'!");
         }
     }
 }
