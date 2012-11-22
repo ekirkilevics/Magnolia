@@ -33,9 +33,12 @@
  */
 package info.magnolia.jcr.util;
 
-import java.util.Calendar;
-
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
+import info.magnolia.repository.RepositoryConstants;
+
+import java.util.Calendar;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -47,34 +50,41 @@ import javax.jcr.ValueFormatException;
  * from a caller perspective - independent from Content API. Internally content API is still used for now, but this will
  * most probably change quite soon.
  *
- * @deprecated since 5.0 - use {@link NodeTypes} instead
+ * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes} instead.
  */
 public class MetaDataUtil {
 
-    @Deprecated
+    /**
+     * @deprecated since 5.0 no longer needed -> metaData properties are now hosted on the working node.
+     */
     public static MetaData getMetaData(Node node) {
         return new MetaData(node);
     }
 
+    /**
+     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#updateModification(javax.jcr.Node)}.
+     */
     public static void updateMetaData(Node node) throws RepositoryException {
-        NodeTypes.LastModifiedMixin.updateModification(node);
+        MetaData md = getMetaData(node);
+        md.setModificationDate();
+        md.setAuthorId(MgnlContext.getUser().getName());
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_MODIFY, node.getSession().getWorkspace().getName(), node
+                .getPrimaryNodeType().getName(), node.getName());
     }
 
     /**
      * @return the lastModification or null it it was not set in JCR.
-     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#getLastModified(javax.jcr.Node)}
+     *
+     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModified(javax.jcr.Node)}.
      */
-    @Deprecated
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
-        return NodeTypes.LastModifiedMixin.getLastModified(node);
+        Node meta = node.getNode(MetaData.DEFAULT_META_NODE);
+        String lastMod = RepositoryConstants.NAMESPACE_PREFIX + ":" + MetaData.LAST_MODIFIED;
+        return (meta.hasProperty(lastMod)) ? meta.getProperty(lastMod).getDate() : null;
     }
 
-    /**
-     * @deprecated since 5.0 - use {@link NodeTypes.RenderableMixin#getTemplate(javax.jcr.Node)}
-     */
-    @Deprecated
-    public static String getTemplate(Node node) throws RepositoryException {
-        return NodeTypes.RenderableMixin.getTemplate(node);
+    public static String getTemplate(Node node) {
+        return getMetaData(node).getTemplate();
     }
 
 }
