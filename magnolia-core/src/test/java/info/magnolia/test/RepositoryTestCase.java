@@ -90,24 +90,10 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        workaroundJCR1778();
-
         if (isAutoStart()) {
             cleanUp();
             startRepository();
         }
-    }
-
-    /**
-     * @deprecated - workaround until JCR-1778 is fixed
-     * @see <a href="https://issues.apache.org/jira/browse/JCR-1778">JCR-1778</a>
-     */
-    @Deprecated
-    static void workaroundJCR1778() throws NoSuchFieldException, IllegalAccessException {
-        final Field cacheField = BindableRepositoryFactory.class.getDeclaredField("cache");
-        cacheField.setAccessible(true);
-        final Map cache = (Map) cacheField.get(null);
-        cache.clear();
     }
 
     protected void modifyContextesToUseRealRepository() {

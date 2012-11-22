@@ -66,39 +66,6 @@ public class SelfTest {
     }
 
     /**
-     * Jackrabbit keeps a cache of jndi references since 1.4.6
-     * See https://issues.apache.org/jira/browse/JCR-1778
-     */
-    @Test
-    public void testJackrabbitUnregistersProperly() throws Exception {
-        Hashtable environment = new Hashtable();
-        environment.put(Context.INITIAL_CONTEXT_FACTORY, DummyInitialContextFactory.class.getName());
-        environment.put(Context.PROVIDER_URL, "http://jackrabbit.apache.org/");
-        Context context = new InitialContext(environment);
-
-        String xml = "src/test/resources/repo-conf/jackrabbit-memory-search.xml";
-        String dir = "target/repository";
-        String key = "repository";
-
-        // Create first repository
-        {
-            RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final Repository repository = (Repository) context.lookup(key);
-            repository.login(new SimpleCredentials("admin", "admin".toCharArray())).logout(); // throws an IllegalStateException!
-            RegistryHelper.unregisterRepository(context, key);
-        }
-
-        RepositoryTestCase.workaroundJCR1778();
-        // Create second repository with the same configuration
-        {
-            RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final Repository repository = (Repository) context.lookup(key);
-            repository.login().logout(); // throws an IllegalStateException!
-            RegistryHelper.unregisterRepository(context, key);
-        }
-    }
-
-    /**
      * This test breaks currently when run against commons-beanutils 1.8, but works fine with version 1.7
      */
     @Test
