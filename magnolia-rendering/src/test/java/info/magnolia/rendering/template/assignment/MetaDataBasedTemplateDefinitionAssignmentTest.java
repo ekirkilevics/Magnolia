@@ -111,7 +111,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        ComponentsTestUtil.clear(); // MgnlContext.initMockContext() uses ComponentsTestUtil
+        // MgnlContext.initMockContext() uses ComponentsTestUtil
+        ComponentsTestUtil.clear();
     }
 
     @Test
@@ -119,6 +120,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // GIVEN
         final String templateId = "id";
         MockNode node = new MockNode();
+        node.addMixin(NodeTypes.RenderableMixin.NAME);
         NodeTypes.RenderableMixin.setTemplate(node, templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
@@ -154,7 +156,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);
 
-        // TEST
+        // THEN
         assertEquals(1, availableTemplates.size());
         assertSame(deletedTemplate, availableTemplates.iterator().next());
     }
@@ -185,7 +187,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);
 
-        // TEST
+        // THEN
         assertEquals(1, availableTemplates.size());
         assertSame(visibleTemplate, availableTemplates.iterator().next());
     }
@@ -201,7 +203,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
-        MockNode parentNode = new MockNode(session);
+        Node parentNode = session.getRootNode();
+        parentNode.addMixin(NodeTypes.RenderableMixin.NAME);
         NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template1");
         Node mockNode = parentNode.addNode("child");
 

@@ -86,7 +86,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.CreatedMixin.setCreation(node, "superuser", calendar);
+        node.setProperty(NodeTypes.CreatedMixin.CREATED, calendar);
         // WHEN
         String property = functions.metaData(node, MetaData.CREATION_DATE);
         //THEN
@@ -98,7 +98,8 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.LastModifiedMixin.setLastModified(node, calendar);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
+
         // WHEN
         String property = functions.metaData(node, MetaData.LAST_MODIFIED);
         //THEN
@@ -121,7 +122,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedAuthorId() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.LastModifiedMixin.setLastModifiedBy(node, "testuser");
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "testuser");
         // WHEN
         String property = functions.metaData(node, MetaData.AUTHOR_ID);
         //THEN
@@ -132,7 +133,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedActivatorId() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.ActivatableMixin.setLastActivatedBy(node, "testuser");
+        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "testuser");
         // WHEN
         String property = functions.metaData(node, MetaData.ACTIVATOR_ID);
         //THEN
@@ -143,7 +144,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedTemplate() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.RenderableMixin.setTemplate(node, "test:pages/main");
+        node.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "test:pages/main");
         // WHEN
         String property = functions.metaData(node, MetaData.TEMPLATE);
         //THEN
@@ -176,7 +177,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.CreatedMixin.setCreation(node, "superuser", calendar);
+        node.setProperty(NodeTypes.CreatedMixin.CREATED, calendar);
         // WHEN
         String created = functions.metaData(node, NodeTypes.CreatedMixin.CREATED);
         //THEN
@@ -186,9 +187,8 @@ public class TemplatingFunctionsMetaDataTest {
     @Test
     public void testCreatedBy() throws RepositoryException {
         // GIVEN
-        Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.CreatedMixin.setCreation(node, "testuser", calendar);
+        node.setProperty(NodeTypes.CreatedMixin.CREATED_BY, "testuser");
         // WHEN
         String createdBy = functions.metaData(node, NodeTypes.CreatedMixin.CREATED_BY);
         //THEN
@@ -200,7 +200,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.CreatedMixin.setCreation(node, "superuser", calendar);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
         // WHEN
         String created = functions.metaData(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED);
         //THEN
@@ -210,9 +210,8 @@ public class TemplatingFunctionsMetaDataTest {
     @Test
     public void testLastModifiedBy() throws RepositoryException {
         // GIVEN
-        Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        NodeTypes.CreatedMixin.setCreation(node, "testuser", calendar);
+        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "testuser");
         // WHEN
         String createdBy = functions.metaData(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
         //THEN
@@ -223,7 +222,8 @@ public class TemplatingFunctionsMetaDataTest {
     public void testTemplate() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.RenderableMixin.setTemplate(node, "test:pages/main");
+        node.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "test:pages/main");
+
         // WHEN
         String template = functions.metaData(node, NodeTypes.RenderableMixin.TEMPLATE);
         //THEN
@@ -246,7 +246,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testLastActivatedBy() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.ActivatableMixin.setLastActivatedBy(node, "testuser");
+        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "testuser");
         // WHEN
         String lastActivatedBy = functions.metaData(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
         //THEN
@@ -257,7 +257,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testActivationStatus() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        NodeTypes.ActivatableMixin.setActivated(node, false);
+        node.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, false);
         // WHEN
         String activationStatus = functions.metaData(node, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
         //THEN
