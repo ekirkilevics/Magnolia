@@ -478,7 +478,7 @@ public class NodeTypes {
 
     static final void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
         if (!node.isNodeType(nodeType)) {
-            throw new RepositoryException("Trying to set property/ies '"+ StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' is not of type '" + nodeType + "'!");
+            throw new RepositoryException("Trying to set property/ies '" + StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' with PrimaryType '" + node.getPrimaryNodeType().getName() + "' is not of type '" + nodeType + "'!");
         }
     }
 }

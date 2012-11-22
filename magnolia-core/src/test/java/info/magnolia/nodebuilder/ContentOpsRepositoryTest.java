@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class ContentOpsRepositoryTest extends RepositoryTestCase {
     @Test
     public void testSetTemplate() throws RepositoryException {
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        Node contentNode = session.getRootNode().addNode(NEW_CONTENT_NAME);
+        Node contentNode = session.getRootNode().addNode(NEW_CONTENT_NAME, NodeTypes.Content.NAME);
         Content content = ContentUtil.asContent(contentNode);
 
         ContentOps.setTemplate(TEMPLATE_NAME).exec(content, ERROR_HANDLER);

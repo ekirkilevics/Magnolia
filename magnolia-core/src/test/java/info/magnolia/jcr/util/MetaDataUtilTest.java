@@ -45,7 +45,6 @@ import info.magnolia.test.RepositoryTestCase;
 
 import java.util.Date;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Node;
 
@@ -58,27 +57,27 @@ import org.junit.Test;
  */
 public class MetaDataUtilTest extends RepositoryTestCase {
 
-    private Node root;
+    private Node testNode;
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        root = session.getRootNode();
+        testNode = session.getRootNode().addNode("test", NodeTypes.Content.NAME);
     }
     @Test
     public void testGetMetaData() throws Exception {
 
         // WHEN
-        MetaData md = MetaDataUtil.getMetaData(root);
+        MetaData md = MetaDataUtil.getMetaData(testNode);
 
         // THEN
         assertNotNull(md);
     }
 
     @Test
-    public void testUpdateMetaData() throws RepositoryException{
+    public void testUpdateMetaData() throws Exception {
         // GIVEN
         final String testUserName = "test";
         final Context ctx = mock(Context.class);
@@ -88,22 +87,23 @@ public class MetaDataUtilTest extends RepositoryTestCase {
         when(ctx.getUser()).thenReturn(user);
         when(user.getName()).thenReturn(testUserName);
 
-        MetaData metaData = MetaDataUtil.getMetaData(root);
+        MetaData metaData = MetaDataUtil.getMetaData(testNode);
 
         // WHEN
-        MetaDataUtil.updateMetaData(root);
+        MetaDataUtil.updateMetaData(testNode);
 
         // THEN
         Date lastMod = metaData.getModificationDate().getTime();
-        assertTrue("lastMod hast not been updated in the last 100ms!" , System.currentTimeMillis() - lastMod.getTime() < 100);
+        long diff = System.currentTimeMillis() - lastMod.getTime();
 
-        String authorId = metaData.getAuthorId();
-        assertEquals(testUserName,authorId);
+        assertTrue("lastMod hast not been updated in the last 500ms - it was only " + diff + "ms!" , diff < 500);
+        assertEquals(testUserName, metaData.getAuthorId());
     }
 
     @Override
     @After
-    public void tearDown(){
+    public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
+        super.tearDown();
     }
 }
