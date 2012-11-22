@@ -35,6 +35,7 @@ package info.magnolia.jcr.util;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +118,7 @@ public class NodeTypes {
          * Sets the date of modification for a node.
          */
         public static void setLastModified(Node node, Calendar modified) throws RepositoryException {
+            checkNodeType(node, LastModifiedMixin.NAME, LAST_MODIFIED);
             node.setProperty(LAST_MODIFIED, modified);
         }
 
@@ -124,6 +126,7 @@ public class NodeTypes {
          * Sets the name of the user that last modified a node.
          */
         public static void setLastModifiedBy(Node node, String userName) throws RepositoryException {
+            checkNodeType(node, LastModifiedMixin.NAME, LAST_MODIFIED_BY);
             node.setProperty(LAST_MODIFIED_BY, userName);
         }
     }
@@ -195,6 +198,7 @@ public class NodeTypes {
          * Sets the name of the user that performed the most recent activation as well as to current time.
          */
         public static void setLastActivation(Node node, String userName, boolean isActivated) throws RepositoryException {
+            checkNodeType(node, ActivatableMixin.NAME, LAST_ACTIVATED, LAST_ACTIVATED_BY, ACTIVATION_STATUS);
             node.setProperty(LAST_ACTIVATED, getCurrentCalendar());
             node.setProperty(LAST_ACTIVATED_BY, userName);
             node.setProperty(ACTIVATION_STATUS, isActivated);
@@ -204,6 +208,7 @@ public class NodeTypes {
          * Set whether the node is activated or not.
          */
         public static void setActivated(Node node, boolean isActivated) throws RepositoryException {
+            checkNodeType(node, ActivatableMixin.NAME, ACTIVATION_STATUS);
             node.setProperty(ACTIVATION_STATUS, isActivated);
         }
 
@@ -211,6 +216,7 @@ public class NodeTypes {
          * Sets the time when the node was most recently activated.
          */
         public static void setLastActivated(Node node, Calendar calendar) throws RepositoryException {
+            checkNodeType(node, ActivatableMixin.NAME, LAST_ACTIVATED);
             node.setProperty(LAST_ACTIVATED, calendar);
         }
 
@@ -218,6 +224,7 @@ public class NodeTypes {
          * Sets the name of the user that performed the most recent activation.
          */
         public static void setLastActivatedBy(Node node, String userName) throws RepositoryException {
+            checkNodeType(node, ActivatableMixin.NAME, LAST_ACTIVATED_BY);
             node.setProperty(LAST_ACTIVATED_BY, userName);
         }
     }
@@ -267,9 +274,11 @@ public class NodeTypes {
          * <code>mgnl:created</code> mixin.
          */
         public static void setCreation(Node node, String userName, Calendar created) throws RepositoryException {
+            checkNodeType(node, NAME, CREATED, CREATED_BY);
             node.setProperty(CREATED, created);
             node.setProperty(CREATED_BY, userName);
 
+            // TODO dlipp: re-use by forwarding to existing method: caution - will trigger AuditLog...
             LastModifiedMixin.updateModification(node, userName, created);
         }
 
@@ -277,6 +286,7 @@ public class NodeTypes {
          * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
          */
         public void setCreated(Node node) throws RepositoryException {
+            checkNodeType(node, NAME, CREATED);
             node.setProperty(CREATED, getCurrentCalendar());
         }
 
@@ -284,6 +294,7 @@ public class NodeTypes {
          * Sets the current date as the node's creation date. Used with nodes having the <code>mgnl:created</code> mixin.
          */
         public void setCreatedBy(Node node) throws RepositoryException {
+            checkNodeType(node, NAME, CREATED_BY);
             node.setProperty(CREATED_BY, getUserName());
         }
     }
@@ -307,6 +318,7 @@ public class NodeTypes {
          * Sets the template assigned to the node. Used with nodes having the <code>mgnl:renderable</code> mixin.
          */
         public static void setTemplate(Node node, String template) throws RepositoryException {
+            checkNodeType(node, NAME, TEMPLATE);
             node.setProperty(TEMPLATE, template);
         }
     }
@@ -342,6 +354,7 @@ public class NodeTypes {
         }
 
         public static void setDeleted(Node node, String comment) throws RepositoryException {
+            checkNodeType(node, NAME, DELETED, DELETED_BY, COMMENT);
             node.setProperty(DELETED, getCurrentCalendar());
             node.setProperty(DELETED_BY, getUserName());
             node.setProperty(COMMENT, comment);
@@ -366,6 +379,7 @@ public class NodeTypes {
          * Set the versioning comment on the node.
          */
         public static void setComment(Node node, String comment) throws RepositoryException{
+            checkNodeType(node, NAME, COMMENT);
             node.setProperty(COMMENT, comment);
         }
     }
@@ -460,5 +474,11 @@ public class NodeTypes {
 
     protected static Calendar getCurrentCalendar() {
         return Calendar.getInstance();
+    }
+
+    static final void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
+        if (!node.isNodeType(nodeType)) {
+            throw new RepositoryException("Trying to set property/ies '"+ StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' is not of type '" + nodeType + "'!");
+        }
     }
 }

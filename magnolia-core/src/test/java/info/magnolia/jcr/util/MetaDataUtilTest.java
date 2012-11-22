@@ -35,33 +35,37 @@ package info.magnolia.jcr.util;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.test.RepositoryTestCase;
 
 import java.util.Date;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Node;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
-public class MetaDataUtilTest {
+public class MetaDataUtilTest extends RepositoryTestCase {
 
-    private MockNode root;
+    private Node root;
 
+    @Override
     @Before
-    public void setUp() {
-        MgnlContext.setInstance(null);
-        MockSession session = new MockSession("MetaDataTest");
-        root = (MockNode) session.getRootNode();
+    public void setUp() throws Exception {
+        super.setUp();
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        root = session.getRootNode();
     }
     @Test
     public void testGetMetaData() throws Exception {
@@ -97,6 +101,7 @@ public class MetaDataUtilTest {
         assertEquals(testUserName,authorId);
     }
 
+    @Override
     @After
     public void tearDown(){
         MgnlContext.setInstance(null);
