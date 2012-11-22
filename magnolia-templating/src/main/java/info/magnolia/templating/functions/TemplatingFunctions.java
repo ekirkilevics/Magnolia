@@ -44,6 +44,7 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.util.SessionUtil;
@@ -55,6 +56,7 @@ import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -67,6 +69,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ISO8601;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -619,7 +622,39 @@ public class TemplatingFunctions {
      * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
      */
     public String metaData(Node content, String property){
-        return MetaDataUtil.getMetaData(content).getStringProperty(property);
+
+        Object returnValue;
+        try {
+            if (property.equals(NodeTypes.CreatedMixin.CREATED)) {
+                returnValue = NodeTypes.CreatedMixin.getCreated(content);
+            } else if (property.equals(NodeTypes.CreatedMixin.CREATED_BY)) {
+                returnValue = NodeTypes.CreatedMixin.getCreatedBy(content);
+            } else if (property.equals(NodeTypes.LastModifiedMixin.LAST_MODIFIED)) {
+                returnValue = NodeTypes.LastModifiedMixin.getLastModified(content);
+            } else if (property.equals(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY)) {
+                returnValue = NodeTypes.LastModifiedMixin.getLastModifiedBy(content);
+            } else if (property.equals(NodeTypes.RenderableMixin.TEMPLATE)) {
+                returnValue = NodeTypes.RenderableMixin.getTemplate(content);
+            } else if (property.equals(NodeTypes.ActivatableMixin.LAST_ACTIVATED)) {
+                returnValue = NodeTypes.ActivatableMixin.getLastActivated(content);
+            } else if (property.equals(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY)) {
+                returnValue = NodeTypes.ActivatableMixin.getLastActivatedBy(content);
+            } else if (property.equals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS)) {
+                returnValue = NodeTypes.ActivatableMixin.getActivationStatus(content);
+            } else {
+
+                // Try to get the value using one of the deprecated names in MetaData.
+                // This throws an IllegalArgumentException if its not one of those constants
+                returnValue = MetaDataUtil.getMetaData(content).getStringProperty(property);
+
+                // If no exception was thrown then warn that a legacy constant was used
+                log.warn("Deprecated constant [" + property+"] used to query for meta data property on node [" + NodeUtil.getPathIfPossible(content) + "]");
+            }
+        } catch (RepositoryException e) {
+            return "";
+        }
+
+        return returnValue instanceof Calendar ? ISO8601.format((Calendar) returnValue) : returnValue.toString();
     }
 
     /**
