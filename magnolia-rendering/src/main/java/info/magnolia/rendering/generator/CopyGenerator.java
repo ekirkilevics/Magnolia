@@ -36,7 +36,6 @@ package info.magnolia.rendering.generator;
 import static info.magnolia.rendering.template.AutoGenerationConfiguration.NODE_TYPE;
 import static info.magnolia.rendering.template.AutoGenerationConfiguration.TEMPLATE_ID;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -56,8 +55,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of {@link Generator} which will create nodes and properties verbatim as found in {@link AutoGenerationConfiguration#getContent()}.
- * @version $Id$
- *
  */
 public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
@@ -112,7 +109,7 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
                 String template = (String) newNodeConfig.get(TEMPLATE_ID);
                 if (template != null) {
                     NodeTypes.RenderableMixin.setTemplate(newNode, template);
-                    MetaDataUtil.updateMetaData(newNode);
+                    NodeTypes.LastModifiedMixin.updateModification(newNode);
                 }
 
                 log.debug("creating {}", newNode.getPath());

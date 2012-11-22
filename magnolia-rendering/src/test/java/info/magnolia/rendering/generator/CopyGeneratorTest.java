@@ -39,15 +39,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.SessionTestUtil;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.test.RepositoryTestCase;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
 
 import org.junit.After;
@@ -65,24 +67,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * TODO fgrilli: tests are temporarily ignoring failing assertions on metadata.
  * When Mock objects refactoring will be completed, we will probably be able to get rid of it.
  * Clean up and simplify messy creation of nested map returned by AutoGenerationConfiguration.
- * @version $Id$
  */
-public class CopyGeneratorTest {
+public class CopyGeneratorTest extends RepositoryTestCase {
 
     protected static final String TEMPLATE_ID_VALUE = "foo:/bar/baz";
     protected static final String USER_NAME = "leobrouwer";
 
-    protected MockSession session;
+    protected Session session;
 
-    protected MockNode root;
-
+    @Override
     @Before
     public void setUp() throws Exception{
-        root = new MockNode();
-        session = SessionTestUtil.createSession("website", "/foo");
+        super.setUp();
+        session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        session.getRootNode().addNode("foo", NodeTypes.Content.NAME);
+
         Context context = mock(Context.class);
         MgnlContext.setInstance(context);
         User user = mock(User.class);
@@ -328,14 +329,16 @@ public class CopyGeneratorTest {
 
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         session = null;
         MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     protected void assertNodeAndMetaData(Node node, String template, String authorId) throws RepositoryException {
-        assertTrue(node.isNodeType(MgnlNodeType.NT_CONTENTNODE));
+        assertTrue(node.isNodeType(NodeTypes.ContentNode.NAME));
         /*MetaData metaData = MetaDataUtil.getMetaData(node);
         assertEquals(template, metaData.getTemplate());
         assertEquals(authorId, metaData.getAuthorId());
