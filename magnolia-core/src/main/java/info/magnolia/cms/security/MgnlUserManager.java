@@ -448,13 +448,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException(name + " is not a valid username.");
         }
-        User user = null;
-        try {
-            user = Security.getUserManager().getUser(name);
-        } catch (UnsupportedOperationException e) {
-            log.warn("UserManager#getUser(String) is not supported by " + Security.getUserManager().getClass().getName() + ". Can't perform user check for duplicates.");
-        }
-        if (user != null) {
+        if (Security.getUserManager().getUser(name) != null) {
             throw new IllegalArgumentException("User with name " + name + " already exists.");
         }
     }
