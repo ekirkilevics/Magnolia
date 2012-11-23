@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.security.auth.Subject;
 import javax.jcr.Value;
+import javax.security.auth.Subject;
 
 /**
  * A {@link UserManager} delegating to a set of user managers. The first user manager which does not
@@ -97,7 +97,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User getUser(final String name) throws UnsupportedOperationException {
-        return delegateUntilNotNull(new Op<User>() {
+        return delegateUntilSupportedAndNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.getUser(name);
@@ -107,7 +107,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User getUserById(final String id) throws UnsupportedOperationException {
-        return delegateUntilNotNull(new Op<User>() {
+        return delegateUntilSupportedAndNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.getUserById(id);
@@ -117,7 +117,7 @@ public class DelegatingUserManager implements UserManager {
 
     @Override
     public User getUser(final Subject subject) throws UnsupportedOperationException {
-        return delegateUntilNotNull(new Op<User>() {
+        return delegateUntilSupportedAndNotNull(new Op<User>() {
             @Override
             public User delegate(UserManager um) {
                 return um.getUser(subject);
@@ -166,6 +166,22 @@ public class DelegatingUserManager implements UserManager {
         for (String realmName : delegates.keySet()) {
             final UserManager um = delegates.get(realmName);
             final RT result = op.delegate(um);
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private <RT> RT delegateUntilSupportedAndNotNull(Op<RT> op) {
+        for (String realmName : delegates.keySet()) {
+            final UserManager um = delegates.get(realmName);
+            RT result = null;
+            try {
+                result = op.delegate(um);
+            } catch (UnsupportedOperationException e) {
+                // ignore;
+            }
             if (result != null) {
                 return result;
             }
