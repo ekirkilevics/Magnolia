@@ -78,7 +78,7 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
 
     @Override
     public String getAssignedTemplate(Node content) throws RepositoryException {
-        return NodeTypes.RenderableMixin.getTemplate(content);
+        return NodeTypes.Renderable.getTemplate(content);
     }
 
     @Override

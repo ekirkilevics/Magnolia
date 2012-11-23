@@ -142,7 +142,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             }
 
             try {
-                templateName = NodeTypes.RenderableMixin.getTemplate(requestedPage.getJCRNode());
+                templateName = NodeTypes.Renderable.getTemplate(requestedPage.getJCRNode());
             } catch (RepositoryException e) {
                 templateName = null;
             }

@@ -511,7 +511,7 @@ public class MockNodeTest {
     public void testIsNodeTypeWithSetMixin() throws RepositoryException {
         // GIVEN
         final Node newNode  = new MockNode();
-        final String mixin = NodeTypes.ActivatableMixin.NAME;
+        final String mixin = NodeTypes.Activatable.NAME;
         newNode.addMixin(mixin);
 
         // WHEN
@@ -528,7 +528,7 @@ public class MockNodeTest {
         Node newNode  = new MockNode();
 
         // WHEN
-        final boolean result = newNode.isNodeType(NodeTypes.ActivatableMixin.NAME);
+        final boolean result = newNode.isNodeType(NodeTypes.Activatable.NAME);
 
         // THEN
         assertFalse(result);

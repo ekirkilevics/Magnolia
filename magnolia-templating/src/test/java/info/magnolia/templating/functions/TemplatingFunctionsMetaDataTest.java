@@ -86,7 +86,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.CreatedMixin.CREATED, calendar);
+        node.setProperty(NodeTypes.Created.CREATED, calendar);
         // WHEN
         String property = functions.metaData(node, MetaData.CREATION_DATE);
         //THEN
@@ -98,7 +98,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
+        node.setProperty(NodeTypes.LastModified.LAST_MODIFIED, calendar);
 
         // WHEN
         String property = functions.metaData(node, MetaData.LAST_MODIFIED);
@@ -111,7 +111,7 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, calendar);
+        node.setProperty(NodeTypes.Activatable.LAST_ACTIVATED, calendar);
         // WHEN
         String property = functions.metaData(node, MetaData.LAST_ACTION);
         //THEN
@@ -122,7 +122,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedAuthorId() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "testuser");
+        node.setProperty(NodeTypes.LastModified.LAST_MODIFIED_BY, "testuser");
         // WHEN
         String property = functions.metaData(node, MetaData.AUTHOR_ID);
         //THEN
@@ -133,7 +133,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedActivatorId() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "testuser");
+        node.setProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY, "testuser");
         // WHEN
         String property = functions.metaData(node, MetaData.ACTIVATOR_ID);
         //THEN
@@ -144,7 +144,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedTemplate() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "test:pages/main");
+        node.setProperty(NodeTypes.Renderable.TEMPLATE, "test:pages/main");
         // WHEN
         String property = functions.metaData(node, MetaData.TEMPLATE);
         //THEN
@@ -165,7 +165,7 @@ public class TemplatingFunctionsMetaDataTest {
     public void testDeprecatedActivated() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
+        node.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
         // WHEN
         String property = functions.metaData(node, MetaData.ACTIVATED);
         //THEN
@@ -177,9 +177,9 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.CreatedMixin.CREATED, calendar);
+        node.setProperty(NodeTypes.Created.CREATED, calendar);
         // WHEN
-        String created = functions.metaData(node, NodeTypes.CreatedMixin.CREATED);
+        String created = functions.metaData(node, NodeTypes.Created.CREATED);
         //THEN
         assertEquals(ISO8601.format(calendar), created);
     }
@@ -188,9 +188,9 @@ public class TemplatingFunctionsMetaDataTest {
     public void testCreatedBy() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.CreatedMixin.CREATED_BY, "testuser");
+        node.setProperty(NodeTypes.Created.CREATED_BY, "testuser");
         // WHEN
-        String createdBy = functions.metaData(node, NodeTypes.CreatedMixin.CREATED_BY);
+        String createdBy = functions.metaData(node, NodeTypes.Created.CREATED_BY);
         //THEN
         assertEquals("testuser", createdBy);
     }
@@ -200,9 +200,9 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
+        node.setProperty(NodeTypes.LastModified.LAST_MODIFIED, calendar);
         // WHEN
-        String created = functions.metaData(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED);
+        String created = functions.metaData(node, NodeTypes.LastModified.LAST_MODIFIED);
         //THEN
         assertEquals(ISO8601.format(calendar), created);
     }
@@ -211,9 +211,9 @@ public class TemplatingFunctionsMetaDataTest {
     public void testLastModifiedBy() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "testuser");
+        node.setProperty(NodeTypes.LastModified.LAST_MODIFIED_BY, "testuser");
         // WHEN
-        String createdBy = functions.metaData(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
+        String createdBy = functions.metaData(node, NodeTypes.LastModified.LAST_MODIFIED_BY);
         //THEN
         assertEquals("testuser", createdBy);
     }
@@ -222,10 +222,10 @@ public class TemplatingFunctionsMetaDataTest {
     public void testTemplate() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "test:pages/main");
+        node.setProperty(NodeTypes.Renderable.TEMPLATE, "test:pages/main");
 
         // WHEN
-        String template = functions.metaData(node, NodeTypes.RenderableMixin.TEMPLATE);
+        String template = functions.metaData(node, NodeTypes.Renderable.TEMPLATE);
         //THEN
         assertEquals("test:pages/main", template);
     }
@@ -235,9 +235,9 @@ public class TemplatingFunctionsMetaDataTest {
         // GIVEN
         Calendar calendar = Calendar.getInstance();
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, calendar);
+        node.setProperty(NodeTypes.Activatable.LAST_ACTIVATED, calendar);
         // WHEN
-        String lastActivated = functions.metaData(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED);
+        String lastActivated = functions.metaData(node, NodeTypes.Activatable.LAST_ACTIVATED);
         //THEN
         assertEquals(ISO8601.format(calendar), lastActivated);
     }
@@ -246,9 +246,9 @@ public class TemplatingFunctionsMetaDataTest {
     public void testLastActivatedBy() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "testuser");
+        node.setProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY, "testuser");
         // WHEN
-        String lastActivatedBy = functions.metaData(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
+        String lastActivatedBy = functions.metaData(node, NodeTypes.Activatable.LAST_ACTIVATED_BY);
         //THEN
         assertEquals("testuser", lastActivatedBy);
     }
@@ -257,9 +257,9 @@ public class TemplatingFunctionsMetaDataTest {
     public void testActivationStatus() throws RepositoryException {
         // GIVEN
         Node node = new MockNode();
-        node.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, false);
+        node.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, false);
         // WHEN
-        String activationStatus = functions.metaData(node, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
+        String activationStatus = functions.metaData(node, NodeTypes.Activatable.ACTIVATION_STATUS);
         //THEN
         assertEquals("0", activationStatus);
     }

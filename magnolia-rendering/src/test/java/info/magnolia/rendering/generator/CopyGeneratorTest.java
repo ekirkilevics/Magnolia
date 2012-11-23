@@ -40,7 +40,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -105,13 +104,13 @@ public class CopyGeneratorTest extends RepositoryTestCase {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, null);
         firstNodeProps.put("anotherProp", "some value");
         content.put("autogen-foo", firstNodeProps);
 
         Map<String, Object> secondNodeProps = new HashMap<String, Object>();
-        secondNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        secondNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         secondNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         secondNodeProps.put("someProp", "a different value");
         content.put("same-level-autogen", secondNodeProps);
@@ -146,17 +145,17 @@ public class CopyGeneratorTest extends RepositoryTestCase {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         firstNodeProps.put("anotherProp", "some value");
 
         Map<String, Object> nestedNodeProps = new HashMap<String, Object>();
-        nestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         nestedNodeProps.put("someProp", "a different value");
 
         Map<String, Object> nestedSubNodeProps = new HashMap<String, Object>();
-        nestedSubNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedSubNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedSubNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         nestedNodeProps.put("nestedSubNode-autogen", nestedSubNodeProps);
@@ -198,25 +197,25 @@ public class CopyGeneratorTest extends RepositoryTestCase {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         content.put("autogen-foo", firstNodeProps);
 
         Map<String, Object> sameLevelNodeProps = new HashMap<String, Object>();
-        sameLevelNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        sameLevelNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         sameLevelNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         content.put("same-level-autogen-foo", sameLevelNodeProps);
 
         Map<String, Object> nestedNodeProps = new HashMap<String, Object>();
-        nestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         firstNodeProps.put("nested-autogen", nestedNodeProps);
 
         Map<String, Object> sameLevelNestedNodeProps = new HashMap<String, Object>();
-        sameLevelNestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        sameLevelNestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         sameLevelNestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         firstNodeProps.put("same-level-as-nested", sameLevelNestedNodeProps);
@@ -269,7 +268,7 @@ public class CopyGeneratorTest extends RepositoryTestCase {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> nodeProps = new HashMap<String, Object>();
-        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nodeProps.put(TEMPLATE_ID, null);
         nodeProps.put("someProp", "original value");
         content.put("autogen-foo", nodeProps);
@@ -305,7 +304,7 @@ public class CopyGeneratorTest extends RepositoryTestCase {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> nodeProps = new HashMap<String, Object>();
-        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nodeProps.put(TEMPLATE_ID, null);
         nodeProps.put("stringProp", "a string");
         nodeProps.put("booleanProp", true);

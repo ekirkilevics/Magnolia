@@ -115,8 +115,8 @@
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
       <supertype>mgnl:created</supertype>
-      <supertype>mgnl:renderable</supertype>
       <supertype>mgnl:activatable</supertype>
+      <supertype>mgnl:renderable</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -132,8 +132,8 @@
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
       <supertype>mgnl:created</supertype>
+      <supertype>mgnl:lastModified</supertype>
       <supertype>mgnl:renderable</supertype>
-      <supertype>mgnl:activatable</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -221,16 +221,6 @@
     </supertypes>
   </nodeType>
 
-  <!-- magnolia deleted node type -->
-  <nodeType name="mgnl:deleted" isMixin="true">
-    <supertypes>
-      <supertype>nt:base</supertype>
-    </supertypes>
-    <propertyDefinition name="mgnl:deleted" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-    <propertyDefinition name="mgnl:deletedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-    <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-  </nodeType>
-
   <!-- magnolia versionable node type -->
   <nodeType name="mgnl:versionable" isMixin="true">
     <supertypes>
@@ -239,4 +229,12 @@
     <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
+  <!-- magnolia deleted node type -->
+  <nodeType name="mgnl:deleted" isMixin="true">
+    <supertypes>
+      <supertype>mgnl:versionable</supertype>
+    </supertypes>
+    <propertyDefinition name="mgnl:deleted" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    <propertyDefinition name="mgnl:deletedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+  </nodeType>
 </nodeTypes>

@@ -76,34 +76,34 @@ public class MetaData {
     public static final String TITLE = "title";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.CreatedMixin#CREATED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Created#CREATED} instead
      */
     public static final String CREATION_DATE = "creationdate";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#LAST_MODIFIED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#LAST_MODIFIED} instead
      */
     public static final String LAST_MODIFIED = "lastmodified";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#LAST_ACTIVATED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#LAST_ACTIVATED} instead
      */
     public static final String LAST_ACTION = "lastaction";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.LastModifiedMixin#LAST_MODIFIED_BY} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#LAST_MODIFIED_BY} instead
      */
     public static final String AUTHOR_ID = "authorid";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#LAST_ACTIVATED_BY} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#LAST_ACTIVATED_BY} instead
      */
     public static final String ACTIVATOR_ID = "activatorid";
 
     /**
      * Template assigned to the node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.RenderableMixin#TEMPLATE} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Renderable#TEMPLATE} instead
      */
     public static final String TEMPLATE = "template";
 
@@ -113,7 +113,7 @@ public class MetaData {
     public static final String TEMPLATE_TYPE = "templatetype";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#ACTIVATION_STATUS} instead
      */
     public static final String ACTIVATED = "activated";
 
@@ -125,19 +125,19 @@ public class MetaData {
     public static final String DEFAULT_META_NODE = "MetaData";
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_NOT_ACTIVATED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#ACTIVATION_STATUS_NOT_ACTIVATED} instead
      */
-    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
+    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = NodeTypes.Activatable.ACTIVATION_STATUS_NOT_ACTIVATED;
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_MODIFIED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#ACTIVATION_STATUS_MODIFIED} instead
      */
-    public static final int ACTIVATION_STATUS_MODIFIED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED;
+    public static final int ACTIVATION_STATUS_MODIFIED = NodeTypes.Activatable.ACTIVATION_STATUS_MODIFIED;
 
     /**
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#ACTIVATION_STATUS_ACTIVATED} instead
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#ACTIVATION_STATUS_ACTIVATED} instead
      */
-    public static final int ACTIVATION_STATUS_ACTIVATED = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED;
+    public static final int ACTIVATION_STATUS_ACTIVATED = NodeTypes.Activatable.ACTIVATION_STATUS_ACTIVATED;
 
     /**
      * Since 5.0 this is the working node itself.
@@ -171,14 +171,14 @@ public class MetaData {
     private static Map<String, String> propertyMappings = new ConcurrentHashMap<String, String>();
 
     static {
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + CREATION_DATE, NodeTypes.CreatedMixin.CREATED);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_MODIFIED, NodeTypes.LastModifiedMixin.LAST_MODIFIED);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_ACTION, NodeTypes.ActivatableMixin.LAST_ACTIVATED);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + AUTHOR_ID, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATOR_ID, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + TEMPLATE, NodeTypes.RenderableMixin.TEMPLATE);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATED, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
-        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":comment", NodeTypes.VersionableMixin.COMMENT);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + CREATION_DATE, NodeTypes.Created.CREATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_MODIFIED, NodeTypes.LastModified.LAST_MODIFIED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + LAST_ACTION, NodeTypes.Activatable.LAST_ACTIVATED);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + AUTHOR_ID, NodeTypes.LastModified.LAST_MODIFIED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATOR_ID, NodeTypes.Activatable.LAST_ACTIVATED_BY);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + TEMPLATE, NodeTypes.Renderable.TEMPLATE);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":" + ACTIVATED, NodeTypes.Activatable.ACTIVATION_STATUS);
+        propertyMappings.put(RepositoryConstants.NAMESPACE_PREFIX + ":comment", NodeTypes.Versionable.COMMENT);
     }
 
     /**
@@ -221,7 +221,7 @@ public class MetaData {
     /**
      * Part of metadata, adds creation date of the current node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#setCreation(Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Created#set(Node)}
      */
     public void setCreationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -231,7 +231,7 @@ public class MetaData {
     /**
      * Part of metadata, get creation date of the current node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.CreatedMixin#getCreated(Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Created#getCreated(Node)}
      */
     public Calendar getCreationDate() {
         return this.getDateProperty(CREATION_DATE);
@@ -240,7 +240,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#update(javax.jcr.Node, String, boolean)}
      */
     public void setActivated() {
         setProperty(ACTIVATED, true);
@@ -249,7 +249,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#update(javax.jcr.Node, String, boolean)}
      */
     public void setUnActivated() {
         setProperty(ACTIVATED, false);
@@ -258,7 +258,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated status of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#isActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#isActivated(javax.jcr.Node)}
      */
     public boolean getIsActivated() {
         return getBooleanProperty(ACTIVATED);
@@ -267,7 +267,7 @@ public class MetaData {
     /**
      * Returns one of the ACTIVATION_STATUS_* constants.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getActivationStatus(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#getActivationStatus(javax.jcr.Node)}
      */
     public int getActivationStatus() {
         if (getIsActivated()) {
@@ -285,7 +285,7 @@ public class MetaData {
     /**
      * Part of metadata, adds activated date of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#update(javax.jcr.Node, String, boolean)}
      */
     public void setLastActivationActionDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -295,7 +295,7 @@ public class MetaData {
     /**
      * Part of metadata, get last activated/de- date of the current node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivated(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#getLastActivated(javax.jcr.Node)}
      */
     public Calendar getLastActionDate() {
         return getDateProperty(LAST_ACTION);
@@ -304,7 +304,7 @@ public class MetaData {
     /**
      * Part of metadata, adds modification date of the current node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModified(Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#update(javax.jcr.Node)}
      */
     public void setModificationDate() {
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
@@ -315,7 +315,7 @@ public class MetaData {
      * Get last modified date of the node to which this meta data belongs or creation date in case content was not
      * modified since.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModified(Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#getLastModified(Node)}
      */
     public Calendar getModificationDate() {
         Calendar modDate = getDateProperty(LAST_MODIFIED);
@@ -328,7 +328,7 @@ public class MetaData {
     /**
      * Part of metadata, last known author of this node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModifiedBy(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#getLastModifiedBy(javax.jcr.Node)}
      */
     public String getAuthorId() {
         return getStringProperty(AUTHOR_ID);
@@ -337,7 +337,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who did some action on this page.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModification(javax.jcr.Node, String, java.util.Calendar)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.LastModified#update(javax.jcr.Node, String, java.util.Calendar)}
      */
     public void setAuthorId(String value) {
         setProperty(AUTHOR_ID, value);
@@ -346,7 +346,7 @@ public class MetaData {
     /**
      * Part of metadata, last known activator of this node.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#getLastActivatedBy(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#getLastActivatedBy(javax.jcr.Node)}
      */
     public String getActivatorId() {
         return getStringProperty(ACTIVATOR_ID);
@@ -355,7 +355,7 @@ public class MetaData {
     /**
      * Part of metadata, current logged-in author who last activated this page.
      *
-     * @deprecated since 5.0 - use {@link NodeTypes.ActivatableMixin#setLastActivation(javax.jcr.Node, String, boolean)} to directly set userName and true false.
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Activatable#update(javax.jcr.Node, String, boolean)} to directly set userName and true false.
      */
     public void setActivatorId(String value) {
         setProperty(ACTIVATOR_ID, value);
@@ -364,7 +364,7 @@ public class MetaData {
     /**
      * Part of metadata, template which will be used to render content of this node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.RenderableMixin#getTemplate(javax.jcr.Node)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Renderable#getTemplate(javax.jcr.Node)}
      */
     public String getTemplate() {
         return getStringProperty(TEMPLATE);
@@ -373,7 +373,7 @@ public class MetaData {
     /**
      * Part of metadata, template which will be used to render content of this node.
      *
-     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.RenderableMixin#setTemplate(javax.jcr.Node, String)}
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeTypes.Renderable#set(javax.jcr.Node, String)}
      */
     public void setTemplate(String value) {
         setProperty(TEMPLATE, value);

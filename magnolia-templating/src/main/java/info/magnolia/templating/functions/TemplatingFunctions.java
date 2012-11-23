@@ -625,22 +625,22 @@ public class TemplatingFunctions {
 
         Object returnValue;
         try {
-            if (property.equals(NodeTypes.CreatedMixin.CREATED)) {
-                returnValue = NodeTypes.CreatedMixin.getCreated(content);
-            } else if (property.equals(NodeTypes.CreatedMixin.CREATED_BY)) {
-                returnValue = NodeTypes.CreatedMixin.getCreatedBy(content);
-            } else if (property.equals(NodeTypes.LastModifiedMixin.LAST_MODIFIED)) {
-                returnValue = NodeTypes.LastModifiedMixin.getLastModified(content);
-            } else if (property.equals(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY)) {
-                returnValue = NodeTypes.LastModifiedMixin.getLastModifiedBy(content);
-            } else if (property.equals(NodeTypes.RenderableMixin.TEMPLATE)) {
-                returnValue = NodeTypes.RenderableMixin.getTemplate(content);
-            } else if (property.equals(NodeTypes.ActivatableMixin.LAST_ACTIVATED)) {
-                returnValue = NodeTypes.ActivatableMixin.getLastActivated(content);
-            } else if (property.equals(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY)) {
-                returnValue = NodeTypes.ActivatableMixin.getLastActivatedBy(content);
-            } else if (property.equals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS)) {
-                returnValue = NodeTypes.ActivatableMixin.getActivationStatus(content);
+            if (property.equals(NodeTypes.Created.CREATED)) {
+                returnValue = NodeTypes.Created.getCreated(content);
+            } else if (property.equals(NodeTypes.Created.CREATED_BY)) {
+                returnValue = NodeTypes.Created.getCreatedBy(content);
+            } else if (property.equals(NodeTypes.LastModified.LAST_MODIFIED)) {
+                returnValue = NodeTypes.LastModified.getLastModified(content);
+            } else if (property.equals(NodeTypes.LastModified.LAST_MODIFIED_BY)) {
+                returnValue = NodeTypes.LastModified.getLastModifiedBy(content);
+            } else if (property.equals(NodeTypes.Renderable.TEMPLATE)) {
+                returnValue = NodeTypes.Renderable.getTemplate(content);
+            } else if (property.equals(NodeTypes.Activatable.LAST_ACTIVATED)) {
+                returnValue = NodeTypes.Activatable.getLastActivated(content);
+            } else if (property.equals(NodeTypes.Activatable.LAST_ACTIVATED_BY)) {
+                returnValue = NodeTypes.Activatable.getLastActivatedBy(content);
+            } else if (property.equals(NodeTypes.Activatable.ACTIVATION_STATUS)) {
+                returnValue = NodeTypes.Activatable.getActivationStatus(content);
             } else {
 
                 // Try to get the value using one of the deprecated names in MetaData.

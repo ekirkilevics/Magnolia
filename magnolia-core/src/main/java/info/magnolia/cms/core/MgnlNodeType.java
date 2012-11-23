@@ -147,7 +147,7 @@ public final class MgnlNodeType {
 
     public static final String MIX_LOCKABLE = JcrConstants.MIX_LOCKABLE;
 
-    public static final String MIX_DELETED = NodeTypes.DeletedMixin.NAME;
+    public static final String MIX_DELETED = NodeTypes.Deleted.NAME;
 
     // JCR properties.
 

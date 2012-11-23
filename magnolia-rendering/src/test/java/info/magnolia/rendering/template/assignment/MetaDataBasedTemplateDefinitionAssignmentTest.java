@@ -120,8 +120,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // GIVEN
         final String templateId = "id";
         MockNode node = new MockNode();
-        node.addMixin(NodeTypes.RenderableMixin.NAME);
-        NodeTypes.RenderableMixin.setTemplate(node, templateId);
+        node.addMixin(NodeTypes.Renderable.NAME);
+        NodeTypes.Renderable.set(node, templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
@@ -204,8 +204,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
         Node parentNode = session.getRootNode();
-        parentNode.addMixin(NodeTypes.RenderableMixin.NAME);
-        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template1");
+        parentNode.addMixin(NodeTypes.Renderable.NAME);
+        NodeTypes.Renderable.set(parentNode, "module:pages/template1");
         Node mockNode = parentNode.addNode("child");
 
         TemplateDefinition template1 = mock(TemplateDefinition.class);
@@ -222,7 +222,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         assertSame(template1, assignment.getDefaultTemplate(mockNode));
 
         // change template on the parent
-        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template2");
+        NodeTypes.Renderable.set(parentNode, "module:pages/template2");
 
         // test that it changes the returned template
         assertSame(template2, assignment.getDefaultTemplate(mockNode));

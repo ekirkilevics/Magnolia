@@ -300,7 +300,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         imageFile.delete();
 
         // update modification date and save the new image node
-        NodeTypes.LastModifiedMixin.setLastModified(imageNode.getJCRNode());
+        NodeTypes.LastModified.update(imageNode.getJCRNode());
         imageNode.getParent().save();
     }
 }

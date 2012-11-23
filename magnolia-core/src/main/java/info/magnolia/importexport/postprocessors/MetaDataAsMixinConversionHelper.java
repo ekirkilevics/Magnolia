@@ -70,14 +70,14 @@ public class MetaDataAsMixinConversionHelper {
     private boolean periodicSaves = false;
 
     public MetaDataAsMixinConversionHelper() {
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.CREATION_DATE, NodeTypes.CreatedMixin.CREATED);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.LAST_ACTION, NodeTypes.ActivatableMixin.LAST_ACTIVATED);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.ACTIVATOR_ID, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.ACTIVATED, NodeTypes.ActivatableMixin.ACTIVATION_STATUS);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.TEMPLATE, NodeTypes.RenderableMixin.TEMPLATE);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.LAST_MODIFIED, NodeTypes.LastModifiedMixin.LAST_MODIFIED);
-        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.AUTHOR_ID, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY);
-        propertyNameMapping.put("mgnl:comment", NodeTypes.VersionableMixin.COMMENT);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.CREATION_DATE, NodeTypes.Created.CREATED);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.LAST_ACTION, NodeTypes.Activatable.LAST_ACTIVATED);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.ACTIVATOR_ID, NodeTypes.Activatable.LAST_ACTIVATED_BY);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.ACTIVATED, NodeTypes.Activatable.ACTIVATION_STATUS);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.TEMPLATE, NodeTypes.Renderable.TEMPLATE);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.LAST_MODIFIED, NodeTypes.LastModified.LAST_MODIFIED);
+        propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.AUTHOR_ID, NodeTypes.LastModified.LAST_MODIFIED_BY);
+        propertyNameMapping.put("mgnl:comment", NodeTypes.Versionable.COMMENT);
     }
 
     public boolean isDeleteMetaDataIfEmptied() {
@@ -133,7 +133,7 @@ public class MetaDataAsMixinConversionHelper {
 
         // Rename mgnl:deletedOn to mgnl:deleted for mixin mgnl:deleted
         if (node.hasProperty(DEPRECATED_DELETION_DATE_PROPERTY_NAME)) {
-            moveProperty(node, DEPRECATED_DELETION_DATE_PROPERTY_NAME, node, NodeTypes.DeletedMixin.DELETED);
+            moveProperty(node, DEPRECATED_DELETION_DATE_PROPERTY_NAME, node, NodeTypes.Deleted.DELETED);
         }
 
         // Transfer properties from the MetaData node

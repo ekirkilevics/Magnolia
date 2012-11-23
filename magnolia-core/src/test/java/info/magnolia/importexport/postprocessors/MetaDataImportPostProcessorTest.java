@@ -73,14 +73,14 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         new MetaDataImportPostProcessor().postProcessNode(node);
 
         // THEN
-        assertPropertyEquals(node, NodeTypes.CreatedMixin.CREATED, calendar);
-        assertPropertyEquals(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED, calendar);
-        assertPropertyEquals(node, NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "superuser");
-        assertPropertyEquals(node, NodeTypes.ActivatableMixin.ACTIVATION_STATUS, "2");
-        assertPropertyEquals(node, NodeTypes.RenderableMixin.TEMPLATE, "samples:pages/some/page");
-        assertPropertyEquals(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "hyperuser");
-        assertPropertyEquals(node, NodeTypes.LastModifiedMixin.LAST_MODIFIED, calendar);
-        assertPropertyEquals(node, NodeTypes.DeletedMixin.DELETED, calendar);
+        assertPropertyEquals(node, NodeTypes.Created.CREATED, calendar);
+        assertPropertyEquals(node, NodeTypes.Activatable.LAST_ACTIVATED, calendar);
+        assertPropertyEquals(node, NodeTypes.Activatable.LAST_ACTIVATED_BY, "superuser");
+        assertPropertyEquals(node, NodeTypes.Activatable.ACTIVATION_STATUS, "2");
+        assertPropertyEquals(node, NodeTypes.Renderable.TEMPLATE, "samples:pages/some/page");
+        assertPropertyEquals(node, NodeTypes.LastModified.LAST_MODIFIED_BY, "hyperuser");
+        assertPropertyEquals(node, NodeTypes.LastModified.LAST_MODIFIED, calendar);
+        assertPropertyEquals(node, NodeTypes.Deleted.DELETED, calendar);
     }
 
     private void assertPropertyEquals(Node node, String relPath, String expectedValue) throws RepositoryException {

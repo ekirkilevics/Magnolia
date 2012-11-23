@@ -168,7 +168,7 @@ public class AbstractTemplateElementTest extends AbstractElementTestCase {
         Node content = getSession().getNode(contentPath);
 
         TemplateDefinitionRegistry registry = Components.getComponent(TemplateDefinitionRegistry.class);
-        String template = NodeTypes.RenderableMixin.getTemplate(content);
+        String template = NodeTypes.Renderable.getTemplate(content);
         TemplateDefinition definition = registry.getTemplateDefinition(template);
 
         assertEquals(expected, compo.getDefinitionMessage(definition, key));

@@ -108,8 +108,8 @@ public class CopyGenerator implements Generator<AutoGenerationConfiguration> {
 
                 String template = (String) newNodeConfig.get(TEMPLATE_ID);
                 if (template != null) {
-                    NodeTypes.RenderableMixin.setTemplate(newNode, template);
-                    NodeTypes.LastModifiedMixin.setLastModification(newNode);
+                    NodeTypes.Renderable.set(newNode, template);
+                    NodeTypes.LastModified.update(newNode);
                 }
 
                 log.debug("creating {}", newNode.getPath());

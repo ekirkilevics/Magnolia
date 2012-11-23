@@ -62,7 +62,7 @@ public class MetaDataUtil {
     }
 
     /**
-     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#setLastModification(javax.jcr.Node)}.
+     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModified#update(javax.jcr.Node)}.
      */
     public static void updateMetaData(Node node) throws RepositoryException {
         MetaData md = getMetaData(node);
@@ -75,7 +75,7 @@ public class MetaDataUtil {
     /**
      * @return the lastModification or null it it was not set in JCR.
      *
-     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModifiedMixin#getLastModified(javax.jcr.Node)}.
+     * @deprecated since 5.0 use {@link info.magnolia.jcr.util.NodeTypes.LastModified#getLastModified(javax.jcr.Node)}.
      */
     public static Calendar getLastModification(Node node) throws PathNotFoundException, RepositoryException, ValueFormatException {
         Node meta = node.getNode(MetaData.DEFAULT_META_NODE);
