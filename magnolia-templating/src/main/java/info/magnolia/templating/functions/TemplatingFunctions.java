@@ -641,6 +641,13 @@ public class TemplatingFunctions {
                 returnValue = NodeTypes.Activatable.getLastActivatedBy(content);
             } else if (property.equals(NodeTypes.Activatable.ACTIVATION_STATUS)) {
                 returnValue = NodeTypes.Activatable.getActivationStatus(content);
+            } else if (property.equals(NodeTypes.Deleted.DELETED)) {
+                returnValue = NodeTypes.Deleted.getDeleted(content);
+            } else if (property.equals(NodeTypes.Deleted.DELETED_BY)) {
+                returnValue = NodeTypes.Deleted.getDeletedBy(content);
+            } else if (property.equals(NodeTypes.Deleted.COMMENT)) {
+                // Since NodeTypes.Deleted.COMMENT and NodeTypes.Versionable.COMMENT have identical names this will work for both
+                returnValue = NodeTypes.Deleted.getComment(content);
             } else {
 
                 // Try to get the value using one of the deprecated names in MetaData.

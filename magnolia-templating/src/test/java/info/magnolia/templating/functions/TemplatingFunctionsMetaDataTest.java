@@ -264,6 +264,52 @@ public class TemplatingFunctionsMetaDataTest {
         assertEquals("0", activationStatus);
     }
 
+
+    @Test
+    public void testDeleted() throws RepositoryException {
+        // GIVEN
+        Calendar calendar = Calendar.getInstance();
+        Node node = new MockNode();
+        node.setProperty(NodeTypes.Deleted.DELETED, calendar);
+        // WHEN
+        String deleted = functions.metaData(node, NodeTypes.Deleted.DELETED);
+        //THEN
+        assertEquals(ISO8601.format(calendar), deleted);
+    }
+
+    @Test
+    public void testDeletedBy() throws RepositoryException {
+        // GIVEN
+        Node node = new MockNode();
+        node.setProperty(NodeTypes.Deleted.DELETED_BY, "testuser");
+        // WHEN
+        String deletedBy = functions.metaData(node, NodeTypes.Deleted.DELETED_BY);
+        //THEN
+        assertEquals("testuser", deletedBy);
+    }
+
+    @Test
+    public void testDeletedComment() throws RepositoryException {
+        // GIVEN
+        Node node = new MockNode();
+        node.setProperty(NodeTypes.Deleted.COMMENT, "a comment");
+        // WHEN
+        String comment = functions.metaData(node, NodeTypes.Deleted.COMMENT);
+        //THEN
+        assertEquals("a comment", comment);
+    }
+
+    @Test
+    public void testVersionableComment() throws RepositoryException {
+        // GIVEN
+        Node node = new MockNode();
+        node.setProperty(NodeTypes.Versionable.COMMENT, "a comment");
+        // WHEN
+        String comment = functions.metaData(node, NodeTypes.Versionable.COMMENT);
+        //THEN
+        assertEquals("a comment", comment);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testUnknownPropertyThrowsException() throws RepositoryException {
         // GIVEN
