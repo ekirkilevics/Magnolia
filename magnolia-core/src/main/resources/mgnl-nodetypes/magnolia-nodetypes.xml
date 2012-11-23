@@ -88,7 +88,7 @@
 
   <nodeType name="mgnl:activatable" isMixin="true">
     <supertypes>
-      <supertype>mgnl:lastModified</supertype>
+      <supertype>nt:base</supertype>
     </supertypes>
     <propertyDefinition name="mgnl:lastActivated" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     <propertyDefinition name="mgnl:lastActivatedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
@@ -110,13 +110,30 @@
     <propertyDefinition name="mgnl:createdBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
+  <nodeType name="mgnl:versionable" isMixin="true">
+    <supertypes>
+      <supertype>nt:base</supertype>
+    </supertypes>
+    <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+  </nodeType>
+
+  <nodeType name="mgnl:deleted" isMixin="true">
+    <supertypes>
+      <supertype>mgnl:versionable</supertype>
+    </supertypes>
+    <propertyDefinition name="mgnl:deleted" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+    <propertyDefinition name="mgnl:deletedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+  </nodeType>
+
   <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
       <supertype>mix:referenceable</supertype>
       <supertype>mgnl:created</supertype>
       <supertype>mgnl:activatable</supertype>
+      <supertype>mgnl:lastModified</supertype>
       <supertype>mgnl:renderable</supertype>
+      <supertype>mgnl:versionable</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -148,7 +165,9 @@
     <supertypes>
       <supertype>nt:folder</supertype>
       <supertype>mix:referenceable</supertype>
+      <supertype>mgnl:created</supertype>
       <supertype>mgnl:activatable</supertype>
+      <supertype>mgnl:lastModified</supertype>
     </supertypes>
     <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
@@ -162,11 +181,12 @@
   <nodeType name="mgnl:resource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="">
     <supertypes>
       <supertype>nt:resource</supertype>
+      <supertype>mgnl:created</supertype>
+      <supertype>mgnl:lastModified</supertype>
     </supertypes>
     <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
-  <!--  magnolia system node type -->
   <nodeType name="mgnl:reserve" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
@@ -179,62 +199,39 @@
     <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 
-  <!-- magnolia page node type -->
   <nodeType name="mgnl:page" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
     </supertypes>
   </nodeType>
 
-  <!-- magnolia area node type -->
   <nodeType name="mgnl:area" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:contentNode</supertype>
     </supertypes>
   </nodeType>
 
-  <!-- magnolia component node type -->
   <nodeType name="mgnl:component" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:contentNode</supertype>
     </supertypes>
   </nodeType>
 
-  <!-- magnolia user node type -->
   <nodeType name="mgnl:user" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
     </supertypes>
   </nodeType>
 
-  <!-- magnolia role node type -->
   <nodeType name="mgnl:role" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
     </supertypes>
   </nodeType>
 
-  <!-- magnolia group node type -->
   <nodeType name="mgnl:group" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
     <supertypes>
       <supertype>mgnl:content</supertype>
     </supertypes>
-  </nodeType>
-
-  <!-- magnolia versionable node type -->
-  <nodeType name="mgnl:versionable" isMixin="true">
-    <supertypes>
-      <supertype>nt:base</supertype>
-    </supertypes>
-    <propertyDefinition name="mgnl:comment" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-  </nodeType>
-
-  <!-- magnolia deleted node type -->
-  <nodeType name="mgnl:deleted" isMixin="true">
-    <supertypes>
-      <supertype>mgnl:versionable</supertype>
-    </supertypes>
-    <propertyDefinition name="mgnl:deleted" requiredType="Date" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
-    <propertyDefinition name="mgnl:deletedBy" requiredType="String" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
   </nodeType>
 </nodeTypes>
