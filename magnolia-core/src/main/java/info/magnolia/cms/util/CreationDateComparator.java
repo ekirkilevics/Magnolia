@@ -52,8 +52,8 @@ public class CreationDateComparator implements Comparator<Content> {
     @Override
     public int compare(Content c1, Content c2) {
         try {
-            final Date date1 = NodeTypes.CreatedMixin.getCreated(c1.getJCRNode()).getTime();
-            final Date date2 = NodeTypes.CreatedMixin.getCreated(c2.getJCRNode()).getTime();
+            final Date date1 = NodeTypes.Created.getCreated(c1.getJCRNode()).getTime();
+            final Date date2 = NodeTypes.Created.getCreated(c2.getJCRNode()).getTime();
             return date1.compareTo(date2);
         } catch (RepositoryException e) {
             log.error("Error retrieving Data from jcr node.", e);

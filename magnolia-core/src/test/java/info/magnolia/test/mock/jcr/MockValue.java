@@ -49,6 +49,7 @@ import javax.jcr.Value;
 import javax.jcr.ValueFormatException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.util.ISO8601;
 import org.apache.jackrabbit.value.BinaryImpl;
 
 /**
@@ -168,7 +169,15 @@ public class MockValue implements Value {
 
     @Override
     public String getString() throws ValueFormatException, IllegalStateException, RepositoryException {
-        return value == null ? "" : value.toString();
+        if (value == null) {
+            return "";
+        }
+        switch (type) {
+            case PropertyType.DATE:
+                return ISO8601.format((Calendar) value);
+        }
+
+        return value.toString();
     }
 
     @Override

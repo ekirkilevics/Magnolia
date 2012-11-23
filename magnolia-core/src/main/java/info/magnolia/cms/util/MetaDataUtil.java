@@ -39,9 +39,7 @@ import info.magnolia.cms.core.MetaData;
 import java.util.Calendar;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
-import info.magnolia.jcr.util.NodeTypes;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +48,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Util to work with {@link info.magnolia.cms.core.MetaData}.
  *
- * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.NodeUtil} instead.
+ * @deprecated since 4.5 as it operates on deprecated Content - use {@link info.magnolia.jcr.util.MetaDataUtil} instead.
+ *
+ * Hint: since 5.0 you should use {@link info.magnolia.jcr.util.NodeUtil} instead.
+ *
  */
 public class MetaDataUtil {
     private static final Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
@@ -113,25 +114,23 @@ public class MetaDataUtil {
      *            node to read status from
      * @return file name for an icon
      *
-     *         TODO dlipp: move to ui-layer as soon as there's a ui-project on which magnolia-gui,
-     *         magnolia-module-workflow and admincentral are based (all these currently use this method).
      */
     public static String getActivationStatusIcon(Node node) {
 
-        int activationStatus;
-        try {
-            activationStatus = NodeTypes.ActivatableMixin.getActivationStatus(node);
-        } catch (RepositoryException e) {
-            activationStatus = NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED;
+        MetaData metaData = info.magnolia.jcr.util.MetaDataUtil.getMetaData(node);
+        String iconFileName;
+        switch (metaData.getActivationStatus()) {
+            case MetaData.ACTIVATION_STATUS_MODIFIED:
+                iconFileName = "indicator_yellow.gif";
+                break;
+            case MetaData.ACTIVATION_STATUS_ACTIVATED:
+                iconFileName = "indicator_green.gif";
+                break;
+            default:
+                iconFileName = "indicator_red.gif";
         }
 
-        switch (activationStatus) {
-            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED:
-                return "indicator_yellow.gif";
-            case NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED:
-                return "indicator_green.gif";
-            default:
-                return "indicator_red.gif";
-        }
+        return iconFileName;
     }
+
 }

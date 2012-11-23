@@ -526,6 +526,11 @@ public class MockNode extends AbstractNode {
                 return true;
             }
         }
+        for(String mixin: mixins) {
+            if (mixin.equals(nodeTypeName)) {
+                return true;
+            }
+        }
         return false;
     }
 

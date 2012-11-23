@@ -39,15 +39,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.engine.RenderException;
 import info.magnolia.rendering.template.AutoGenerationConfiguration;
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.SessionTestUtil;
+import info.magnolia.repository.RepositoryConstants;
+import info.magnolia.test.RepositoryTestCase;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -58,6 +58,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
 
 import org.junit.After;
@@ -65,24 +66,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * TODO fgrilli: tests are temporarily ignoring failing assertions on metadata.
  * When Mock objects refactoring will be completed, we will probably be able to get rid of it.
  * Clean up and simplify messy creation of nested map returned by AutoGenerationConfiguration.
- * @version $Id$
  */
-public class CopyGeneratorTest {
+public class CopyGeneratorTest extends RepositoryTestCase {
 
     protected static final String TEMPLATE_ID_VALUE = "foo:/bar/baz";
     protected static final String USER_NAME = "leobrouwer";
 
-    protected MockSession session;
+    protected Session session;
 
-    protected MockNode root;
-
+    @Override
     @Before
     public void setUp() throws Exception{
-        root = new MockNode();
-        session = SessionTestUtil.createSession("website", "/foo");
+        super.setUp();
+        session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        session.getRootNode().addNode("foo", NodeTypes.Content.NAME);
+
         Context context = mock(Context.class);
         MgnlContext.setInstance(context);
         User user = mock(User.class);
@@ -104,13 +104,13 @@ public class CopyGeneratorTest {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, null);
         firstNodeProps.put("anotherProp", "some value");
         content.put("autogen-foo", firstNodeProps);
 
         Map<String, Object> secondNodeProps = new HashMap<String, Object>();
-        secondNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        secondNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         secondNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         secondNodeProps.put("someProp", "a different value");
         content.put("same-level-autogen", secondNodeProps);
@@ -145,17 +145,17 @@ public class CopyGeneratorTest {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         firstNodeProps.put("anotherProp", "some value");
 
         Map<String, Object> nestedNodeProps = new HashMap<String, Object>();
-        nestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
         nestedNodeProps.put("someProp", "a different value");
 
         Map<String, Object> nestedSubNodeProps = new HashMap<String, Object>();
-        nestedSubNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedSubNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedSubNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         nestedNodeProps.put("nestedSubNode-autogen", nestedSubNodeProps);
@@ -197,25 +197,25 @@ public class CopyGeneratorTest {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> firstNodeProps = new HashMap<String, Object>();
-        firstNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        firstNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         firstNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         content.put("autogen-foo", firstNodeProps);
 
         Map<String, Object> sameLevelNodeProps = new HashMap<String, Object>();
-        sameLevelNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        sameLevelNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         sameLevelNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         content.put("same-level-autogen-foo", sameLevelNodeProps);
 
         Map<String, Object> nestedNodeProps = new HashMap<String, Object>();
-        nestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         firstNodeProps.put("nested-autogen", nestedNodeProps);
 
         Map<String, Object> sameLevelNestedNodeProps = new HashMap<String, Object>();
-        sameLevelNestedNodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        sameLevelNestedNodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         sameLevelNestedNodeProps.put(TEMPLATE_ID, TEMPLATE_ID_VALUE);
 
         firstNodeProps.put("same-level-as-nested", sameLevelNestedNodeProps);
@@ -268,7 +268,7 @@ public class CopyGeneratorTest {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> nodeProps = new HashMap<String, Object>();
-        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nodeProps.put(TEMPLATE_ID, null);
         nodeProps.put("someProp", "original value");
         content.put("autogen-foo", nodeProps);
@@ -304,7 +304,7 @@ public class CopyGeneratorTest {
 
         Map<String, Object> content = new HashMap<String, Object>();
         Map<String, Object> nodeProps = new HashMap<String, Object>();
-        nodeProps.put(NODE_TYPE, MgnlNodeType.NT_CONTENTNODE);
+        nodeProps.put(NODE_TYPE, NodeTypes.ContentNode.NAME);
         nodeProps.put(TEMPLATE_ID, null);
         nodeProps.put("stringProp", "a string");
         nodeProps.put("booleanProp", true);
@@ -328,14 +328,16 @@ public class CopyGeneratorTest {
 
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         session = null;
         MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     protected void assertNodeAndMetaData(Node node, String template, String authorId) throws RepositoryException {
-        assertTrue(node.isNodeType(MgnlNodeType.NT_CONTENTNODE));
+        assertTrue(node.isNodeType(NodeTypes.ContentNode.NAME));
         /*MetaData metaData = MetaDataUtil.getMetaData(node);
         assertEquals(template, metaData.getTemplate());
         assertEquals(authorId, metaData.getAuthorId());

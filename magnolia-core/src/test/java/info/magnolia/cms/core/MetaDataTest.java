@@ -76,13 +76,13 @@ public class MetaDataTest {
     @Test
     public void testSetCreationDate() throws RepositoryException {
         new MetaData(root).setCreationDate();
-        assertTrue(root.hasProperty(NodeTypes.CreatedMixin.CREATED));
+        assertTrue(root.hasProperty(NodeTypes.Created.CREATED));
     }
 
     @Test
     public void testGetCreationDate() throws RepositoryException {
         Calendar expected = Calendar.getInstance();
-        root.setProperty(NodeTypes.CreatedMixin.CREATED, expected);
+        root.setProperty(NodeTypes.Created.CREATED, expected);
         Calendar actual = new MetaData(root).getCreationDate();
         assertEquals(expected.getTimeInMillis(), actual.getTimeInMillis());
     }
@@ -90,32 +90,32 @@ public class MetaDataTest {
     @Test
     public void testSetActivated() throws RepositoryException {
         new MetaData(root).setActivated();
-        assertTrue(root.getProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS).getBoolean());
+        assertTrue(root.getProperty(NodeTypes.Activatable.ACTIVATION_STATUS).getBoolean());
     }
 
     @Test
     public void testSetUnActivated() throws RepositoryException {
-        root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
+        root.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
         new MetaData(root).setUnActivated();
-        assertFalse(root.getProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS).getBoolean());
+        assertFalse(root.getProperty(NodeTypes.Activatable.ACTIVATION_STATUS).getBoolean());
     }
 
     @Test
     public void testGetIsActivated() throws RepositoryException {
         assertFalse(new MetaData(root).getIsActivated());
-        root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
+        root.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
         assertTrue(new MetaData(root).getIsActivated());
     }
 
     @Test
     public void testGetActivationStatusReturnsNotActivatedWhenNotActivated() {
-        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_NOT_ACTIVATED, new MetaData(root).getActivationStatus());
+        assertEquals(NodeTypes.Activatable.ACTIVATION_STATUS_NOT_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
     public void testGetActivationStatusReturnsActivatedWhenActivatedAndNeverModified() throws RepositoryException {
-        root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
-        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
+        root.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
+        assertEquals(NodeTypes.Activatable.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
@@ -124,10 +124,10 @@ public class MetaDataTest {
         Calendar yesterday = Calendar.getInstance();
         yesterday.setTime(DateUtils.addDays(new Date(), -1));
 
-        root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
-        root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, today);
-        root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, yesterday);
-        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
+        root.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
+        root.setProperty(NodeTypes.Activatable.LAST_ACTIVATED, today);
+        root.setProperty(NodeTypes.LastModified.LAST_MODIFIED, yesterday);
+        assertEquals(NodeTypes.Activatable.ACTIVATION_STATUS_ACTIVATED, new MetaData(root).getActivationStatus());
     }
 
     @Test
@@ -136,104 +136,104 @@ public class MetaDataTest {
         Calendar yesterday = Calendar.getInstance();
         yesterday.setTime(DateUtils.addDays(new Date(), -1));
 
-        root.setProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS, true);
-        root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, yesterday);
-        root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, today);
-        assertEquals(NodeTypes.ActivatableMixin.ACTIVATION_STATUS_MODIFIED, new MetaData(root).getActivationStatus());
+        root.setProperty(NodeTypes.Activatable.ACTIVATION_STATUS, true);
+        root.setProperty(NodeTypes.Activatable.LAST_ACTIVATED, yesterday);
+        root.setProperty(NodeTypes.LastModified.LAST_MODIFIED, today);
+        assertEquals(NodeTypes.Activatable.ACTIVATION_STATUS_MODIFIED, new MetaData(root).getActivationStatus());
     }
 
     @Test
     public void testSetLastActivationActionDate() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED));
+        assertFalse(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED));
         new MetaData(root).setLastActivationActionDate();
-        assertTrue(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED));
+        assertTrue(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED));
     }
 
     @Test
     public void testGetLastActionDate() throws RepositoryException {
 
-        assertFalse(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED));
+        assertFalse(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED));
         assertNull(new MetaData(root).getLastActionDate());
 
-        root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED, Calendar.getInstance());
+        root.setProperty(NodeTypes.Activatable.LAST_ACTIVATED, Calendar.getInstance());
 
-        assertTrue(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED));
+        assertTrue(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED));
         assertNotNull(new MetaData(root).getLastActionDate());
     }
 
     @Test
     public void testSetModificationDate() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED));
+        assertFalse(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED));
         new MetaData(root).setModificationDate();
-        assertTrue(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED));
+        assertTrue(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED));
     }
 
     @Test
     public void testGetModificationDate() throws RepositoryException {
 
-        assertFalse(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED));
+        assertFalse(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED));
         assertNull(new MetaData(root).getModificationDate());
 
-        root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED, Calendar.getInstance());
+        root.setProperty(NodeTypes.LastModified.LAST_MODIFIED, Calendar.getInstance());
 
-        assertTrue(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED));
+        assertTrue(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED));
         assertNotNull(new MetaData(root).getModificationDate());
     }
 
     @Test
     public void testGetAuthorId() throws RepositoryException {
 
-        assertFalse(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY));
+        assertFalse(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED_BY));
         assertEquals("", new MetaData(root).getAuthorId());
 
-        root.setProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY, "superuser");
+        root.setProperty(NodeTypes.LastModified.LAST_MODIFIED_BY, "superuser");
 
-        assertTrue(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY));
+        assertTrue(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED_BY));
         assertNotNull(new MetaData(root).getAuthorId());
     }
 
     @Test
     public void testSetAuthorId() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY));
+        assertFalse(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED_BY));
         new MetaData(root).setAuthorId("superuser");
-        assertTrue(root.hasProperty(NodeTypes.LastModifiedMixin.LAST_MODIFIED_BY));
+        assertTrue(root.hasProperty(NodeTypes.LastModified.LAST_MODIFIED_BY));
     }
 
     @Test
     public void testGetActivatorId() throws RepositoryException {
 
-        assertFalse(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY));
+        assertFalse(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY));
         assertEquals("", new MetaData(root).getActivatorId());
 
-        root.setProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY, "superuser");
+        root.setProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY, "superuser");
 
-        assertTrue(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY));
+        assertTrue(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY));
         assertNotNull(new MetaData(root).getActivatorId());
     }
 
     @Test
     public void testSetActivatorId() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY));
+        assertFalse(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY));
         new MetaData(root).setActivatorId("superuser");
-        assertTrue(root.hasProperty(NodeTypes.ActivatableMixin.LAST_ACTIVATED_BY));
+        assertTrue(root.hasProperty(NodeTypes.Activatable.LAST_ACTIVATED_BY));
     }
 
     @Test
     public void testGetTemplate() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertFalse(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
         assertEquals("", new MetaData(root).getTemplate());
 
-        root.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "samples:pages/main");
+        root.setProperty(NodeTypes.Renderable.TEMPLATE, "samples:pages/main");
 
-        assertTrue(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertTrue(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
         assertNotNull(new MetaData(root).getTemplate());
     }
 
     @Test
     public void testSetTemplate() throws RepositoryException {
-        assertFalse(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertFalse(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
         new MetaData(root).setTemplate("samples:pages/main");
-        assertTrue(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertTrue(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
     }
 
     @Test
@@ -247,7 +247,7 @@ public class MetaDataTest {
 
         // THEN
         assertEquals(value, md.getStringProperty(MetaData.TEMPLATE));
-        assertTrue(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertTrue(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
     }
 
     /**
@@ -293,7 +293,7 @@ public class MetaDataTest {
 
         // THEN
         assertEquals(value, md.getBooleanProperty(MetaData.ACTIVATED));
-        assertTrue(root.hasProperty(NodeTypes.ActivatableMixin.ACTIVATION_STATUS));
+        assertTrue(root.hasProperty(NodeTypes.Activatable.ACTIVATION_STATUS));
     }
 
     @Test
@@ -307,7 +307,7 @@ public class MetaDataTest {
 
         // THEN
         assertEquals(value, md.getDateProperty(MetaData.CREATION_DATE));
-        assertTrue(root.hasProperty(NodeTypes.CreatedMixin.CREATED));
+        assertTrue(root.hasProperty(NodeTypes.Created.CREATED));
     }
 
     @Test
@@ -322,7 +322,7 @@ public class MetaDataTest {
 
         // THEN
         assertEquals(value, result);
-        assertTrue(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertTrue(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
     }
 
     @Test
@@ -330,7 +330,7 @@ public class MetaDataTest {
         // GIVEN
         final MetaData md = new MetaData(root);
         final String value = "value";
-        root.setProperty(NodeTypes.RenderableMixin.TEMPLATE, value);
+        root.setProperty(NodeTypes.Renderable.TEMPLATE, value);
 
         final String newValue = "newValue";
 
@@ -339,7 +339,7 @@ public class MetaDataTest {
 
         // THEN
         assertEquals(newValue, md.getStringProperty(MetaData.TEMPLATE));
-        assertEquals(newValue, root.getProperty(NodeTypes.RenderableMixin.TEMPLATE).getString());
+        assertEquals(newValue, root.getProperty(NodeTypes.Renderable.TEMPLATE).getString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -374,9 +374,9 @@ public class MetaDataTest {
 
     @Test
     public void testRemoveProperty() throws RepositoryException {
-        root.setProperty(NodeTypes.RenderableMixin.TEMPLATE, "samples:pages/main");
+        root.setProperty(NodeTypes.Renderable.TEMPLATE, "samples:pages/main");
         new MetaData(root).removeProperty(MetaData.TEMPLATE);
-        assertFalse(root.hasProperty(NodeTypes.RenderableMixin.TEMPLATE));
+        assertFalse(root.hasProperty(NodeTypes.Renderable.TEMPLATE));
     }
 
     @Test(expected = IllegalArgumentException.class)

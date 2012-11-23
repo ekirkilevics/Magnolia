@@ -35,7 +35,6 @@ package info.magnolia.nodebuilder;
 
 import static org.junit.Assert.*;
 import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.test.mock.MockContent;
@@ -55,8 +54,6 @@ public class ContentOpsTest {
     private static final String NODEDATA_VALUE = "value";
 
     private static final String NODEDATA_NAME = "nodedata";
-
-    private static final String TEMPLATE_NAME = "template";
 
     private static final String ROOT_NAME = "root";
 
@@ -78,21 +75,6 @@ public class ContentOpsTest {
 
     /**
      * Test method for
-     * {@link info.magnolia.nodebuilder.ContentOps#createPage(java.lang.String, java.lang.String)}.
-     */
-    @Test
-    public void testCreatePage() throws RepositoryException {
-        MockContent root = new MockContent(ROOT_NAME);
-        ContentOps.createPage(NEW_CONTENT_NAME, TEMPLATE_NAME).exec(root, ERROR_HANDLER);
-
-        assertTrue(root.hasContent(NEW_CONTENT_NAME));
-        Content page = root.getContent(NEW_CONTENT_NAME);
-        assertEquals(ItemType.CONTENT, page.getItemType());
-        assertEquals(TEMPLATE_NAME, page.getTemplate());
-    }
-
-    /**
-     * Test method for
      * {@link info.magnolia.nodebuilder.ContentOps#createCollectionNode(java.lang.String)}.
      */
     @Test
@@ -106,24 +88,9 @@ public class ContentOpsTest {
 
     /**
      * Test method for
-     * {@link info.magnolia.nodebuilder.ContentOps#createParagraph(java.lang.String, java.lang.String)}
-     * .
-     */
-    @Test
-    public void testCreateParagraph() throws RepositoryException {
-        MockContent root = new MockContent(ROOT_NAME);
-        ContentOps.createParagraph(NEW_CONTENT_NAME, TEMPLATE_NAME).exec(root, ERROR_HANDLER);
-
-        assertTrue(root.hasContent(NEW_CONTENT_NAME));
-        Content paragraph = root.getContent(NEW_CONTENT_NAME);
-        assertEquals(ItemType.CONTENTNODE, paragraph.getItemType());
-        assertEquals(TEMPLATE_NAME, paragraph.getTemplate());
-    }
-
-    /**
-     * Test method for
      * {@link info.magnolia.nodebuilder.ContentOps#setNodeData(java.lang.String, java.lang.Object)}.
      */
+    @Test
     public void testSetNodeData() {
         MockContent content = new MockContent(NEW_CONTENT_NAME);
         ContentOps.setNodeData(NODEDATA_NAME, NODEDATA_VALUE).exec(content, ERROR_HANDLER);
@@ -152,14 +119,4 @@ public class ContentOpsTest {
         assertEquals(new String(bytes), IOUtils.toString(stream));
     }
 
-    /**
-     * Test method for {@link info.magnolia.nodebuilder.ContentOps#setTemplate(java.lang.String)}.
-     */
-    @Test
-    public void testSetTemplate() {
-        MockContent content = new MockContent(NEW_CONTENT_NAME);
-        ContentOps.setTemplate(TEMPLATE_NAME).exec(content, ERROR_HANDLER);
-
-        assertEquals(TEMPLATE_NAME, content.getTemplate());
-    }
 }

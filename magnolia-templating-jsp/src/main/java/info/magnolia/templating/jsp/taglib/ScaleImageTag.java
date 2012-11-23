@@ -253,8 +253,8 @@ public class ScaleImageTag extends BaseImageTag {
     protected boolean rescale(Content parentContentNode, Content imageContentNode) {
 
         try {
-            Calendar parentModified = NodeTypes.LastModifiedMixin.getLastModified(parentContentNode.getJCRNode());
-            Calendar imageModified = NodeTypes.LastModifiedMixin.getLastModified(imageContentNode.getJCRNode());
+            Calendar parentModified = NodeTypes.LastModified.getLastModified(parentContentNode.getJCRNode());
+            Calendar imageModified = NodeTypes.LastModified.getLastModified(imageContentNode.getJCRNode());
 
             if (parentModified.after(imageModified)) {
                 return true;

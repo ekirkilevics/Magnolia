@@ -48,16 +48,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.Map;
 
 import javax.jcr.ImportUUIDBehavior;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.core.jndi.BindableRepositoryFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -65,10 +62,11 @@ import org.junit.Before;
 
 /**
  * Superclass for Tests requiring access to a real jcr repo.
+ * Make sure to call super.setUp() + super.tearDown() when overriding the methods provided in this class.
+ *
  * Caution: since Magnolia 4.5 this is a JUnit-4 style test.
  *
  * @author ashapochka
- * @version $Id$
  */
 public abstract class RepositoryTestCase extends MgnlTestCase {
 
@@ -90,24 +88,10 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        workaroundJCR1778();
-
         if (isAutoStart()) {
             cleanUp();
             startRepository();
         }
-    }
-
-    /**
-     * @deprecated - workaround until JCR-1778 is fixed
-     * @see <a href="https://issues.apache.org/jira/browse/JCR-1778">JCR-1778</a>
-     */
-    @Deprecated
-    static void workaroundJCR1778() throws NoSuchFieldException, IllegalAccessException {
-        final Field cacheField = BindableRepositoryFactory.class.getDeclaredField("cache");
-        cacheField.setAccessible(true);
-        final Map cache = (Map) cacheField.get(null);
-        cache.clear();
     }
 
     protected void modifyContextesToUseRealRepository() {

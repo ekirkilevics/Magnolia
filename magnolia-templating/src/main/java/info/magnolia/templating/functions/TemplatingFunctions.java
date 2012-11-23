@@ -44,6 +44,7 @@ import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
 import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.util.SessionUtil;
@@ -55,6 +56,7 @@ import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.templating.inheritance.DefaultInheritanceContentDecorator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -67,6 +69,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ISO8601;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -619,7 +622,46 @@ public class TemplatingFunctions {
      * Returns the string representation of a property from the metaData of the node or <code>null</code> if the node has no Magnolia metaData or if no matching property is found.
      */
     public String metaData(Node content, String property){
-        return MetaDataUtil.getMetaData(content).getStringProperty(property);
+
+        Object returnValue;
+        try {
+            if (property.equals(NodeTypes.Created.CREATED)) {
+                returnValue = NodeTypes.Created.getCreated(content);
+            } else if (property.equals(NodeTypes.Created.CREATED_BY)) {
+                returnValue = NodeTypes.Created.getCreatedBy(content);
+            } else if (property.equals(NodeTypes.LastModified.LAST_MODIFIED)) {
+                returnValue = NodeTypes.LastModified.getLastModified(content);
+            } else if (property.equals(NodeTypes.LastModified.LAST_MODIFIED_BY)) {
+                returnValue = NodeTypes.LastModified.getLastModifiedBy(content);
+            } else if (property.equals(NodeTypes.Renderable.TEMPLATE)) {
+                returnValue = NodeTypes.Renderable.getTemplate(content);
+            } else if (property.equals(NodeTypes.Activatable.LAST_ACTIVATED)) {
+                returnValue = NodeTypes.Activatable.getLastActivated(content);
+            } else if (property.equals(NodeTypes.Activatable.LAST_ACTIVATED_BY)) {
+                returnValue = NodeTypes.Activatable.getLastActivatedBy(content);
+            } else if (property.equals(NodeTypes.Activatable.ACTIVATION_STATUS)) {
+                returnValue = NodeTypes.Activatable.getActivationStatus(content);
+            } else if (property.equals(NodeTypes.Deleted.DELETED)) {
+                returnValue = NodeTypes.Deleted.getDeleted(content);
+            } else if (property.equals(NodeTypes.Deleted.DELETED_BY)) {
+                returnValue = NodeTypes.Deleted.getDeletedBy(content);
+            } else if (property.equals(NodeTypes.Deleted.COMMENT)) {
+                // Since NodeTypes.Deleted.COMMENT and NodeTypes.Versionable.COMMENT have identical names this will work for both
+                returnValue = NodeTypes.Deleted.getComment(content);
+            } else {
+
+                // Try to get the value using one of the deprecated names in MetaData.
+                // This throws an IllegalArgumentException if its not one of those constants
+                returnValue = MetaDataUtil.getMetaData(content).getStringProperty(property);
+
+                // If no exception was thrown then warn that a legacy constant was used
+                log.warn("Deprecated constant [" + property+"] used to query for meta data property on node [" + NodeUtil.getPathIfPossible(content) + "]");
+            }
+        } catch (RepositoryException e) {
+            return "";
+        }
+
+        return returnValue instanceof Calendar ? ISO8601.format((Calendar) returnValue) : returnValue.toString();
     }
 
     /**

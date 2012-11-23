@@ -39,23 +39,13 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.mock.MockContext;
 
-import java.util.Hashtable;
 import java.util.Locale;
 
-import javax.jcr.Repository;
-import javax.jcr.SimpleCredentials;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import org.apache.jackrabbit.core.jndi.RegistryHelper;
-import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
 import org.junit.After;
 import org.junit.Test;
 
 /**
  * Ensures some issues we encountered with 3rd party libraries are gone for good.
- *
- * @version $Id$
  */
 public class SelfTest {
 
@@ -63,39 +53,6 @@ public class SelfTest {
     public void tearDown() throws Exception {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
-    }
-
-    /**
-     * Jackrabbit keeps a cache of jndi references since 1.4.6
-     * See https://issues.apache.org/jira/browse/JCR-1778
-     */
-    @Test
-    public void testJackrabbitUnregistersProperly() throws Exception {
-        Hashtable environment = new Hashtable();
-        environment.put(Context.INITIAL_CONTEXT_FACTORY, DummyInitialContextFactory.class.getName());
-        environment.put(Context.PROVIDER_URL, "http://jackrabbit.apache.org/");
-        Context context = new InitialContext(environment);
-
-        String xml = "src/test/resources/repo-conf/jackrabbit-memory-search.xml";
-        String dir = "target/repository";
-        String key = "repository";
-
-        // Create first repository
-        {
-            RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final Repository repository = (Repository) context.lookup(key);
-            repository.login(new SimpleCredentials("admin", "admin".toCharArray())).logout(); // throws an IllegalStateException!
-            RegistryHelper.unregisterRepository(context, key);
-        }
-
-        RepositoryTestCase.workaroundJCR1778();
-        // Create second repository with the same configuration
-        {
-            RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final Repository repository = (Repository) context.lookup(key);
-            repository.login().logout(); // throws an IllegalStateException!
-            RegistryHelper.unregisterRepository(context, key);
-        }
     }
 
     /**

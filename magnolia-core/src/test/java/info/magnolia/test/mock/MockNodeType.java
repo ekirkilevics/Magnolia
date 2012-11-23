@@ -33,7 +33,8 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
+import org.apache.jackrabbit.JcrConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,8 +51,6 @@ import javax.jcr.nodetype.PropertyDefinition;
 
 /**
  * Mock implementation of JCR NodeType.
- * @author had
- * @version $Id: $
  */
 public class MockNodeType implements NodeType {
 
@@ -61,17 +60,17 @@ public class MockNodeType implements NodeType {
     private NodeType[] superTypes = new NodeType[]{};
 
     static {
-        nodeTypeHierarchy.put(MgnlNodeType.NT_CONTENT, Arrays.asList(new String[]{ MgnlNodeType.NT_PAGE }));
-        nodeTypeHierarchy.put(MgnlNodeType.NT_CONTENTNODE, Arrays.asList(new String[]{ MgnlNodeType.NT_AREA, MgnlNodeType.NT_COMPONENT, MgnlNodeType.USER, MgnlNodeType.GROUP, MgnlNodeType.ROLE}));
+        nodeTypeHierarchy.put(NodeTypes.Content.NAME, Arrays.asList(new String[]{ NodeTypes.Page.NAME }));
+        nodeTypeHierarchy.put(NodeTypes.ContentNode.NAME, Arrays.asList(new String[]{ NodeTypes.Area.NAME, NodeTypes.Component.NAME, NodeTypes.User.NAME, NodeTypes.Group.NAME, NodeTypes.Role.NAME}));
     }
 
     public MockNodeType(String nodeTypeName) {
         this.name = nodeTypeName;
-        if(NT_BASE.equals(nodeTypeName)) {
+        if(JcrConstants.NT_BASE.equals(nodeTypeName)) {
             return;
         }
         List<MockNodeType> superTypes = new ArrayList<MockNodeType>();
-        superTypes.add(new MockNodeType(NT_BASE));
+        superTypes.add(new MockNodeType(JcrConstants.NT_BASE));
 
         for(Entry<String, List<String>> entry : nodeTypeHierarchy.entrySet()) {
             if(entry.getValue().contains(nodeTypeName)) {

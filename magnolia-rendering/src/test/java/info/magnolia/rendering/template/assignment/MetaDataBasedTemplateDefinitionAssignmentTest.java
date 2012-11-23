@@ -111,7 +111,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
     @After
     public void tearDown() throws Exception {
         MgnlContext.setInstance(null);
-        ComponentsTestUtil.clear(); // MgnlContext.initMockContext() uses ComponentsTestUtil
+        // MgnlContext.initMockContext() uses ComponentsTestUtil
+        ComponentsTestUtil.clear();
     }
 
     @Test
@@ -119,7 +120,8 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // GIVEN
         final String templateId = "id";
         MockNode node = new MockNode();
-        NodeTypes.RenderableMixin.setTemplate(node, templateId);
+        node.addMixin(NodeTypes.Renderable.NAME);
+        NodeTypes.Renderable.set(node, templateId);
 
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         TemplateDefinition templateDefinition = mock(TemplateDefinition.class);
@@ -154,7 +156,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);
 
-        // TEST
+        // THEN
         assertEquals(1, availableTemplates.size());
         assertSame(deletedTemplate, availableTemplates.iterator().next());
     }
@@ -185,7 +187,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);
 
-        // TEST
+        // THEN
         assertEquals(1, availableTemplates.size());
         assertSame(visibleTemplate, availableTemplates.iterator().next());
     }
@@ -201,8 +203,9 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         TemplateDefinitionRegistry registry = new TemplateDefinitionRegistry();
         MetaDataBasedTemplateDefinitionAssignment assignment = new MetaDataBasedTemplateDefinitionAssignment(registry);
 
-        MockNode parentNode = new MockNode(session);
-        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template1");
+        Node parentNode = session.getRootNode();
+        parentNode.addMixin(NodeTypes.Renderable.NAME);
+        NodeTypes.Renderable.set(parentNode, "module:pages/template1");
         Node mockNode = parentNode.addNode("child");
 
         TemplateDefinition template1 = mock(TemplateDefinition.class);
@@ -219,7 +222,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         assertSame(template1, assignment.getDefaultTemplate(mockNode));
 
         // change template on the parent
-        NodeTypes.RenderableMixin.setTemplate(parentNode, "module:pages/template2");
+        NodeTypes.Renderable.set(parentNode, "module:pages/template2");
 
         // test that it changes the returned template
         assertSame(template2, assignment.getDefaultTemplate(mockNode));

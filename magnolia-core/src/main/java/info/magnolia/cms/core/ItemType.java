@@ -107,7 +107,7 @@ public final class ItemType implements Serializable {
 
     public static final String MIX_LOCKABLE = JcrConstants.MIX_LOCKABLE;
 
-    public static final String DELETED_NODE_MIXIN = NodeTypes.DeletedMixin.NAME;
+    public static final String DELETED_NODE_MIXIN = NodeTypes.Deleted.NAME;
 
     /**
      * Magnolia content.

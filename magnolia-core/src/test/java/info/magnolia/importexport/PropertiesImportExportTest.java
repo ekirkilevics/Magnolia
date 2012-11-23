@@ -124,8 +124,8 @@ public class PropertiesImportExportTest {
         assertNotNull("Content retrievable by its UUID", uuidLinkNode);
         MetaData nodeMetaData = uuidLinkNode.getMetaData();
         assertNotNull("Metadata of node should not be null when it is set explicitly in the properties", nodeMetaData);
-        assertEquals("Template node is populated properly", "someParagraphName", NodeTypes.RenderableMixin.getTemplate(uuidLinkNode.getJCRNode()));
-        assertTrue("activation matches status set in the properties", NodeTypes.ActivatableMixin.isActivated(uuidLinkNode.getJCRNode()));
+        assertEquals("Template node is populated properly", "someParagraphName", NodeTypes.Renderable.getTemplate(uuidLinkNode.getJCRNode()));
+        assertTrue("activation matches status set in the properties", NodeTypes.Activatable.isActivated(uuidLinkNode.getJCRNode()));
 
     }
 

@@ -99,7 +99,7 @@ public class ContentOps {
 
             @Override
             protected Content doExec(Content context, ErrorHandler errorHandler) throws RepositoryException {
-                NodeTypes.RenderableMixin.setTemplate(context.getJCRNode(), template);
+                NodeTypes.Renderable.set(context.getJCRNode(), template);
                 return context;
             }
         };
