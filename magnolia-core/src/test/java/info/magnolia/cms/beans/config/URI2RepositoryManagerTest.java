@@ -33,27 +33,29 @@
  */
 package info.magnolia.cms.beans.config;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
 
-import junit.framework.TestCase;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.link.Link;
 import info.magnolia.test.ComponentsTestUtil;
+import org.junit.Test;
 
 /**
 * 
 * URI2RepositoryManagerTest.
 */
-public class URI2RepositoryManagerTest extends TestCase{
+public class URI2RepositoryManagerTest {
 
     private NodeData nodeData = mock(NodeData.class);
     private Property property = mock(Property.class);
     private Node node = mock(Node.class);
 
+    @Test
     public void testGetURIWhenLinkIsEditorBinaryLinkAndPrefixHandleIsSet() throws Exception{
         when(property.getParent()).thenReturn(node);
         when(nodeData.getJCRProperty()).thenReturn(property);
@@ -74,6 +76,7 @@ public class URI2RepositoryManagerTest extends TestCase{
         assertEquals("/data/contact/pepa/image_file/file/fileName.ext", URI2RepositoryManager.getInstance().getURI(link));
     }
 
+    @Test
     public void testGetURIWhenLinkIsNotEditorBinaryLinkAndPrefixHandleIsSet() throws Exception{
         when(property.getParent()).thenReturn(node);
         when(nodeData.getJCRProperty()).thenReturn(property);
