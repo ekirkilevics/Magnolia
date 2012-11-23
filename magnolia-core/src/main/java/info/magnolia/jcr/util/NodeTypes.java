@@ -87,7 +87,7 @@ public class NodeTypes {
          * Sets the date of modification to current Calendar and uses {@link info.magnolia.context.MgnlContext} to set the name of the user.
          */
         public static void update(Node node) throws RepositoryException {
-            update(node, getUserName(), getCurrentCalendar());
+            update(node, getCurrentUserName(), getCurrentCalendar());
         }
 
         /**
@@ -205,7 +205,7 @@ public class NodeTypes {
          * user. Used with nodes having the <code>mgnl:created</code> mixin.
          */
         public static void set(Node node) throws RepositoryException {
-            set(node, getUserName(), getCurrentCalendar());
+            set(node, getCurrentUserName(), getCurrentCalendar());
         }
 
         /**
@@ -279,7 +279,7 @@ public class NodeTypes {
         public static void set(Node node, String comment) throws RepositoryException {
             checkNodeType(node, NAME, DELETED, DELETED_BY, COMMENT);
             node.setProperty(DELETED, getCurrentCalendar());
-            node.setProperty(DELETED_BY, getUserName());
+            node.setProperty(DELETED_BY, getCurrentUserName());
             node.setProperty(COMMENT, comment);
         }
     }
@@ -391,7 +391,7 @@ public class NodeTypes {
         public static final String NAME = MGNL_PREFIX + "reserve";
     }
 
-    protected static String getUserName() {
+    protected static String getCurrentUserName() {
         return MgnlContext.getUser().getName();
     }
 
@@ -399,7 +399,7 @@ public class NodeTypes {
         return Calendar.getInstance();
     }
 
-    static final void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
+    static void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
         if (!node.isNodeType(nodeType)) {
             log.warn("Trying to set property/ies '" + StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' with PrimaryType '" + node.getPrimaryNodeType().getName() + "' is not of type '" + nodeType + "'!");
         }

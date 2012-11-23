@@ -55,7 +55,7 @@ import javax.jcr.ValueFormatException;
 public class MetaDataUtil {
 
     /**
-     * @deprecated since 5.0 no longer needed -> metaData properties are now hosted on the working node.
+     * @deprecated since 5.0 use {@link NodeTypes}
      */
     public static MetaData getMetaData(Node node) {
         return new MetaData(node);
@@ -83,6 +83,9 @@ public class MetaDataUtil {
         return (meta.hasProperty(lastMod)) ? meta.getProperty(lastMod).getDate() : null;
     }
 
+    /**
+     * @deprecated  since 5.0 use {@link NodeTypes.RenderableMixin#getTemplate(Node)}
+     */
     public static String getTemplate(Node node) {
         return getMetaData(node).getTemplate();
     }
