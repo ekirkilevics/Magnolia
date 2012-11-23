@@ -33,11 +33,10 @@
  */
 package info.magnolia.link;
 
-import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.assertEquals;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.jcr.MockNode;
 
 import java.text.MessageFormat;
 
@@ -46,10 +45,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
- * @author gjoseph
- * @version $Revision$ ($Author$)
+ * UUIDLinkTest.
  */
 public class UUIDLinkTest extends BaseLinkTest {
 
@@ -67,13 +64,11 @@ public class UUIDLinkTest extends BaseLinkTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        replay(allMocks.toArray());
     }
 
     @Override
     @After
     public void tearDown() throws Exception {
-        verify(allMocks.toArray());
         super.tearDown();
     }
 
@@ -123,7 +118,8 @@ public class UUIDLinkTest extends BaseLinkTest {
 
     @Test
     public void testUUIDToAbsoluteLinksAfterRenaming() throws Exception{
-        ((MockContent)ContentUtil.getContent(RepositoryConstants.WEBSITE, "/parent/sub")).setName("subRenamed");
+        MockNode renameNode = (MockNode) session.getNode("/parent/sub");
+        renameNode.setName("subRenamed");
         Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
@@ -135,6 +131,8 @@ public class UUIDLinkTest extends BaseLinkTest {
 
     @Test
     public void testUUIDToBinary() throws Exception {
+        session.getNode("/parent/sub").setPrimaryType(NodeTypes.Resource.NAME);
+        session.getNode("/parent/sub").setProperty("fileName", "test");
         Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(HREF_BINARY, NOP_TRANSFORMER.transform(link));
     }
@@ -142,10 +140,12 @@ public class UUIDLinkTest extends BaseLinkTest {
     @Test
     public void testUUIDToBinaryAfterRenaming() throws Exception {
         // now rename the the page
-        ((MockContent)ContentUtil.getContent(RepositoryConstants.WEBSITE, "/parent/sub")).setName("subRenamed");
+        session.getNode("/parent/sub").setPrimaryType(NodeTypes.Resource.NAME);
+        session.getNode("/parent/sub").setProperty("fileName", "test");
+        MockNode renameNode = (MockNode) session.getNode("/parent/sub");
+        renameNode.setName("subRenamed");
 
         Link link = LinkUtil.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(StringUtils.replace(HREF_BINARY, "sub", "subRenamed"), NOP_TRANSFORMER.transform(link));
     }
-
 }

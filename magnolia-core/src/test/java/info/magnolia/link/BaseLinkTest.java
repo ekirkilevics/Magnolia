@@ -33,12 +33,10 @@
  */
 package info.magnolia.link;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
+import static org.mockito.Mockito.*;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.runtime.FileProperties;
-import info.magnolia.cms.core.BinaryNodeData;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.context.MgnlContext;
@@ -46,13 +44,13 @@ import info.magnolia.context.WebContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockContent;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+import javax.jcr.Node;
 
 import org.junit.Before;
 
@@ -64,7 +62,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     protected static final String SOME_CONTEXT = "/some-context";
     protected static final String HANDLE_PARENT_SUB = "/parent/sub";
     protected static final String UUID_PATTERN_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
-    protected static final String UUID_PATTERN_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
+    protected static final String UUID_PATTERN_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',path:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
     protected static final String UUID_PATTERN_SIMPLE = MessageFormat.format(UUID_PATTERN_NEW_FORMAT, new String[]{"2", RepositoryConstants.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
     protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", RepositoryConstants.WEBSITE, HANDLE_PARENT_SUB});
 
@@ -72,33 +70,30 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
     protected WebContext webContext;
 
-    protected List allMocks;
+    protected MockSession session;
 
     protected String website =
-        "/parent@uuid=1\n" +
-        "/parent/sub@uuid=2\n" +
-        "/parent/sub2@uuid=3";
-
+        "/parent.uuid=1\n" +
+        "/parent/sub.uuid=2\n" +
+        "/parent/sub2.uuid=3";
 
     @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
 
-        MockHierarchyManager hm = MockUtil.createHierarchyManager(RepositoryConstants.WEBSITE, website);
-        webContext = createMock(WebContext.class);
-        expect(webContext.getHierarchyManager(RepositoryConstants.WEBSITE)).andReturn(hm).anyTimes();
-        expect(webContext.getContextPath()).andReturn(SOME_CONTEXT).anyTimes();
+        session = SessionTestUtil.createSession(RepositoryConstants.WEBSITE, website);
+        webContext = mock(WebContext.class);
+        when(webContext.getContextPath()).thenReturn(SOME_CONTEXT);
+        when(webContext.getJCRSession("website")).thenReturn(session);
 
-        // add a binary
-        MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
-        BinaryNodeData bmnd = page.addBinaryNodeData("file");
-        bmnd.setAttribute(FileProperties.PROPERTY_FILENAME, "test");
-        bmnd.setAttribute(FileProperties.PROPERTY_EXTENSION, "jpg");
-        bmnd.setAttribute("jcr:mimeType", "image/jpeg");
+        MockNode page = (MockNode) session.getNode(HANDLE_PARENT_SUB);
 
-        allMocks = new ArrayList();
-        allMocks.add(webContext);
+        Node bmnd = page.addNode("file");
+        bmnd.setProperty(FileProperties.PROPERTY_FILENAME, "test");
+        bmnd.setProperty(FileProperties.PROPERTY_EXTENSION, "jpg");
+        bmnd.setProperty("jcr:mimeType", "image/jpeg");
+
         MgnlContext.setInstance(webContext);
 
         // not configured in the repository

@@ -35,12 +35,10 @@ package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -51,7 +49,10 @@ import java.util.regex.Pattern;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.spi.commons.conversion.MalformedPathException;
@@ -72,9 +73,6 @@ public class LinkUtil {
     public static final String DEFAULT_EXTENSION = "html";
 
     public static final String DEFAULT_REPOSITORY = RepositoryConstants.WEBSITE;
-
-    // is this proxied or not? Tests says no.
-    //private static final LinkTransformerManager linkManager = LinkTransformerManager.getInstance();
 
     /**
      * Pattern to find a link.
@@ -198,6 +196,7 @@ public class LinkUtil {
         LinkTransformer transformer = LinkTransformerManager.getInstance().getBrowserLink(null);
         return convertLinksFromUUIDPattern(str, transformer);
     }
+
     /**
      * Determines if the given link is internal and relative.
      */
@@ -256,7 +255,6 @@ public class LinkUtil {
      * @return repository denoted by the provided URI.
      */
     public static String mapPathToRepository(String path) {
-        //String repository = URI2RepositoryManager.getInstance().getRepository(path);
         String repository = getURI2RepositoryManager().getRepository(path);
         if(StringUtils.isEmpty(repository)){
             repository = DEFAULT_REPOSITORY;
@@ -290,12 +288,27 @@ public class LinkUtil {
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @deprecated
      */
     public static String createAbsoluteLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
             return null;
         }
-        return LinkTransformerManager.getInstance().getAbsolute().transform(createLinkInstance(nodedata));
+        try {
+            if(nodedata.getType() != PropertyType.BINARY){
+                return createAbsoluteLink(nodedata.getJCRProperty());
+            }
+            return createAbsoluteLink(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
+        } catch (RepositoryException e) {
+            throw new LinkException(e);
+        }
+    }
+
+    public static String createAbsoluteLink(Property property) throws LinkException {
+        if(property == null){
+            return null;
+        }
+        return LinkTransformerManager.getInstance().getAbsolute().transform(createLinkInstance(property));
     }
 
     /**
@@ -310,8 +323,7 @@ public class LinkUtil {
      */
     public static String createAbsoluteLink(String repository, String uuid) throws RepositoryException {
         Node jcrNode = MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid);
-        /*TODO update with Node method*/
-        return createAbsoluteLink(ContentUtil.asContent(jcrNode));
+        return createAbsoluteLink(jcrNode);
     }
 
     /**
@@ -321,22 +333,54 @@ public class LinkUtil {
      *            content to create link to.
      * @return Absolute link to the provided content.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @deprecated
      */
     public static String createAbsoluteLink(Content content) {
         if(content == null){
             return null;
         }
-        return LinkTransformerManager.getInstance().getAbsolute().transform(createLinkInstance(content));
+        return createAbsoluteLink(content.getJCRNode());
+    }
+
+    public static String createAbsoluteLink(Node node) {
+        if(node == null){
+            return null;
+        }
+        return LinkTransformerManager.getInstance().getAbsolute().transform(createLinkInstance(node));
     }
 
     /**
      * Creates a complete url to access given content from external systems applying all the URI2Repository mappings and locales.
+     * @deprecated
      */
     public static String createExternalLink(Content content) {
         if(content == null){
             return null;
         }
-        return LinkTransformerManager.getInstance().getCompleteUrl().transform(createLinkInstance(content));
+        return createExternalLink(content.getJCRNode());
+    }
+
+    public static String createExternalLink(Node node) {
+        if(node == null){
+            return null;
+        }
+        return LinkTransformerManager.getInstance().getCompleteUrl().transform(createLinkInstance(node));
+    }
+
+    /**
+     * Creates link guessing best possible link format from current site and provided node.
+     *
+     * @param nodedata
+     *            Node data to create link for.
+     * @return Absolute link to the provided node data.
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @deprecated
+     */
+    public static String createLink(Content node) {
+        if(node == null){
+            return null;
+        }
+        return createLink(node.getJCRNode());
     }
 
     /**
@@ -347,23 +391,39 @@ public class LinkUtil {
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createLink(Content node) {
+    public static String createLink(Node node) {
         if(node == null){
             return null;
         }
-        if (node.isNodeType(MgnlNodeType.NT_RESOURCE)) {
             try {
-                // This content is what was formerly hidden as binary node data and still needs to be treated as such until new Link API is ready.
-                String name = node.getName();
-                Content parent = node.getParent();
-                return LinkUtil.createLink(parent.getNodeData(name));
+                return LinkTransformerManager.getInstance().getBrowserLink(node.getPath()).transform(createLinkInstance(node));
             } catch (RepositoryException e) {
                 log.debug(e.getMessage(), e);
-            } catch (LinkException e) {
-                log.debug(e.getMessage(), e);
             }
+            return null;
+    }
+
+    /**
+     * Creates link guessing best possible link format from current site and provided node data.
+     *
+     * @param nodedata
+     *            Node data to create link for.
+     * @return Absolute link to the provided node data.
+     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @deprecated
+     */
+    public static String createLink(NodeData nodedata) throws LinkException {
+        if(nodedata == null || !nodedata.isExist()){
+            return null;
         }
-        return LinkTransformerManager.getInstance().getBrowserLink(node.getHandle()).transform(createLinkInstance(node));
+        try {
+            if(nodedata.getType() != PropertyType.BINARY){
+                return createLink(nodedata.getJCRProperty());
+            }
+            return createLink(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
+        } catch (RepositoryException e) {
+            throw new LinkException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -374,12 +434,12 @@ public class LinkUtil {
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createLink(NodeData nodedata) throws LinkException {
-        if(nodedata == null || !nodedata.isExist()){
+    public static String createLink(Property property) throws LinkException {
+        if(property == null){
             return null;
         }
         try {
-            return LinkTransformerManager.getInstance().getBrowserLink(nodedata.getParent().getHandle()).transform(LinkFactory.createLink(nodedata));
+            return LinkTransformerManager.getInstance().getBrowserLink(property.getParent().getPath()).transform(createLinkInstance(property));
         } catch (RepositoryException e) {
             throw new LinkException(e.getMessage(), e);
         }
@@ -397,19 +457,46 @@ public class LinkUtil {
      */
     public static String createLink(String repository, String uuid) throws RepositoryException {
         Node node = MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid);
-        /*TODO update with Node method*/
-        return createLink(ContentUtil.asContent(node));
+        return createLink(node);
     }
 
+    /**
+     * 
+     * @param node
+     * @return
+     * @deprecated
+     */
     public static Link createLinkInstance(Content node) {
+        return createLinkInstance(node.getJCRNode());
+    }
+
+    protected static Link createLinkInstance(Node node) {
         return new Link(node);
     }
 
+    /**
+     * 
+     * @param nodeData
+     * @return
+     * @throws LinkException
+     * @deprecated
+     */
     public static Link createLinkInstance(NodeData nodeData) throws LinkException{
         try {
-            return new Link(nodeData.getParent().getWorkspace().getName(), nodeData.getParent(), nodeData);
+            if(nodeData.getType() != PropertyType.BINARY){
+                return createLinkInstance(nodeData.getJCRProperty());
+            }
+            return createLinkInstance(MgnlContext.getJCRSession(nodeData.getHierarchyManager().getWorkspace().getName()).getNode(nodeData.getHandle()));
         } catch (RepositoryException e) {
             throw new LinkException("can't find node " + nodeData , e);
+        }
+    }
+
+    public static Link createLinkInstance(Property property) throws LinkException{
+        try {
+            return new Link(property.getParent().getSession().getWorkspace().getName(), property.getParent(), property);
+        } catch (RepositoryException e) {
+            throw new LinkException("can't find node " + property , e);
         }
     }
 
@@ -421,7 +508,7 @@ public class LinkUtil {
      */
     public static Link createLinkInstance(String repository, String uuid) throws LinkException {
         try {
-            return new Link(MgnlContext.getHierarchyManager(repository).getContentByUUID(uuid));
+            return new Link(MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid));
         } catch (RepositoryException e) {
             throw new LinkException("can't get node with uuid " + uuid + " and repository " + repository);
         }
@@ -438,12 +525,13 @@ public class LinkUtil {
      * @throws LinkException
      */
     public static Link createLinkInstance(String repository, String path, String extension, String anchor, String parameters) throws LinkException {
-        Content node = null;
+        Node node = null;
         String fileName = null;
         String nodeDataName = null;
-        NodeData nodeData = null;
+        Property property = null;
         try {
-            HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+            Session session = MgnlContext.getJCRSession(repository);
+            
             boolean exists = false;
             try {
                 // jackrabbit own path parser
@@ -451,26 +539,24 @@ public class LinkUtil {
                 PathParser.checkFormat(path);
             } catch (MalformedPathException e) {
                 // we first check for path incl. the file name. While file name might not be necessarily part of the path, it might contain also non ascii chars. If that is the case, parsing exception will occur so we know that path with filename can't exist.
-                    exists = false;
+                    //exists = false;
+                
             }
-            exists = hm.isExist(path) && !hm.isNodeData(path);
+            exists = session.itemExists(path) && !session.propertyExists(path);
             if (exists) {
-                node = hm.getContent(path);
+                node = session.getNode(path);
             }
             if (node == null) {
-                // this is a binary containing the name at the end
-                // this name is stored as an attribute but is not part of the handle
-                if (hm.isNodeData(StringUtils.substringBeforeLast(path, "/"))) {
-                    fileName = StringUtils.substringAfterLast(path, "/");
-                    path = StringUtils.substringBeforeLast(path, "/");
+                if(session.nodeExists(path)){
+                    node = session.getNode(path);
                 }
-
-                // link to the binary node data
-                if (hm.isNodeData(path)) {
+                if (node != null && node.isNodeType(NodeTypes.Resource.NAME) && node.hasProperty("fileName")) {
+                    fileName = node.getProperty("fileName").getString();
+                }
+                if (session.propertyExists(path)) {
                     nodeDataName = StringUtils.substringAfterLast(path, "/");
                     path = StringUtils.substringBeforeLast(path, "/");
-                    node = hm.getContent(path);
-                    nodeData = node.getNodeData(nodeDataName);
+                    property = node.getProperty(nodeDataName);
                 }
             }
             if (node == null) {
@@ -485,8 +571,8 @@ public class LinkUtil {
         link.setExtension(extension);
         link.setParameters(parameters);
         link.setFileName(fileName);
-        link.setNodeDataName(nodeDataName);
-        link.setNodeData(nodeData);
+        link.setPropertyName(nodeDataName);
+        link.setProperty(property);
         link.setHandle(path);
         return link;
     }
@@ -511,7 +597,7 @@ public class LinkUtil {
             link = createLinkInstance(defaultRepository, uuid);
         } catch (LinkException e) {
             try {
-                final Content node = MgnlContext.getHierarchyManager(defaultRepository).getContent(fallbackHandle != null? fallbackHandle:"");
+                final Node node = MgnlContext.getJCRSession(defaultRepository).getNode(fallbackHandle != null? fallbackHandle:"");
                 link = createLinkInstance(node);
             } catch (PathNotFoundException pnfe) {
                 log.warn("Can't find node with uuid {} or handle {} in repository {}", new Object[]{ uuid, fallbackHandle, defaultRepository});
@@ -524,7 +610,7 @@ public class LinkUtil {
             }
         }
         link.setFallbackHandle(fallbackHandle);
-        link.setNodeDataName(nodeDataName);
+        link.setPropertyName(nodeDataName);
         link.setExtension(extension);
         link.setAnchor(anchor);
         link.setParameters(parameters);
@@ -575,7 +661,7 @@ public class LinkUtil {
         return "${link:{"
             + "uuid:{" + link.getUUID() + "},"
             + "repository:{" + link.getRepository() + "},"
-            + "handle:{" + link.getHandle() + "}," // original handle represented by the uuid
+            + "path:{" + link.getHandle() + "}," // original handle represented by the uuid
             + "nodeData:{" + StringUtils.defaultString(link.getNodeDataName()) + "}," // in case of binaries
             + "extension:{" + StringUtils.defaultString(link.getExtension()) + "}" // the extension to use if no extension can be resolved otherwise
             + "}}"

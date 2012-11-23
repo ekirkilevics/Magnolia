@@ -34,8 +34,11 @@
 package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+
 import org.apache.commons.lang.math.NumberUtils;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import java.io.InputStream;
 
@@ -48,7 +51,7 @@ import java.io.InputStream;
  */
 public class File {
 
-    private final NodeData data;
+    private Node node;
 
     private String extension;
 
@@ -56,23 +59,47 @@ public class File {
 
     private String contentType;
 
-    private String nodeDataTemplate;
-
     private int size;
 
+    /**
+     * @deprecated Since 5.0 use File(Node)
+     */
     public File(NodeData data) {
-        this.data = data;
+        initFile(data);
+    }
+    
+    public File(Node node) {
+        this.node = node;
 
-        this.setNodeDataTemplate(data.getAttribute("nodeDataTemplate")); //$NON-NLS-1$
-        this.setExtension(data.getAttribute("extension")); //$NON-NLS-1$
-        this.setFileName(data.getAttribute("fileName")); //$NON-NLS-1$
-        this.setContentType(data.getAttribute("contentType")); //$NON-NLS-1$
-
-        String sizeString = data.getAttribute("size"); //$NON-NLS-1$
-        if (NumberUtils.isNumber(sizeString)) {
-            this.setSize(Integer.parseInt(sizeString));
+        try{
+        if(node.hasProperty("extension")){
+            setExtension(node.getProperty("extension").getString());
+        }
+        if(node.hasProperty("fileName")){
+            setFileName(node.getProperty("fileName").getString());
+        }
+        if(node.hasProperty("contentType")){
+            setContentType(node.getProperty("contentType").getString());
         }
 
+        if(node.hasProperty("size")){
+            String sizeString = node.getProperty("size").getString();
+            if (NumberUtils.isNumber(sizeString)) {
+                setSize(Integer.parseInt(sizeString));
+            }
+        }
+        }catch(RepositoryException e){
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public File initFile(NodeData nodedata){
+        try {
+            return new File(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getExtension() {
@@ -100,11 +127,11 @@ public class File {
     }
 
     public String getNodeDataTemplate() {
-        return nodeDataTemplate;
+        throw new UnsupportedOperationException();
     }
 
     public void setNodeDataTemplate(String nodeDataTemplate) {
-        this.nodeDataTemplate = nodeDataTemplate;
+        throw new UnsupportedOperationException();
     }
 
     public int getSize() {
@@ -114,17 +141,16 @@ public class File {
     public void setSize(int size) {
         this.size = size;
     }
+    
+    public Node getNode() {
+        return node;
+    }
 
     public NodeData getNodeData() {
-        return this.data;
+        throw new UnsupportedOperationException();
     }
 
     public InputStream getStream() {
-        try {
-            return this.data.getValue().getStream();
-        }
-        catch (RepositoryException re) {
-            return null;
-        }
+        throw new UnsupportedOperationException();
     }
 }

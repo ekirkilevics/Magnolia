@@ -51,6 +51,7 @@ import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
 
@@ -454,11 +455,12 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final AggregationState agg = new AggregationState();
         agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
+        final MockSession session = new MockSession("website");
         MgnlContext.setInstance(context);
         expect(context.getContextPath()).andReturn("/");
         expect(context.getLocale()).andReturn(Locale.CANADA);
         expect(context.getAggregationState()).andReturn(agg);
-        expect(context.getHierarchyManager("website")).andReturn(hm);
+        expect(MgnlContext.getJCRSession("website")).andReturn(session).times(2);
 
         LinkTransformerManager.getInstance().setMakeBrowserLinksRelative(true);
 
@@ -472,13 +474,15 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     public void testUuidLinksAreTransformedToAbsoluteLinksInWebContextWithoutAggregationState() throws IOException, TemplateException, RepositoryException {
         final MockContent page = new MockContent("baz");
         final MockHierarchyManager hm = prepareHM(page);
+        final MockSession session = new MockSession("website");
 
         LinkTransformerManager.getInstance().setAddContextPathToBrowserLinks(true);
 
         final WebContext context = createStrictMock(WebContext.class);
+        MgnlContext.setInstance(context);
         expect(context.getLocale()).andReturn(Locale.CANADA);
         expect(context.getAggregationState()).andReturn(null);
-        expect(context.getHierarchyManager("website")).andReturn(hm);
+        expect(MgnlContext.getJCRSession("website")).andReturn(session).anyTimes();
         expect(context.getContextPath()).andReturn("/some-context");
 
         replay(context);
@@ -494,13 +498,14 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
     private void doTestUuidLinksAreTransformed(Context webCtx, String expectedOutput) throws IOException, TemplateException, RepositoryException {
         MockHierarchyManager cfgHM = MockUtil.createHierarchyManager(RepositoryConstants.WEBSITE, "fakeemptyrepo");
         MockUtil.mockObservation(cfgHM);
+        final MockSession session = new MockSession("website");
 
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
 
         if (webCtx == null) {
             expect(sysMockCtx.getLocale()).andReturn(Locale.KOREA);
             final MockHierarchyManager hm = prepareHM(new MockContent("baz"));
-            expect(sysMockCtx.getHierarchyManager("website")).andReturn(hm);
+            expect(sysMockCtx.getJCRSession("website")).andReturn(session).anyTimes();
         }
         ComponentsTestUtil.setInstance(SystemContext.class, sysMockCtx);
         replay(sysMockCtx);
@@ -509,7 +514,7 @@ public class FreemarkerHelperTest extends AbstractFreemarkerTestCase {
         final I18nContentSupport i18NSupportMock = createStrictMock(I18nContentSupport.class);
         ComponentsTestUtil.setInstance(I18nContentSupport.class, i18NSupportMock);
 
-        expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html").times(1, 2);
+        expect(i18NSupportMock.toI18NURI("/foo/bar.html")).andReturn("/foo/bar/baz.html").times(1, 2);
 
         final String text = "Some text... blah blah... <a href=\"${link:{uuid:{" + SOME_UUID + "},repository:{website},handle:{/foo/bar},nodeData:{},extension:{html}}}\">Bleh</a> !";
         final MockContent c = new MockContent("content");

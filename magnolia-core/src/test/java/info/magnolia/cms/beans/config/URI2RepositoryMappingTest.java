@@ -33,11 +33,10 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -47,7 +46,8 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
 import info.magnolia.test.mock.MockRepositoryAcquiringStrategy;
 
-import javax.jcr.PropertyType;
+import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 
@@ -56,7 +56,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * URI2RepositoryMappingTest.
  */
 public class URI2RepositoryMappingTest {
 
@@ -78,27 +78,35 @@ public class URI2RepositoryMappingTest {
     public void testGetUri() throws Exception {
         // GIVEN
         ComponentsTestUtil.setInstance(ServerConfiguration.class, new ServerConfiguration());
-        ServerConfiguration.getInstance().setDefaultExtension("bla");
+        Components.getComponent(ServerConfiguration.class).setDefaultExtension("bla");
         URI2RepositoryMapping mapping = new URI2RepositoryMapping();
         mapping.setRepository("dummy-repo");
         mapping.setURIPrefix("/blabla/");
         // instance is set only in constructor ...
-        final Context context = mock(Context.class);
-        final HierarchyManager hm = mock(HierarchyManager.class);
-        final Workspace ws = mock(Workspace.class);
-        final Content cnt = mock(Content.class);
-        final NodeData docu = mock(NodeData.class);
-        when(context.getHierarchyManager("dummy-repo")).thenReturn(hm);
-        when(hm.isNodeData("/Test")).thenReturn(Boolean.FALSE);
-        when(hm.isNodeData("/Test/image")).thenReturn(Boolean.TRUE);
-        when(hm.getContent("/Test")).thenReturn(cnt);
-        when(cnt.getNodeData("image")).thenReturn(docu);
-        when(cnt.getWorkspace()).thenReturn(ws);
-        when(cnt.isNodeType("mix:referenceable")).thenReturn(true);
 
-        when(docu.getType()).thenReturn(PropertyType.BINARY);
-        when(docu.getAttribute("extension")).thenReturn("jpg");
-        when(docu.getAttribute("fileName")).thenReturn("blah");
+        final Workspace ws = mock(Workspace.class);
+        final Context context = mock(Context.class);
+        final Session session = mock(Session.class);
+        final Node node = mock(Node.class);
+        final Property property = mock(Property.class);
+        final Property property2 = mock(Property.class);
+        when(context.getJCRSession("dummy-repo")).thenReturn(session);
+        when(session.nodeExists("/Test/image")).thenReturn(true);
+        when(session.getNode("/Test/image")).thenReturn(node);
+
+        when(node.isNodeType(MgnlNodeType.NT_RESOURCE)).thenReturn(true);
+        when(node.hasProperty("fileName")).thenReturn(true);
+        when(node.getProperty("fileName")).thenReturn(property);
+        when(property.getString()).thenReturn("blah");
+
+        when(node.getSession()).thenReturn(session);
+        when(session.getWorkspace()).thenReturn(ws);
+        when(ws.getName()).thenReturn("dummy-repo");
+
+        when(node.hasProperty("extension")).thenReturn(true);
+        when(node.getProperty("extension")).thenReturn(property2);
+        when(property2.getString()).thenReturn("jpg");
+
         MgnlContext.setInstance(context);
 
         // WHEN
@@ -112,53 +120,56 @@ public class URI2RepositoryMappingTest {
     @Test
     public void testGetHandleStripsExtensionInclTheDot() throws Exception {
         WebContext context = mock(WebContext.class);
-        Session hm = mock(Session.class);
+        Session session = mock(Session.class);
         MgnlContext.setInstance(context);
-        MockRepositoryAcquiringStrategy strategy = Components.getSingleton(MockRepositoryAcquiringStrategy.class);
-        strategy.addSession("config", hm);
+        MockRepositoryAcquiringStrategy strategy = Components.getComponent(MockRepositoryAcquiringStrategy.class);
+        strategy.addSession("config", session);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         ComponentsTestUtil.setInstance(ServerConfiguration.class, serverConfiguration);
-        ServerConfiguration.getInstance().setDefaultExtension("ext");
+        Components.getComponent(ServerConfiguration.class).setDefaultExtension("ext");
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, new URI2RepositoryManager());
-        HierarchyManager hman = mock(HierarchyManager.class);
-        when(context.getHierarchyManager("website")).thenReturn(hman);
-        Object[] objs = new Object[] {context, hm};
-        String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
+
+        when(context.getJCRSession("website")).thenReturn(session);
+        String handle = Components.getComponent(URI2RepositoryManager.class).getHandle("/blah.ext");
         assertEquals("/blah", handle);
-        handle = URI2RepositoryManager.getInstance().getHandle("/b.l/ah.ext");
+        handle = Components.getComponent(URI2RepositoryManager.class).getHandle("/b.l/ah.ext");
         assertEquals("/b.l/ah", handle);
-        handle = URI2RepositoryManager.getInstance().getHandle("/bl.ah.ext");
+        handle = Components.getComponent(URI2RepositoryManager.class).getHandle("/bl.ah.ext");
         assertEquals("/bl.ah", handle);
     }
 
     @Test
-    public void testGetHandleWhenLinkWithPrefixHandleExistInRepo(){
+    public void testGetHandleWhenLinkWithPrefixHandleExistInRepo() throws Exception{
         WebContext context = mock(WebContext.class);
-        HierarchyManager hm = mock(HierarchyManager.class);
+        Session session = mock(Session.class);
+
         MgnlContext.setInstance(context);
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/demo-project", "website", "/demoproject/year2010"));
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
-        when(context.getHierarchyManager("website")).thenReturn(hm);
-        when(hm.isExist("/demoproject/year2010/blah")).thenReturn(true);
 
-        String handle = URI2RepositoryManager.getInstance().getHandle("/demo-project/blah.ext");
+        when(context.getJCRSession("website")).thenReturn(session);
+        when(session.nodeExists("/demoproject/year2010/blah")).thenReturn(true);
+
+        String handle = Components.getComponent(URI2RepositoryManager.class).getHandle("/demo-project/blah.ext");
         assertEquals("/demoproject/year2010/blah", handle); 
     }
 
     @Test
-    public void testGetHandleWhenLinkWithPrefixHandleDoesNotExistInRepo(){
+    public void testGetHandleWhenLinkWithPrefixHandleDoesNotExistInRepo() throws Exception{
         WebContext context = mock(WebContext.class);
-        HierarchyManager hm = mock(HierarchyManager.class);
+        Session session = mock(Session.class);
+
         MgnlContext.setInstance(context);
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("", "website", "/blabla"));
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
-        when(context.getHierarchyManager("website")).thenReturn(hm);
-        when(hm.isExist("/demoproject/year2010/blah")).thenReturn(true);
-        when(hm.isExist("/blah")).thenReturn(true);
-        
-        String handle = URI2RepositoryManager.getInstance().getHandle("/blah.ext");
+
+        when(context.getJCRSession("website")).thenReturn(session);
+        when(session.itemExists("/demoproject/year2010/blah")).thenReturn(true);
+        when(session.itemExists("/blah")).thenReturn(true);
+
+        String handle = Components.getComponent(URI2RepositoryManager.class).getHandle("/blah.ext");
         assertEquals("/blah", handle); 
     }
 }

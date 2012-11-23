@@ -33,13 +33,11 @@
  */
 package info.magnolia.link;
 
-import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
-import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 
@@ -63,13 +61,11 @@ public class LinkUtilTest extends BaseLinkTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        replay(allMocks.toArray());
     }
 
     @Override
     @After
     public void tearDown() throws Exception {
-        verify(allMocks.toArray());
         super.tearDown();
     }
 
@@ -82,11 +78,11 @@ public class LinkUtilTest extends BaseLinkTest {
     @Test
     public void testParsingLinksWithBackslashInQueryParam() {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs("look <a href=\"/parent/sub.html?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results");
-        assertEquals("look <a href=\"${link:{uuid:{2},repository:{website},handle:{/parent/sub},nodeData:{},extension:{html}}}?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results", res);
+        assertEquals("look <a href=\"${link:{uuid:{2},repository:{website},path:{/parent/sub},nodeData:{},extension:{html}}}?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results", res);
     }
 
     @Test
-    public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() {
+    public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() throws Exception{
         doTestParsingLinksShouldNotParse("/somthing/else.html");
     }
 
@@ -249,13 +245,13 @@ public class LinkUtilTest extends BaseLinkTest {
 
     @Test
     public void testMakeCompleteURL() throws Exception {
-        ServerConfiguration serverConfiguration = Components.getSingleton(ServerConfiguration.class);
+        ServerConfiguration serverConfiguration = Components.getComponent(ServerConfiguration.class);
         String base = serverConfiguration.getDefaultBaseUrl();
         serverConfiguration.setDefaultBaseUrl("http://some.site/yay/");
         String url = null;
         try {
             MockSession session = new MockSession("website");
-            MockContent c = new MockContent((MockNode) session.getRootNode());
+            MockNode c = (MockNode) session.getRootNode();
             url = LinkTransformerManager.getInstance().getCompleteUrl().transform(LinkUtil.createLinkInstance(c));
         } finally {
             // restore
@@ -273,7 +269,5 @@ public class LinkUtilTest extends BaseLinkTest {
         } catch (LinkException e) {
             fail("Got unexpected exception "+ e.getMessage());
         }
-
     }
-
 }

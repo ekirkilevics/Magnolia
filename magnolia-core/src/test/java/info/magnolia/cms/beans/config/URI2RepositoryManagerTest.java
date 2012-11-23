@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2012-2012 Magnolia International
+ * This file Copyright (c) 2012 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,21 +33,31 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
+
+import javax.jcr.Node;
+import javax.jcr.Property;
+
 import junit.framework.TestCase;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.link.Link;
 import info.magnolia.test.ComponentsTestUtil;
 
 /**
 * 
-* @version $Id:$
+* URI2RepositoryManagerTest.
 */
 public class URI2RepositoryManagerTest extends TestCase{
 
     private NodeData nodeData = mock(NodeData.class);
+    private Property property = mock(Property.class);
+    private Node node = mock(Node.class);
 
-    public void testGetURIWhenLinkIsEditorBinaryLinkAndPrefixHandleIsSet(){
+    public void testGetURIWhenLinkIsEditorBinaryLinkAndPrefixHandleIsSet() throws Exception{
+        when(property.getParent()).thenReturn(node);
+        when(nodeData.getJCRProperty()).thenReturn(property);
+        when(node.isNodeType(NodeTypes.Resource.NAME)).thenReturn(true);
         Link link = new Link();
         link.setHandle("contact/pepa/image_file");
         link.setNodeDataName("file");
@@ -55,26 +65,31 @@ public class URI2RepositoryManagerTest extends TestCase{
         link.setExtension("ext");
         link.setRepository("data");
         link.setNodeData(nodeData);
-        
+        link.setJCRNode(node);
+
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", "/blabla"));
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
-        
+
         assertEquals("/data/contact/pepa/image_file/file/fileName.ext", URI2RepositoryManager.getInstance().getURI(link));
     }
 
-    public void testGetURIWhenLinkIsNotEditorBinaryLinkAndPrefixHandleIsSet(){
+    public void testGetURIWhenLinkIsNotEditorBinaryLinkAndPrefixHandleIsSet() throws Exception{
+        when(property.getParent()).thenReturn(node);
+        when(nodeData.getJCRProperty()).thenReturn(property);
+        when(node.isNodeType(NodeTypes.Resource.NAME)).thenReturn(false);
         Link link = new Link();
         link.setHandle("contact/pepa/image_file");
         link.setNodeDataName("file");
         link.setFileName("fileName");
         link.setExtension("ext");
         link.setRepository("data");
-        
+        link.setJCRNode(node);
+
         URI2RepositoryManager uri2RepositoryManager = new URI2RepositoryManager();
         uri2RepositoryManager.addMapping(new URI2RepositoryMapping("/data", "data", "/blabla"));
         ComponentsTestUtil.setInstance(URI2RepositoryManager.class, uri2RepositoryManager);
-        
+
         assertEquals("/contact/pepa/image_file/file/fileName.ext", URI2RepositoryManager.getInstance().getURI(link));
     }
 }

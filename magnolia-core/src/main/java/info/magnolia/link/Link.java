@@ -36,18 +36,18 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.jcr.util.NodeTypes;
+import info.magnolia.objectfactory.Components;
 
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
-import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Representation of the link to a content in Magnolia CMS. The target for the link might be a content (page, paragraph) or the node data (binary file).
@@ -56,15 +56,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Link {
 
-    private static final Logger log = LoggerFactory.getLogger(Link.class);
-
     private String repository;
     private String handle;
     private String uuid;
-    private String nodeDataName;
     private String extension;
-    private Content node;
-    private NodeData nodeData;
     private String fileName;
     private String fallbackHandle;
     private String anchor;
@@ -73,8 +68,7 @@ public class Link {
     private Node jcrNode;
     private Property property;
     private String propertyName;
-    private String identifier;
-    
+
     /**
      * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
      */
@@ -86,63 +80,75 @@ public class Link {
      * @deprecated since 5.0
      */
     public Link(Content content) {
-        setNode(content);
-        try {
-            setRepository(content.getWorkspace().getName());
-        } catch (RepositoryException e) {
-            throw new RuntimeException(e);
-        }
-        // should we have Content.hasUUID()? ... DefaultContent hides the fact that some nodes might not have UUIDs (we can link to other content then just the one in website
-        if (content.isNodeType(ItemType.MIX_REFERENCEABLE)) {
-            setUUID(content.getUUID());
-        }
+        this(content.getJCRNode());
     }
-    
+
     /**
      * @param node
      * @throws RepositoryException 
      */
-    public Link(Node node) throws RepositoryException {
-        setJCRNode(node);
+    public Link(Node node) {
         try {
             setJCRNode(node);
             setRepository(node.getSession().getWorkspace().getName());
+            if (node.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+                setUUID(node.getIdentifier());
+            }
         } catch (RepositoryException e) {
             throw new RuntimeException(e);
-        }
-        if (node.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
-            setIdentifier(node.getIdentifier());
         }
     }
 
     public Link(String repoName, Content parent, NodeData nodedata) {
-        setNode(parent);
-        setRepository(repoName);
-        setNodeData(nodedata);
-        setNodeDataName(nodedata.getName());
+        initLink(repoName, parent, nodedata);
     }
 
-     public String getExtension() {
-         if(StringUtils.isEmpty(this.extension) && this.getNodeData() != null && this.getNodeData().getType() == PropertyType.BINARY){
-             File binary = new File(nodeData);
-             extension = binary.getExtension();
-         }
-         return StringUtils.defaultIfEmpty(this.extension, ServerConfiguration.getInstance().getDefaultExtension());
-     }
+    public Link(String repoName, Node parent, Property property) {
+        setJCRNode(parent);
+        setRepository(repoName);
+        setProperty(property);
+        try{
+            setPropertyName(property.getName());
+        }catch(RepositoryException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Link initLink(String repoName, Content parent, NodeData nodedata){
+        try {
+            return new Link(repoName, parent.getJCRNode(), nodedata.getJCRProperty());
+        } catch (PathNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getExtension() {
+        try{
+            if(StringUtils.isEmpty(this.extension) && this.getJCRNode() != null && this.getJCRNode().isNodeType(MgnlNodeType.NT_RESOURCE)){
+                File binary = new File(jcrNode);
+                extension = binary.getExtension();
+            }
+            return StringUtils.defaultIfEmpty(this.extension, Components.getComponent(ServerConfiguration.class).getDefaultExtension());
+        }catch(RepositoryException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     public void setExtension(String extension) {
         this.extension = extension;
     }
 
-
     public String getFileName() {
-        if(StringUtils.isEmpty(this.fileName) && this.getNodeData() != null && this.getNodeData().getType() == PropertyType.BINARY){
-            File binary = new File(nodeData);
-            fileName = binary.getFileName();
+        try{
+            if(StringUtils.isEmpty(this.fileName) && this.getJCRNode() != null && this.getJCRNode().isNodeType(MgnlNodeType.NT_RESOURCE)){
+                File binary = new File(jcrNode);
+                fileName = binary.getFileName();
+            }
+            return fileName;
+        }catch(RepositoryException e){
+            throw new RuntimeException(e);
         }
-        return fileName;
     }
-
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
@@ -152,29 +158,35 @@ public class Link {
      * @deprecated since 5.0
      */
     public Content getNode() {
-        return this.node;
+        return ContentUtil.asContent(this.jcrNode);
     }
 
     /**
      * @deprecated since 5.0
      */
     public void setNode(Content node) {
-        this.node = node;
+        this.jcrNode = node.getJCRNode();
     }
-    
+
     public Node getJCRNode() {
         return this.jcrNode;
     }
 
-
     public void setJCRNode(Node jcrNode) {
         this.jcrNode = jcrNode;
     }
-    
-    public Property getProperty(){
+
+    public Property getProperty() throws LinkException{
+        try{
+            if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null){
+                this.property = this.getJCRNode().getProperty(this.propertyName);
+            }
+        }catch(RepositoryException e){
+            throw new LinkException(e);
+        }
         return this.property;
     }
-    
+
     public void setProperty(Property property){
         this.property = property;
     }
@@ -183,23 +195,42 @@ public class Link {
      * @deprecated since 5.0
      */
     public NodeData getNodeData() {
-        if(this.nodeData == null && StringUtils.isNotEmpty(this.nodeDataName) && this.getNode() != null){
-            this.nodeData = this.getNode().getNodeData(this.nodeDataName);
+        try {
+            if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null){
+                this.property = this.getJCRNode().getProperty(this.propertyName);
+            }
+            if(property == null){
+                return null;
+            }
+            return ContentUtil.asContent(this.property.getParent()).getNodeData(this.propertyName);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
         }
-        return this.nodeData;
     }
 
     /**
      * @deprecated since 5.0
      */
     public void setNodeData(NodeData nodeData) {
-        this.nodeData = nodeData;
+        if(nodeData != null){
+            try {
+                this.property = nodeData.getJCRProperty();
+            } catch (PathNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            this.property = null;
+        }
     }
 
     public boolean isEditorBinaryLink(){
-        return getNodeData() != null;
+        try {
+            return getJCRNode().isNodeType(NodeTypes.Resource.NAME);
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
     }
-    
+
     public String getPropertyName() {
         return this.propertyName;
     }
@@ -208,18 +239,28 @@ public class Link {
         this.propertyName = propertyName;
     }
 
+    /**
+     * @deprecated
+     */
     public String getNodeDataName() {
-        return this.nodeDataName;
+        return this.propertyName;
     }
 
+    /**
+     * @deprecated
+     */
     public void setNodeDataName(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
+        this.propertyName = nodeDataName;
     }
 
      public String getHandle() {
          if(StringUtils.isEmpty(this.handle)){
-             if(getNode() != null){
-                 handle = getNode().getHandle();
+             if(getJCRNode() != null){
+                 try {
+                    handle = getJCRNode().getPath();
+                } catch (RepositoryException e) {
+                    throw new RuntimeException(e);
+                }
              } else {
                  handle = this.getFallbackHandle();
              }
@@ -238,21 +279,14 @@ public class Link {
     public void setRepository(String repository) {
         this.repository = repository;
     }
-
-    public String getIdentifier() throws RepositoryException {
-        if(StringUtils.isEmpty(this.identifier) && this.getJCRNode() != null){
-            this.identifier = this.getJCRNode().getIdentifier();
-        }
-        return this.uuid;
-    }
     
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-    
-     public String getUUID() {
-         if(StringUtils.isEmpty(this.uuid) && this.getNode() != null){
-             this.uuid = this.getNode().getUUID();
+    public String getUUID() {
+        if(StringUtils.isEmpty(this.uuid) && this.getJCRNode() != null){
+            try {
+                this.uuid = this.getJCRNode().getIdentifier();
+            } catch (RepositoryException e) {
+                throw new RuntimeException(e);
+            }
          }
          return this.uuid;
      }

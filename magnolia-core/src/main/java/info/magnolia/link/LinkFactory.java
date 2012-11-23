@@ -147,7 +147,6 @@ public class LinkFactory {
      */
     public static Pattern UUID_PATTERN = LinkUtil.UUID_PATTERN;
 
-
     /**
      * Pattern to find a link.
      * @deprecated Since 5.0.

@@ -35,8 +35,8 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.link.Link;
 
-import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.repository.RepositoryConstants;
 
@@ -47,7 +47,6 @@ import java.util.TreeSet;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Maps uri prefixes to repositories.
@@ -114,7 +113,7 @@ public class URI2RepositoryManager {
      */
     public String getURI(String repository, String handle) {
         try {
-            return getURI(LinkFactory.createLink(repository, handle, null, null, null));
+            return getURI(LinkUtil.createLinkInstance(repository, handle, null, null, null));
         }
         catch (LinkException e) {
             log.error("can't map [" + handle + "] to a uri", e);

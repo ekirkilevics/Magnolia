@@ -150,7 +150,7 @@ public class PropertiesImportExport {
         }
         if (name.equals("@type")) {
             // do nothing, this has been taken into account when creating the node.
-        } else if (name.equals("@uuid")) {
+        } else if (name.equals("@uuid") || name.equals("uuid")) {
             setIdentifier(node, valueStr);
         } else {
             Object valueObj = convertPropertyStringToObject(valueStr);

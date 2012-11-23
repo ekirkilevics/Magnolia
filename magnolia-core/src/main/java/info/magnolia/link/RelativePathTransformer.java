@@ -46,7 +46,7 @@ import info.magnolia.cms.core.Content;
 public class RelativePathTransformer extends AbsolutePathTransformer {
 
     protected String absolutSourcePath;
-    
+
     public void setAbsolutSourcePath(Node sourceNode){
         try {
             Link link = new Link(sourceNode);
@@ -57,18 +57,18 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
             throw new RuntimeException(e);
         }
     }
-    
+
     public void setAbsolutSourcePath(String absolutSourcePath){
         this.absolutSourcePath = absolutSourcePath;
     }
-    
+
     public RelativePathTransformer(){
     }
 
     public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
         this(sourcePage.getJCRNode(), useURI2RepositoryMapping, useI18N);
     }
-    
+
     public RelativePathTransformer(Node sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
         try {

@@ -33,11 +33,13 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.HierarchyManager;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.Link;
-import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkException;
+import info.magnolia.link.LinkUtil;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -100,13 +102,17 @@ public class URI2RepositoryMapping {
         handle = StringUtils.removeEnd(handle, "." + extension);
         handle = cleanHandle(handle);
 
-        final HierarchyManager hm = MgnlContext.getHierarchyManager(this.repository);
-        if (!hm.isExist(handle)) {
-            String maybeHandle = (this.handlePrefix.endsWith("/") ? "/" : "") + StringUtils.removeStart(handle, this.handlePrefix);
-            // prefix might have been prepended incorrectly. Second part of the condition is there to match links to binary nodes
-            if (hm.isExist(maybeHandle) || (maybeHandle.lastIndexOf("/") > 0 && hm.isExist(StringUtils.substringBeforeLast(maybeHandle, "/")))) {
-                return maybeHandle;
+        try{
+            final Session session = MgnlContext.getJCRSession(this.repository);
+            if (!session.itemExists(handle)) {
+                String maybeHandle = (this.handlePrefix.endsWith("/") ? "/" : "") + StringUtils.removeStart(handle, this.handlePrefix);
+                // prefix might have been prepended incorrectly. Second part of the condition is there to match links to binary nodes
+                if (session.itemExists(maybeHandle) || (maybeHandle.lastIndexOf("/") > 0 && session.itemExists(StringUtils.substringBeforeLast(maybeHandle, "/")))) {
+                    return maybeHandle;
+                }
             }
+        }catch(RepositoryException e){
+            throw new RuntimeException(e);
         }
         return handle;
     }
@@ -129,7 +135,7 @@ public class URI2RepositoryMapping {
      */
     public String getURI(String handle) {
         try {
-            return getURI(LinkFactory.createLink(this.getRepository(), handle, null, null, null));
+            return getURI(LinkUtil.createLinkInstance(this.getRepository(), handle, null, null, null));
         }
         catch (LinkException e) {
             return handle;
