@@ -600,7 +600,7 @@ public class Node2BeanTest {
     }
 
     @Test
-    @Ignore // jsimak: MAGNOLIA-4631
+    @Ignore("jsimak: MAGNOLIA-4685")
     public void testBeansWithEnabledPropertySetToFalseAreExcludedFromCollection() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
@@ -627,7 +627,7 @@ public class Node2BeanTest {
     }
 
     @Test
-    @Ignore // jsimak: MAGNOLIA-4631
+    @Ignore("jsimak: MAGNOLIA-4685")
     public void testBeansWithEnabledPropertySetToFalseAreExcludedFromMap() throws IOException, RepositoryException, Node2BeanException {
         // GIVEN
         Session session = SessionTestUtil.createSession("test",
