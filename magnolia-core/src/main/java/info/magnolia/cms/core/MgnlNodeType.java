@@ -99,6 +99,7 @@ public final class MgnlNodeType {
 
     /**
      * Node type: metadata.
+     * @deprecated since 5.0 with MAGNOLIA-4640 metaData subnode is no longer used.
      */
     public static final String NT_METADATA = MGNL_PREFIX + "metaData";
 
