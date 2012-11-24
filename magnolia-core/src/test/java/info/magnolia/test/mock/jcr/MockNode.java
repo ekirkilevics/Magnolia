@@ -33,7 +33,7 @@
  */
 package info.magnolia.test.mock.jcr;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.MockNodeType;
 
 import java.io.InputStream;
@@ -121,7 +121,7 @@ public class MockNode extends AbstractNode {
         this.session = session;
     }
     public MockNode(String name) {
-        this(name, MgnlNodeType.NT_CONTENTNODE);
+        this(name, NodeTypes.ContentNode.NAME);
         if (name.indexOf("/") >= 0) {
             throw new IllegalArgumentException("Name of a node must not contain a '/': " + name);
         }

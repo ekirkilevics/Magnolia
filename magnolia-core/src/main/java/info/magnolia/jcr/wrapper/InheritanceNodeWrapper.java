@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.iterator.ChainedNodeIterator;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
@@ -48,6 +47,7 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
+import info.magnolia.jcr.util.NodeTypes;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -66,8 +66,6 @@ import org.apache.commons.lang.StringUtils;
  * <p>
  * The {@link #getNodes()} and {@link #getNodes(String)} methods merge the direct and inherited children by first adding the
  * inherited children to the iterator and then the direct children.
- *
- * @version $Id$
  */
 public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
 
@@ -126,11 +124,11 @@ public class InheritanceNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     /**
-     * True if this node is an anchor. By default true if this node is of type {@link MgnlNodeType#NT_CONTENT}.
+     * True if this node is an anchor. By default true if this node is of type {@link info.magnolia.jcr.util.NodeTypes.Content#NAME}.
      */
     protected boolean isAnchor() {
         try {
-            return this.isNodeType(MgnlNodeType.NT_CONTENT);
+            return this.isNodeType(NodeTypes.Content.NAME);
         } catch (RepositoryException e) {
             throw new RuntimeRepositoryException(e);
         }

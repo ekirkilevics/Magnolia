@@ -35,13 +35,8 @@ package info.magnolia.cms.core;
 
 import static org.junit.Assert.*;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.getCurrentArguments;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -78,7 +73,7 @@ import org.easymock.IAnswer;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class NodeTest extends RepositoryTestCase {
 
@@ -304,7 +299,7 @@ public class NodeTest extends RepositoryTestCase {
     @Test
     public void testIsNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws Exception {
         // GIVEN
-        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_CONTENTNODE);
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", NodeTypes.ContentNode.NAME);
         node.addMixin(JcrConstants.MIX_VERSIONABLE);
         node.getSession().save();
         final Node version = VersionManager.getInstance().addVersion(node, new Rule(NodeTypes.ContentNode.NAME, ",")).getFrozenNode();
@@ -328,27 +323,27 @@ public class NodeTest extends RepositoryTestCase {
     @Test
     public void testIsNotNodeTypeForNodeCheckFrozenTypeIfWereNotLookingForFrozenNodes() throws Exception {
         // GIVEN
-        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", MgnlNodeType.NT_CONTENT);
-        node.addMixin(MgnlNodeType.MIX_VERSIONABLE);
+        final Node node = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE).getRootNode().addNode("testPage", NodeTypes.Content.NAME);
+        node.addMixin(JcrConstants.MIX_VERSIONABLE);
         node.getSession().save();
-        final Node version = VersionManager.getInstance().addVersion(node, new Rule(MgnlNodeType.NT_CONTENTNODE, ",")).getFrozenNode();
+        final Node version = VersionManager.getInstance().addVersion(node, new Rule(NodeTypes.ContentNode.NAME, ",")).getFrozenNode();
 
         // WHEN-THEN
-        assertFalse(NodeUtil.isNodeType(version, MgnlNodeType.NT_CONTENTNODE));
+        assertFalse(NodeUtil.isNodeType(version, NodeTypes.ContentNode.NAME));
     }
 
         @Test
     public void testIsNodeTypeForNodeDoesNotCheckFrozenTypeIfTheRequestedTypeIsFrozenType()throws RepositoryException {
         final Node node = createStrictMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
-        expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp);
-        expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
-        expect(node.isNodeType(ItemType.NT_FROZENNODE)).andReturn(true);
+        expect(node.getProperty(JcrConstants.JCR_PRIMARYTYPE)).andReturn(nodeTypeProp);
+        expect(nodeTypeProp.getString()).andReturn(JcrConstants.NT_FROZENNODE);
+        expect(node.isNodeType(JcrConstants.NT_FROZENNODE)).andReturn(true);
 
         replay(node, nodeTypeProp);
         final DefaultContent c = new DefaultContent();
         c.setNode(node);
-        assertTrue(c.isNodeType(node, ItemType.NT_FROZENNODE));
+        assertTrue(c.isNodeType(node, JcrConstants.NT_FROZENNODE));
         verify(node, nodeTypeProp);
     }
 

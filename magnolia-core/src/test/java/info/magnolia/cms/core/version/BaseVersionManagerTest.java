@@ -38,12 +38,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
@@ -58,19 +57,19 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.version.Version;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author philipp
- * @version $Id$
+ * Tests.
  */
 public class BaseVersionManagerTest extends RepositoryTestCase {
 
     private static String mgnlMixDeleted = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<nodeTypes" + " xmlns:rep=\"internal\""
     + " xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"" + " xmlns:mix=\"http://www.jcp.org/jcr/mix/1.0\""
-    + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + ItemType.DELETED_NODE_MIXIN
+    + " xmlns:mgnl=\"http://www.magnolia.info/jcr/mgnl\"" + " xmlns:jcr=\"http://www.jcp.org/jcr/1.0\">" + "<nodeType name=\"" + NodeTypes.Deleted.NAME
     + "\" isMixin=\"true\" hasOrderableChildNodes=\"true\" primaryItemName=\"\">" + "<supertypes>" + "<supertype>nt:base</supertype>"
     + "</supertypes>" + "</nodeType>" + "</nodeTypes>";
 
@@ -88,14 +87,14 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
     public void testCreateAndRestoreVersion() throws RepositoryException{
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
-        Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
-        node.addNode("paragraph", ItemType.CONTENTNODE.getSystemName());
+        Node node = session.getRootNode().addNode( "page", NodeTypes.Content.NAME);
+        node.addNode("paragraph", NodeTypes.ContentNode.NAME);
         session.save();
         Version version = versionMan.addVersion(node);
-        assertFalse("Original node should not have mixin", node.isNodeType(ItemType.MIX_VERSIONABLE));
+        assertFalse("Original node should not have mixin", node.isNodeType(JcrConstants.MIX_VERSIONABLE));
 
         Node nodeInVersionWS =versionMan.getVersionedNode(node);
-        assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.MIX_VERSIONABLE));
+        assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(JcrConstants.MIX_VERSIONABLE));
 
         // assert that the the paragraph was versioned
         Node versionedNode = versionMan.getVersion(node, version.getName());
@@ -120,27 +119,27 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
 
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         VersionManager versionMan = VersionManager.getInstance();
-        Node node = session.getRootNode().addNode( "page", ItemType.CONTENT.getSystemName());
+        Node node = session.getRootNode().addNode( "page", NodeTypes.Content.NAME);
 
         // add deleted mixin
-        node.addMixin(ItemType.DELETED_NODE_MIXIN);
+        node.addMixin(NodeTypes.Deleted.NAME);
 
         session.save();
         versionMan.addVersion(node);
 
         Node nodeInVersionWS = versionMan.getVersionedNode(node);
-        assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
+        assertTrue("Node in mgnlVersion workspace must have mixin", nodeInVersionWS.isNodeType(NodeTypes.Deleted.NAME));
 
-        node.removeMixin(ItemType.DELETED_NODE_MIXIN);
+        node.removeMixin(NodeTypes.Deleted.NAME);
         session.save();
 
-        assertFalse("Node in website workspace should not have mixin", node.isNodeType(ItemType.DELETED_NODE_MIXIN));
+        assertFalse("Node in website workspace should not have mixin", node.isNodeType(NodeTypes.Deleted.NAME));
 
         // add version w/o mixin
         versionMan.addVersion(node);
         nodeInVersionWS = versionMan.getVersionedNode(node);
 
-        assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(ItemType.DELETED_NODE_MIXIN));
+        assertFalse("Node in mgnlVersion workspace should not have mixin", nodeInVersionWS.isNodeType(NodeTypes.Deleted.NAME));
     }
 
     @Test
@@ -155,16 +154,16 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
         Node root = session.getRootNode();
 
-        Node firstPage = root.addNode("firstPage", MgnlNodeType.NT_PAGE);
+        Node firstPage = root.addNode("firstPage", NodeTypes.Page.NAME);
 
 
         session.save();
         VersionManager versionManager = VersionManager.getInstance();
 
         final Rule rule = new Rule();
-        rule.addAllowType(MgnlNodeType.NT_PAGE);
-        rule.addAllowType(MgnlNodeType.NT_CONTENTNODE);
-        rule.addAllowType(MgnlNodeType.NT_RESOURCE);
+        rule.addAllowType(NodeTypes.Page.NAME);
+        rule.addAllowType(NodeTypes.ContentNode.NAME);
+        rule.addAllowType(NodeTypes.Resource.NAME);
 
         firstPage.setProperty("title", "v1title");
         firstPage.addNode("v1child", "mgnl:area");

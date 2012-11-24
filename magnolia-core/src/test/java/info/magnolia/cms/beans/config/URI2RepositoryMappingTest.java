@@ -33,14 +33,14 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.TestMagnoliaConfigurationProperties;
@@ -94,7 +94,7 @@ public class URI2RepositoryMappingTest {
         when(session.nodeExists("/Test/image")).thenReturn(true);
         when(session.getNode("/Test/image")).thenReturn(node);
 
-        when(node.isNodeType(MgnlNodeType.NT_RESOURCE)).thenReturn(true);
+        when(node.isNodeType(NodeTypes.Resource.NAME)).thenReturn(true);
         when(node.hasProperty("fileName")).thenReturn(true);
         when(node.getProperty("fileName")).thenReturn(property);
         when(property.getString()).thenReturn("blah");

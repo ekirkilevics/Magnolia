@@ -36,8 +36,6 @@ package info.magnolia.cms.security;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import info.magnolia.cms.core.ItemType;
-
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
@@ -47,10 +45,10 @@ import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockComponentProvider;
@@ -137,7 +135,7 @@ public class MgnlUserManagerTest {
         when(result.getNodes()).thenReturn(nodeIterator);
         when(nodeIterator.hasNext()).thenReturn(true).thenReturn(false);
         when(nodeIterator.nextNode()).thenReturn(node);
-        when(node.isNodeType(MgnlNodeType.USER)).thenReturn(true);
+        when(node.isNodeType(NodeTypes.User.NAME)).thenReturn(true);
 
         MgnlUserManager um = new MgnlUserManager();
         // Realm "all"
@@ -170,7 +168,7 @@ public class MgnlUserManagerTest {
         when(result.getNodes()).thenReturn(nodeIterator);
         when(nodeIterator.hasNext()).thenReturn(true).thenReturn(false);
         when(nodeIterator.nextNode()).thenReturn(node);
-        when(node.isNodeType(ItemType.USER.getSystemName())).thenReturn(true);
+        when(node.isNodeType(NodeTypes.User.NAME)).thenReturn(true);
 
         final MgnlUserManager um = new MgnlUserManager();
 

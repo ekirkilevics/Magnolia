@@ -35,14 +35,14 @@ package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
 import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.repository.RepositoryConstants;
@@ -275,14 +275,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             //            + " or [jcr:path] like '/" + realm + "/%/" + name + "'";
         }
 
-        final String statement = "select * from [" + MgnlNodeType.USER + "] " + where;
+        final String statement = "select * from [" + NodeTypes.User.NAME + "] " + where;
 
         Query query = session.getWorkspace().getQueryManager().createQuery(statement, Query.JCR_SQL2);
         NodeIterator iter = query.execute().getNodes();
         Node user = null;
         while (iter.hasNext()) {
             Node node = iter.nextNode();
-            if (node.isNodeType(ItemType.USER.getSystemName())) {
+            if (node.isNodeType(NodeTypes.User.NAME)) {
                 user = node;
                 break;
             }
@@ -352,9 +352,9 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         Collection<Node> folders = new HashSet<Node>();
         while(nodesIter.hasNext()){
             Node newNode = (Node) nodesIter.next();
-            if(newNode.isNodeType(MgnlNodeType.USER)){
+            if(newNode.isNodeType(NodeTypes.User.NAME)){
                 nodes.add(newNode);
-            }else if(newNode.isNodeType(MgnlNodeType.NT_FOLDER)){
+            }else if(newNode.isNodeType(NodeTypes.Folder.NAME)){
                 folders.add(newNode);
             }
         }
@@ -379,15 +379,15 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
             @Override
             public MgnlUser doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/" + getRealmName()).addNode(name,ItemType.USER.getSystemName());
+                Node userNode = session.getNode("/" + getRealmName()).addNode(name,NodeTypes.User.NAME);
                 userNode.setProperty("name", name);
                 setPasswordProperty(userNode, pw);
                 userNode.setProperty("language", "en");
 
                 final String handle = userNode.getPath();
-                final Node acls = userNode.addNode(NODE_ACLUSERS, ItemType.CONTENTNODE.getSystemName());
+                final Node acls = userNode.addNode(NODE_ACLUSERS, NodeTypes.ContentNode.NAME);
                 // read only access to the node itself
-                Node acl = acls.addNode(Path.getUniqueLabel(session, acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
+                Node acl = acls.addNode(Path.getUniqueLabel(session, acls.getPath(), "0"), NodeTypes.ContentNode.NAME);
                 acl.setProperty("path", handle);
                 acl.setProperty("permissions", Permission.READ);
                 // those who had access to their nodes should get access to their own props
@@ -455,7 +455,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     protected Content createUserNode(String name) throws RepositoryException {
         final String path = "/" + getRealmName();
-        return getHierarchyManager().createContent(path, name, ItemType.USER.getSystemName());
+        return getHierarchyManager().createContent(path, name, NodeTypes.User.NAME);
     }
 
     /**
@@ -494,7 +494,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     }
 
     private Node addWrite(String parentPath, String property, Node acls) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Node acl = acls.addNode(Path.getUniqueLabel(acls.getSession(), acls.getPath(), "0"), ItemType.CONTENTNODE.getSystemName());
+        Node acl = acls.addNode(Path.getUniqueLabel(acls.getSession(), acls.getPath(), "0"), NodeTypes.ContentNode.NAME);
         acl.setProperty("path", parentPath + "/" + property);
         acl.setProperty("permissions", Permission.ALL);
         return acl;

@@ -39,14 +39,14 @@ import static info.magnolia.cms.beans.runtime.FileProperties.PROPERTY_CONTENTTYP
 import static info.magnolia.cms.beans.runtime.FileProperties.PROPERTY_LASTMODIFIED;
 import static info.magnolia.cms.core.ItemType.CONTENT;
 import static info.magnolia.cms.core.ItemType.CONTENTNODE;
-import static info.magnolia.cms.core.ItemType.NT_RESOURCE;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContext;
@@ -62,7 +62,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class ContentVersionTest extends RepositoryTestCase {
 
@@ -82,11 +82,11 @@ public class ContentVersionTest extends RepositoryTestCase {
     public void testBasics() throws RepositoryException{
         final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
-        Content page = hm.createContent("/", "page", CONTENT.getSystemName());
-        Content parargraph = page.createContent("paragraph", CONTENTNODE.getSystemName());
-        Content area = page.createContent("area", MgnlNodeType.NT_AREA);
-        Content component = page.createContent("component", MgnlNodeType.NT_COMPONENT);
-        Content subpage = page.createContent("subpage", CONTENT.getSystemName());
+        Content page = hm.createContent("/", "page", NodeTypes.Content.NAME);
+        Content parargraph = page.createContent("paragraph", NodeTypes.ContentNode.NAME);
+        Content area = page.createContent("area", NodeTypes.Area.NAME);
+        Content component = page.createContent("component", NodeTypes.Component.NAME);
+        Content subpage = page.createContent("subpage", NodeTypes.Content.NAME);
 
         page.setNodeData("nodedata", VERSIONED);
         parargraph.setNodeData("nodedata", VERSIONED);
@@ -95,8 +95,8 @@ public class ContentVersionTest extends RepositoryTestCase {
         subpage.setNodeData("nodedata", VERSIONED);
         hm.save();
 
-        page.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
-        subpage.addVersion(new Rule(new String[]{CONTENTNODE.getSystemName()}));
+        page.addVersion(new Rule(new String[]{NodeTypes.ContentNode.NAME}));
+        subpage.addVersion(new Rule(new String[]{NodeTypes.ContentNode.NAME}));
 
         page.setNodeData("nodedata", NOT_VERSIONED);
         parargraph.setNodeData("nodedata", NOT_VERSIONED);
@@ -104,10 +104,10 @@ public class ContentVersionTest extends RepositoryTestCase {
         component.setNodeData("nodedata", NOT_VERSIONED);
         subpage.setNodeData("nodedata", NOT_VERSIONED);
 
-        page.createContent("new-subpage", CONTENT);
-        page.createContent("new-paragraph", CONTENTNODE);
-        page.createContent("new-area", MgnlNodeType.NT_AREA);
-        page.createContent("new-component", MgnlNodeType.NT_AREA);
+        page.createContent("new-subpage", NodeTypes.Content.NAME);
+        page.createContent("new-paragraph", NodeTypes.ContentNode.NAME);
+        page.createContent("new-area", NodeTypes.Area.NAME);
+        page.createContent("new-component", NodeTypes.Area.NAME);
 
         hm.save();
 
@@ -189,7 +189,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
-        Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());
+        Content node = hm.createContent("/", "node", NodeTypes.ContentNode.NAME);
         final NodeData binaryNodeData = node.setNodeData("binary", getClass().getResourceAsStream("/testresource.txt"));
         binaryNodeData.setAttribute(PROPERTY_CONTENTTYPE, "text/plain");
         binaryNodeData.setAttribute(PROPERTY_LASTMODIFIED, Calendar.getInstance());
@@ -214,7 +214,7 @@ public class ContentVersionTest extends RepositoryTestCase {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
-        Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());
+        Content node = hm.createContent("/", "node", NodeTypes.ContentNode.NAME);
         final NodeData binaryNodeData = node.setNodeData("binary", getClass().getResourceAsStream("/testresource.txt"));
         binaryNodeData.setAttribute(PROPERTY_CONTENTTYPE, "text/plain");
         binaryNodeData.setAttribute(PROPERTY_LASTMODIFIED, Calendar.getInstance());
@@ -246,8 +246,8 @@ public class ContentVersionTest extends RepositoryTestCase {
         final HierarchyManager hm = MgnlContext.getHierarchyManager(RepositoryConstants.WEBSITE);
 
         // create content with binary
-        Content node = hm.createContent("/", "node", CONTENTNODE.getSystemName());
-        Content child = node.createContent("child", CONTENTNODE.getSystemName());
+        Content node = hm.createContent("/", "node", NodeTypes.ContentNode.NAME);
+        Content child = node.createContent("child", NodeTypes.ContentNode.NAME);
         final NodeData binaryNodeData = child.setNodeData("binary", getClass().getResourceAsStream("/testresource.txt"));
         binaryNodeData.setAttribute(PROPERTY_CONTENTTYPE, "text/plain");
         binaryNodeData.setAttribute(PROPERTY_LASTMODIFIED, Calendar.getInstance());
@@ -257,8 +257,8 @@ public class ContentVersionTest extends RepositoryTestCase {
         assertNotNull(binaryNodeData.getValue());
 
         final Rule rule = new Rule();
-        rule.addAllowType(CONTENTNODE.getSystemName());
-        rule.addAllowType(NT_RESOURCE);
+        rule.addAllowType(NodeTypes.ContentNode.NAME);
+        rule.addAllowType(NodeTypes.Resource.NAME);
 
         // add version
         node.addVersion(rule);
