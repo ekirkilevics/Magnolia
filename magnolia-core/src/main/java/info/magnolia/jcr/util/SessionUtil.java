@@ -46,8 +46,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Session-related utility methods.
- *
- * @version $Id$
  */
 public class SessionUtil {
 
@@ -78,7 +76,7 @@ public class SessionUtil {
                 res = session.getNode(path);
             }
         } catch (RepositoryException e) {
-            log.error("Exeption during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
+            log.error("Exception during node Search for nodePath: '" + path + "' in repository: '" + repository + "'", e);
         }
         return res;
     }
@@ -100,7 +98,7 @@ public class SessionUtil {
                 res = session.getNodeByIdentifier(id);
             }
         } catch (RepositoryException e) {
-            log.error("Exeption during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
+            log.error("Exception during node Search by identifier: '" + id + "' in repository: '" + repository + "'", e);
         }
         return res;
     }
