@@ -42,6 +42,8 @@ import info.magnolia.link.LinkException;
 import info.magnolia.link.LinkUtil;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,6 +53,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class URI2RepositoryMapping {
+
+    private static Logger log = LoggerFactory.getLogger(URI2RepositoryMapping.class);
 
     /**
      * The prefix which triggers this mapping.
@@ -112,7 +116,8 @@ public class URI2RepositoryMapping {
                 }
             }
         }catch(RepositoryException e){
-            throw new RuntimeException(e);
+            //Log the exception and return handle
+            log.debug(e.getMessage(), e);
         }
         return handle;
     }

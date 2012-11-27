@@ -36,18 +36,19 @@ package info.magnolia.link;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 
 /**
  * Representation of the link to a content in Magnolia CMS. The target for the link might be a content (page, paragraph) or the node data (binary file).
@@ -70,14 +71,14 @@ public class Link {
     private String propertyName;
 
     /**
-     * A constructor for undefined links. (i.e linking to a nonexistent page, for instance)
+     * A constructor for undefined links. (i.e linking to a nonexistent page, for instance).
      */
     public Link() {
     }
 
     /**
      * @param content
-     * @deprecated since 5.0
+     * @deprecated Since 5.0 use Link(Node).
      */
     public Link(Content content) {
         this(content.getJCRNode());
@@ -91,7 +92,7 @@ public class Link {
         try {
             setJCRNode(node);
             setRepository(node.getSession().getWorkspace().getName());
-            if (node.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+            if (node.isNodeType(JcrConstants.MIX_REFERENCEABLE)) {
                 setUUID(node.getIdentifier());
             }
         } catch (RepositoryException e) {
@@ -99,39 +100,50 @@ public class Link {
         }
     }
 
+    /**
+     * @deprecated Since 5.0 use Link(Node).
+     */
     public Link(String repoName, Content parent, NodeData nodedata) {
         initLink(repoName, parent, nodedata);
     }
 
-    public Link(String repoName, Node parent, Property property) {
-        setJCRNode(parent);
-        setRepository(repoName);
-        setProperty(property);
+    public Link(Property property) {
         try{
+            setJCRNode(property.getParent());
+            setRepository(property.getSession().getWorkspace().toString());
+            setProperty(property);
             setPropertyName(property.getName());
         }catch(RepositoryException e){
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Initialisation method for Link(String, Content, NodeData) constructor.
+     * @param content
+     * @deprecated Since 5.0 use Link(Node).
+     */
     public Link initLink(String repoName, Content parent, NodeData nodedata){
         try {
-            return new Link(repoName, parent.getJCRNode(), nodedata.getJCRProperty());
-        } catch (PathNotFoundException e) {
+            if(nodedata.getType() != PropertyType.BINARY){
+                return new Link(nodedata.getJCRProperty());
+            }
+            return new Link(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
+        } catch (RepositoryException e) {
             throw new RuntimeException(e);
         }
     }
 
     public String getExtension() {
         try{
-            if(StringUtils.isEmpty(this.extension) && this.getJCRNode() != null && this.getJCRNode().isNodeType(MgnlNodeType.NT_RESOURCE)){
+            if(StringUtils.isEmpty(this.extension) && this.getJCRNode() != null && this.getJCRNode().isNodeType(NodeTypes.Resource.NAME)){
                 File binary = new File(jcrNode);
                 extension = binary.getExtension();
             }
-            return StringUtils.defaultIfEmpty(this.extension, Components.getComponent(ServerConfiguration.class).getDefaultExtension());
         }catch(RepositoryException e){
-            throw new RuntimeException(e);
+            //Just return extension if already set, default if not.
         }
+        return StringUtils.defaultIfEmpty(this.extension, Components.getComponent(ServerConfiguration.class).getDefaultExtension());
     }
 
     public void setExtension(String extension) {
@@ -140,14 +152,14 @@ public class Link {
 
     public String getFileName() {
         try{
-            if(StringUtils.isEmpty(this.fileName) && this.getJCRNode() != null && this.getJCRNode().isNodeType(MgnlNodeType.NT_RESOURCE)){
+            if(StringUtils.isEmpty(this.fileName) && this.getJCRNode() != null && this.getJCRNode().isNodeType(NodeTypes.Resource.NAME)){
                 File binary = new File(jcrNode);
                 fileName = binary.getFileName();
             }
-            return fileName;
         }catch(RepositoryException e){
-            throw new RuntimeException(e);
+            //Just return fileName.
         }
+        return fileName;
     }
 
     public void setFileName(String fileName) {
@@ -155,14 +167,14 @@ public class Link {
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated Since 5.0 use Link.getJCRNode() instead.
      */
     public Content getNode() {
         return ContentUtil.asContent(this.jcrNode);
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated since 5.0 use Link.setJCRNode() instead.
      */
     public void setNode(Content node) {
         this.jcrNode = node.getJCRNode();
@@ -178,11 +190,11 @@ public class Link {
 
     public Property getProperty() throws LinkException{
         try{
-            if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null){
+            if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null && this.getJCRNode().hasProperty(propertyName)){
                 this.property = this.getJCRNode().getProperty(this.propertyName);
             }
         }catch(RepositoryException e){
-            throw new LinkException(e);
+            //Just return null;
         }
         return this.property;
     }
@@ -192,11 +204,14 @@ public class Link {
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated since 5.0 use Link.getProperty() instead.
      */
     public NodeData getNodeData() {
         try {
-            if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null){
+            if(this.jcrNode != null && this.jcrNode.isNodeType(NodeTypes.Resource.NAME)){
+                return ContentUtil.asContent(jcrNode.getParent()).getNodeData(jcrNode.getName());
+            }
+            else if(this.property == null && StringUtils.isNotEmpty(this.propertyName) && this.getJCRNode() != null){
                 this.property = this.getJCRNode().getProperty(this.propertyName);
             }
             if(property == null){
@@ -209,13 +224,17 @@ public class Link {
     }
 
     /**
-     * @deprecated since 5.0
+     * @deprecated since 5.0 use Link.setProperty() instead.
      */
     public void setNodeData(NodeData nodeData) {
         if(nodeData != null){
             try {
-                this.property = nodeData.getJCRProperty();
-            } catch (PathNotFoundException e) {
+                if(nodeData.getType() != PropertyType.BINARY){
+                    this.property = nodeData.getJCRProperty();
+                }else{
+                    this.jcrNode = nodeData.getParent().getJCRNode().getNode(nodeData.getName());
+                }
+            } catch (RepositoryException e) {
                 throw new RuntimeException(e);
             }
         }else{
@@ -240,14 +259,14 @@ public class Link {
     }
 
     /**
-     * @deprecated
+     * @deprecated Since 5.0 use Link.getPropertyName() instead.
      */
     public String getNodeDataName() {
         return this.propertyName;
     }
 
     /**
-     * @deprecated
+     * @deprecated Since 5.0 use Link.setPropertyName() instead.
      */
     public void setNodeDataName(String nodeDataName) {
         this.propertyName = nodeDataName;

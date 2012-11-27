@@ -288,7 +288,7 @@ public class LinkUtil {
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createAbsoluteLink(Property) instead.
      */
     public static String createAbsoluteLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
@@ -333,7 +333,7 @@ public class LinkUtil {
      *            content to create link to.
      * @return Absolute link to the provided content.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createAbsoluteLink(Node) instead.
      */
     public static String createAbsoluteLink(Content content) {
         if(content == null){
@@ -351,7 +351,7 @@ public class LinkUtil {
 
     /**
      * Creates a complete url to access given content from external systems applying all the URI2Repository mappings and locales.
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createExternalLink(Node) instead.
      */
     public static String createExternalLink(Content content) {
         if(content == null){
@@ -374,7 +374,7 @@ public class LinkUtil {
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createLink(Node) instead.
      */
     public static String createLink(Content node) {
         if(node == null){
@@ -410,7 +410,7 @@ public class LinkUtil {
      *            Node data to create link for.
      * @return Absolute link to the provided node data.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createAbsoluteLink(Property) instead.
      */
     public static String createLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
@@ -464,7 +464,7 @@ public class LinkUtil {
      * 
      * @param node
      * @return
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createLinkInstance(Node) instead.
      */
     public static Link createLinkInstance(Content node) {
         return createLinkInstance(node.getJCRNode());
@@ -479,7 +479,7 @@ public class LinkUtil {
      * @param nodeData
      * @return
      * @throws LinkException
-     * @deprecated
+     * @deprecated Since 5.0 use LinkUtil.createLinkInstance(Property) instead.
      */
     public static Link createLinkInstance(NodeData nodeData) throws LinkException{
         try {
@@ -493,11 +493,7 @@ public class LinkUtil {
     }
 
     public static Link createLinkInstance(Property property) throws LinkException{
-        try {
-            return new Link(property.getParent().getSession().getWorkspace().getName(), property.getParent(), property);
-        } catch (RepositoryException e) {
-            throw new LinkException("can't find node " + property , e);
-        }
+        return new Link(property);
     }
 
     /**
@@ -534,13 +530,9 @@ public class LinkUtil {
             
             boolean exists = false;
             try {
-                // jackrabbit own path parser
-                // TODO: rewrite this as Magnolia method or allow configuration of parser per JCR impl
                 PathParser.checkFormat(path);
             } catch (MalformedPathException e) {
                 // we first check for path incl. the file name. While file name might not be necessarily part of the path, it might contain also non ascii chars. If that is the case, parsing exception will occur so we know that path with filename can't exist.
-                    //exists = false;
-                
             }
             exists = session.itemExists(path) && !session.propertyExists(path);
             if (exists) {

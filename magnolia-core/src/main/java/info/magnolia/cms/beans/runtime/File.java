@@ -34,6 +34,7 @@
 package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.lang.math.NumberUtils;
@@ -72,29 +73,33 @@ public class File {
         this.node = node;
 
         try{
-        if(node.hasProperty("extension")){
-            setExtension(node.getProperty("extension").getString());
-        }
-        if(node.hasProperty("fileName")){
-            setFileName(node.getProperty("fileName").getString());
-        }
-        if(node.hasProperty("contentType")){
-            setContentType(node.getProperty("contentType").getString());
-        }
-
-        if(node.hasProperty("size")){
-            String sizeString = node.getProperty("size").getString();
-            if (NumberUtils.isNumber(sizeString)) {
-                setSize(Integer.parseInt(sizeString));
+            if(node.hasProperty("extension")){
+                setExtension(node.getProperty("extension").getString());
             }
-        }
+            if(node.hasProperty("fileName")){
+                setFileName(node.getProperty("fileName").getString());
+            }
+            if(node.hasProperty("contentType")){
+                setContentType(node.getProperty("contentType").getString());
+            }
+
+            if(node.hasProperty("size")){
+                String sizeString = node.getProperty("size").getString();
+                if (NumberUtils.isNumber(sizeString)) {
+                    setSize(Integer.parseInt(sizeString));
+                }
+            }
         }catch(RepositoryException e){
             throw new RuntimeException(e);
         }
 
     }
 
-    public File initFile(NodeData nodedata){
+    /**
+     * Initialisation method for File(NodeData) constructor.
+     * @deprecated Since 5.0 use File(Node)
+     */
+    private File initFile(NodeData nodedata){
         try {
             return new File(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
         } catch (RepositoryException e) {
@@ -126,10 +131,16 @@ public class File {
         this.contentType = contentType;
     }
 
+    /**
+     * @deprecated Since 5.0.
+     */
     public String getNodeDataTemplate() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * @deprecated Since 5.0.
+     */
     public void setNodeDataTemplate(String nodeDataTemplate) {
         throw new UnsupportedOperationException();
     }
@@ -146,11 +157,24 @@ public class File {
         return node;
     }
 
+    /**
+     * @deprecated Since 5.0 use getNode(Node) instead. 
+     */
     public NodeData getNodeData() {
-        throw new UnsupportedOperationException();
+        try {
+            if(ContentUtil.asContent(node.getParent()).hasNodeData(node.getName())){
+                return ContentUtil.asContent(node.getParent()).getNodeData(node.getName());
+            }
+        } catch (RepositoryException e) {
+            //Cannot retrieve NodeData, return null.
+        }
+        return null;
     }
 
+    /**
+     * @deprecated Since 5.0, unsupported on Node API. 
+     */
     public InputStream getStream() {
-        throw new UnsupportedOperationException();
+        return getNodeData().getStream();
     }
 }
