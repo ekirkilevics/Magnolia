@@ -471,4 +471,30 @@ public class NodeUtilTest {
         // THEN
         assertEquals("Should not be Siblings  ", false, areSiblings);
     }
+
+    @Test
+    public void testCombinePathAndName() throws RepositoryException {
+        // GIVEN
+        final String nodePath = "/someNode";
+        final String subNodeName = "subnode";
+
+        // WHEN
+        final String result = NodeUtil.combinePathAndName(nodePath, subNodeName);
+
+        // THEN
+        assertEquals(nodePath + "/" + subNodeName, result);
+    }
+
+    @Test
+    public void testCombinePathAndNameForRootNode() throws RepositoryException {
+        // GIVEN
+        final String rootPath = "/";
+        final String subNodeName = "subnode";
+
+        // WHEN
+        final String result = NodeUtil.combinePathAndName(rootPath, subNodeName);
+
+        // THEN
+        assertEquals(rootPath + subNodeName, result);
+    }
 }

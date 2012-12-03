@@ -417,6 +417,9 @@ public class NodeUtil {
         return unwrap(lhs).isSame(unwrap(rhs));
     }
 
+    /**
+     * @return a valid jcr path combined from the provided path and name.
+     */
     public static String combinePathAndName(String path, String name) {
         if ("/".equals(path)) {
             return "/" + name;
