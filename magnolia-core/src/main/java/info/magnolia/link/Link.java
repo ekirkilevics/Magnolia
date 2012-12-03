@@ -39,6 +39,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 
@@ -57,12 +58,12 @@ import org.apache.jackrabbit.JcrConstants;
  */
 public class Link {
 
-    private String repository;
-    private String handle;
+    private String workspace;
+    private String path;
     private String uuid;
     private String extension;
     private String fileName;
-    private String fallbackHandle;
+    private String fallbackPath;
     private String anchor;
     private String parameters;
     
@@ -86,7 +87,6 @@ public class Link {
 
     /**
      * @param node
-     * @throws RepositoryException 
      */
     public Link(Node node) {
         try {
@@ -96,15 +96,15 @@ public class Link {
                 setUUID(node.getIdentifier());
             }
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
     /**
      * @deprecated Since 5.0 use Link(Node).
      */
-    public Link(String repoName, Content parent, NodeData nodedata) {
-        initLink(repoName, parent, nodedata);
+    public Link(String workspaceName, Content parent, NodeData nodedata) {
+        initLink(workspaceName, parent, nodedata);
     }
 
     public Link(Property property) {
@@ -114,23 +114,25 @@ public class Link {
             setProperty(property);
             setPropertyName(property.getName());
         }catch(RepositoryException e){
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
     /**
      * Initialisation method for Link(String, Content, NodeData) constructor.
-     * @param content
+     * @param workspaceName
+     * @param parent
+     * @param nodedata
      * @deprecated Since 5.0 use Link(Node).
      */
-    public Link initLink(String repoName, Content parent, NodeData nodedata){
+    public Link initLink(String workspaceName, Content parent, NodeData nodedata){
         try {
             if(nodedata.getType() != PropertyType.BINARY){
                 return new Link(nodedata.getJCRProperty());
             }
             return new Link(MgnlContext.getJCRSession(nodedata.getHierarchyManager().getWorkspace().getName()).getNode(nodedata.getHandle()));
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -219,7 +221,7 @@ public class Link {
             }
             return ContentUtil.asContent(this.property.getParent()).getNodeData(this.propertyName);
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -235,7 +237,7 @@ public class Link {
                     this.jcrNode = nodeData.getParent().getJCRNode().getNode(nodeData.getName());
                 }
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeRepositoryException(e);
             }
         }else{
             this.property = null;
@@ -246,7 +248,7 @@ public class Link {
         try {
             return getJCRNode().isNodeType(NodeTypes.Resource.NAME);
         } catch (RepositoryException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeRepositoryException(e);
         }
     }
 
@@ -272,31 +274,59 @@ public class Link {
         this.propertyName = nodeDataName;
     }
 
-     public String getHandle() {
-         if(StringUtils.isEmpty(this.handle)){
-             if(getJCRNode() != null){
-                 try {
-                    handle = getJCRNode().getPath();
-                } catch (RepositoryException e) {
-                    throw new RuntimeException(e);
-                }
-             } else {
-                 handle = this.getFallbackHandle();
-             }
-         }
-         return this.handle;
-     }
+    /**
+     * @deprecated Since 5.0 use Link.getPath instead.
+     */
+    public String getHandle() {
+        return this.path;
+    }
 
+    /**
+     * @deprecated Since 5.0 use Link.setPath instead.
+     */
     public void setHandle(String path) {
-        this.handle = path;
+        setPath(path);
+    }
+    
+    public String getPath() {
+        if(StringUtils.isEmpty(this.path)){
+            if(getJCRNode() != null){
+                try {
+                    path = getJCRNode().getPath();
+               } catch (RepositoryException e) {
+                   throw new RuntimeRepositoryException(e);
+               }
+            } else {
+                path = this.getFallbackHandle();
+            }
+        }
+        return this.path;
     }
 
+   public void setPath(String path) {
+       this.path = path;
+   }
+
+    /**
+     * @deprecated Since 5.0 use Link.getWorkspace instead.
+     */
     public String getRepository() {
-        return this.repository;
+        return getWorkspace();
     }
 
+    /**
+     * @deprecated Since 5.0 use Link.setWorkspace instead.
+     */
     public void setRepository(String repository) {
-        this.repository = repository;
+        setWorkspace(repository);
+    }
+
+    public String getWorkspace() {
+        return this.workspace;
+    }
+
+    public void setWorkspace(String workspace) {
+        this.workspace = workspace;
     }
     
     public String getUUID() {
@@ -304,7 +334,7 @@ public class Link {
             try {
                 this.uuid = this.getJCRNode().getIdentifier();
             } catch (RepositoryException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeRepositoryException(e);
             }
          }
          return this.uuid;
@@ -314,12 +344,26 @@ public class Link {
         this.uuid = uuid;
     }
 
+    /**
+     * @deprecated Since 5.0 use Link.getFallbackPath instead.
+     */
     public String getFallbackHandle() {
-        return this.fallbackHandle;
+        return getFallbackPath();
     }
 
+    /**
+     * @deprecated Since 5.0 use Link.setFallbackPath instead.
+     */
     public void setFallbackHandle(String fallbackPath) {
-        this.fallbackHandle = fallbackPath;
+        setFallbackPath(fallbackPath);
+    }
+
+    public String getFallbackPath() {
+        return this.fallbackPath;
+    }
+
+    public void setFallbackPath(String fallbackPath) {
+        this.fallbackPath = fallbackPath;
     }
 
     public String getAnchor() {

@@ -84,8 +84,8 @@ public class UUIDLinkTest extends BaseLinkTest {
     public void testParseLink() throws Exception {
         Link link = LinkUtil.parseLink(HREF_ABSOLUTE_LINK);
 
-        assertEquals(RepositoryConstants.WEBSITE, link.getRepository());
-        assertEquals(HANDLE_PARENT_SUB, link.getHandle());
+        assertEquals(RepositoryConstants.WEBSITE, link.getWorkspace());
+        assertEquals(HANDLE_PARENT_SUB, link.getPath());
         assertEquals(UUID_PATTERN_SIMPLE, LinkUtil.toPattern(link));
     }
 

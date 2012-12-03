@@ -121,16 +121,16 @@ public class LinkUtil {
      * Transforms a uuid to a handle beginning with a /. This path is used to get the page from the repository.
      * The editor needs this kind of links.
      */
-    public static String convertUUIDtoHandle(String uuid, String repository) throws LinkException {
-        return createLinkInstance(repository, uuid).getHandle();
+    public static String convertUUIDtoHandle(String uuid, String workspaceName) throws LinkException {
+        return createLinkInstance(workspaceName, uuid).getPath();
     }
 
     /**
      * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()},
      * this method will apply all uri to repository mappings as well as i18n.
      */
-    public static String convertUUIDtoURI(String uuid, String repository) throws LinkException {
-        return LinkTransformerManager.getInstance().getAbsolute(false).transform(createLinkInstance(repository, uuid));
+    public static String convertUUIDtoURI(String uuid, String workspaceName) throws LinkException {
+        return LinkTransformerManager.getInstance().getAbsolute(false).transform(createLinkInstance(workspaceName, uuid));
     }
 
     //-- conversions to UUID - bulk
@@ -255,11 +255,11 @@ public class LinkUtil {
      * @return repository denoted by the provided URI.
      */
     public static String mapPathToRepository(String path) {
-        String repository = getURI2RepositoryManager().getRepository(path);
-        if(StringUtils.isEmpty(repository)){
-            repository = DEFAULT_REPOSITORY;
+        String workspaceName = getURI2RepositoryManager().getRepository(path);
+        if(StringUtils.isEmpty(workspaceName)){
+            workspaceName = DEFAULT_REPOSITORY;
         }
-        return repository;
+        return workspaceName;
     }
 
     /**
@@ -304,6 +304,12 @@ public class LinkUtil {
         }
     }
 
+    /**
+     * Creates absolute link including context path for provided Property.
+     * @param property
+     * @return Absolute link to the provided Property.
+     * @throws LinkException
+     */
     public static String createAbsoluteLink(Property property) throws LinkException {
         if(property == null){
             return null;
@@ -316,13 +322,13 @@ public class LinkUtil {
      *
      * @param uuid
      *            UUID of content to create link to.
-     * @param repository
+     * @param workspaceName
      *            Name of the repository where content is located.
      * @return Absolute link to the provided content.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(String repository, String uuid) throws RepositoryException {
-        Node jcrNode = MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid);
+    public static String createAbsoluteLink(String workspaceName, String uuid) throws RepositoryException {
+        Node jcrNode = MgnlContext.getJCRSession(workspaceName).getNodeByIdentifier(uuid);
         return createAbsoluteLink(jcrNode);
     }
 
@@ -342,6 +348,11 @@ public class LinkUtil {
         return createAbsoluteLink(content.getJCRNode());
     }
 
+    /**
+     * Creates absolute link including context path to the provided node and performing all URI2Repository mappings and applying locales.
+     * @param node
+     * @return Absolute link to the provided content.
+     */
     public static String createAbsoluteLink(Node node) {
         if(node == null){
             return null;
@@ -360,6 +371,10 @@ public class LinkUtil {
         return createExternalLink(content.getJCRNode());
     }
 
+    /**
+     * Creates a complete url to access given node from external systems applying all the URI2Repository mappings and locales.
+     * @param node
+     */
     public static String createExternalLink(Node node) {
         if(node == null){
             return null;
@@ -386,10 +401,8 @@ public class LinkUtil {
     /**
      * Creates link guessing best possible link format from current site and provided node.
      *
-     * @param nodedata
-     *            Node data to create link for.
-     * @return Absolute link to the provided node data.
-     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @param node Node to create link for.
+     * @return Absolute link to the provided Node.
      */
     public static String createLink(Node node) {
         if(node == null){
@@ -427,12 +440,11 @@ public class LinkUtil {
     }
 
     /**
-     * Creates link guessing best possible link format from current site and provided node data.
+     * Creates link guessing best possible link format from current site and provided Property.
      *
-     * @param nodedata
-     *            Node data to create link for.
-     * @return Absolute link to the provided node data.
-     * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
+     * @param property Property to create link for.
+     * @return Absolute link to the provided Property.
+     * @throws LinkException
      */
     public static String createLink(Property property) throws LinkException {
         if(property == null){
@@ -450,34 +462,39 @@ public class LinkUtil {
      *
      * @param uuid
      *            UUID of content to create link to.
-     * @param repository
+     * @param workspaceName
      *            Name of the repository where content is located.
      * @return Absolute link to the provided content.
      * @see info.magnolia.cms.i18n.AbstractI18nContentSupport
      */
-    public static String createLink(String repository, String uuid) throws RepositoryException {
-        Node node = MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid);
+    public static String createLink(String workspaceName, String uuid) throws RepositoryException {
+        Node node = MgnlContext.getJCRSession(workspaceName).getNodeByIdentifier(uuid);
         return createLink(node);
     }
 
     /**
-     * 
+     * Creates Link to provided Content.
      * @param node
-     * @return
+     * @return Link to provided Content.
      * @deprecated Since 5.0 use LinkUtil.createLinkInstance(Node) instead.
      */
     public static Link createLinkInstance(Content node) {
         return createLinkInstance(node.getJCRNode());
     }
 
+    /**
+     * Creates Link to provided Node.
+     * @param node
+     * @return Link to provided Node.
+     */
     protected static Link createLinkInstance(Node node) {
         return new Link(node);
     }
 
     /**
-     * 
+     * Creates Link to provided NodeData.
      * @param nodeData
-     * @return
+     * @return Link to provided NodeData.
      * @throws LinkException
      * @deprecated Since 5.0 use LinkUtil.createLinkInstance(Property) instead.
      */
@@ -498,21 +515,21 @@ public class LinkUtil {
 
     /**
      * Creates link to the content denoted by repository and uuid.
-     * @param repository Parent repository of the content of interest.
+     * @param workspaceName Parent repository of the content of interest.
      * @param uuid UUID of the content to create link to.
      * @return link to the content with provided UUID.
      */
-    public static Link createLinkInstance(String repository, String uuid) throws LinkException {
+    public static Link createLinkInstance(String workspaceName, String uuid) throws LinkException {
         try {
-            return new Link(MgnlContext.getJCRSession(repository).getNodeByIdentifier(uuid));
+            return new Link(MgnlContext.getJCRSession(workspaceName).getNodeByIdentifier(uuid));
         } catch (RepositoryException e) {
-            throw new LinkException("can't get node with uuid " + uuid + " and repository " + repository);
+            throw new LinkException("can't get node with uuid " + uuid + " and repository " + workspaceName);
         }
     }
 
     /**
      * Creates link to the content identified by the repository and path. Link will use specified extension and will also contain the anchor and parameters if specified.
-     * @param repository Source repository for the content.
+     * @param workspaceName Source repository for the content.
      * @param path Path to the content of interest.
      * @param extension Optional extension to be used in the link
      * @param anchor Optional link anchor.
@@ -520,13 +537,13 @@ public class LinkUtil {
      * @return Link pointing to the content denoted by repository and path including extension, anchor and parameters if such were provided.
      * @throws LinkException
      */
-    public static Link createLinkInstance(String repository, String path, String extension, String anchor, String parameters) throws LinkException {
+    public static Link createLinkInstance(String workspaceName, String path, String extension, String anchor, String parameters) throws LinkException {
         Node node = null;
         String fileName = null;
         String nodeDataName = null;
         Property property = null;
         try {
-            Session session = MgnlContext.getJCRSession(repository);
+            Session session = MgnlContext.getJCRSession(workspaceName);
             
             boolean exists = false;
             try {
@@ -552,10 +569,10 @@ public class LinkUtil {
                 }
             }
             if (node == null) {
-                throw new LinkException("can't find node " + path + " in repository " + repository);
+                throw new LinkException("can't find node " + path + " in repository " + workspaceName);
             }
         } catch (RepositoryException e) {
-            throw new LinkException("can't get node with path " + path + " from repository " + repository);
+            throw new LinkException("can't get node with path " + path + " from repository " + workspaceName);
         }
 
         Link link = new Link(node);
@@ -565,7 +582,7 @@ public class LinkUtil {
         link.setFileName(fileName);
         link.setPropertyName(nodeDataName);
         link.setProperty(property);
-        link.setHandle(path);
+        link.setPath(path);
         return link;
     }
 
@@ -573,7 +590,7 @@ public class LinkUtil {
      * Creates link based on provided parameters. Should the uuid be non existent or the fallback handle invalid, creates nonetheless an <em>"undefined"</em> {@link Link} object,
      * pointing to the non existing uuid so that broken link detection tools can find it.
      * @param uuid UUID of the content
-     * @param repository Content repository name.
+     * @param workspaceName Content repository name.
      * @param fallbackHandle Optional fallback content handle.
      * @param nodeDataName Content node data name for binary data.
      * @param extension Optional link extension.
@@ -582,8 +599,8 @@ public class LinkUtil {
      * @return Link pointing to the content denoted by uuid and repository. Link is created using all provided optional values if present.
      * @throws LinkException
      */
-    public static Link createLinkInstance(String uuid, String repository, String fallbackHandle, String nodeDataName, String extension, String anchor, String parameters) throws LinkException {
-        final String defaultRepository = StringUtils.defaultIfEmpty(repository, RepositoryConstants.WEBSITE);
+    public static Link createLinkInstance(String uuid, String workspaceName, String fallbackHandle, String nodeDataName, String extension, String anchor, String parameters) throws LinkException {
+        final String defaultRepository = StringUtils.defaultIfEmpty(workspaceName, RepositoryConstants.WEBSITE);
         Link link;
         try {
             link = createLinkInstance(defaultRepository, uuid);
@@ -601,7 +618,7 @@ public class LinkUtil {
                 link.setUUID(uuid);
             }
         }
-        link.setFallbackHandle(fallbackHandle);
+        link.setFallbackPath(fallbackHandle);
         link.setPropertyName(nodeDataName);
         link.setExtension(extension);
         link.setAnchor(anchor);
@@ -636,9 +653,9 @@ public class LinkUtil {
         if(matcher.matches()){
             String orgHandle = matcher.group(1);
             orgHandle = Components.getComponent(I18nContentSupport.class).toRawURI(orgHandle);
-            String repository = getURI2RepositoryManager().getRepository(orgHandle);
+            String workspaceName = getURI2RepositoryManager().getRepository(orgHandle);
             String handle = getURI2RepositoryManager().getHandle(orgHandle);
-            return createLinkInstance(repository, handle, matcher.group(3),matcher.group(5),matcher.group(7));
+            return createLinkInstance(workspaceName, handle, matcher.group(3),matcher.group(5),matcher.group(7));
         }
         throw new LinkException("can't parse [ " + link + "]");
     }
@@ -647,13 +664,12 @@ public class LinkUtil {
      * Converts provided Link to an UUID link pattern.
      * @param link Link to convert.
      * @return UUID link pattern representation of provided link.
-     * @throws RepositoryException
      */
     public static String toPattern(Link link) {
         return "${link:{"
             + "uuid:{" + link.getUUID() + "},"
-            + "repository:{" + link.getRepository() + "},"
-            + "path:{" + link.getHandle() + "}," // original handle represented by the uuid
+            + "repository:{" + link.getWorkspace() + "},"
+            + "path:{" + link.getPath() + "}," // original handle represented by the uuid
             + "nodeData:{" + StringUtils.defaultString(link.getNodeDataName()) + "}," // in case of binaries
             + "extension:{" + StringUtils.defaultString(link.getExtension()) + "}" // the extension to use if no extension can be resolved otherwise
             + "}}"

@@ -148,7 +148,7 @@ public class URI2RepositoryMapping {
     }
 
     public String getURI(Link uuidLink){
-        String uri = uuidLink.getHandle();
+        String uri = uuidLink.getPath();
         if (StringUtils.isNotEmpty(this.handlePrefix)) {
             uri = StringUtils.removeStart(uri, this.handlePrefix);
         }

@@ -239,7 +239,7 @@ public class LinkUtilTest extends BaseLinkTest {
 
     @Test
     public void testMakeAbsolutePathFromUUID() throws LinkException {
-        String absolutePath = LinkUtil.createLinkInstance(RepositoryConstants.WEBSITE, "2").getHandle();
+        String absolutePath = LinkUtil.createLinkInstance(RepositoryConstants.WEBSITE, "2").getPath();
         assertEquals("/parent/sub", absolutePath);
     }
 
