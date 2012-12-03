@@ -33,13 +33,8 @@
  */
 package info.magnolia.jcr.node2bean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import info.magnolia.cms.util.SimpleUrlPattern;
+import static org.junit.Assert.*;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.impl.CollectionPropertyHidingTransformer;
 import info.magnolia.jcr.node2bean.impl.Node2BeanProcessorImpl;
@@ -488,8 +483,8 @@ public class Node2BeanTest {
         // THEN
         assertNotNull(map);
         assertEquals(2, map.size());
-        assertEquals("Hello", ((SimpleBean) map.get("a")).getString());
-        assertEquals("World", ((SimpleBean) map.get("b")).getString());
+        assertEquals("Hello", map.get("a").getString());
+        assertEquals("World", map.get("b").getString());
         assertTrue("we wanted a custom map impl!", map instanceof MyMap);
     }
 
@@ -730,28 +725,6 @@ public class Node2BeanTest {
         assertTrue("hello".equals(a.getString()) || "hello".equals(b.getString()));
         assertTrue("world".equals(a.getString()) || "world".equals(b.getString()));
         assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
-    }
-
-    @Test
-    public void testSimpleUrlPatternIsConvertedAutomagically() throws Exception {
-        // GIVEN
-        Session session = SessionTestUtil.createSession("test",
-                "/parent.class=info.magnolia.jcr.node2bean.BeanWithSimpleUrlPattern\n" +
-                "/parent.myPattern=H?llo*\n"
-                );
-        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
-
-        // WHEN
-        final BeanWithSimpleUrlPattern res = (BeanWithSimpleUrlPattern) n2b.toBean(session.getNode("parent"));
-
-        // THEN
-        assertNotNull(res);
-        assertNotNull(res.getMyPattern());
-        assertTrue(res.getMyPattern() instanceof SimpleUrlPattern);
-        assertTrue(res.matches("Hello world"));
-        assertTrue(res.matches("Hallo weld"));
-        assertFalse(res.matches("Haaaallo weeeeeld"));
-        assertFalse(res.matches("Bonjour monde"));
     }
 
     @Test

@@ -35,7 +35,6 @@ package info.magnolia.jcr.node2bean.impl;
 
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.node2bean.Node2BeanException;
@@ -115,13 +114,6 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
 
         // de-register the converter for Class, we do our own conversion in convertPropertyValue()
         convertUtilsBean.deregister(Class.class);
-
-        convertUtilsBean.register(new Converter() {
-            @Override
-            public Object convert(Class type, Object value) {
-                return new SimpleUrlPattern((String) value);
-            }
-        }, SimpleUrlPattern.class);
 
         convertUtilsBean.register(new Converter() {
             @Override
