@@ -91,7 +91,7 @@ public class Link {
     public Link(Node node) {
         try {
             setJCRNode(node);
-            setRepository(node.getSession().getWorkspace().getName());
+            setWorkspace(node.getSession().getWorkspace().getName());
             if (node.isNodeType(JcrConstants.MIX_REFERENCEABLE)) {
                 setUUID(node.getIdentifier());
             }
@@ -110,7 +110,7 @@ public class Link {
     public Link(Property property) {
         try{
             setJCRNode(property.getParent());
-            setRepository(property.getSession().getWorkspace().toString());
+            setWorkspace(property.getSession().getWorkspace().toString());
             setProperty(property);
             setPropertyName(property.getName());
         }catch(RepositoryException e){
@@ -278,7 +278,7 @@ public class Link {
      * @deprecated Since 5.0 use Link.getPath instead.
      */
     public String getHandle() {
-        return this.path;
+        return getPath();
     }
 
     /**
