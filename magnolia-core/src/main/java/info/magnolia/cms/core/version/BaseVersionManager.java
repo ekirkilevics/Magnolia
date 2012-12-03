@@ -321,7 +321,7 @@ public abstract class BaseVersionManager {
 
     /**
      * /** Get named version.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             if repository implementation does not support Versions API
      * @throws javax.jcr.RepositoryException
@@ -430,20 +430,30 @@ public abstract class BaseVersionManager {
                 systemVersionedNode.save();
 
                 try {
+                    // using system context here is forced by the fact that JR will use same context to also check source (mgnlVersion) repo READ permission and ordinary user has no rights in this workspace
+                    Session sysDestinationSession = MgnlContext.getJCRSession(node.getSession().getWorkspace().getName());
+                    log.debug("restoring ino:{}:{}", sysDestinationSession.getWorkspace().getName(), node.getPath());
+                    Node destinationNode = sysDestinationSession.getNode(node.getPath());
                     // if restored, update original node with the restored node and its subtree
                     Rule rule = getUsedFilter(versionedNode);
                     try {
                         synchronized (ExclusiveWrite.getInstance()) {
-                            CopyUtil.getInstance().copyFromVersion(versionedNode, node, new RuleBasedNodePredicate(rule));
-                            if (NodeUtil.hasMixin(node, ItemType.DELETED_NODE_MIXIN)) {
-                                node.removeMixin(ItemType.DELETED_NODE_MIXIN);
+                            CopyUtil.getInstance().copyFromVersion(versionedNode, destinationNode, new RuleBasedNodePredicate(rule));
+                            if (NodeUtil.hasMixin(destinationNode, ItemType.DELETED_NODE_MIXIN)) {
+                                destinationNode.removeMixin(ItemType.DELETED_NODE_MIXIN);
                             }
-                            node.save();
+                            destinationNode.save();
                         }
+                        // node was updated in system context and we should make sure it is notified of the changes
+                        node.refresh(false);
                     }
                     catch (RepositoryException re) {
-                        log.error("failed to restore versioned node, reverting all changes make to this node");
-                        node.refresh(false);
+                        if (log.isDebugEnabled()) {
+                            log.debug("error during restore: " + re.getMessage(), re);
+                            } else {
+                                log.error("failed to restore versioned node, reverting all changes make to this node");
+                                }
+                        destinationNode.refresh(false);
                         throw re;
                     }
                 }

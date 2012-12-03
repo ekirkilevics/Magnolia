@@ -263,6 +263,7 @@ public final class CopyUtil {
         }
         else {
             String parH = parent.getPath();
+            log.debug("workspace level clone from {}:{} to {}:{}", new Object[] { node.getSession().getWorkspace().getName(), node.getPath(), parent.getSession().getWorkspace().getName(), parent.getPath() });
             parent.getSession().getWorkspace().clone(
                     node.getSession().getWorkspace().getName(),
                     node.getPath(),
