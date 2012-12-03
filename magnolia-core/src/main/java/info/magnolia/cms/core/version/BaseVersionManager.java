@@ -432,7 +432,7 @@ public abstract class BaseVersionManager {
                 try {
                     // using system context here is forced by the fact that JR will use same context to also check source (mgnlVersion) repo READ permission and ordinary user has no rights in this workspace
                     Session sysDestinationSession = MgnlContext.getJCRSession(node.getSession().getWorkspace().getName());
-                    log.debug("restoring ino:{}:{}", sysDestinationSession.getWorkspace().getName(), node.getPath());
+                    log.debug("restoring info:{}:{}", sysDestinationSession.getWorkspace().getName(), node.getPath());
                     Node destinationNode = sysDestinationSession.getNode(node.getPath());
                     // if restored, update original node with the restored node and its subtree
                     Rule rule = getUsedFilter(versionedNode);
