@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
@@ -113,20 +114,33 @@ public class MultipartRequestFilter extends OncePerRequestAbstractMgnlFilter {
      */
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    throws IOException, ServletException {
 
         boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(request));
-        if (isMultipartContent) {
-            MultipartForm mpf = parseRequest(request);
-            // wrap the request
-            request = new MultipartRequestWrapper(request, mpf);
-            MgnlContext.push(request, response);
-        }
+        MultipartForm mpf = null;
         try {
-            chain.doFilter(request, response);
+            if (isMultipartContent) {
+                mpf = parseRequest(request);
+                // wrap the request
+                request = new MultipartRequestWrapper(request, mpf);
+                MgnlContext.push(request, response);
+            }
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                if(isMultipartContent){
+                    MgnlContext.pop();
+                }
+            }
         } finally {
-            if(isMultipartContent){
-                MgnlContext.pop();
+            if (mpf != null) {
+                Iterator<Document> keys = mpf.getDocuments().values().iterator();
+                while (keys.hasNext()) {
+                    Document doc = keys.next();
+                    if (doc != null && doc.getFile() != null && doc.getFile().exists()) {
+                        doc.delete();
+                    }
+                }
             }
         }
     }

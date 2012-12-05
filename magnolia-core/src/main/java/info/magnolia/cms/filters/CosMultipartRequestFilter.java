@@ -33,12 +33,14 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -64,7 +66,7 @@ public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter 
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-
+    
         String type = null;
         String type1 = request.getHeader("Content-Type");
         String type2 = request.getContentType();
@@ -78,16 +80,29 @@ public class CosMultipartRequestFilter extends OncePerRequestAbstractMgnlFilter 
             type = (type1.length() > type2.length() ? type1 : type2);
         }
         boolean isMultipart = (type != null) && type.toLowerCase().startsWith("multipart/form-data");
-        if (isMultipart) {
-            MultipartForm mpf = parseParameters(request);
-            request = new MultipartRequestWrapper(request, mpf);
-            MgnlContext.push(request, response);
-        }
-        try {
-            chain.doFilter(request, response);
-        } finally {
+        MultipartForm mpf = null;
+        try{
             if (isMultipart) {
-                MgnlContext.pop();
+                mpf = parseParameters(request);
+                request = new MultipartRequestWrapper(request, mpf);
+                MgnlContext.push(request, response);
+            }
+            try {
+                chain.doFilter(request, response);
+            } finally {
+                if (isMultipart) {
+                    MgnlContext.pop();
+                }
+            }
+        } finally {
+            if (mpf != null) {
+                Iterator<Document> keys = mpf.getDocuments().values().iterator();
+                while (keys.hasNext()) {
+                    Document doc = keys.next();
+                    if (doc != null && doc.getFile() != null && doc.getFile().exists()) {
+                        doc.delete();
+                    }
+                }
             }
         }
     }
