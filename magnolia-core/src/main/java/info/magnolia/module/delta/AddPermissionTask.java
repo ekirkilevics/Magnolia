@@ -73,7 +73,15 @@ public class AddPermissionTask extends AbstractTask {
             try {
                 roleManager.addPermission(role, workspaceName, path, permission);
                 if(includingSubNodes){
-                    roleManager.addPermission(role, workspaceName, path + "/*", permission);
+                    String pathIncludingSubNodes = "";
+                    if ("/".equals(path)){
+                        pathIncludingSubNodes = "/*";
+                    }else if (path.endsWith("/")){
+                        pathIncludingSubNodes = path + "*";
+                    }else{
+                        pathIncludingSubNodes = path + "/*";
+                    }
+                    roleManager.addPermission(role, workspaceName, pathIncludingSubNodes, permission);
                 }
             }
             catch (UnsupportedOperationException e) {
