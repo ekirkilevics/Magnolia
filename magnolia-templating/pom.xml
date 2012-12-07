@@ -4,7 +4,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>5.0-SNAPSHOT</version>
+    <version>5.0-alpha1-rc1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-templating</artifactId>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-alpha1-rc1</version>
     </dependency>
     <!-- temporary dep as old UI will be dropped soon -->
     <dependency>
@@ -54,7 +54,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-rendering</artifactId>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-alpha1-rc1</version>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
@@ -91,7 +91,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>5.0-SNAPSHOT</version>
+      <version>5.0-alpha1-rc1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
