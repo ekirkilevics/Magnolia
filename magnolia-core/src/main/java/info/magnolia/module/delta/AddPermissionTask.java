@@ -39,7 +39,8 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.module.InstallContext;
 
 /**
- * A task to add a permission to a role, using {@link info.magnolia.cms.security.RoleManager}.
+ * A task to add a permission to a role, using
+ * {@link info.magnolia.cms.security.RoleManager}.
  *
  * @author pbaerfuss
  * @version $Id$
@@ -52,7 +53,8 @@ public class AddPermissionTask extends AbstractTask {
     private final long permission;
     private final boolean includingSubNodes;
 
-    public AddPermissionTask(String taskName, String taskDescription, String roleName, String workspaceName, String path, long permission, boolean includingSubNodes) {
+    public AddPermissionTask(String taskName, String taskDescription, String roleName, String workspaceName, String path, long permission,
+            boolean includingSubNodes) {
         super(taskName, taskDescription);
         this.roleName = roleName;
         this.workspaceName = workspaceName;
@@ -66,13 +68,12 @@ public class AddPermissionTask extends AbstractTask {
         SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
         RoleManager roleManager = securitySupport.getRoleManager();
         Role role = roleManager.getRole(roleName);
-        if(role == null){
+        if (role == null) {
             ctx.warn("Role \"" + roleName + "\" not found, can't add permissions to " + path + ".");
-        }
-        else{
+        } else {
             try {
                 roleManager.addPermission(role, workspaceName, path, permission);
-                if(includingSubNodes){
+                if (includingSubNodes) {
                     String pathIncludingSubNodes = "";
                     if ("/".equals(path)) {
                         pathIncludingSubNodes = "/*";
@@ -81,9 +82,9 @@ public class AddPermissionTask extends AbstractTask {
                     }
                     roleManager.addPermission(role, workspaceName, pathIncludingSubNodes, permission);
                 }
-            }
-            catch (UnsupportedOperationException e) {
-                ctx.warn("Can't update role \"" + roleName + "\" due to an unsupported operation exception. This is most likely the case if the roles are managed externally.");
+            } catch (UnsupportedOperationException e) {
+                ctx.warn("Can't update role \"" + roleName
+                        + "\" due to an unsupported operation exception. This is most likely the case if the roles are managed externally.");
             }
         }
     }
