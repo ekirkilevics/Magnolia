@@ -33,10 +33,10 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
-import info.magnolia.jcr.node2bean.N2B;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanTransformer;
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
+import info.magnolia.jcr.node2bean.TransformedBy;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.objectfactory.Components;
@@ -164,15 +164,9 @@ public class TypeMappingImpl implements TypeMapping {
             Class<Node2BeanTransformer> transformerClass = null;
             Node2BeanTransformer transformer = null;
             if (writeMethod != null) {
-                N2B transformerAnnotation = writeMethod.getAnnotation(N2B.class);
-                transformerClass = transformerAnnotation == null ? null : (Class<Node2BeanTransformer>) transformerAnnotation.transformer();
-                try {
-                    transformer = transformerClass == null ? null : transformerClass.newInstance();
-                } catch (InstantiationException e) {
-                    throw new Node2BeanException("Can't instantiate transformer [" + transformerClass + "]", e);
-                } catch (IllegalAccessException e) {
-                    throw new Node2BeanException("Cant't instantiate transformer [" + transformerClass + "]. Is constructor visible?", e);
-                }
+                TransformedBy transformerAnnotation = writeMethod.getAnnotation(TransformedBy.class);
+                transformerClass = transformerAnnotation == null ? null : (Class<Node2BeanTransformer>) transformerAnnotation.value();
+                transformer = transformerClass == null ? null : Components.getComponentProvider().newInstance(transformerClass);
             }
             if (transformer == null) {
                 try {

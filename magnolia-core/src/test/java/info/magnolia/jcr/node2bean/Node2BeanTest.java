@@ -834,7 +834,7 @@ public class Node2BeanTest {
     public class BeanWithAnnotation {
         private Command command;
 
-        @N2B(transformer = SomeCommandTransformer.class)
+        @TransformedBy(SomeCommandTransformer.class)
         public void setCommand(Command command) {
             this.command = command;
         }

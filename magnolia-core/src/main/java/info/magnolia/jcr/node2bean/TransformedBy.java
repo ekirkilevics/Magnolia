@@ -39,10 +39,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates which transformer will be used by node2bean to transform property used by setter.
+ * Use TransformedBy annotation on a setter of bean class to specify transformer
+ * which will be used on corresponding node to transform value which is being
+ * set by Node2Bean.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface N2B {
-    Class<? extends Node2BeanTransformer> transformer();
+public @interface TransformedBy {
+    Class<? extends Node2BeanTransformer> value();
 }
