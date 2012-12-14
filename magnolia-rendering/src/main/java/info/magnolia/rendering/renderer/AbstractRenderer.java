@@ -199,10 +199,20 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
             );
 
             // populate the instance with values given as request parameters
-            Map<String, String> params = MgnlContext.getParameters();
+            Map<String, String[]> params = MgnlContext.getWebContext().getRequest().getParameterMap();
+            Map<String, Object> filtered = new HashMap<String, Object>();
             if (params != null) {
-                BeanUtils.populate(model, params);
+                for (Entry<String, String[]> entry : params.entrySet()) {
+                    String key = entry.getKey();
+                    String[] value = entry.getValue();
+                    if (StringUtils.contains(key, "[")) {
+                        key = StringUtils.substringBefore(key, "[");
+                    }
+                    filtered.put(key, value);
+                }
             }
+
+            BeanUtils.populate(model, filtered);
 
             return model;
 
