@@ -34,7 +34,6 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.MetaDataUtil;
@@ -166,63 +165,60 @@ public class InterceptFilter extends AbstractMgnlFilter {
 
         final Session session = MgnlContext.getJCRSession(repository);
 
-        synchronized (ExclusiveWrite.getInstance()) {
-
-            if (ACTION_PREVIEW.equals(action)) {
-                // preview mode (button in main bar)
-                String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
-                log.debug("preview request parameter value is {} ", preview);
-                if (preview != null) {
-                    if (Boolean.parseBoolean(preview)) {
-                        MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
-                        MgnlContext.setAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, channel, Context.SESSION_SCOPE);
-                    } else {
-                        MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
-                        MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
-                    }
+        if (ACTION_PREVIEW.equals(action)) {
+            // preview mode (button in main bar)
+            String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
+            log.debug("preview request parameter value is {} ", preview);
+            if (preview != null) {
+                if (Boolean.parseBoolean(preview)) {
+                    MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE, Context.SESSION_SCOPE);
+                    MgnlContext.setAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, channel, Context.SESSION_SCOPE);
                 } else {
                     MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
                     MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
                 }
-            } else if (ACTION_NODE_DELETE.equals(action)) {
-                // delete paragraph
-                try {
-                    Node page = session.getNode(handle);
-                    session.removeItem(nodePath);
-                    MetaDataUtil.updateMetaData(page);
-                    session.save();
-                } catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e);
-                }
-            } else if (ACTION_NODE_SORT.equals(action)) {
-                // sort paragraphs
-                try {
-                    String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
-                    String pathTarget = request.getParameter(PARAM_PATH_TARGET);
-                    String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
-                    String srcName = StringUtils.substringAfterLast(pathSelected, "/");
-                    String destName = StringUtils.substringAfterLast(pathTarget, "/");
-                    String order = StringUtils.defaultIfEmpty(request.getParameter("order"), "before");
-                    if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
-                        destName = null;
-                    }
-                    Node parent = session.getNode(pathParent+srcName);
-
-                    if("before".equals(order)) {
-                        NodeUtil.orderBefore(parent, destName);
-                    } else {
-                        NodeUtil.orderAfter(parent, destName);
-                    }
-
-                    Node page = session.getNode(handle);
-                    MetaDataUtil.updateMetaData(page);
-                    session.save();
-                } catch (RepositoryException e) {
-                    log.error("Exception caught: {}", e.getMessage(), e);
-                }
             } else {
-                log.warn("Unknown action {}", action);
+                MgnlContext.removeAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
+                MgnlContext.removeAttribute(MultiChannelFilter.ENFORCE_CHANNEL_PARAMETER, Context.SESSION_SCOPE);
             }
+        } else if (ACTION_NODE_DELETE.equals(action)) {
+            // delete paragraph
+            try {
+                Node page = session.getNode(handle);
+                session.removeItem(nodePath);
+                MetaDataUtil.updateMetaData(page);
+                session.save();
+            } catch (RepositoryException e) {
+                log.error("Exception caught: {}", e.getMessage(), e);
+            }
+        } else if (ACTION_NODE_SORT.equals(action)) {
+            // sort paragraphs
+            try {
+                String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
+                String pathTarget = request.getParameter(PARAM_PATH_TARGET);
+                String pathParent = StringUtils.substringBeforeLast(pathSelected, "/");
+                String srcName = StringUtils.substringAfterLast(pathSelected, "/");
+                String destName = StringUtils.substringAfterLast(pathTarget, "/");
+                String order = StringUtils.defaultIfEmpty(request.getParameter("order"), "before");
+                if (StringUtils.equalsIgnoreCase(destName, "mgnlNew")) {
+                    destName = null;
+                }
+                Node parent = session.getNode(pathParent + srcName);
+
+                if ("before".equals(order)) {
+                    NodeUtil.orderBefore(parent, destName);
+                } else {
+                    NodeUtil.orderAfter(parent, destName);
+                }
+
+                Node page = session.getNode(handle);
+                MetaDataUtil.updateMetaData(page);
+                session.save();
+            } catch (RepositoryException e) {
+                log.error("Exception caught: {}", e.getMessage(), e);
+            }
+        } else {
+            log.warn("Unknown action {}", action);
         }
     }
 }

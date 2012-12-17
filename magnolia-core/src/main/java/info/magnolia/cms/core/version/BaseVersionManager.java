@@ -38,7 +38,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.JCRSessionOp;
 import info.magnolia.cms.security.PermissionUtil;
-import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.predicate.RuleBasedNodePredicate;
@@ -437,13 +436,11 @@ public abstract class BaseVersionManager {
                     // if restored, update original node with the restored node and its subtree
                     Rule rule = getUsedFilter(versionedNode);
                     try {
-                        synchronized (ExclusiveWrite.getInstance()) {
-                            CopyUtil.getInstance().copyFromVersion(versionedNode, destinationNode, new RuleBasedNodePredicate(rule));
-                            if (NodeUtil.hasMixin(destinationNode, ItemType.DELETED_NODE_MIXIN)) {
-                                destinationNode.removeMixin(ItemType.DELETED_NODE_MIXIN);
-                            }
-                            destinationNode.save();
+                        CopyUtil.getInstance().copyFromVersion(versionedNode, destinationNode, new RuleBasedNodePredicate(rule));
+                        if (NodeUtil.hasMixin(destinationNode, ItemType.DELETED_NODE_MIXIN)) {
+                            destinationNode.removeMixin(ItemType.DELETED_NODE_MIXIN);
                         }
+                        destinationNode.save();
                         // node was updated in system context and we should make sure it is notified of the changes
                         node.refresh(false);
                     }
