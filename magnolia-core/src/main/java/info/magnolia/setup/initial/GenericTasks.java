@@ -33,9 +33,9 @@
  */
 package info.magnolia.setup.initial;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Realm;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleModuleResource;
@@ -69,8 +69,6 @@ import org.apache.commons.lang.StringUtils;
  * Groups tasks which are need to do a fresh install of magnolia 4.5 (or higher).
  *
  * @see info.magnolia.setup.CoreModuleVersionHandler
- *
- * @version $Id$
  */
 public class GenericTasks {
     /**
@@ -81,11 +79,11 @@ public class GenericTasks {
         return Arrays.asList(
                 // - install server node
                 new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", RepositoryConstants.CONFIG, "/server", null,
-                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "server", MgnlNodeType.NT_CONTENT)),
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "server", NodeTypes.Content.NAME)),
 
                 // - install or update modules node
                 new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", RepositoryConstants.CONFIG, "/modules", null,
-                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", MgnlNodeType.NT_CONTENT)),
+                        new CreateNodeTask(null, null, RepositoryConstants.CONFIG, "/", "modules", NodeTypes.Content.NAME)),
 
                 new BootstrapSingleResource("Bootstrap", "Bootstraps the new filter configuration", "/mgnl-bootstrap/core/config.server.filters.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
 
@@ -127,8 +125,8 @@ public class GenericTasks {
                         )),
 
                 // --- user/roles repositories related tasks
-                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_SYSTEM.getName(), MgnlNodeType.NT_FOLDER),
-                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_ADMIN.getName(), MgnlNodeType.NT_FOLDER),
+                new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_SYSTEM.getName(), NodeTypes.Folder.NAME),
+                new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", RepositoryConstants.USERS, "/", Realm.REALM_ADMIN.getName(), NodeTypes.Folder.NAME),
 
                 new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
                         new AddURIPermissionsToAllRoles(true),

@@ -38,11 +38,11 @@ import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.NonExistingNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.jcr.RuntimeRepositoryException;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ import org.apache.jackrabbit.util.ChildrenCollectorFilter;
 
 
 /**
- * @version $Id$
+ * Mock implementation of Content.
  */
 public class MockContent extends DefaultContent {
 
@@ -146,7 +146,7 @@ public class MockContent extends DefaultContent {
             Node currentNode;
             while(nodeIterator.hasNext()) {
                 currentNode = nodeIterator.nextNode();
-                if (MgnlNodeType.NT_RESOURCE.equals(currentNode.getPrimaryNodeType().getName())) {
+                if (NodeTypes.Resource.NAME.equals(currentNode.getPrimaryNodeType().getName())) {
                     onlyExistingNodeDatas.add(addBinaryNodeData(currentNode.getName()));
                 }
             }

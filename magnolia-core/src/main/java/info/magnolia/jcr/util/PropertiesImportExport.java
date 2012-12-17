@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.OrderedProperties;
 
 import java.io.ByteArrayInputStream;
@@ -94,7 +93,7 @@ public class PropertiesImportExport {
                 type = properties.getProperty(path + ".@type");
             }
 
-            type = StringUtils.defaultIfEmpty(type, MgnlNodeType.NT_CONTENTNODE);
+            type = StringUtils.defaultIfEmpty(type, NodeTypes.ContentNode.NAME);
             Node c = NodeUtil.createPath(root, path, type);
             populateNode(c, propertyName, valueStr);
         }
@@ -132,7 +131,7 @@ public class PropertiesImportExport {
                 if (StringUtils.isEmpty(properties.getProperty(orgKey))) {
                     // make this the type property if not defined otherwise
                     if (!properties.containsKey(orgKey + ".@type")) {
-                        cleaned.put(path + ".@type", MgnlNodeType.NT_CONTENTNODE);
+                        cleaned.put(path + ".@type", NodeTypes.ContentNode.NAME);
                     }
                     continue;
                 }

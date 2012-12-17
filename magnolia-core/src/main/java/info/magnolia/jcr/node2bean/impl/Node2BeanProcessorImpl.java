@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
@@ -43,6 +42,7 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.jcr.wrapper.ExtendingNodeWrapper;
@@ -203,7 +203,7 @@ public class Node2BeanProcessorImpl implements Node2BeanProcessor {
             @Override
             public boolean evaluateTyped(Property t) {
                 try {
-                    return !(t.getName().startsWith(MgnlNodeType.JCR_PREFIX) || t.getName().startsWith(MgnlNodeType.MGNL_PREFIX));
+                    return !(t.getName().startsWith(NodeTypes.JCR_PREFIX) || t.getName().startsWith(NodeTypes.MGNL_PREFIX));
                 } catch (RepositoryException e) {
                     return false;
                 }

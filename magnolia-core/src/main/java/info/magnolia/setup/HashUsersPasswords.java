@@ -34,8 +34,8 @@
 package info.magnolia.setup;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.SecurityUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -52,9 +52,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Task to encrypt base64 encoded passwords. Will skip all non-base64 entries.
- *
- * @version $Id$
- *
  */
 public final class HashUsersPasswords extends AllChildrenNodesOperation {
 
@@ -70,7 +67,7 @@ public final class HashUsersPasswords extends AllChildrenNodesOperation {
             } catch (RepositoryException e) {
                 return false;
             }
-            return MgnlNodeType.NT_FOLDER.equals(type) || MgnlNodeType.USER.equals(type);
+            return NodeTypes.Folder.NAME.equals(type) || NodeTypes.User.NAME.equals(type);
         }
     };
 
@@ -88,7 +85,7 @@ public final class HashUsersPasswords extends AllChildrenNodesOperation {
 
     @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        if (MgnlNodeType.USER.equals(node.getNodeTypeName())) {
+        if (NodeTypes.User.NAME.equals(node.getNodeTypeName())) {
             String encodedPassword = node.getNodeData("pswd").getString();
 
             if (StringUtils.isNotBlank(encodedPassword)) {

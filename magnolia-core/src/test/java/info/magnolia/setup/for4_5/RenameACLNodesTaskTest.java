@@ -33,8 +33,8 @@
  */
 package info.magnolia.setup.for4_5;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
@@ -50,8 +50,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * Test case for RenameACLNodesTask.
- *
- * @version $Id$
  */
 public class RenameACLNodesTaskTest extends RepositoryTestCase {
 
@@ -60,10 +58,10 @@ public class RenameACLNodesTaskTest extends RepositoryTestCase {
 
         // Given
         Session session = MgnlContext.getSystemContext().getJCRSession(RepositoryConstants.USER_ROLES);
-        Node roleNode = session.getRootNode().addNode("superuser", MgnlNodeType.ROLE);
-        roleNode.addNode("acl_dms_dms", MgnlNodeType.NT_CONTENTNODE);
-        roleNode.addNode("acl_website", MgnlNodeType.NT_CONTENTNODE);
-        roleNode.addNode("something_else_completely", MgnlNodeType.NT_CONTENTNODE);
+        Node roleNode = session.getRootNode().addNode("superuser", NodeTypes.Role.NAME);
+        roleNode.addNode("acl_dms_dms", NodeTypes.ContentNode.NAME);
+        roleNode.addNode("acl_website", NodeTypes.ContentNode.NAME);
+        roleNode.addNode("something_else_completely", NodeTypes.ContentNode.NAME);
 
         InstallContext installContext = mock(InstallContext.class);
         when(installContext.getJCRSession(RepositoryConstants.USER_ROLES)).thenReturn(session);

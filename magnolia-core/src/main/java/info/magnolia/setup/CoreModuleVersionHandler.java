@@ -34,8 +34,9 @@
 package info.magnolia.setup;
 
 import static info.magnolia.nodebuilder.Ops.*;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.cms.filters.FilterManager;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
@@ -74,8 +75,6 @@ import java.util.List;
 /**
  * Special VersionHandler for the core module. As it does not extend {@link info.magnolia.module.DefaultModuleVersionHandler} it has a special getBasicInstallTasks(InstallContext) that
  * e.g. will not automatically bootstrap xml-files placed in mgnl-bootstrap/core.
- *
- * @version $Id$
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
@@ -84,7 +83,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
     private final CreateNodeTask addFreemarkerSharedVariables = new CreateNodeTask("Freemarker configuration", "Adds sharedVariables node to the Freemarker configuration",
-            RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", MgnlNodeType.NT_CONTENTNODE);
+            RepositoryConstants.CONFIG, "/server/rendering/freemarker", "sharedVariables", NodeTypes.ContentNode.NAME);
     private final BootstrapSingleResource bootstrapWebContainerResources = new BootstrapSingleResource("Web container resources configuration", "Global configuration which resources are not meant to be handled by Magnolia. For instance JSP files.", "/mgnl-bootstrap/core/config.server.webContainerResources.xml");
     private final BootstrapSingleModuleResource bootstrapChannelManagement = new BootstrapSingleModuleResource("ChannelManagement configuration", "", "config.server.rendering.channelManagement.xml");
 
@@ -102,9 +101,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RenameACLNodesTask())
                 .addTask(new ArrayDelegateTask("New security filter", "Adds the securityCallback filter.",
                         new NodeBuilderTask("New security filter", "Adds the securityCallback filter.", ErrorHandling.strict, RepositoryConstants.CONFIG, FilterManager.SERVER_FILTERS,
-                                addNode("securityCallback", MgnlNodeType.NT_CONTENT).then(
+                                addNode("securityCallback", NodeTypes.Content.NAME).then(
                                         addProperty("class", "info.magnolia.cms.security.SecurityCallbackFilter"),
-                                        addNode("bypasses", MgnlNodeType.NT_CONTENTNODE)
+                                        addNode("bypasses", NodeTypes.ContentNode.NAME)
                                 )
                         ),
                         new OrderNodeBeforeTask("", "Puts the securityCallback just before the uriSecurity filter.", RepositoryConstants.CONFIG, FilterManager.SERVER_FILTERS + "/securityCallback", "uriSecurity")
@@ -121,11 +120,11 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new RemoveDuplicatePermissionTask("Remove duplicate permission", "Remove duplicate permission in workspace forum for role superuser", "superuser", "acl_forum"))
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/system", "realName", "system"))
                 .addTask(new CheckOrCreatePropertyTask("Update system userManager ", "Add the realName property.", RepositoryConstants.CONFIG, "/server/security/userManagers/admin", "realName", "admin"))
-                .addTask(new RenameNodesTask("Update servlet mapping names", "Update '--resources--' servlet mapping names to use '.'.", RepositoryConstants.CONFIG, "/server/filters/servlets", "--resources--", "-.resources--", MgnlNodeType.NT_CONTENTNODE))
+                .addTask(new RenameNodesTask("Update servlet mapping names", "Update '--resources--' servlet mapping names to use '.'.", RepositoryConstants.CONFIG, "/server/filters/servlets", "--resources--", "-.resources--", NodeTypes.ContentNode.NAME))
 
-                .addTask(new ChildrenExistsDelegateTask("name", "description", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses", MgnlNodeType.NT_CONTENTNODE, null, new RemoveNodeTask("Update securityCallback", "Remove empty bypasses node from securityCallback.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses")))
+                .addTask(new ChildrenExistsDelegateTask("name", "description", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses", NodeTypes.ContentNode.NAME, null, new RemoveNodeTask("Update securityCallback", "Remove empty bypasses node from securityCallback.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/bypasses")))
                 .addTask(new PropertyValueDelegateTask("Remove urlPattern", "Remove urlPattern from 'magnolia' clientCallback if previously set to '*'", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern", "patternString", "*", true, new RemoveNodeTask("Update form clientCallback", "Remove 'urlPattern' from new 'magnolia' clientCallback", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/magnolia/urlPattern")))
-                .addTask(new RenameNodesTask("Rename clientCallback", "Rename 'magnolia' clientCallback to 'form'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks", "magnolia", "form", MgnlNodeType.NT_CONTENTNODE))
+                .addTask(new RenameNodesTask("Rename clientCallback", "Rename 'magnolia' clientCallback to 'form'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks", "magnolia", "form", NodeTypes.ContentNode.NAME))
                 .addTask(new NodeExistsDelegateTask("Server node", "Update uriSecurity if needed.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/public",
                     new OrderNodeBeforeTask("Order clientCallbacks", "Order 'form' clientCallback before 'public'.", RepositoryConstants.CONFIG, "/server/filters/securityCallback/clientCallbacks/form", "public"),null))
                 .addTask(new RemoveNodeTask("Update contentSecurity", "Remove clientCallback from cms/contentSecurity as they're now under 'securityCallback'.", RepositoryConstants.CONFIG, "/server/filters/cms/contentSecurity/clientCallback"))

@@ -37,10 +37,10 @@ import static java.lang.String.format;
 import static org.apache.commons.lang.ArrayUtils.contains;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.filters.FilterManager;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -62,8 +62,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Updates the given security filter's client callback configuration to reflect the changes introduced in 4.5.
- *
- * @version $Id$
  */
 public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRepositoryTask {
 
@@ -90,7 +88,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         final Content fromFilterNode = hm.getContent(FilterManager.SERVER_FILTERS + "/" + fromFilterName);
         final Content targetFilterNode = hm.getContent(FilterManager.SERVER_FILTERS + "/" + targetFilterName);
 
-        final Content newCallbacksNode = targetFilterNode.createContent("clientCallbacks", MgnlNodeType.NT_CONTENTNODE);
+        final Content newCallbacksNode = targetFilterNode.createContent("clientCallbacks", NodeTypes.ContentNode.NAME);
         final Content currentCallbackNode = fromFilterNode.getContent("clientCallback");
         final String currentClass = currentCallbackNode.getNodeData("class").getString();
         if (contains(SIMPLE_CALLBACK_CLASSES, currentClass)) {
@@ -141,7 +139,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
             return;
         }
 
-        final Content newCallback = target.createContent(newName, MgnlNodeType.NT_CONTENTNODE);
+        final Content newCallback = target.createContent(newName, NodeTypes.ContentNode.NAME);
         copyStringProperty(source, newCallback, "class");
         if (FORM_CLASS.equals(clazz)) {
             copyStringProperty(source, newCallback, "loginForm");
@@ -161,7 +159,7 @@ public class UpdateSecurityFilterClientCallbacksConfiguration extends AbstractRe
         }
 
         if (urlPattern != null) {
-            Content urlPatternContent = newCallback.createContent("urlPattern", MgnlNodeType.NT_CONTENTNODE);
+            Content urlPatternContent = newCallback.createContent("urlPattern", NodeTypes.ContentNode.NAME);
             urlPatternContent.setNodeData("class", "info.magnolia.cms.util.SimpleUrlPattern");
             urlPatternContent.setNodeData("patternString", urlPattern);
         }
