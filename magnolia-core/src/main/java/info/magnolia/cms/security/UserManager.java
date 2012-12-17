@@ -118,7 +118,9 @@ public interface UserManager {
 
     /**
      * Sets given property for the user.
-     * 
+     *
+     * @deprecated since 4.5.7 - use {@link UserManager#setProperty(User, String, String)}
+     *
      * @param user
      *            User to be updated. If property doesn't exist yet, it will be created. If the value is null, property will be removed if existing.
      * @param propertyName
@@ -127,7 +129,13 @@ public interface UserManager {
      *            Value of the property. Use org.apache.jackrabbit.value.ValueFactoryImpl to convert type to Value.
      * @return updated user object with new value of the property.
      */
+    @Deprecated
     public User setProperty(User user, String propertyName, Value propertyValue);
+
+    /**
+     * Sets given property for the user and returns updated user object with new value of the property.
+     */
+    public User setProperty(User user, String propertyName, String propertyValue);
 
     /* ---------- User Manager configuration ----------- */
 
@@ -163,14 +171,14 @@ public interface UserManager {
 
     /**
      * Adds user to a group.
-     * 
+     *
      * @return user object with the group already assigned.
      */
     public User addGroup(User user, String groupName);
 
     /**
      * Updates last access timestamp for the user.
-     * 
+     *
      * @throws UnsupportedOperationException
      *             if the current implementation doesn't support this operation
      */
@@ -192,14 +200,14 @@ public interface UserManager {
 
     /**
      * Removes user from a group.
-     * 
+     *
      * @return user object with the group assignment removed.
      */
     public User removeGroup(User user, String groupName);
 
     /**
      * Removes role from a user.
-     * 
+     *
      * @return user object without removed role.
      */
     public User removeRole(User user, String roleName);

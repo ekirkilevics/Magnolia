@@ -286,6 +286,16 @@ public class DelegatingUserManager implements UserManager {
     }
 
     @Override
+    public User setProperty(final User user, final String propertyName, final String propertyValue) {
+        return delegateUntilSupported(new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.setProperty(user, propertyName, propertyValue);
+            }
+        });
+    }
+
+    @Override
     public User removeGroup(final User user, final String groupName) {
         return delegateUntilNotNull(new Op<User>() {
             @Override

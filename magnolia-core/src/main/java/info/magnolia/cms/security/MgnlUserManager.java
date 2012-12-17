@@ -155,6 +155,33 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         });
     }
 
+    @Override
+    public User setProperty(final User user, final String propertyName, final String propertyValue) {
+        return MgnlContext.doInSystemContext(new SilentSessionOp<User>(getRepositoryName()) {
+
+            @Override
+            public User doExec(Session session) throws RepositoryException {
+                String path = ((MgnlUser) user).getPath();
+                Node userNode;
+                try {
+                    userNode = session.getNode(path);
+                    // setting value to null would remove existing properties anyway, so no need to create a
+                    // not-yet-existing-one first and then set it to null.
+                    if (propertyName != null) {
+                        userNode.setProperty(propertyName, propertyValue);
+                        session.save();
+                    }
+                } catch (RepositoryException e) {
+                    session.refresh(false);
+                    log.error("Property {} can't be changed. " + e.getMessage(), propertyName);
+                    return user;
+                }
+                return newUserInstance(userNode);
+            }
+        });
+    }
+
+
     /**
      * TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name).
      * @deprecated since 4.5 use realmName instead

@@ -34,16 +34,8 @@
 package info.magnolia.cms.security;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
-import javax.jcr.query.QueryResult;
+import static org.mockito.Mockito.*;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
@@ -54,6 +46,17 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Value;
+import javax.jcr.Workspace;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+
 import org.junit.After;
 import org.junit.Test;
 
@@ -237,9 +240,41 @@ public class MgnlUserManagerTest {
         MgnlContext.setInstance(ctx);
 
         // WHEN
-        um.setProperty(user, propName, null);
+        um.setProperty(user, propName, (Value) null);
 
         // THEN
         assertFalse(usersNode.hasProperty(propName));
     }
+
+    @Test
+    public void testSetStringProperty() throws Exception {
+        // GIVEN
+        final SystemContext ctx = mock(SystemContext.class);
+        final MgnlUser user = mock(MgnlUser.class);
+        final String path = "users";
+        when(user.getPath()).thenReturn(path);
+        final String propName = "prop";
+        final String propValue = "value";
+        final MgnlUserManager um = new MgnlUserManager();
+        Components.setComponentProvider(new MockComponentProvider());
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+
+        MgnlContext.setInstance(ctx);
+
+        when(ctx.getUser()).thenReturn(user);
+
+        final String workspace = "users";
+        final Session session = new MockSession(workspace);
+        final Node usersNode = session.getRootNode().addNode(path);
+        when(ctx.getJCRSession(workspace)).thenReturn(session);
+
+        MgnlContext.setInstance(ctx);
+
+        // WHEN
+        um.setProperty(user, propName, propValue);
+
+        // THEN
+        assertEquals(propValue, usersNode.getProperty(propName).getString());
+    }
+
 }
