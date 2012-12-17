@@ -33,14 +33,12 @@
  */
 package info.magnolia.rendering.renderer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
@@ -51,13 +49,17 @@ import info.magnolia.rendering.template.RenderableDefinition;
 import info.magnolia.test.AbstractMagnoliaTestCase;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.MockComponentProvider;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
 import org.junit.Before;
@@ -96,6 +98,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
     private MockNode content;
     private RenderingModel<?> parentModel;
     private RenderingContext ctx;
+    private HttpServletRequest request;
 
     @Override
     @Before
@@ -104,17 +107,21 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
         MockNode root = new MockNode();
         content = (MockNode) root.addNode("content");
         content.setIdentifier(CONTENT_IDENTIFIER);
-        Context context = mock(Context.class);
+        request = mock(HttpServletRequest.class);
+        parentModel = mock(RenderingModel.class);
+
+        MockWebContext context = new MockWebContext();
+        context.setAttribute(AbstractRenderer.MODEL_ATTRIBUTE, parentModel, 3);
+        context.setRequest(request);
+        context.getAggregationState().setMainContent(new MockContent("content"));
         MgnlContext.setInstance(context);
 
-        parentModel = mock(RenderingModel.class);
-        when(context.getAttribute(AbstractRenderer.MODEL_ATTRIBUTE)).thenReturn(parentModel);
         ctx = mock(RenderingContext.class);
 
         Components.setComponentProvider(new MockComponentProvider());
         ComponentsTestUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
     }
-    
+
     @Override
     @After
     public void tearDown() throws Exception{
@@ -152,7 +159,7 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
             }
         };
         // WHEN
-            renderer.render(ctx, contextObjects);
+        renderer.render(ctx, contextObjects);
 
         // THEN - expected Exception
     }
@@ -194,5 +201,62 @@ public class AbstractRendererTest extends AbstractMagnoliaTestCase {
         // THEN
         assertTrue(renderer.wasOnRenderCalled());
         assertEquals(parentModel, MgnlContext.getAttribute(AbstractRenderer.MODEL_ATTRIBUTE));
+    }
+
+    @Test
+    public void testWillNotFailModelCreationWhenSquareBracketIsInQueryString() throws RenderException {
+        // GIVEN
+        Map<String, String[]> map = new HashMap<String, String[]>();
+        map.put("checkbox[]", new String[] { "a", "b", "c" });
+        map.put("param", new String[] { "value" });
+        map.put("number", new String[] { "10" });
+        when(request.getParameterMap()).thenReturn(map);
+        DummyRenderer renderer = new DummyRenderer();
+        RenderableDefinition definition = mock(RenderableDefinition.class);
+
+        // WHEN
+        MyDummyModel model = renderer.newModel(MyDummyModel.class, content, definition, parentModel);
+
+        // THEN
+        assertEquals("value", model.getParam());
+        assertEquals(10, model.getNumber());
+        assertArrayEquals(new String[] { "a", "b", "c" }, model.getCheckbox());
+    }
+
+    public class MyDummyModel extends DummyModel {
+
+        private String[] checkbox = new String[3];
+
+        private String param;
+
+        private int number;
+
+        public MyDummyModel() {
+            super(null, null, null);
+        }
+
+        public String[] getCheckbox() {
+            return checkbox;
+        }
+
+        public void setCheckbox(String[] checkbox) {
+            this.checkbox = checkbox;
+        }
+
+        public String getParam() {
+            return param;
+        }
+
+        public void setParam(String param) {
+            this.param = param;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
+        }
     }
 }
