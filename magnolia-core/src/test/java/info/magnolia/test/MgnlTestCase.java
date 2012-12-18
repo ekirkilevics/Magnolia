@@ -86,7 +86,7 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
- * @version $Id$
+ * Superclass for non-trivial tests requiring various default implementations (ComponentsTestUtils) and a MockContext.
  */
 public abstract class MgnlTestCase {
 
@@ -198,6 +198,9 @@ public abstract class MgnlTestCase {
         return Collections.singletonList(core);
     }
 
+    /**
+     * @deprecated since 4.5.8. Directly use {@link info.magnolia.test.mock.jcr.SessionTestUtil#createSession(String, String)} instead.
+     */
     protected MockHierarchyManager initMockConfigRepository(String properties) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
 
         MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.CONFIG, properties);
