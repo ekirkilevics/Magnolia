@@ -71,9 +71,9 @@ public class MockProperty extends AbstractProperty {
     private String name;
     private MockNode parent;
     private Session session;
-    private MockValue value;
+    private Value value;
 
-    public MockProperty(String name, MockValue value, MockNode parent) {
+    public MockProperty(String name, Value value, MockNode parent) {
         this.name = name;
         this.parent = parent;
         this.value = value;
@@ -122,11 +122,6 @@ public class MockProperty extends AbstractProperty {
     @Override
     public double getDouble() throws ValueFormatException, RepositoryException {
         return getValue().getDouble();
-    }
-
-    @Override
-    public long getLength() throws ValueFormatException, RepositoryException {
-        return ((MockValue) getValue()).getLength();
     }
 
     @Override
@@ -293,7 +288,7 @@ public class MockProperty extends AbstractProperty {
 
     @Override
     public void setValue(Value value) {
-        this.value = (MockValue) value;
+        this.value = value;
     }
 
     public Object getObjectValue() {

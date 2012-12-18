@@ -127,7 +127,7 @@ public class MockNode extends AbstractNode {
         }
     }
 
-    public MockNode(String name, Map<String, MockValue> properties, Map<String, MockNode> children) {
+    public MockNode(String name, Map<String, ? extends Value> properties, Map<String, MockNode> children) {
         this(name);
         Iterator<String> propertiesIterator = properties.keySet().iterator();
         while (propertiesIterator.hasNext()) {
@@ -747,7 +747,7 @@ public class MockNode extends AbstractNode {
             property = (MockProperty) properties.get(name);
             if (property == null) {
                 // create new property
-                property = new MockProperty(name, (MockValue) value, this);
+                property = new MockProperty(name, value, this);
                 properties.put(name, property);
             } else {
                 property.setValue(value);
