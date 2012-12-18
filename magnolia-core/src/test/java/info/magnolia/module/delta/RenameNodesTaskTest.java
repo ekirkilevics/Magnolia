@@ -35,8 +35,9 @@ package info.magnolia.module.delta;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
@@ -49,7 +50,7 @@ import javax.jcr.Session;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class RenameNodesTaskTest extends RepositoryTestCase {
 
@@ -63,7 +64,7 @@ public class RenameNodesTaskTest extends RepositoryTestCase {
         session.getRootNode().addNode(relPath);
         final String oldName = "old";
         final String newName = "new";
-        final String testNodeType = MgnlNodeType.NT_CONTENT;
+        final String testNodeType = NodeTypes.Content.NAME;
         final Node rootOfOperation = session.getRootNode().getNode(relPath);
         // a first one
         rootOfOperation.addNode(oldName, testNodeType);
@@ -74,7 +75,7 @@ public class RenameNodesTaskTest extends RepositoryTestCase {
 
         // one with matching name but wrong NodeType
         final String pathForSubNodeWithWrongNodeType = "subnodeHasWrongNodeType";
-        rootOfOperation.addNode(pathForSubNodeWithWrongNodeType).addNode(oldName, MgnlNodeType.NT_CONTENTNODE);
+        rootOfOperation.addNode(pathForSubNodeWithWrongNodeType).addNode(oldName, NodeTypes.ContentNode.NAME);
 
         InstallContext installContext = mock(InstallContext.class);
         when(installContext.getJCRSession(RepositoryConstants.CONFIG)).thenReturn(session);

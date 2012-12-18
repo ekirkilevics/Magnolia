@@ -35,6 +35,7 @@ package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -47,8 +48,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Adds URI permissions to all roles.
- *
- * @version $Id$
  */
 public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     private static final int ALLOW_ALL = 63;
@@ -79,7 +78,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
 
     @Override
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Content uriPermissionsNode = node.createContent("acl_uri", MgnlNodeType.NT_CONTENTNODE);
+        final Content uriPermissionsNode = node.createContent("acl_uri", NodeTypes.ContentNode.NAME);
         if ("anonymous".equals(node.getName())) {
             if (isAuthorInstance) {
                 addPermission(uriPermissionsNode, "0", "/*", DENY);
@@ -94,7 +93,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
     }
 
     private void addPermission(Content uriRepoNode, String permNodeName, String path, long value) throws RepositoryException {
-        final Content permNode = uriRepoNode.createContent(permNodeName, MgnlNodeType.NT_CONTENTNODE);
+        final Content permNode = uriRepoNode.createContent(permNodeName, NodeTypes.ContentNode.NAME);
         permNode.createNodeData("path", path);
         permNode.createNodeData("permissions", Long.valueOf(value));
     }

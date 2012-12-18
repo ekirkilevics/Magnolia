@@ -44,6 +44,7 @@ import info.magnolia.jcr.node2bean.TransformationState;
 import info.magnolia.jcr.node2bean.TypeDescriptor;
 import info.magnolia.jcr.node2bean.TypeMapping;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
 
@@ -217,8 +218,8 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             @Override
             public boolean evaluateTyped(Node t) {
                 try {
-                    return !(t.getName().startsWith(MgnlNodeType.JCR_PREFIX) ||
-                            t.getName().startsWith(MgnlNodeType.MGNL_PREFIX) ||
+                    return !(t.getName().startsWith(NodeTypes.JCR_PREFIX) ||
+                            t.getName().startsWith(NodeTypes.MGNL_PREFIX) ||
                             t.isNodeType(MgnlNodeType.NT_METADATA));
                 } catch (RepositoryException e) {
                     return false;

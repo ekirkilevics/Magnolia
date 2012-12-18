@@ -48,13 +48,13 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.version.MgnlVersioningSession;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.Components;
@@ -67,8 +67,6 @@ import info.magnolia.stats.JCRStats;
 
 /**
  * Manages all used Repositories.
- *
- * @version $Id$
  */
 @Singleton
 public final class DefaultRepositoryManager implements RepositoryManager {
@@ -132,7 +130,7 @@ public final class DefaultRepositoryManager implements RepositoryManager {
                 } catch (RepositoryException e) {
                     throw new RuntimeRepositoryException(e);
                 }
-                return (!name.startsWith(MgnlNodeType.JCR_PREFIX) && !name.startsWith("rep:"));
+                return (!name.startsWith(NodeTypes.JCR_PREFIX) && !name.startsWith("rep:"));
             }
         });
 

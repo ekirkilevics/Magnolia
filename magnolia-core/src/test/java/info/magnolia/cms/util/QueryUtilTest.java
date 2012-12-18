@@ -35,9 +35,10 @@ package info.magnolia.cms.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.context.MgnlContext;
 import info.magnolia.importexport.DataTransporter;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.test.RepositoryTestCase;
 
@@ -63,8 +64,6 @@ import org.junit.Test;
 
 /**
  * Tests for {@link QueryUtil}.
- *
- * @version $Id$
  */
 public class QueryUtilTest extends RepositoryTestCase{
 
@@ -93,7 +92,7 @@ public class QueryUtilTest extends RepositoryTestCase{
         String statement = "select * from [mgnl:page]";
         NodeIterator result = QueryUtil.search("website", statement);
         while(result.hasNext()){
-            assertEquals(MgnlNodeType.NT_PAGE, result.nextNode().getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Page.NAME, result.nextNode().getPrimaryNodeType().getName());
         }
     }
 
@@ -102,7 +101,7 @@ public class QueryUtilTest extends RepositoryTestCase{
         String statement = "select * from [mgnl:component]";
         NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2);
         while(result.hasNext()){
-            assertEquals(MgnlNodeType.NT_COMPONENT, result.nextNode().getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Component.NAME, result.nextNode().getPrimaryNodeType().getName());
         }
     }
 
@@ -125,14 +124,14 @@ public class QueryUtilTest extends RepositoryTestCase{
     @Test
     public void testSearchForUUIDInChildNode() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [nt:base] where [jcr:uuid] = '6ecc7d08-9329-44ca-bfc7-ab7b73f6f64d'";
-        NodeIterator iterator =  QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
+        NodeIterator iterator =  QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Page.NAME);
         assertEquals("/queryTest", iterator.nextNode().getPath());
     }
 
     @Test
     public void testSearchForSpecificTemplate() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [nt:base] where [mgnl:template] = 'standard-templating-kit:pages/stkArticle'";
-        NodeIterator iterator = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
+        NodeIterator iterator = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Page.NAME);
         assertEquals(2, NodeUtil.getCollectionFromNodeIterator(iterator).size());
     }
 
@@ -150,7 +149,7 @@ public class QueryUtilTest extends RepositoryTestCase{
         QueryObjectModelBuilder qom = new SQL2QOMBuilder();
         String statement = "select * from [nt:base] where [jcr:uuid] = 'c1fcda79-1f81-412d-a748-b9ea34ea97f7'";
         QueryObjectModel model = qom.createQueryObjectModel(statement, factory, session.getValueFactory());
-        NodeIterator result = QueryUtil.search(model, MgnlNodeType.NT_PAGE);
+        NodeIterator result = QueryUtil.search(model, NodeTypes.Page.NAME);
         Collection<Node> collection = NodeUtil.getCollectionFromNodeIterator(result);
         assertEquals(1, collection.size());
     }
@@ -158,11 +157,11 @@ public class QueryUtilTest extends RepositoryTestCase{
     @Test
     public void testQueryWhenSearchingJustForPages() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [nt:base]";
-        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
+        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Page.NAME);
         int count = 0;
         while(result.hasNext()){
             Node node = result.nextNode();
-            assertEquals(MgnlNodeType.NT_PAGE, node.getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Page.NAME, node.getPrimaryNodeType().getName());
             count++;
         }
         assertEquals(7, count);
@@ -171,10 +170,10 @@ public class QueryUtilTest extends RepositoryTestCase{
     @Test
     public void testQueryWhenSearchingJustForComponents() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [nt:base]";
-        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_COMPONENT);
+        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Component.NAME);
         int count = 0;
         while(result.hasNext()){
-            assertEquals(MgnlNodeType.NT_COMPONENT, result.nextNode().getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Component.NAME, result.nextNode().getPrimaryNodeType().getName());
             count++;
         }
         assertEquals(5, count);
@@ -183,10 +182,10 @@ public class QueryUtilTest extends RepositoryTestCase{
     @Test
     public void testSearchForPagesWhoseComponentIsContainingSpecificText() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [mgnl:component] as t where contains(t.*, 'TestText')";
-        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
+        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Page.NAME);
         int count = 0;
         while(result.hasNext()){
-            assertEquals(MgnlNodeType.NT_PAGE, result.nextNode().getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Page.NAME, result.nextNode().getPrimaryNodeType().getName());
             count++;
         }
         assertEquals(2, count);
@@ -195,10 +194,10 @@ public class QueryUtilTest extends RepositoryTestCase{
     @Test
     public void testSearchForAreasContainingImage() throws InvalidQueryException, RepositoryException{
         String statement = "select * from [mgnl:component] where image is not null";
-        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_AREA);
+        NodeIterator result = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Area.NAME);
         while(result.hasNext()){
             Node node = result.nextNode();
-            assertEquals(MgnlNodeType.NT_AREA, node.getPrimaryNodeType().getName());
+            assertEquals(NodeTypes.Area.NAME, node.getPrimaryNodeType().getName());
             assertEquals("/queryTest/subPage2/subPage2/content", node.getPath());
         }
     }
@@ -208,10 +207,10 @@ public class QueryUtilTest extends RepositoryTestCase{
         String statement = "select * from [nt:base] as t where contains(t.*, 'Poughkeepsie')";
         NodeIterator result = QueryUtil.search("website", statement);
         //Just executes the query
-        assertEquals(MgnlNodeType.NT_COMPONENT, result.nextNode().getPrimaryNodeType().getName());
+        assertEquals(NodeTypes.Component.NAME, result.nextNode().getPrimaryNodeType().getName());
         //Executes the query and searches for wanted parent type
-        result = QueryUtil.search("website", statement, Query.JCR_SQL2, MgnlNodeType.NT_PAGE);
-        assertEquals(MgnlNodeType.NT_PAGE, result.nextNode().getPrimaryNodeType().getName());
+        result = QueryUtil.search("website", statement, Query.JCR_SQL2, NodeTypes.Page.NAME);
+        assertEquals(NodeTypes.Page.NAME, result.nextNode().getPrimaryNodeType().getName());
     }
 
     @Test

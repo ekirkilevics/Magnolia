@@ -41,10 +41,7 @@ import javax.jcr.Session;
 import javax.security.auth.Subject;
 
 /**
- * A mock context where you can set a mocked hierarchy manger on it.
- * @author philipp
- * @version $Id$
- *
+ * A mock context where you can add Sessions and set a User.
  */
 public class MockContext extends AbstractMapBasedContext implements SystemContext{
 

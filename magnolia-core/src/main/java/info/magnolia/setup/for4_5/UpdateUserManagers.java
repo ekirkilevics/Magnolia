@@ -33,7 +33,7 @@
  */
 package info.magnolia.setup.for4_5;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
@@ -50,9 +50,6 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Updates user managers with properties used in account lockout feature.
- *
- * @author ochytil
- * @version $Revision: $ ($Author: $)
  */
 public class UpdateUserManagers extends AbstractRepositoryTask{
 
@@ -65,7 +62,7 @@ public class UpdateUserManagers extends AbstractRepositoryTask{
 
         Session session = ctx.getJCRSession(RepositoryConstants.CONFIG);
 
-        for (Node node : NodeUtil.getNodes(session.getRootNode().getNode("server").getNode("security").getNode("userManagers"), MgnlNodeType.NT_CONTENTNODE)) {
+        for (Node node : NodeUtil.getNodes(session.getRootNode().getNode("server").getNode("security").getNode("userManagers"), NodeTypes.ContentNode.NAME)) {
             if(node.hasProperty("class")){
                 String className = node.getProperty("class").getString();
                 if (className.equals("info.magnolia.cms.security.MgnlUserManager") || className.equals("info.magnolia.cms.security.SystemUserManager")){

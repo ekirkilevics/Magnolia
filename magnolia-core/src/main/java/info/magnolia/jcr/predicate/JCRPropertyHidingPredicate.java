@@ -36,19 +36,17 @@ package info.magnolia.jcr.predicate;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 
 /**
  * Simple predicate implementation hiding all jcr properties.
- *
- * @version $Id$
  */
 public class JCRPropertyHidingPredicate extends AbstractPredicate<Property> {
 
     @Override
     public boolean evaluateTyped(Property property) {
         try {
-            return !property.getName().startsWith(MgnlNodeType.JCR_PREFIX);
+            return !property.getName().startsWith(NodeTypes.JCR_PREFIX);
         } catch (RepositoryException e) {
             // either invalid or not accessible to the current user
             return false;

@@ -34,13 +34,13 @@
 package info.magnolia.templating.elements;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.context.RenderingContext;
@@ -77,8 +77,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Renders an area and outputs a marker that instructs the page editor to place a bar at this location.
- *
- * @version $Id$
  */
 public class AreaElement extends AbstractContentTemplatingElement {
 
@@ -205,7 +203,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 @Override
                 public Void exec() throws RepositoryException {
                     Node parentNodeInSystemSession = NodeUtil.getNodeByIdentifier(workspaceName, parentId);
-                    Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, MgnlNodeType.NT_AREA);
+                    Node newAreaNode = NodeUtil.createPath(parentNodeInSystemSession, AreaElement.this.name, NodeTypes.Area.NAME);
                     newAreaNode.getSession().save();
                     return null;
                 }
@@ -244,7 +242,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 List<ContentMap> components = new ArrayList<ContentMap>();
 
                 if (areaNode != null) {
-                    for (Node node : NodeUtil.getNodes(areaNode, MgnlNodeType.NT_COMPONENT)) {
+                    for (Node node : NodeUtil.getNodes(areaNode, NodeTypes.Component.NAME)) {
                         components.add(new ContentMap(node));
                     }
                 }
@@ -411,7 +409,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private boolean hasComponents(Node parent) throws RenderException {
         try {
-            return NodeUtil.getNodes(parent, MgnlNodeType.NT_COMPONENT).iterator().hasNext();
+            return NodeUtil.getNodes(parent, NodeTypes.Component.NAME).iterator().hasNext();
         } catch (RepositoryException e) {
             throw new RenderException(e);
         }

@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
 
@@ -49,8 +49,7 @@ import org.junit.Test;
 
 
 /**
- * @version $Id$
- *
+ * Tests.
  */
 public class RuleTest extends RepositoryTestCase{
 
@@ -80,7 +79,7 @@ public class RuleTest extends RepositoryTestCase{
     public void testIsAllowedNode() throws RepositoryException {
         // GIVEN
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        Node node =  session.getRootNode().addNode( "page", MgnlNodeType.NT_AREA);
+        Node node =  session.getRootNode().addNode( "page", NodeTypes.Area.NAME);
         String allowedTypes = "mgnl:contentNode";
         Rule rule = new Rule(allowedTypes, ",");
 
@@ -95,7 +94,7 @@ public class RuleTest extends RepositoryTestCase{
     public void testIsNotAllowedNode() throws RepositoryException {
         // GIVEN
         Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
-        Node node =  session.getRootNode().addNode( "page", MgnlNodeType.NT_PAGE);
+        Node node =  session.getRootNode().addNode( "page", NodeTypes.Page.NAME);
         String allowedTypes = "mgnl:contentNode";
         Rule rule = new Rule(allowedTypes, ",");
 

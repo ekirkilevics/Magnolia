@@ -34,7 +34,6 @@
 package info.magnolia.rendering.engine;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.wrapper.ChannelVisibilityContentDecorator;
@@ -60,6 +59,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +67,6 @@ import org.slf4j.LoggerFactory;
  * Filter responsible for rendering the current aggregation state,
  * by delegating to the appropriate TemplateRenderer or by serving
  * binary content.
- *
- * @version $Id$
- *
  */
 public class RenderingFilter extends AbstractMgnlFilter {
 
@@ -250,14 +247,14 @@ public class RenderingFilter extends AbstractMgnlFilter {
         try {
             Node atom = session.getNode(path);
             if (atom != null) {
-                if (atom.hasProperty(MgnlNodeType.JCR_DATA)) {
+                if (atom.hasProperty(JcrConstants.JCR_DATA)) {
                     Property sizeProperty = atom.getProperty("size");
                     String sizeString = sizeProperty == null ? "" : sizeProperty.getString();
                     if (NumberUtils.isNumber(sizeString)) {
                         res.setContentLength(Integer.parseInt(sizeString));
                     }
                 }
-                Property streamProperty = atom.getProperty(MgnlNodeType.JCR_DATA);
+                Property streamProperty = atom.getProperty(JcrConstants.JCR_DATA);
                 return streamProperty.getStream();
             }
 

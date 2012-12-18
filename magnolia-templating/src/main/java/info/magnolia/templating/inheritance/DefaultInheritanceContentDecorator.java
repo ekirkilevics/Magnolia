@@ -33,10 +33,10 @@
  */
 package info.magnolia.templating.inheritance;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.inheritance.InheritanceContentDecorator;
 import info.magnolia.jcr.iterator.RangeIteratorImpl;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.template.InheritanceConfiguration;
 
 import java.util.ArrayList;
@@ -60,8 +60,6 @@ import org.apache.commons.lang.StringUtils;
  * <p/>
  * That is, for a destination node /page1/page2/main, the nearest anchor node is /page1/page2, therefor if there is a
  * node /page1/main then that is used as a source.
- *
- * @version $Id$
  */
 public class DefaultInheritanceContentDecorator extends InheritanceContentDecorator {
 
@@ -135,14 +133,14 @@ public class DefaultInheritanceContentDecorator extends InheritanceContentDecora
     }
 
     /**
-     * True if this node is an anchor. By default true if this node is of type {@link info.magnolia.cms.core.MgnlNodeType#NT_CONTENT}.
+     * True if this node is an anchor. By default true if this node is of type {@link info.magnolia.jcr.util.NodeTypes.Content#NAME}.
      *
      * @param node the node to evaluate
      * @return true if the node is an anchor
      * @throws javax.jcr.RepositoryException if a problem occurs accessing the node
      */
     protected boolean isAnchor(Node node) throws RepositoryException {
-        return node.isNodeType(MgnlNodeType.NT_CONTENT);
+        return node.isNodeType(NodeTypes.Content.NAME);
     }
 
     @Override

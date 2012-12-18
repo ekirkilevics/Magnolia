@@ -33,7 +33,7 @@
  */
 package info.magnolia.setup.for4_5;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractRepositoryTask;
@@ -50,8 +50,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Renames ACL nodes for all roles from the old format of acl_repositoryName_workspaceName to acl_workspaceName.
- *
- * @version $Id$
  */
 public class RenameACLNodesTask extends AbstractRepositoryTask {
     private final static Logger log = LoggerFactory.getLogger(RenameACLNodesTask.class);
@@ -65,9 +63,9 @@ public class RenameACLNodesTask extends AbstractRepositoryTask {
 
         Session session = installContext.getJCRSession(RepositoryConstants.USER_ROLES);
 
-        for (Node roleNode : NodeUtil.getNodes(session.getRootNode(), MgnlNodeType.ROLE)) {
+        for (Node roleNode : NodeUtil.getNodes(session.getRootNode(), NodeTypes.Role.NAME)) {
 
-            for (Node aclNode : NodeUtil.getNodes(roleNode, MgnlNodeType.NT_CONTENTNODE)) {
+            for (Node aclNode : NodeUtil.getNodes(roleNode, NodeTypes.ContentNode.NAME)) {
 
                 String nodeName = aclNode.getName();
                 if (nodeName.startsWith("acl_") && nodeName.substring(4).contains("_")) {

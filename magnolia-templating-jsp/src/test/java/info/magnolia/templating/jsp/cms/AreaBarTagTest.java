@@ -36,7 +36,8 @@ package info.magnolia.templating.jsp.cms;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import info.magnolia.cms.core.MgnlNodeType;
+
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.rendering.template.configured.ConfiguredAreaDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
 import info.magnolia.templating.jsp.AbstractTagTestCase;
@@ -50,8 +51,7 @@ import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 /**
- * @version $Id$
- *
+ * Tests.
  */
 public class AreaBarTagTest extends AbstractTagTestCase {
 
@@ -90,7 +90,7 @@ public class AreaBarTagTest extends AbstractTagTestCase {
         // GIVEN
         Node paragraph1 = getSession().getNode("/foo/bar/paragraphs/1");
         // make sure we have a areaNode...
-        paragraph1.addNode("stage", MgnlNodeType.NT_AREA);
+        paragraph1.addNode("stage", NodeTypes.Area.NAME);
 
         final WebRequest request = new GetMethodWebRequest(jspUrl);
         final WebResponse response = runner.getResponse(request);

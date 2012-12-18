@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.jcr.MockNode;
 import info.magnolia.test.mock.jcr.MockSession;
 import info.magnolia.test.mock.jcr.MockValue;
@@ -50,7 +50,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class OpsTest {
 
@@ -74,7 +74,7 @@ public class OpsTest {
     }
     @Test
     public void testAddNodeWithTwoStrings() throws RepositoryException {
-        final String itemTypeName = MgnlNodeType.NT_FOLDER;
+        final String itemTypeName = NodeTypes.Folder.NAME;
 
         final NodeOperation op = Ops.addNode(CHILD_NAME, itemTypeName);
         op.exec(rootNode, eh);

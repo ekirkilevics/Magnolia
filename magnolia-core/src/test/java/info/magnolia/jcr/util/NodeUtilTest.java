@@ -36,6 +36,7 @@ package info.magnolia.jcr.util;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
@@ -57,6 +58,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -99,7 +101,7 @@ public class NodeUtilTest {
     @Test
     public void testUnwrap() throws Exception {
         final Version version = mock(Version.class);
-        when(version.getNode(MgnlNodeType.JCR_FROZENNODE)).thenReturn(root);
+        when(version.getNode(JcrConstants.JCR_FROZENNODE)).thenReturn(root);
         final VersionedNode wrapper = new VersionedNode(version, root);
 
         assertEquals(root, NodeUtil.unwrap(wrapper));
@@ -221,9 +223,9 @@ public class NodeUtilTest {
 
     @Test
     public void testGetNodes() throws RepositoryException {
-        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
+        first.addNode("alpha", NodeTypes.Content.NAME);
         first.addNode("meta", MgnlNodeType.NT_METADATA);
-        first.addNode("gamma", MgnlNodeType.NT_CONTENT);
+        first.addNode("gamma", NodeTypes.Content.NAME);
 
         Iterable<Node> iterable = NodeUtil.getNodes(first);
         Iterator<Node> iterator = iterable.iterator();
@@ -234,11 +236,11 @@ public class NodeUtilTest {
 
     @Test
     public void testGetNodeWithContentType() throws RepositoryException {
-        root.addNode("alpha", MgnlNodeType.NT_CONTENT);
-        root.addNode("beta", MgnlNodeType.NT_FOLDER);
-        root.addNode("gamma", MgnlNodeType.NT_CONTENT);
+        root.addNode("alpha", NodeTypes.Content.NAME);
+        root.addNode("beta", NodeTypes.Folder.NAME);
+        root.addNode("gamma", NodeTypes.Content.NAME);
 
-        Iterable<Node> iterable = NodeUtil.getNodes(root, MgnlNodeType.NT_CONTENT);
+        Iterable<Node> iterable = NodeUtil.getNodes(root, NodeTypes.Content.NAME);
         Iterator<Node> iterator = iterable.iterator();
         assertEquals("alpha", iterator.next().getName());
         assertEquals("gamma", iterator.next().getName());
@@ -247,8 +249,8 @@ public class NodeUtilTest {
 
     @Test
     public void testGetNodesWithNodeFilter() throws RepositoryException {
-        first.addNode("alpha", MgnlNodeType.NT_CONTENT);
-        first.addNode("beta", MgnlNodeType.JCR_CONTENT);
+        first.addNode("alpha", NodeTypes.Content.NAME);
+        first.addNode("beta", JcrConstants.JCR_CONTENT);
 
         Iterable<Node> iterable = NodeUtil.getNodes(first, NodeUtil.MAGNOLIA_FILTER);
         Iterator<Node> iterator = iterable.iterator();
