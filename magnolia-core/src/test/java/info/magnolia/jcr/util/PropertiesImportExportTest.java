@@ -34,18 +34,25 @@
 package info.magnolia.jcr.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Properties;
 
 import javax.jcr.Node;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
+import org.apache.jackrabbit.util.ISO8601;
+import org.apache.jackrabbit.value.BinaryValue;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,5 +158,77 @@ public class PropertiesImportExportTest {
     public void testCreateNodesFailingBecauseOfDotInPath() throws Exception {
         String content = "/parent.sub.@uuid=1";
         pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
+    }
+
+    @Test
+    public void testDoesntExportRootNode() throws RepositoryException {
+
+        Properties p = pie.toProperties(new MockNode(), new AbstractPredicate<Node>() {
+
+            @Override
+            public boolean evaluateTyped(Node node) {
+                return true;
+            }
+        });
+
+        assertTrue(p.isEmpty());
+    }
+
+    @Test
+    public void testExportsNodeTypeAndIdentifier() throws RepositoryException {
+
+        MockNode node = new MockNode("nodename", NodeTypes.ContentNode.NAME);
+        node.setIdentifier("node-identifier");
+        Properties p = pie.toProperties(node, new AbstractPredicate<Node>() {
+
+            @Override
+            public boolean evaluateTyped(Node node) {
+                return true;
+            }
+        });
+
+        assertFalse(p.isEmpty());
+        assertContains(p, "/nodename.@type", node.getPrimaryNodeType().getName());
+        assertContains(p, "/nodename.@uuid", node.getIdentifier());
+    }
+
+    @Test
+    public void testExportsProperties() throws RepositoryException {
+
+        MockNode node = new MockNode("nodename");
+        node.setProperty("string-property", "string-value");
+        node.setProperty("int-property", 42);
+        node.setProperty("long-property", 12);
+        Calendar date = Calendar.getInstance();
+        node.setProperty("date-property", date);
+        node.setProperty("double-property", 1.2345d);
+        node.setProperty("boolean-property", true);
+        node.setProperty("path-property", "/some/path", PropertyType.PATH);
+        node.setProperty("binary-property", new BinaryValue("test string to be used as binary data its contents does not matter"));
+
+        Properties p = pie.toProperties(node, new AbstractPredicate<Node>() {
+
+            @Override
+            public boolean evaluateTyped(Node node) {
+                return true;
+            }
+        });
+
+        assertFalse(p.isEmpty());
+        assertContains(p, "/nodename.@type", node.getPrimaryNodeType().getName());
+        assertContains(p, "/nodename.@uuid", node.getIdentifier());
+        assertContains(p, "/nodename.string-property", "string-value");
+        assertContains(p, "/nodename.int-property", "42");
+        assertContains(p, "/nodename.long-property", "12");
+        assertContains(p, "/nodename.date-property", "date:" + ISO8601.format(date));
+        assertContains(p, "/nodename.double-property", "1.2345");
+        assertContains(p, "/nodename.boolean-property", "boolean:true");
+        assertContains(p, "/nodename.path-property", "/some/path");
+        assertContains(p, "/nodename.binary-property", "binary:test string to be used as binary data its contents does not matter");
+    }
+
+    private void assertContains(Properties p, String key, String value) {
+        assertTrue(p.containsKey(key));
+        assertEquals(value, p.get(key));
     }
 }

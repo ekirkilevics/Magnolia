@@ -33,22 +33,26 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.MgnlNodeType;
-import info.magnolia.cms.util.OrderedProperties;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Properties;
-
 import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.ISO8601;
+
+import info.magnolia.cms.util.OrderedProperties;
+import info.magnolia.jcr.predicate.AbstractPredicate;
 
 /**
  * Utility class providing support for properties-like format to import/export jcr data. Useful when data regularly
@@ -58,8 +62,6 @@ import org.apache.jackrabbit.util.ISO8601;
  *
  * TODO : handle conflicts (already existing nodes, properties, what to do with existing properties if we don't create
  * new nodes, ...)
- *
- * TODO dlipp - export is not yet implemented (MAGNOLIA-4564)
  */
 public class PropertiesImportExport {
 
@@ -94,7 +96,7 @@ public class PropertiesImportExport {
                 type = properties.getProperty(path + ".@type");
             }
 
-            type = StringUtils.defaultIfEmpty(type, MgnlNodeType.NT_CONTENTNODE);
+            type = StringUtils.defaultIfEmpty(type, NodeTypes.ContentNode.NAME);
             Node c = NodeUtil.createPath(root, path, type);
             populateNode(c, propertyName, valueStr);
         }
@@ -117,7 +119,7 @@ public class PropertiesImportExport {
                 throw new IllegalArgumentException("Key must not contain more than one '.': " + orgKey);
             }
             if (orgKey.contains("@") && !orgKey.contains(".@")) {
-                throw new IllegalArgumentException("Key containing '@' must be preceeded by a '.': " + orgKey);
+                throw new IllegalArgumentException("Key containing '@' must be preceded by a '.': " + orgKey);
             }
             // if this is a node definition (no property)
             String newKey = orgKey;
@@ -132,7 +134,7 @@ public class PropertiesImportExport {
                 if (StringUtils.isEmpty(properties.getProperty(orgKey))) {
                     // make this the type property if not defined otherwise
                     if (!properties.containsKey(orgKey + ".@type")) {
-                        cleaned.put(path + ".@type", MgnlNodeType.NT_CONTENTNODE);
+                        cleaned.put(path + ".@type", NodeTypes.ContentNode.NAME);
                     }
                     continue;
                 }
@@ -197,5 +199,100 @@ public class PropertiesImportExport {
 
     private static boolean contains(String s, char ch) {
         return s.indexOf(ch) > -1;
+    }
+
+    public Properties toProperties(Node node, final AbstractPredicate<Node> nodePredicate) throws RepositoryException {
+        final Properties out = new OrderedProperties();
+        NodeUtil.visit(
+                node,
+                new NodeVisitor() {
+                    @Override
+                    public void visit(Node node) throws RepositoryException {
+                        appendNodeTypeAndIdentifier(node, out);
+                        appendNodeProperties(node, out);
+                    }
+                }, nodePredicate
+        );
+        return out;
+    }
+
+    private void appendNodeTypeAndIdentifier(Node node, Properties out) throws RepositoryException {
+
+        // we don't need to export the JCR root node.
+        if (node.getDepth() == 0) {
+            return;
+        }
+
+        String path = getExportPath(node);
+
+        String nodeTypeName = node.getPrimaryNodeType().getName();
+        if (nodeTypeName != null && StringUtils.isNotEmpty(nodeTypeName)) {
+            out.put(path + ".@type", nodeTypeName);
+        }
+
+        String nodeIdentifier = node.getIdentifier();
+        if (nodeIdentifier != null && StringUtils.isNotEmpty(nodeIdentifier)) {
+            out.put(path + ".@uuid", nodeIdentifier);
+        }
+    }
+
+    private void appendNodeProperties(Node node, Properties out) throws RepositoryException {
+        PropertyIterator propertyIterator = node.getProperties();
+        while (propertyIterator.hasNext()) {
+            Property property = propertyIterator.nextProperty();
+            String path = getExportPath(node) + "." + property.getName();
+
+            String propertyValue = getPropertyString(property);
+
+            if (propertyValue != null) {
+                out.setProperty(path, propertyValue);
+            }
+        }
+    }
+
+    private String getExportPath(Node node) throws RepositoryException {
+        return node.getPath();
+    }
+
+    private String getPropertyString(Property property) throws RepositoryException {
+
+        switch (property.getType()) {
+            case (PropertyType.STRING): {
+                return property.getString();
+            }
+            case (PropertyType.BOOLEAN): {
+                return convertBooleanToExportString(property.getBoolean());
+            }
+            case (PropertyType.BINARY): {
+                return convertBinaryToExportString(property.getValue());
+            }
+            case (PropertyType.PATH): {
+                return property.getString();
+            }
+            case (PropertyType.DATE): {
+                return convertCalendarToExportString(property.getDate());
+            }
+            case (PropertyType.LONG): {
+                return "" + property.getLong();
+            }
+            case (PropertyType.DOUBLE): {
+                return "" + property.getDouble();
+            }
+            default: {
+                return property.getString();
+            }
+        }
+    }
+
+    private String convertBooleanToExportString(boolean b) {
+        return "boolean:" + (b ? "true" : "false");
+    }
+
+    private String convertBinaryToExportString(Value value) throws RepositoryException {
+        return "binary:" + ConvertUtils.convert(value.getString());
+    }
+
+    private String convertCalendarToExportString(Calendar calendar) {
+        return "date:" + ISO8601.format(calendar);
     }
 }
