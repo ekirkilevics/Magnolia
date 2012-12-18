@@ -49,7 +49,9 @@ import javax.jcr.Session;
 import javax.jcr.Workspace;
 
 /**
- * @version $Id$
+ * Mock implementation of a HierarchyManager.
+ *
+ * @deprecated since 4.5.8. Use {@link MockSession} instead.
  */
 public class MockHierarchyManager extends DefaultHierarchyManager {
 
