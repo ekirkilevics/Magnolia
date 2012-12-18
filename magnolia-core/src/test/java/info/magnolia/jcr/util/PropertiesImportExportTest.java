@@ -51,7 +51,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests.
+ * Tests for {@link PropertiesImportExport}.
  */
 public class PropertiesImportExportTest {
 
@@ -60,8 +60,9 @@ public class PropertiesImportExportTest {
     @Before
     public void setUp() {
         pie = new PropertiesImportExport() {
+
             /**
-             * Override to allow setting required setting of identifier
+             * Override to allow setting required setting of identifier.
              */
             @Override
             protected void setIdentifier(Node c, String valueStr) {
@@ -75,6 +76,7 @@ public class PropertiesImportExportTest {
         ComponentsTestUtil.clear();
         MgnlContext.setInstance(null);
     }
+
     @Test
     public void testConvertsToWrapperType() {
         assertEquals(Boolean.TRUE, pie.convertPropertyStringToObject("boolean:true"));
@@ -102,56 +104,52 @@ public class PropertiesImportExportTest {
     public void testCanUseIntShortcutForConvertingIntegers() {
         assertEquals(Integer.valueOf(37), pie.convertPropertyStringToObject("int:37"));
     }
+
     @Test
     public void testCreateNodes() throws Exception {
         final MockNode root = new MockNode();
 
         String content =
-            "/parent1/sub1.prop1=one\n" +
-            "/parent2/sub2\n" +
-            "/parent2/sub2.prop1=two";
+                "/parent1/sub1.prop1=one\n" +
+                        "/parent2/sub2\n" +
+                        "/parent2/sub2.prop1=two";
 
         pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
         assertEquals("one", root.getNode("/parent1/sub1").getProperty("prop1").getString());
         assertTrue(root.hasNode("/parent2/sub2"));
         assertEquals("two", root.getNode("/parent2/sub2").getProperty("prop1").getString());
 
-        content =
-            "/parent1/sub1.@uuid=1\n" +
-            "/parent2/sub2.@uuid=2";
+        content = "/parent1/sub1.@uuid=1\n" +
+                "/parent2/sub2.@uuid=2";
 
         pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
         assertEquals("1", root.getNode("/parent1/sub1").getIdentifier());
         assertEquals("2", root.getNode("/parent2/sub2").getIdentifier());
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateNodesFailingBecauseOfEqualsSignWithoutADot() throws Exception {
         final MockNode root = new MockNode();
-        String content =
-            "/parent/sub/prop=2";
+        String content = "/parent/sub/prop=2";
         pie.createNodes(root, new ByteArrayInputStream(content.getBytes()));
     }
 
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateNodesFailingBecauseOfMissingTrailingSlash() throws Exception {
-        String content =
-            "parent/sub@uuid=1";
+        String content = "parent/sub@uuid=1";
         pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testCreateNodesFailingBecauseOfDotAndMonkeyTail() throws Exception {
-        String content =
-            "/parent/sub@uuid=1";
+        String content = "/parent/sub@uuid=1";
         pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testCreateNodesFailingBecauseOfDotInPath() throws Exception {
-        String content =
-            "/parent.sub.@uuid=1";
+        String content = "/parent.sub.@uuid=1";
         pie.createNodes(null, new ByteArrayInputStream(content.getBytes()));
     }
 }
