@@ -66,10 +66,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Util to create mock objects. Use createHierarchyManager() to build mock content based on a property file. Property
- * values can have prefixes like boolean: int: for creating typed nodedatas.
- *
- * @version $Id$
+ * Util to create mock objects - especially MockContexts.
+ * The MockHierarchyManagers should no longer be used but be replaced by {@link MockSession}s created by {@link info.magnolia.test.mock.jcr.SessionTestUtil}
  */
 public class MockUtil {
 
