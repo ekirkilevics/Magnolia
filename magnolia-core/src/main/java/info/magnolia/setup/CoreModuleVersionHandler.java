@@ -66,6 +66,7 @@ import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.setup.for4_5.RenameACLNodesTask;
 import info.magnolia.setup.for4_5.UpdateSecurityFilterClientCallbacksConfiguration;
 import info.magnolia.setup.for4_5.UpdateUserManagers;
+import info.magnolia.setup.for5_0.ConvertMetaDataUpdateTask;
 import info.magnolia.setup.initial.GenericTasks;
 
 import java.util.ArrayList;
@@ -93,6 +94,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     public CoreModuleVersionHandler() {
         super();
+
+        register(DeltaBuilder.update("5.0", "")
+                .addTask(new ConvertMetaDataUpdateTask("", "")));
 
         register(DeltaBuilder.checkPrecondition("4.4.6", "4.5"));
 
