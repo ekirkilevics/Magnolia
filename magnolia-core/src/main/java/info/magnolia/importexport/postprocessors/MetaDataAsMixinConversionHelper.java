@@ -35,7 +35,9 @@ package info.magnolia.importexport.postprocessors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Property;
@@ -66,6 +68,11 @@ public class MetaDataAsMixinConversionHelper {
 
     private final HashMap<String, String> propertyNameMapping = new HashMap<String, String>();
 
+    /**
+     * Names of properties that we expect to see in MetaData after conversion.
+     */
+    private final Set<String> propertyNamesExpectedInMetaDataAfterConversion = new HashSet<String>();
+
     private boolean deleteMetaDataIfEmptied = false;
     private boolean periodicSaves = false;
 
@@ -78,6 +85,14 @@ public class MetaDataAsMixinConversionHelper {
         propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.LAST_MODIFIED, NodeTypes.LastModified.LAST_MODIFIED);
         propertyNameMapping.put(NodeTypes.MGNL_PREFIX + MetaData.AUTHOR_ID, NodeTypes.LastModified.LAST_MODIFIED_BY);
         propertyNameMapping.put("mgnl:comment", NodeTypes.Versionable.COMMENT);
+
+        // We're not transferring mgnl:title and mgnl:templatetype so we'll expect those to still be present
+        propertyNamesExpectedInMetaDataAfterConversion.add(NodeTypes.MGNL_PREFIX + MetaData.TITLE);
+        propertyNamesExpectedInMetaDataAfterConversion.add(NodeTypes.MGNL_PREFIX + MetaData.TEMPLATE_TYPE);
+
+        // Since we don't transfer a property if it already exists on the content node we need to expect all of those
+        // we transfer to still be present afterwards
+        propertyNamesExpectedInMetaDataAfterConversion.addAll(propertyNameMapping.keySet());
     }
 
     public boolean isDeleteMetaDataIfEmptied() {
@@ -141,10 +156,10 @@ public class MetaDataAsMixinConversionHelper {
             Node metaDataNode = node.getNode(MetaData.DEFAULT_META_NODE);
             if (NodeUtil.isNodeType(metaDataNode, MgnlNodeType.NT_METADATA)) {
                 moveProperties(node, metaDataNode, propertyNameMapping);
-            }
 
-            if (deleteMetaDataIfEmptied && isEmptyMetaDataNode(metaDataNode)) {
-                metaDataNode.remove();
+                if (deleteMetaDataIfEmptied && isEmptyMetaDataNode(metaDataNode)) {
+                    metaDataNode.remove();
+                }
             }
         }
     }
@@ -179,17 +194,12 @@ public class MetaDataAsMixinConversionHelper {
             return true;
         }
 
-        // We're not transferring mgnl:title and mgnl:templatetype so we'll expect those to still be present
-        if (propertyName.equals(NodeTypes.MGNL_PREFIX + MetaData.TITLE) || propertyName.equals(NodeTypes.MGNL_PREFIX + MetaData.TEMPLATE_TYPE)) {
-            return true;
-        }
-
         // Legacy property deprecated in Magnolia 3.0
         if (propertyName.equals(NodeTypes.MGNL_PREFIX + "Data") && property.getString().equals("MetaData")) {
             return true;
         }
 
-        return false;
+        return propertyNamesExpectedInMetaDataAfterConversion.contains(propertyName);
     }
 
     /**
