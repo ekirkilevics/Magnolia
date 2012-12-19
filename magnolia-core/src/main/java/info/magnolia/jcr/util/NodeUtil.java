@@ -76,7 +76,7 @@ public class NodeUtil {
 
     /**
      * Predicate hiding properties prefixed with jcr or mgnl.
-     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr. In addition you could use {@link info.magnolia.jcr.wrapper.JCRMgnlPropertyHidingPredicate}
+     * @deprecated since 5.0 - obsolete as there's no nodetypes with namespace jcr. In addition you could use {@link info.magnolia.jcr.predicate.JCRMgnlPropertyHidingPredicate}
      */
     public static AbstractPredicate<Property> ALL_PROPERTIES_EXCEPT_JCR_AND_MGNL_FILTER = new AbstractPredicate<Property>() {
 
