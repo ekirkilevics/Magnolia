@@ -399,7 +399,7 @@ public class NodeTypes {
         return Calendar.getInstance();
     }
 
-    static void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
+    public static void checkNodeType(Node node, String nodeType, String... propertyNames) throws RepositoryException {
         if (!node.isNodeType(nodeType)) {
             log.warn("Trying to set property/ies '" + StringUtils.join(propertyNames, ", ") + "' although the node '" + node.getPath() + "' with PrimaryType '" + node.getPrimaryNodeType().getName() + "' is not of type '" + nodeType + "'!");
         }
