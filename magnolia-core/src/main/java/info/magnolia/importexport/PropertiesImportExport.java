@@ -179,8 +179,6 @@ public class PropertiesImportExport {
     }
 
     /**
-     * @deprecated since 4.3
-     *
      * This method is deprecated, it returns results in a format that does not match
      * the format that the import method uses (doesn't include @uuid or @type properties)
      *
@@ -188,25 +186,37 @@ public class PropertiesImportExport {
      * as a result of these changes (i.e. unit tests that are expecting a specific number of
      * properties returned, etc)
      *
-     * For new applications use the contentToProperties methods instead.
+     * @deprecated since 4.3 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
      */
     @Deprecated
     public static Properties toProperties(HierarchyManager hm) throws Exception {
         return toProperties(hm.getRoot());
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
+     */
     public static Properties toProperties(Content rootContent) throws Exception {
         return toProperties(rootContent, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, true);
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
+     */
     public static Properties contentToProperties(HierarchyManager hm) throws Exception {
         return contentToProperties(hm.getRoot());
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
+     */
     public static Properties contentToProperties(Content rootContent) throws Exception {
         return toProperties(rootContent, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER, false);
     }
 
+    /**
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
+     */
     public static Properties contentToProperties(Content rootContent, Content.ContentFilter filter) throws Exception {
         return toProperties(rootContent, filter, false);
     }
@@ -221,6 +231,7 @@ public class PropertiesImportExport {
      * @param legacyMode if true, will not include @uuid and @type nodes
      * @return a Properties object representing the content starting at rootContent
      * @throws Exception
+     * @deprecated since 5.0 - use {@link info.magnolia.jcr.util.PropertiesImportExport#toProperties(javax.jcr.Node, info.magnolia.jcr.predicate.AbstractPredicate)}
      */
     private static Properties toProperties(Content rootContent, Content.ContentFilter contentFilter, final boolean legacyMode) throws Exception {
         final Properties out = new OrderedProperties();
