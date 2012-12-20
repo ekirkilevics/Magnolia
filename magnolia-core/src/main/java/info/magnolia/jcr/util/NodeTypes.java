@@ -391,6 +391,15 @@ public class NodeTypes {
         public static final String NAME = MGNL_PREFIX + "reserve";
     }
 
+    /**
+     * Represents the nodeType mgnl:metaData.
+     * Is basically obsolete since MetaData as mixin but could still be used in customers code,
+     * hence it has to stay for quite a while.
+     */
+    public static class MetaData {
+        public static final String NAME = MGNL_PREFIX + "metaData";
+    }
+
     protected static String getCurrentUserName() {
         return MgnlContext.getUser().getName();
     }
