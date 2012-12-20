@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.template.registry;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
@@ -56,8 +56,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * ObservedManager for {@link info.magnolia.rendering.template.TemplateDefinition} configured in repository.
- *
- * @version $Id$
  */
 @Singleton
 public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObservingManager {
@@ -84,14 +82,14 @@ public class ConfiguredTemplateDefinitionManager extends ModuleConfigurationObse
 
                 @Override
                 public void visit(Node nodeToVisit) throws RepositoryException {
-                    for (Node configNode : NodeUtil.getNodes(nodeToVisit, MgnlNodeType.NT_CONTENTNODE)) {
+                    for (Node configNode : NodeUtil.getNodes(nodeToVisit, NodeTypes.ContentNode.NAME)) {
                         TemplateDefinitionProvider provider = readProvider(configNode);
                         if (provider != null) {
                             providers.add(provider);
                         }
                     }
                 }
-            }, new NodeTypePredicate(MgnlNodeType.NT_CONTENT, false));
+            }, new NodeTypePredicate(NodeTypes.Content.NAME, false));
         }
 
         this.registeredIds = templateDefinitionRegistry.unregisterAndRegister(registeredIds, providers);

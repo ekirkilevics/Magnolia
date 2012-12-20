@@ -35,7 +35,6 @@ package info.magnolia.templating.jsp.taglib;
 
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.NodeTypes;
@@ -161,7 +160,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
             imageContentNode = parentContentNode.getNode(this.imageContentNodeName);
         }
         else {
-            imageContentNode = parentContentNode.addNode(this.imageContentNodeName, MgnlNodeType.NT_CONTENTNODE);
+            imageContentNode = parentContentNode.addNode(this.imageContentNodeName, NodeTypes.ContentNode.NAME);
             session.save();
         }
         return imageContentNode;

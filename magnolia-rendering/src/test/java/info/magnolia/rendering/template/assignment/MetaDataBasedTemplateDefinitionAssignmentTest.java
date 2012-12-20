@@ -37,7 +37,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MgnlNodeType;
+
 import info.magnolia.cms.i18n.DefaultMessagesManager;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
@@ -151,7 +151,7 @@ public class MetaDataBasedTemplateDefinitionAssignmentTest {
         registry.register(new SimpleTemplateDefinitionProvider("some:other/template/that/wont/be/returned", mock(TemplateDefinition.class)));
 
         MockNode mockNode = new MockNode();
-        mockNode.addMixin(MgnlNodeType.MIX_DELETED);
+        mockNode.addMixin(NodeTypes.Deleted.NAME);
 
         // WHEN
         Collection<TemplateDefinition> availableTemplates = assignment.getAvailableTemplates(mockNode);

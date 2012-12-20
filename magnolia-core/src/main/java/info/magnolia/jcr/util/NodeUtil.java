@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.util;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
@@ -125,7 +124,7 @@ public class NodeUtil {
         public boolean evaluateTyped(Node node) {
             try {
                 return !node.getName().startsWith(NodeTypes.JCR_PREFIX)
-                && !NodeUtil.isNodeType(node, MgnlNodeType.NT_METADATA);
+                && !NodeUtil.isNodeType(node, NodeTypes.MetaData.NAME);
             } catch (RepositoryException e) {
                 log.error("Unable to read name or nodeType for node {}", getNodePathIfPossible(node));
                 return false;

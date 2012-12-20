@@ -35,7 +35,6 @@ package info.magnolia.templating.functions;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
@@ -201,10 +200,10 @@ public class TemplatingFunctions {
         if (content == null) {
             return null;
         }
-        if (content.isNodeType(MgnlNodeType.NT_PAGE)) {
+        if (content.isNodeType(NodeTypes.Page.NAME)) {
             return content;
         }
-        return parent(content, MgnlNodeType.NT_PAGE);
+        return parent(content, NodeTypes.Page.NAME);
     }
 
     public List<ContentMap> ancestors(ContentMap contentMap) throws RepositoryException {

@@ -33,7 +33,6 @@
  */
 package info.magnolia.jcr.node2bean.impl;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
@@ -220,7 +219,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                 try {
                     return !(t.getName().startsWith(NodeTypes.JCR_PREFIX) ||
                             t.getName().startsWith(NodeTypes.MGNL_PREFIX) ||
-                            t.isNodeType(MgnlNodeType.NT_METADATA));
+                            t.isNodeType(NodeTypes.MetaData.NAME));
                 } catch (RepositoryException e) {
                     return false;
                 }

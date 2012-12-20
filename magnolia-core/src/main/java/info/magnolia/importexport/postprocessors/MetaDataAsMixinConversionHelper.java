@@ -48,7 +48,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 
@@ -137,7 +136,7 @@ public class MetaDataAsMixinConversionHelper {
             NodeIterator children = node.getNodes();
             while (children.hasNext()) {
                 Node child = children.nextNode();
-                if (!(child.getName().equals(MetaData.DEFAULT_META_NODE) && NodeUtil.isNodeType(child, MgnlNodeType.NT_METADATA))) {
+                if (!(child.getName().equals(MetaData.DEFAULT_META_NODE) && NodeUtil.isNodeType(child, NodeTypes.MetaData.NAME))) {
                     nodes.add(child);
                 }
             }
@@ -154,7 +153,7 @@ public class MetaDataAsMixinConversionHelper {
         // Transfer properties from the MetaData node
         if (node.hasNode(MetaData.DEFAULT_META_NODE)) {
             Node metaDataNode = node.getNode(MetaData.DEFAULT_META_NODE);
-            if (NodeUtil.isNodeType(metaDataNode, MgnlNodeType.NT_METADATA)) {
+            if (NodeUtil.isNodeType(metaDataNode, NodeTypes.MetaData.NAME)) {
                 moveProperties(node, metaDataNode, propertyNameMapping);
 
                 if (deleteMetaDataIfEmptied && isEmptyMetaDataNode(metaDataNode)) {

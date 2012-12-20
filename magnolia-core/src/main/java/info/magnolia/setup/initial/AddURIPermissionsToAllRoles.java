@@ -34,7 +34,6 @@
 package info.magnolia.setup.initial;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
@@ -64,7 +63,7 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
                 try {
                     final String itemType = content.getItemType().getSystemName();
                     // TODO reconsider after 3.5 final: is ItemType.ROLE enough here?
-                    return itemType.startsWith("mgnl:") && !itemType.equals(MgnlNodeType.NT_METADATA);
+                    return itemType.startsWith("mgnl:") && !itemType.equals(NodeTypes.MetaData.NAME);
                 }
                 catch (RepositoryException e) {
                     log.error("Unable to read itemtype for node {}", content.getHandle());

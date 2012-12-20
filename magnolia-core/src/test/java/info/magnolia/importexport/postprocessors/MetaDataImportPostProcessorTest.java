@@ -38,7 +38,6 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.util.NodeTypes;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -58,7 +57,7 @@ public class MetaDataImportPostProcessorTest extends RepositoryTestCase {
         // GIVEN
         Session session = MgnlContext.getJCRSession("config");
         Node node = session.getRootNode().addNode("test");
-        Node md = node.addNode("MetaData", MgnlNodeType.NT_METADATA);
+        Node md = node.addNode("MetaData", NodeTypes.MetaData.NAME);
         Calendar calendar = Calendar.getInstance();
         md.setProperty("mgnl:creationdate", calendar);
         md.setProperty("mgnl:lastaction", calendar);

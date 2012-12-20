@@ -78,7 +78,7 @@ public final class ItemType implements Serializable {
     /**
      * Node type: metadata.
      */
-    public static final String NT_METADATA = MgnlNodeType.NT_METADATA;
+    public static final String NT_METADATA = NodeTypes.MetaData.NAME;
 
     /**
      * "wfe:workItem".

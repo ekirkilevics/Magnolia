@@ -33,7 +33,7 @@
  */
 package info.magnolia.templating.jsp.taglib;
 
-import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 
 import java.io.IOException;
@@ -171,12 +171,12 @@ public class SearchResultSnippetTag extends TagSupport {
         String[] searchTerms = StringUtils.split(this.query);
 
         try{
-        Iterator<Node> iterator = NodeUtil.getNodes(this.page, MgnlNodeType.NT_CONTENTNODE).iterator();
+        Iterator<Node> iterator = NodeUtil.getNodes(this.page, NodeTypes.ContentNode.NAME).iterator();
 
         outer : while (iterator.hasNext()) {
             Node paragraphCollection = iterator.next();
 
-            Iterator<Node> parIterator = NodeUtil.getNodes(paragraphCollection, MgnlNodeType.NT_CONTENTNODE).iterator();
+            Iterator<Node> parIterator = NodeUtil.getNodes(paragraphCollection, NodeTypes.ContentNode.NAME).iterator();
             while (parIterator.hasNext()) {
                 Node paragraph = parIterator.next();
 

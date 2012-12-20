@@ -35,7 +35,8 @@ package info.magnolia.rendering.template.registry;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import info.magnolia.cms.core.MgnlNodeType;
+
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.registry.RegistrationException;
@@ -74,7 +75,7 @@ public class ConfiguredTemplateDefinitionManagerTest extends MgnlTestCase {
 
         session = SessionTestUtil.createSession(RepositoryConstants.CONFIG,
                 "/modules/fooModule/templates/a.title=fooTitle",
-                "/modules/barModule/templates/articles.@type=" + MgnlNodeType.NT_CONTENT,
+                "/modules/barModule/templates/articles.@type=" + NodeTypes.Content.NAME,
                 "/modules/barModule/templates/articles/b.title=barTitle",
                 "/modules/zedModule\n"
         );

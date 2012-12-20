@@ -33,9 +33,9 @@
  */
 package info.magnolia.rendering.template.configured;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.RuntimeRepositoryException;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.rendering.template.InheritanceConfiguration;
@@ -139,7 +139,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return NodeUtil.isNodeType(node, MgnlNodeType.NT_COMPONENT) && (node.hasProperty(INHERITED_PROPERTY_NAME) && Boolean.parseBoolean(node.getProperty(INHERITED_PROPERTY_NAME).getString()));
+                return NodeUtil.isNodeType(node, NodeTypes.Component.NAME) && (node.hasProperty(INHERITED_PROPERTY_NAME) && Boolean.parseBoolean(node.getProperty(INHERITED_PROPERTY_NAME).getString()));
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -154,7 +154,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return NodeUtil.isNodeType(node, MgnlNodeType.NT_COMPONENT);
+                return NodeUtil.isNodeType(node, NodeTypes.Component.NAME);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }

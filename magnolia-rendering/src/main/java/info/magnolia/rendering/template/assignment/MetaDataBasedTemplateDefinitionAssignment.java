@@ -43,15 +43,14 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.jcr.util.NodeTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.PermissionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.registry.RegistrationException;
 import info.magnolia.rendering.template.TemplateAvailability;
@@ -128,7 +127,7 @@ public class MetaDataBasedTemplateDefinitionAssignment implements TemplateDefini
     public Collection<TemplateDefinition> getAvailableTemplates(Node content) {
 
         try {
-            if (content != null && NodeUtil.hasMixin(content, MgnlNodeType.MIX_DELETED)) {
+            if (content != null && NodeUtil.hasMixin(content, NodeTypes.Deleted.NAME)) {
                 return Collections.singleton(templateDefinitionRegistry.getTemplateDefinition(DELETED_PAGE_TEMPLATE));
             }
         } catch (RepositoryException e) {

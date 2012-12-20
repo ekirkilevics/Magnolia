@@ -37,7 +37,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
@@ -224,7 +223,7 @@ public class NodeUtilTest {
     @Test
     public void testGetNodes() throws RepositoryException {
         first.addNode("alpha", NodeTypes.Content.NAME);
-        first.addNode("meta", MgnlNodeType.NT_METADATA);
+        first.addNode("meta", NodeTypes.MetaData.NAME);
         first.addNode("gamma", NodeTypes.Content.NAME);
 
         Iterable<Node> iterable = NodeUtil.getNodes(first);

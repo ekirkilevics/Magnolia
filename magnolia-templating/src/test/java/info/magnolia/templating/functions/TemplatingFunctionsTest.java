@@ -38,15 +38,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.inheritance.InheritanceNodeWrapper;
 import info.magnolia.jcr.util.ContentMap;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.rendering.template.configured.ConfiguredInheritance;
@@ -118,11 +119,11 @@ public class TemplatingFunctionsTest {
         MockSession session = new MockSession("website");
         root = (MockNode) session.getRootNode();
 
-        topPage = createChildNodes(root, DEPTH_1_PAGE_NAMES, MgnlNodeType.NT_PAGE);
-        topPageComponent = createChildNodes(topPage, DEPTH_2_COMPONENT_NAMES, MgnlNodeType.NT_COMPONENT);
-        childPage = createChildNodes(topPage, DEPTH_2_PAGE_NAMES, MgnlNodeType.NT_PAGE);
-        childPageComponent = createChildNodes(childPage, DEPTH_3_COMPONENT_NAMES, MgnlNodeType.NT_COMPONENT);
-        childPageSubPage = createChildNodes(childPage, DEPTH_3_PAGE_NAMES, MgnlNodeType.NT_PAGE);
+        topPage = createChildNodes(root, DEPTH_1_PAGE_NAMES, NodeTypes.Page.NAME);
+        topPageComponent = createChildNodes(topPage, DEPTH_2_COMPONENT_NAMES, NodeTypes.Component.NAME);
+        childPage = createChildNodes(topPage, DEPTH_2_PAGE_NAMES, NodeTypes.Page.NAME);
+        childPageComponent = createChildNodes(childPage, DEPTH_3_COMPONENT_NAMES, NodeTypes.Component.NAME);
+        childPageSubPage = createChildNodes(childPage, DEPTH_3_PAGE_NAMES, NodeTypes.Page.NAME);
 
         rootContentMap = new ContentMap(root);
         topPageContentMap = new ContentMap(topPage);
@@ -194,7 +195,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        List<Node> resultChildPages = functions.children(topPage, MgnlNodeType.NT_PAGE);
+        List<Node> resultChildPages = functions.children(topPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNodesListEqualStringDefinitions(DEPTH_2_PAGE_NAMES, resultChildPages);
@@ -205,7 +206,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        List<Node> resultChildComponents = functions.children(topPage, MgnlNodeType.NT_COMPONENT);
+        List<Node> resultChildComponents = functions.children(topPage, NodeTypes.Component.NAME);
 
         // THEN
         assertNodesListEqualStringDefinitions(DEPTH_2_COMPONENT_NAMES, resultChildComponents);
@@ -228,7 +229,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        List<ContentMap> resultChildPages = functions.children(topPageContentMap, MgnlNodeType.NT_PAGE);
+        List<ContentMap> resultChildPages = functions.children(topPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertContentMapListEqualStringDefinitions(DEPTH_2_PAGE_NAMES, resultChildPages);
@@ -239,7 +240,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        List<ContentMap> resultChildComponents = functions.children(topPageContentMap, MgnlNodeType.NT_COMPONENT);
+        List<ContentMap> resultChildComponents = functions.children(topPageContentMap, NodeTypes.Component.NAME);
 
         // THEN
         assertContentMapListEqualStringDefinitions(DEPTH_2_COMPONENT_NAMES, resultChildComponents);
@@ -305,7 +306,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        Node resultNode = functions.root(topPage, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.root(topPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNull(resultNode);
@@ -316,7 +317,7 @@ public class TemplatingFunctionsTest {
         // GIVEN
 
         // WHEN
-        Node resultNode = functions.root(childPage, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.root(childPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(topPage, resultNode);
@@ -326,7 +327,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromPageNodeDepth3() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.root(childPageSubPage, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.root(childPageSubPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(topPage, resultNode);
@@ -336,7 +337,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromComponentNodeDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.root(topPageComponent, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.root(topPageComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(topPage, resultNode);
@@ -346,7 +347,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.root(childPageComponent, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.root(childPageComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(topPage, resultNode);
@@ -406,7 +407,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromPageContentMapDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.root(topPageContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.root(topPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertNull(resultContentMap);
@@ -416,7 +417,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromPageContentMapDepth2() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.root(childPageContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.root(childPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -426,7 +427,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromPageContentMapDepth3() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.root(childPageSubPageContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.root(childPageSubPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -436,7 +437,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromComponentContentMapDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.root(topPageComponentContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.root(topPageComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -446,7 +447,7 @@ public class TemplatingFunctionsTest {
     public void testRootPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.root(childPageComponentContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.root(childPageComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -516,7 +517,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromPageNode() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.parent(childPage, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.parent(childPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(topPage, resultNode);
@@ -526,7 +527,7 @@ public class TemplatingFunctionsTest {
     public void testParentComponentFromPageNode() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.parent(childPage, MgnlNodeType.NT_COMPONENT);
+        Node resultNode = functions.parent(childPage, NodeTypes.Component.NAME);
 
         // THEN
         assertNull(resultNode);
@@ -536,7 +537,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromNodeDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.parent(topPage, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.parent(topPage, NodeTypes.Page.NAME);
 
         // THEN
         assertNull(resultNode);
@@ -546,7 +547,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromComponentNodeDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.parent(topPageComponent, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.parent(topPageComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(topPage, resultNode);
@@ -556,7 +557,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromComponentNodeDepth2() throws RepositoryException {
         // GIVEN
         // WHEN
-        Node resultNode = functions.parent(childPageComponent, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.parent(childPageComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(childPage, resultNode);
@@ -565,10 +566,10 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentNodeDepth3() throws RepositoryException {
         // GIVEN
-        Node childPageSubSubComponent = childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT);
+        Node childPageSubSubComponent = childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME);
 
         // WHEN
-        Node resultNode = functions.parent(childPageSubSubComponent, MgnlNodeType.NT_PAGE);
+        Node resultNode = functions.parent(childPageSubSubComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertNodeEqualsNode(childPage, resultNode);
@@ -578,7 +579,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromPageContentMap() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.parent(childPageContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.parent(childPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -588,7 +589,7 @@ public class TemplatingFunctionsTest {
     public void testParentComponentFromPageContentMap() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultNode = functions.parent(childPageContentMap, MgnlNodeType.NT_COMPONENT);
+        ContentMap resultNode = functions.parent(childPageContentMap, NodeTypes.Component.NAME);
 
         // THEN
         assertNull(resultNode);
@@ -598,7 +599,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromContentMapDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultNode = functions.parent(topPageContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultNode = functions.parent(topPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertNull(resultNode);
@@ -608,7 +609,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromComponentContentMapDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.parent(topPageComponentContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.parent(topPageComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(topPageContentMap, resultContentMap);
@@ -618,7 +619,7 @@ public class TemplatingFunctionsTest {
     public void testParentPageFromComponentContentMapDepth2() throws RepositoryException {
         // GIVEN
         // WHEN
-        ContentMap resultContentMap = functions.parent(childPageComponentContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.parent(childPageComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(childPageContentMap, resultContentMap);
@@ -627,10 +628,10 @@ public class TemplatingFunctionsTest {
     @Test
     public void testParentPageFromComponentContentMapDepth3() throws RepositoryException {
         // GIVEN
-        ContentMap childPageSubSubComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT));
+        ContentMap childPageSubSubComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME));
 
         // WHEN
-        ContentMap resultContentMap = functions.parent(childPageSubSubComponentContentMap, MgnlNodeType.NT_PAGE);
+        ContentMap resultContentMap = functions.parent(childPageSubSubComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertMapEqualsMap(childPageContentMap, resultContentMap);
@@ -649,7 +650,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageHavingNoParentPageShouldBeNull() throws RepositoryException {
         // GIVEN
-        Node componentWithoutPage = root.addNode("onlyComponent", MgnlNodeType.NT_COMPONENT);
+        Node componentWithoutPage = root.addNode("onlyComponent", NodeTypes.Component.NAME);
 
         // WHEN
         Node resultNode = functions.page(componentWithoutPage);
@@ -691,7 +692,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromComponentNodeDepth3() throws RepositoryException {
         // GIVEN
-        Node subSubComponent = childPageComponent.addNode("subSubCompoent", MgnlNodeType.NT_COMPONENT);
+        Node subSubComponent = childPageComponent.addNode("subSubCompoent", NodeTypes.Component.NAME);
 
         // WHEN
         Node resultNode = functions.page(subSubComponent);
@@ -713,7 +714,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageContentMapHavingNoParentPageShouldBeNull() throws RepositoryException {
         // GIVEN
-        Node componentWithoutPage = root.addNode("onlyComponent", MgnlNodeType.NT_COMPONENT);
+        Node componentWithoutPage = root.addNode("onlyComponent", NodeTypes.Component.NAME);
 
         // WHEN
         ContentMap resultContentMap = functions.page(new ContentMap(componentWithoutPage));
@@ -755,7 +756,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testPageFromComponentContentMapDepth3() throws RepositoryException {
         // GIVEN
-        Node subSubComponent = childPageComponent.addNode("subSubCompoent", MgnlNodeType.NT_COMPONENT);
+        Node subSubComponent = childPageComponent.addNode("subSubCompoent", NodeTypes.Component.NAME);
 
         // WHEN
         ContentMap resultContentMap = functions.page(new ContentMap(subSubComponent));
@@ -778,7 +779,7 @@ public class TemplatingFunctionsTest {
     public void testAncestorPagesFromNodeDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        List<Node> resultList = functions.ancestors(topPage, MgnlNodeType.NT_PAGE);
+        List<Node> resultList = functions.ancestors(topPage, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(resultList.size(), 0);
@@ -804,7 +805,7 @@ public class TemplatingFunctionsTest {
         Iterator<Node> itCompare = compareList.iterator();
 
         // WHEN
-        List<Node> resultList = functions.ancestors(childPageComponent, MgnlNodeType.NT_PAGE);
+        List<Node> resultList = functions.ancestors(childPageComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(compareList.size(), resultList.size());
@@ -816,7 +817,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromSubComponentNodeDepth5() throws RepositoryException {
         // GIVEN
-        Node subSubComponent = childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT);
+        Node subSubComponent = childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME);
 
         List<Node> compareList = new ArrayList<Node>();
         compareList.add(topPage);
@@ -837,7 +838,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorPagesFromSubComponentNodeDepth5() throws RepositoryException {
         // GIVEN
-        Node subSubComponent = childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT);
+        Node subSubComponent = childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME);
 
         List<Node> compareList = new ArrayList<Node>();
         compareList.add(topPage);
@@ -845,7 +846,7 @@ public class TemplatingFunctionsTest {
         Iterator<Node> itCompare = compareList.iterator();
 
         // WHEN
-        List<Node> resultList = functions.ancestors(subSubComponent, MgnlNodeType.NT_PAGE);
+        List<Node> resultList = functions.ancestors(subSubComponent, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(compareList.size(), resultList.size());
@@ -868,7 +869,7 @@ public class TemplatingFunctionsTest {
     public void testAncestorPagesFromContentMapDepth1() throws RepositoryException {
         // GIVEN
         // WHEN
-        List<ContentMap> resultList = functions.ancestors(topPageContentMap, MgnlNodeType.NT_PAGE);
+        List<ContentMap> resultList = functions.ancestors(topPageContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(resultList.size(), 0);
@@ -894,7 +895,7 @@ public class TemplatingFunctionsTest {
         Iterator<Node> itCompare = compareList.iterator();
 
         // WHEN
-        List<ContentMap> resultList = functions.ancestors(childPageComponentContentMap, MgnlNodeType.NT_PAGE);
+        List<ContentMap> resultList = functions.ancestors(childPageComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(compareList.size(), resultList.size());
@@ -906,7 +907,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorsFromSubComponentConentMapDepth5() throws RepositoryException {
         // GIVEN
-        ContentMap subComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT));
+        ContentMap subComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME));
 
         List<Node> compareList = new ArrayList<Node>();
         compareList.add(topPage);
@@ -927,7 +928,7 @@ public class TemplatingFunctionsTest {
     @Test
     public void testAncestorPagesFromSubComponentConentMapDepth5() throws RepositoryException {
         // GIVEN
-        ContentMap subComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", MgnlNodeType.NT_COMPONENT));
+        ContentMap subComponentContentMap = new ContentMap(childPageComponent.addNode("subSubComponent", NodeTypes.Component.NAME));
 
         List<Node> compareList = new ArrayList<Node>();
         compareList.add(topPage);
@@ -935,7 +936,7 @@ public class TemplatingFunctionsTest {
         Iterator<Node> itCompare = compareList.iterator();
 
         // WHEN
-        List<ContentMap> resultList = functions.ancestors(subComponentContentMap, MgnlNodeType.NT_PAGE);
+        List<ContentMap> resultList = functions.ancestors(subComponentContentMap, NodeTypes.Page.NAME);
 
         // THEN
         assertEquals(compareList.size(), resultList.size());

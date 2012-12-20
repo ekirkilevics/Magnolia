@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.renderer.registry;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.util.ModuleConfigurationObservingManager;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.NodeVisitor;
 import info.magnolia.module.ModuleRegistry;
@@ -83,14 +83,14 @@ public class ConfiguredRendererManager extends ModuleConfigurationObservingManag
 
                 @Override
                 public void visit(Node parent) throws RepositoryException {
-                    for (Node configNode : NodeUtil.getNodes(parent, MgnlNodeType.NT_CONTENTNODE)) {
+                    for (Node configNode : NodeUtil.getNodes(parent, NodeTypes.ContentNode.NAME)) {
                         RendererProvider provider = readProvider(configNode);
                         if (provider != null) {
                             providers.add(provider);
                         }
                     }
                 }
-            }, new NodeTypePredicate(MgnlNodeType.NT_CONTENT, false));
+            }, new NodeTypePredicate(NodeTypes.Content.NAME, false));
         }
 
         this.registeredIds = registry.unregisterAndRegister(registeredIds, providers);

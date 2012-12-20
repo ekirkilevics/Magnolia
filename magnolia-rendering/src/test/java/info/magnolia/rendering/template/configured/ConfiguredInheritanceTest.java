@@ -33,8 +33,8 @@
  */
 package info.magnolia.rendering.template.configured;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.jcr.predicate.AbstractPredicate;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.jcr.MockNode;
@@ -234,7 +234,7 @@ public class ConfiguredInheritanceTest {
     public void testFilteredComponentInheritancePredicate() throws Exception {
         ConfiguredInheritance.FilteredComponentInheritancePredicate predicate = new ConfiguredInheritance.FilteredComponentInheritancePredicate();
         MockNode node = new MockNode();
-        node.setPrimaryType(MgnlNodeType.NT_COMPONENT);
+        node.setPrimaryType(NodeTypes.Component.NAME);
 
         assertFalse(predicate.evaluateTyped(node));
 
