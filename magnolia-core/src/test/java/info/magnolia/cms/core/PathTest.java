@@ -42,17 +42,21 @@ import info.magnolia.test.ComponentsTestUtil;
 import java.io.File;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests.
  */
 public class PathTest {
 
+    @Before
+    public void setUp() {
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "./src/test/resources");
+    }
     @After
     public void tearDown() throws Exception {
-        ComponentsTestUtil.clear();
-        MgnlContext.setInstance(null);
+        SystemProperty.clear();
     }
 
     /**
