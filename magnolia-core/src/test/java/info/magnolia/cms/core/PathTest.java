@@ -36,8 +36,6 @@ package info.magnolia.cms.core;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.ComponentsTestUtil;
 
 import java.io.File;
 
