@@ -344,7 +344,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testCollectAllChildren_DefaultPredicate_Simple() throws RepositoryException {
+    public void testCollectAllChildrenDefaultPredicateSimple() throws RepositoryException {
         // GIVEN
 
         // WHEN
@@ -356,7 +356,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testCollectAllChildren_DefaultPredicate_FilterType() throws RepositoryException {
+    public void testCollectAllChildrenDefaultPredicateFilterType() throws RepositoryException {
         // GIVEN
         second.setPrimaryType("toto:data");
 
@@ -369,7 +369,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testCollectAllChildren_DefaultPredicate_FilterType_ThreeLevel() throws RepositoryException {
+    public void testCollectAllChildrenDefaultPredicateFilterTypeThreeLevel() throws RepositoryException {
         // GIVEN
         Node secondL11 = second.addNode("L11");
         Node secondL12 = second.addNode("L12");
@@ -389,7 +389,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testCollectAllChildren_SpecificPredicate_FilterType_ThreeLevel() throws RepositoryException {
+    public void testCollectAllChildrenSpecificPredicateFilterTypeThreeLevel() throws RepositoryException {
         // GIVEN
         Node secondL11 = second.addNode("L11");
         Node secondL12 = second.addNode("L12");
@@ -423,7 +423,7 @@ public class NodeUtilTest {
 
 
     @Test
-    public void testGetAncestors_Level0() throws RepositoryException {
+    public void testGetAncestorsLevel0() throws RepositoryException {
         // GIVEN
 
         // WHEN
@@ -435,7 +435,7 @@ public class NodeUtilTest {
     }
 
     @Test
-    public void testGetAncestors_Level3() throws RepositoryException {
+    public void testGetAncestorsLevel3() throws RepositoryException {
         // GIVEN
         Node subFirst = first.addNode("subFirst");
 
