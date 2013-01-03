@@ -113,7 +113,7 @@ public class MgnlVersioningNodeWrapper extends ChildWrappingNodeWrapper {
         PermissionUtil.verifyIsGrantedOrThrowException(getSession(), Path.getAbsolutePath(getPath()), Session.ACTION_REMOVE);
         NodeType nodeType = this.getPrimaryNodeType();
         String workspaceName = getSession().getWorkspace().getName();
-        if (!workspaceName.equals("mgnlVersion")) {
+        if (!workspaceName.startsWith("mgnl")) {
             MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
                 @Override
                 public Void exec() throws RepositoryException {
