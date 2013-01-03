@@ -35,6 +35,7 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
@@ -50,6 +51,7 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.LoginException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
@@ -198,7 +200,11 @@ public final class CopyUtil {
                 continue;
             }
             try {
-                source.getSession().getNodeByUUID(child.getUUID());
+                if (child.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+                    source.getSession().getNodeByUUID(child.getUUID());
+                } else {
+                    source.getNode(child.getName());
+                }
                 // if exist its ok, recursively remove all sub nodes
                 this.removeNonExistingChildNodes(source, child, filter);
             }
@@ -206,6 +212,17 @@ public final class CopyUtil {
                 PropertyIterator referencedProperties = child.getReferences();
                 if (referencedProperties.getSize() > 0) {
                     // remove all referenced properties, its safe since source workspace cannot have these
+                    // properties if node with this UUID does not exist
+                    while (referencedProperties.hasNext()) {
+                        referencedProperties.nextProperty().remove();
+                    }
+                }
+                child.remove();
+            } catch (PathNotFoundException e) {
+                PropertyIterator referencedProperties = child.getReferences();
+                if (referencedProperties.getSize() > 0) {
+                    // remove all referenced properties, its safe since source workspace cannot have
+                    // these
                     // properties if node with this UUID does not exist
                     while (referencedProperties.hasNext()) {
                         referencedProperties.nextProperty().remove();

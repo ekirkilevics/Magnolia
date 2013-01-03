@@ -48,17 +48,26 @@ public class NodeTypePredicate extends AbstractPredicate<Node> {
 
     private static final Logger log = LoggerFactory.getLogger(NodeTypePredicate.class);
     private final String primaryNodeType;
+    private final boolean evaluateSupertypes;
 
     public NodeTypePredicate(String primaryNodeType) {
+        this(primaryNodeType, false);
+    }
+
+    public NodeTypePredicate(String primaryNodeType, boolean evaluateSupertypes) {
         if (primaryNodeType == null) {
             throw new NullPointerException("Type must have a value.");
         }
         this.primaryNodeType = primaryNodeType;
+        this.evaluateSupertypes = evaluateSupertypes;
     }
 
     @Override
     public boolean evaluateTyped(Node t) {
         try {
+            if (evaluateSupertypes) {
+                return t.isNodeType(primaryNodeType);
+            }
             return primaryNodeType.equals(t.getPrimaryNodeType().getName());
         } catch (RepositoryException e) {
             log.error("Failed to read type of node {}", t);
