@@ -141,9 +141,9 @@ public class DefaultContent extends AbstractContent {
      * operation
      */
     protected DefaultContent(Node rootNode, String path, String contentType)
-    throws PathNotFoundException,
-    RepositoryException,
-    AccessDeniedException {
+            throws PathNotFoundException,
+            RepositoryException,
+            AccessDeniedException {
         this.setNode(rootNode.addNode(path, contentType));
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
@@ -526,7 +526,7 @@ public class DefaultContent extends AbstractContent {
         final String workspaceName = this.node.getSession().getWorkspace().getName();
         log.debug("removing {} from {}", this.node.getPath(), workspaceName);
         final ItemType nodeType = this.getItemType();
-        if (!workspaceName.equals("mgnlVersion")) {
+        if (!workspaceName.startsWith("mgnl")) {
             MgnlContext.doInSystemContext(new Op<Void, RepositoryException>() {
                 @Override
                 public Void exec() throws RepositoryException {

@@ -53,8 +53,10 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.nodetype.NodeTypeManager;
 
@@ -646,5 +648,47 @@ public class NodeUtil {
         }
         return nodeCollection;
     }
+
+
+    /**
+     * Write the properties of the node to the log.
+     */
+    public static void traceNodeProperties(Node nodeOp) throws RepositoryException {
+        // debug by logging properties.
+        PropertyIterator propIter;
+        propIter = nodeOp.getProperties();
+        log.info("Trace Node Properties:");
+        while (propIter.hasNext()) {
+            Property prop = propIter.nextProperty();
+            if (prop.isMultiple()){
+                Value[] values = prop.getValues();
+                for (int i=0; i<values.length; i++){
+                    log.info(prop.toString() + "[" + i + "] = " + upToNCharacters(values[i].getString(), 30));
+                }
+            }else{
+                log.info(prop.toString() + " = " + upToNCharacters(prop.getString(), 30));
+            }
+
+        }
+    }
+
+    /**
+     * Write the children of the node to the log.
+     */
+    public static void traceNodeChildren(Node nodeOp) throws RepositoryException {
+        // debug by logging properties.
+        NodeIterator nodeIter;
+        nodeIter = nodeOp.getNodes();
+        log.info("Trace Node Children:");
+        while (nodeIter.hasNext()) {
+            Node n = nodeIter.nextNode();
+            log.info(n.toString());
+        }
+    }
+
+    private static String upToNCharacters(String s, int n) {
+        return s.substring(0, Math.min(s.length(), n));
+    }
+
 
 }
