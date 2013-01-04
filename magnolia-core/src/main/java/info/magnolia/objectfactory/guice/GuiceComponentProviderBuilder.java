@@ -41,6 +41,7 @@ import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycila.inject.jsr250.Jsr250;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +120,9 @@ public class GuiceComponentProviderBuilder {
 
                 // Bind the ComponentProvider instance first so its the first thing to get member injection
                 bind(ComponentProvider.class).toInstance(componentProvider);
+
+                // JSR-250 support added by Mycila
+                install(Jsr250.newJsr250Module());
 
                 install(new GuiceComponentConfigurationModule(configuration));
 

@@ -37,14 +37,18 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import info.magnolia.objectfactory.configuration.ComponentProviderConfiguration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-@Ignore
+/**
+ * This test case makes sure that @PostConstruct and @PreDestroy is implemented correctly when used in a class
+ * hierarchy and on private methods.
+ *
+ * Support for @PreDestroy is currently disabled because it proved unreliable for lazy singletons and scoped objects.
+ */
 public class GuiceComponentProviderLifecycleTest {
 
     public static abstract class LifecycleBase {
@@ -191,7 +195,7 @@ public class GuiceComponentProviderLifecycleTest {
         LifecycleBase component = p.getComponent(clazz);
         assertContainsAll(component.startSequence, startSequence);
         p.destroy();
-        assertContainsAll(component.stopSequence, endSequence);
+//        assertContainsAll(component.stopSequence, endSequence);
     }
 
     private void assertLifeCycleSequence(Class<? extends LifecycleBase> clazz, String expectedStartSequence, String expectedStopSequence) {
@@ -199,7 +203,7 @@ public class GuiceComponentProviderLifecycleTest {
         LifecycleBase component = p.getComponent(clazz);
         assertEquals(expectedStartSequence, component.startSequence);
         p.destroy();
-        assertEquals(expectedStopSequence, component.stopSequence);
+//        assertEquals(expectedStopSequence, component.stopSequence);
     }
 
     private GuiceComponentProvider createProvider(Class<? extends LifecycleBase> clazz) {
