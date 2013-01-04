@@ -33,8 +33,7 @@
  */
 package info.magnolia.link;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -58,7 +57,7 @@ public class LinkUtilAssetTest {
         linkNoExtension = "server/path/filename";
         now = new GregorianCalendar();
         lastYear = new GregorianCalendar();
-        lastYear.set(Calendar.YEAR, now.get(Calendar.YEAR)-1);
+        lastYear.set(Calendar.YEAR, now.get(Calendar.YEAR) - 1);
     }
 
     @Test
@@ -74,7 +73,7 @@ public class LinkUtilAssetTest {
         // Did return a different link
         assertFalse(link.equals(fLinkNow));
         // Still contains extension
-        assertTrue(fLinkNow.indexOf(".png")>0);
+        assertTrue(fLinkNow.indexOf(".png") > 0);
 
         // Different for different dates
         assertFalse(fLinkPast.equals(fLinkNow));
