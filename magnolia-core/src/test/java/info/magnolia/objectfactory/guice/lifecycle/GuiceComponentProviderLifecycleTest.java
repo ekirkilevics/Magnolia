@@ -56,7 +56,7 @@ import info.magnolia.objectfactory.guice.lifecycle.packageprotected.LifecyclePac
  */
 public class GuiceComponentProviderLifecycleTest {
 
-    private boolean shouldTestDestroy = true;
+    private boolean shouldTestDestroy = false;
 
     private List<String> events = new ArrayList<String>();
 
