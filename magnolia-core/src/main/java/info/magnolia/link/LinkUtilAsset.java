@@ -46,13 +46,14 @@ public class LinkUtilAsset {
      * This way we can use far future cache headers on images/assets, and simply change the filename for the
      * asset when the asset has changed and we want browsers & proxies to take up the new asset from the server.
      * Appends the date as a string directly before the file extension.
+     * 
      * @param lastModified
      * @return The original link with the date based finger-print inserted.
      */
-    public static String addAssetCacheFingerprintToLink(String link, Calendar lastModified){
+    public static String addAssetCacheFingerprintToLink(String link, Calendar lastModified) {
         String fingerprint = "";
         String fingerprintedLink = "";
-        if (lastModified == null){
+        if (lastModified == null) {
             return link;
         }
 
@@ -64,15 +65,14 @@ public class LinkUtilAsset {
         int lastDot = link.lastIndexOf('.');
         int lastSlash = link.lastIndexOf('/');
 
-        if (lastDot > lastSlash && lastDot != -1){
-            fingerprintedLink = link.substring(0,lastDot) + "." + fingerprint + link.substring(lastDot);
-        }else{
+        if (lastDot > lastSlash && lastDot != -1) {
+            fingerprintedLink = link.substring(0, lastDot) + "." + fingerprint + link.substring(lastDot);
+        } else {
             // No file extension - just add fingerprint at end.
-           fingerprintedLink = link + "." + fingerprint;
+            fingerprintedLink = link + "." + fingerprint;
         }
 
         return fingerprintedLink;
     }
-
 
 }
