@@ -172,9 +172,12 @@ public class MockProperty extends AbstractProperty {
         return getValue().getStream();
     }
 
+    /**
+     * Return the value as String or null if the value is null.
+     */
     @Override
     public String getString() throws ValueFormatException, RepositoryException {
-        return getValue().getString();
+        return getValue() != null ? getValue().getString() : null;
     }
 
     @Override
