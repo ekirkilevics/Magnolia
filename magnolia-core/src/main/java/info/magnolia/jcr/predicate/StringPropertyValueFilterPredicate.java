@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -44,11 +44,11 @@ import javax.jcr.RepositoryException;
  * If value is set to null, return only properties that have a null value.
  * If the property is not of the type {@PropertyType.STRING} return false.
  */
-public class PropertyValueFilterPredicate extends AbstractPredicate<Property> {
+public class StringPropertyValueFilterPredicate extends AbstractPredicate<Property> {
 
     private String value;
 
-    public PropertyValueFilterPredicate(String value) {
+    public StringPropertyValueFilterPredicate(String value) {
         this.value = value;
     }
 
