@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,18 +33,18 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import javax.jcr.Node;
+import info.magnolia.jcr.predicate.StringPropertyValueFilterPredicate;
 
-import info.magnolia.jcr.predicate.PropertyValueFilterPredicate;
+import javax.jcr.Node;
 
 /**
  * Filtering node wrapper with hardcoded predicate to simplify unwrapping when needed.
- * This Wrapper filter the Node property passing the following predicate {@link PropertyValueFilterPredicate}
+ * This Wrapper filter the Node property passing the following predicate {@link StringPropertyValueFilterPredicate}
  *  Property associated to the node have a property.getString() that equals the passed value.
  */
-public class PropertyValueFilteringNodeWrapper extends PropertyFilteringNodeWrapper {
+public class StringPropertyValueFilteringNodeWrapper extends PropertyFilteringNodeWrapper {
 
-    public PropertyValueFilteringNodeWrapper(Node wrapped, String value) {
-        super(wrapped, new PropertyValueFilterPredicate(value));
+    public StringPropertyValueFilteringNodeWrapper(Node wrapped, String value) {
+        super(wrapped, new StringPropertyValueFilterPredicate(value));
     }
 }
