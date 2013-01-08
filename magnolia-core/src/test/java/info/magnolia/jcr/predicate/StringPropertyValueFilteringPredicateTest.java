@@ -85,13 +85,18 @@ public class StringPropertyValueFilteringPredicateTest {
 
     @Test
     public void testReturnsFalseOnException() {
-        JCRMgnlPropertyHidingPredicate predicate = new JCRMgnlPropertyHidingPredicate();
+        // GIVEN
+        String value = "value";
         Property property = mock(Property.class);
         try {
             when(property.getName()).thenThrow(new RepositoryException());
         } catch (RepositoryException e) {
             fail();
         }
-        predicate.evaluate(property);
+        // WHEN
+        StringPropertyValueFilterPredicate predicate = new StringPropertyValueFilterPredicate(value);
+        
+        // THEN
+        assertFalse(predicate.evaluate(property));
     }
 }

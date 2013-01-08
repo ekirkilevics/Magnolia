@@ -33,17 +33,15 @@
  */
 package info.magnolia.jcr.predicate;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import info.magnolia.test.mock.jcr.MockProperty;
+
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
-
-import info.magnolia.test.mock.jcr.MockProperty;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Test case for JCRMgnlPropertyHidingPredicate.
@@ -61,13 +59,17 @@ public class JCRMgnlPropertyHidingPredicateTest {
 
     @Test
     public void testReturnsFalseOnException() {
-        JCRMgnlPropertyHidingPredicate predicate = new JCRMgnlPropertyHidingPredicate();
+        // GIVEN
         Property property = mock(Property.class);
         try {
             when(property.getName()).thenThrow(new RepositoryException());
         } catch (RepositoryException e) {
             fail();
         }
-        predicate.evaluate(property);
+        // WHEN
+        JCRMgnlPropertyHidingPredicate predicate = new JCRMgnlPropertyHidingPredicate();
+        
+        // THEN
+        assertFalse(predicate.evaluate(property));
     }
 }
