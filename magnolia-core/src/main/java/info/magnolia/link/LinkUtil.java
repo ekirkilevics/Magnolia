@@ -62,6 +62,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for various operations necessary for link transformations and handling.
+ * This is actually a Business Facade providing an entry point to the link transformations.
+ * Hence it will be renamed to LinkManager (MAGNOLIA-4765) soon.
  */
 public class LinkUtil {
 
