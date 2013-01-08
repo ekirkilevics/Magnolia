@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,29 +33,27 @@
  */
 package info.magnolia.jcr.predicate;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+import info.magnolia.test.mock.jcr.MockProperty;
+
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
 import org.junit.Test;
 
-import info.magnolia.test.mock.jcr.MockProperty;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /**
- * Test case for JCRMgnlPropertyHidingPredicate.
+ * Test case for {@link StringPropertyValueFilterPredicate}.
  */
-public class PropertyValueFilteringPredicateTest {
+public class StringPropertyValueFilteringPredicateTest {
 
     @Test
     public void testEvaluate() throws Exception {
         // GIVEN
         String value = "value";
         // WHEN
-        PropertyValueFilterPredicate predicate = new PropertyValueFilterPredicate(value);
+        StringPropertyValueFilterPredicate predicate = new StringPropertyValueFilterPredicate(value);
         // THEN
         assertTrue(predicate.evaluate(new MockProperty("someProperty", "value", null)));
         assertTrue(predicate.evaluate(new MockProperty("mgnl:someProperty", "value", null)));
@@ -68,10 +66,21 @@ public class PropertyValueFilteringPredicateTest {
         // GIVEN
         String value = "1";
         // WHEN
-        PropertyValueFilterPredicate predicate = new PropertyValueFilterPredicate(value);
+        StringPropertyValueFilterPredicate predicate = new StringPropertyValueFilterPredicate(value);
         // THEN
         assertTrue(predicate.evaluate(new MockProperty("jcr:someProperty", "1", null)));
         assertFalse(predicate.evaluate(new MockProperty("jcr:someProperty", new Integer(1), null)));
+    }
+
+    @Test
+    public void testEvaluateNull() throws Exception {
+        // GIVEN
+        String value = null;
+        // WHEN
+        StringPropertyValueFilterPredicate predicate = new StringPropertyValueFilterPredicate(value);
+        // THEN
+        assertFalse(predicate.evaluate(new MockProperty("jcr:someProperty", "a", null)));
+        assertTrue(predicate.evaluate(new MockProperty("jcr:someProperty", null, null)));
     }
 
     @Test
