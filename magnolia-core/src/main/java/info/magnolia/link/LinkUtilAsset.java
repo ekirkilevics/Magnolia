@@ -33,13 +33,16 @@
  */
 package info.magnolia.link;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import org.apache.commons.lang.time.FastDateFormat;
 
 /**
  * Various utility methods for handling assets.
  */
 public class LinkUtilAsset {
+
+    private static final FastDateFormat FINGERPRINT_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd-HH-mm-ss");
 
     /**
      * Insert a finger-print into an asset link that is based on the last modified date.
@@ -51,15 +54,12 @@ public class LinkUtilAsset {
      * @return The original link with the date based finger-print inserted.
      */
     public static String addAssetCacheFingerprintToLink(String link, Calendar lastModified) {
-        String fingerprint = "";
         String fingerprintedLink = "";
         if (lastModified == null) {
             return link;
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String formatted = formatter.format(lastModified.getTime());
-        fingerprint = formatted;
+        String fingerprint = FINGERPRINT_FORMAT.format(lastModified.getTime());
 
         // Determine where to place the fingerprint.
         int lastDot = link.lastIndexOf('.');
