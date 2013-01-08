@@ -35,7 +35,6 @@ package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
@@ -62,6 +61,7 @@ import javax.jcr.nodetype.NodeType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.commons.iterator.FilteringNodeIterator;
 import org.apache.jackrabbit.commons.predicate.Predicate;
 import org.slf4j.Logger;
@@ -71,8 +71,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Util to copy nodes and hierarchies between workspaces. A {@link Content.ContentFilter} defines what such a copy process includes.
  * This is used to copy pages to the version workspace. While the paragraph nodes have to be copied the sub-pages should not.
- *
- * @version $Id$
  */
 public final class CopyUtil {
 
@@ -200,7 +198,7 @@ public final class CopyUtil {
                 continue;
             }
             try {
-                if (child.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+                if (child.isNodeType(JcrConstants.MIX_REFERENCEABLE)) {
                     source.getSession().getNodeByUUID(child.getUUID());
                 } else {
                     source.getNode(child.getName());
