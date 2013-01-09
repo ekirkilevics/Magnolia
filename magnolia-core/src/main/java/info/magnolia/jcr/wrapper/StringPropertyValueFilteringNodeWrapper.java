@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,40 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.jcr.predicate;
+package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.predicate.StringPropertyValueFilterPredicate;
 
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
+import javax.jcr.Node;
 
 /**
- * Simple predicate implementation that filter property based on the desired value.
- * Return only properties that have a value equals to the value passed as constructor.
- * If value is set to null, return only properties that have a null value.
- * If the property is not of the type {@PropertyType.STRING} return false.
+ * Filtering node wrapper with hardcoded predicate to simplify unwrapping when needed.
+ * This Wrapper filter the Node property passing the following predicate {@link StringPropertyValueFilterPredicate}
+ *  Property associated to the node have a property.getString() that equals the passed value.
  */
-public class PropertyValueFilterPredicate extends AbstractPredicate<Property> {
+public class StringPropertyValueFilteringNodeWrapper extends PropertyFilteringNodeWrapper {
 
-    private String value;
-
-    public PropertyValueFilterPredicate(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public boolean evaluateTyped(Property property) {
-        try {
-            if(value == null) {
-                return property.getString() == null;
-            } else if(property.getValue() == null || property.getType() != PropertyType.STRING) {
-                return false;
-            } else {
-                return value.equals(property.getString());
-            }
-        } catch (RepositoryException e) {
-            // either invalid or not accessible to the current user
-            return false;
-        }
+    public StringPropertyValueFilteringNodeWrapper(Node wrapped, String value) {
+        super(wrapped, new StringPropertyValueFilterPredicate(value));
     }
 }

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.link;
+package info.magnolia.cms.util;
 
 import static org.junit.Assert.*;
 
@@ -42,70 +42,106 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test LinkUtilAsset.
+ * Test LinkUtil.
  */
-public class LinkUtilAssetTest {
+public class LinkUtilTest {
 
     String link;
     String linkNoExtension;
-    Calendar now;
-    Calendar lastYear;
+    Calendar calendar1;
+    Calendar calendar2; // A calendar with a different date then calendar1
 
     @Before
     public void setUp() throws Exception {
         link = "server/path/filename.png";
         linkNoExtension = "server/path/filename";
-        now = new GregorianCalendar();
-        lastYear = new GregorianCalendar();
-        lastYear.set(Calendar.YEAR, now.get(Calendar.YEAR) - 1);
+        calendar1 = new GregorianCalendar();
+        calendar1.set(2000, 1, 1, 1, 1, 1); // 2000-02-01 01:01:01
+
+        calendar2 = new GregorianCalendar();
+        calendar2.set(2000, 1, 1, 1, 1, 2); // 2000-02-01 01:01:02
     }
 
     @Test
-    public void testAddAssetCacheFingerprintToLink() throws Exception {
+    /**
+     * Basic test of the dash separated date fingerprint.
+     * @throws Exception
+     */
+    public void testAddFingerprintToLink() throws Exception {
         // GIVEN
 
         // WHEN
-        String fLinkNow = LinkUtilAsset.addAssetCacheFingerprintToLink(link, now);
-        String fLinkPast = LinkUtilAsset.addAssetCacheFingerprintToLink(link, lastYear);
+        String link1 = LinkUtil.addFingerprintToLink(link, calendar1);
+
+        // THEN
+        assertTrue("server/path/filename.2000-02-01-01-01-01.png".equals(link1));
+    }
+
+    @Test
+    /**
+     * There are a few things that any implementation of addFingerprintToLink must do.
+     * @throws Exception
+     */
+    public void testAddFingerprintToLinkFundamentalAssertions() throws Exception {
+        // GIVEN
+
+        // WHEN
+        String link1 = LinkUtil.addFingerprintToLink(link, calendar1);
 
         // THEN
 
         // Did return a different link
-        assertFalse(link.equals(fLinkNow));
+        assertFalse(link.equals(link1));
         // Still contains extension
-        assertTrue(fLinkNow.indexOf(".png") > 0);
-
-        // Different for different dates
-        assertFalse(fLinkPast.equals(fLinkNow));
+        assertTrue(link1.indexOf(".png") > 0);
     }
 
     @Test
-    public void testAddAssetCacheFingerprintToLinkWithoutExtension() throws Exception {
+    /**
+     * For any implementation of addFingerprintToLink:
+     * two dates should generate two different fingerprints.
+     * @throws Exception
+     */
+    public void testAddFingerprintToLinkCompareTwoDates() throws Exception {
         // GIVEN
 
         // WHEN
-        String fLinkNow = LinkUtilAsset.addAssetCacheFingerprintToLink(linkNoExtension, now);
-        String fLinkPast = LinkUtilAsset.addAssetCacheFingerprintToLink(linkNoExtension, lastYear);
+        String link1 = LinkUtil.addFingerprintToLink(link, calendar1);
+        String fLinkPast = LinkUtil.addFingerprintToLink(link, calendar2);
+
+        // THEN
+
+        // Different for different dates
+        assertFalse(fLinkPast.equals(link1));
+    }
+
+    @Test
+    public void testAddFingerprintToLinkWithoutExtension() throws Exception {
+        // GIVEN
+
+        // WHEN
+        String link1 = LinkUtil.addFingerprintToLink(linkNoExtension, calendar1);
+        String link2 = LinkUtil.addFingerprintToLink(linkNoExtension, calendar2);
 
         // THEN
 
         // Did return a different link
-        assertFalse(link.equals(fLinkNow));
+        assertFalse(link.equals(link1));
 
         // Different for different dates
-        assertFalse(fLinkPast.equals(fLinkNow));
+        assertFalse(link2.equals(link1));
     }
 
     @Test
-    public void testAddAssetCacheFingerprintToLinkWithInvalidDate() throws Exception {
+    public void testAddFingerprintToLinkWithInvalidDate() throws Exception {
         // GIVEN
 
         // WHEN
-        String fLinkNow = LinkUtilAsset.addAssetCacheFingerprintToLink(link, null);
+        String link1 = LinkUtil.addFingerprintToLink(link, null);
 
         // THEN
 
         // Returns the same link
-        assertTrue(link.equals(fLinkNow));
+        assertTrue(link.equals(link1));
     }
 }

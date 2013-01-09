@@ -31,21 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.link;
+package info.magnolia.cms.util;
 
 import java.util.Calendar;
 
 import org.apache.commons.lang.time.FastDateFormat;
 
 /**
- * Various utility methods for handling assets.
+ * Utility methods for links.
  */
-public class LinkUtilAsset {
+public class LinkUtil {
 
     private static final FastDateFormat FINGERPRINT_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd-HH-mm-ss");
 
     /**
-     * Insert a finger-print into an asset link that is based on the last modified date.
+     * Insert a finger-print into a link that is based on the last modified date.
      * This way we can use far future cache headers on images/assets, and simply change the filename for the
      * asset when the asset has changed and we want browsers & proxies to take up the new asset from the server.
      * Appends the date as a string directly before the file extension.
@@ -53,7 +53,7 @@ public class LinkUtilAsset {
      * @param lastModified
      * @return The original link with the date based finger-print inserted.
      */
-    public static String addAssetCacheFingerprintToLink(String link, Calendar lastModified) {
+    public static String addFingerprintToLink(String link, Calendar lastModified) {
         String fingerprintedLink = "";
         if (lastModified == null) {
             return link;

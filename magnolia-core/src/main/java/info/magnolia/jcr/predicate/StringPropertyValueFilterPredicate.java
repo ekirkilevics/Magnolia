@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,20 +31,40 @@
  * intact.
  *
  */
-package info.magnolia.jcr.wrapper;
+package info.magnolia.jcr.predicate;
 
-import javax.jcr.Node;
 
-import info.magnolia.jcr.predicate.PropertyValueFilterPredicate;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 /**
- * Filtering node wrapper with hardcoded predicate to simplify unwrapping when needed.
- * This Wrapper filter the Node property passing the following predicate {@link PropertyValueFilterPredicate}
- *  Property associated to the node have a property.getString() that equals the passed value.
+ * Simple predicate implementation that filter property based on the desired value.
+ * Return only properties that have a value equals to the value passed as constructor.
+ * If value is set to null, return only properties that have a null value.
+ * If the property is not of the type {@PropertyType.STRING} return false.
  */
-public class PropertyValueFilteringNodeWrapper extends PropertyFilteringNodeWrapper {
+public class StringPropertyValueFilterPredicate extends AbstractPredicate<Property> {
 
-    public PropertyValueFilteringNodeWrapper(Node wrapped, String value) {
-        super(wrapped, new PropertyValueFilterPredicate(value));
+    private String value;
+
+    public StringPropertyValueFilterPredicate(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean evaluateTyped(Property property) {
+        try {
+            if(value == null) {
+                return property.getString() == null;
+            } else if(property.getValue() == null || property.getType() != PropertyType.STRING) {
+                return false;
+            } else {
+                return value.equals(property.getString());
+            }
+        } catch (RepositoryException e) {
+            // either invalid or not accessible to the current user
+            return false;
+        }
     }
 }
