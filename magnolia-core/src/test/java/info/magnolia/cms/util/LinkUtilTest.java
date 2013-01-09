@@ -65,7 +65,6 @@ public class LinkUtilTest {
     @Test
     /**
      * Basic test of the dash separated date fingerprint.
-     * @throws Exception
      */
     public void testAddFingerprintToLink() throws Exception {
         // GIVEN
@@ -74,13 +73,12 @@ public class LinkUtilTest {
         String link1 = LinkUtil.addFingerprintToLink(link, calendar1);
 
         // THEN
-        assertTrue("server/path/filename.2000-02-01-01-01-01.png".equals(link1));
+        assertEquals("server/path/filename.2000-02-01-01-01-01.png", link1);
     }
 
     @Test
     /**
      * There are a few things that any implementation of addFingerprintToLink must do.
-     * @throws Exception
      */
     public void testAddFingerprintToLinkFundamentalAssertions() throws Exception {
         // GIVEN
@@ -100,7 +98,6 @@ public class LinkUtilTest {
     /**
      * For any implementation of addFingerprintToLink:
      * two dates should generate two different fingerprints.
-     * @throws Exception
      */
     public void testAddFingerprintToLinkCompareTwoDates() throws Exception {
         // GIVEN
@@ -112,7 +109,7 @@ public class LinkUtilTest {
         // THEN
 
         // Different for different dates
-        assertFalse(fLinkPast.equals(link1));
+        assertNotEquals(fLinkPast, link1);
     }
 
     @Test
@@ -126,10 +123,10 @@ public class LinkUtilTest {
         // THEN
 
         // Did return a different link
-        assertFalse(link.equals(link1));
+        assertNotEquals(link, link1);
 
         // Different for different dates
-        assertFalse(link2.equals(link1));
+        assertNotEquals(link2, link1);
     }
 
     @Test
@@ -142,6 +139,6 @@ public class LinkUtilTest {
         // THEN
 
         // Returns the same link
-        assertTrue(link.equals(link1));
+        assertEquals(link, link1);
     }
 }
