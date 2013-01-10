@@ -33,39 +33,28 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.objectfactory.Classes;
+import info.magnolia.objectfactory.MgnlInstantiationException;
 
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.jcr.ItemNotFoundException;
-import javax.jcr.NamespaceException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.security.AccessControlPolicy;
 
 import org.apache.jackrabbit.core.ItemImpl;
-import org.apache.jackrabbit.core.cache.GrowingLRUMap;
-import org.apache.jackrabbit.core.id.ItemId;
-import org.apache.jackrabbit.core.id.PropertyId;
-import org.apache.jackrabbit.core.security.authorization.AbstractCompiledPermissions;
 import org.apache.jackrabbit.core.security.authorization.AccessControlEditor;
 import org.apache.jackrabbit.core.security.authorization.CompiledPermissions;
-import org.apache.jackrabbit.core.security.authorization.PrivilegeManagerImpl;
 import org.apache.jackrabbit.core.security.authorization.combined.CombinedProvider;
-import org.apache.jackrabbit.spi.Name;
 import org.apache.jackrabbit.spi.Path;
-import org.apache.jackrabbit.spi.commons.conversion.CachingPathResolver;
-import org.apache.jackrabbit.spi.commons.conversion.IllegalNameException;
-import org.apache.jackrabbit.spi.commons.conversion.NameResolver;
-import org.apache.jackrabbit.spi.commons.conversion.ParsingPathResolver;
-import org.apache.jackrabbit.spi.commons.conversion.PathResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,208 +66,17 @@ import org.slf4j.LoggerFactory;
 // TODO: should extend just abstract control provider!!!
 public class MagnoliaAccessProvider extends CombinedProvider {
 
-    /**
-     * Permission based on user ACL for given workspace. Caches the result of resolving paths from ids, the caching
-     * implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}.
-     *
-     * @version $Id$
-     */
-    public class ACLBasedPermissions extends AbstractCompiledPermissions {
-
-        private final AccessManager ami;
-        @SuppressWarnings("unchecked")
-        private final Map<ItemId, Boolean> readCache = new GrowingLRUMap(1024, 5000);
-        private final Object monitor = new Object();
-
-        public ACLBasedPermissions(List<Permission> permissions) {
-            // TODO: use provider instead of fixed impl
-            ami = new AccessManagerImpl();
-            ami.setPermissionList(permissions);
-        }
-
-        @Override
-        public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
-
-            if ((itemId != null && "cafebabe-cafe-babe-cafe-babecafebabe".equals(itemId.toString())) || (itemPath != null && "/".equals(itemPath.toString()))) {
-                // quick check - allow access to root to all like in old mgnl security
-                return true;
-            }
-
-            if (itemPath == null) {
-
-                // we deal only with permissions on nodes
-                if (!itemId.denotesNode()) {
-                    itemId = ((PropertyId)itemId).getParentId();
-                }
-
-                synchronized (monitor) {
-
-                    if (readCache.containsKey(itemId)) {
-                        return readCache.get(itemId);
-                    }
-
-                    itemPath = session.getHierarchyManager().getPath(itemId);
-                    boolean canRead = canRead(itemPath, itemId);
-                    readCache.put(itemId, canRead);
-                    return canRead;
-                }
-            }
-
-            String path = pathResolver.getJCRPath(itemPath);
-            log.debug("Read request for " + path + " :: " + itemId);
-            return ami.isGranted(path, Permission.READ);
-        }
-
-        @Override
-        protected Result buildResult(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Result getResult(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean grants(Path absPath, int permissions) throws RepositoryException {
-            long magnoliaPermissions = convertJackrabbitPermissionsToMagnoliaPermissions(permissions);
-            return ami.isGranted(pathResolver.getJCRPath(absPath), magnoliaPermissions);
-        }
-
-        @Override
-        public int getPrivileges(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected Result buildRepositoryResult() throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected PrivilegeManagerImpl getPrivilegeManagerImpl() throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-    }
-
-    /**
-     * Permissions granting access to all users to root Caches the result of resolving paths from ids, the caching implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}. See {@link MagnoliaAccessProvider#canAccessRoot(Set)} for details.
-     * 
-     * @version $Id$
-     */
-    public class RootOnlyPermissions extends AbstractCompiledPermissions {
-
-        @SuppressWarnings("unchecked")
-        private final Map<ItemId, Boolean> readCache = new GrowingLRUMap(1024, 5000);
-        private final Object monitor = new Object();
-
-        @Override
-        public boolean canRead(Path itemPath, ItemId itemId) throws RepositoryException {
-
-            if (itemPath == null) {
-
-                // we deal only with permissions on nodes
-                if (!itemId.denotesNode()) {
-                    itemId = ((PropertyId) itemId).getParentId();
-                }
-
-                synchronized (monitor) {
-
-                    if (readCache.containsKey(itemId)) {
-                        return readCache.get(itemId);
-                    }
-
-                    itemPath = session.getHierarchyManager().getPath(itemId);
-
-                    boolean canRead = "/".equals(pathResolver.getJCRPath(itemPath));
-                    readCache.put(itemId, canRead);
-                    return canRead;
-                }
-            }
-
-            String path = pathResolver.getJCRPath(itemPath);
-            log.debug("Read request for " + path + " :: " + itemId);
-            return "/".equals(pathResolver.getJCRPath(itemPath));
-        }
-
-        @Override
-        protected Result buildResult(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Result getResult(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean grants(Path absPath, int permissions) throws RepositoryException {
-            return "/".equals(pathResolver.getJCRPath(absPath));
-        }
-
-        @Override
-        public int getPrivileges(Path absPath) throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected Result buildRepositoryResult() throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected PrivilegeManagerImpl getPrivilegeManagerImpl() throws RepositoryException {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     private static final Logger log = LoggerFactory.getLogger(MagnoliaAccessProvider.class);
-
-    /**
-     * Used to convert a jackrabbit Path abstraction into a path string with slashes and no namespaces.
-     */
-    private final PathResolver pathResolver = new CachingPathResolver(new ParsingPathResolver(null, new NameResolver() {
-
-        @Override
-        public Name getQName(String name) throws IllegalNameException, NamespaceException {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getJCRName(Name name) throws NamespaceException {
-            return name.getLocalName();
-        }
-    }));
-
-    private static final long permissionMapping[][] = {
-        {org.apache.jackrabbit.core.security.authorization.Permission.READ, Permission.READ},
-        {org.apache.jackrabbit.core.security.authorization.Permission.SET_PROPERTY, Permission.SET},
-        {org.apache.jackrabbit.core.security.authorization.Permission.ADD_NODE, Permission.ADD},
-        {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_NODE, Permission.REMOVE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.REMOVE_PROPERTY, Permission.REMOVE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.READ_AC, Permission.EXECUTE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.MODIFY_AC, Permission.EXECUTE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.NODE_TYPE_MNGMT, Permission.ADD},
-        {org.apache.jackrabbit.core.security.authorization.Permission.VERSION_MNGMT, Permission.EXECUTE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.LOCK_MNGMT, Permission.EXECUTE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.LIFECYCLE_MNGMT, Permission.EXECUTE},
-        {org.apache.jackrabbit.core.security.authorization.Permission.RETENTION_MNGMT, Permission.EXECUTE},
-    };
 
     private CompiledPermissions RootOnlyPermission;
 
-    private long convertJackrabbitPermissionsToMagnoliaPermissions(long jackRabbitPermissions) {
-        long magnoliaPermissions = 0;
-        for (long[] mapping : permissionMapping) {
-            long jackrabbitPermission = mapping[0];
-            long magnoliaPermission = mapping[1];
-            if ((jackRabbitPermissions & jackrabbitPermission) != 0) {
-                magnoliaPermissions = magnoliaPermissions | magnoliaPermission;
-            }
-        }
-        return magnoliaPermissions;
-    }
+    private Map<?, ?> configuration;
+
+    private final Class<? extends DefaultACLBasedPermissions> defaultPermissionsClass = DefaultACLBasedPermissions.class;
+
+    private Class<? extends DefaultACLBasedPermissions> permissionsClass;
+
+    private final String compiledPermissionsClass = null;
 
     @Override
     public boolean canAccessRoot(Set<Principal> principals) throws RepositoryException {
@@ -315,7 +113,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     }
 
     private CompiledPermissions getUserPermissions(List<Permission> permissions) {
-        return new ACLBasedPermissions(permissions);
+         return Classes.getClassFactory().newInstance(permissionsClass, permissions, session, configuration);
     }
 
     @Override
@@ -336,11 +134,42 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         return super.getEffectivePolicies(principals, permissions);
     }
 
+    private final String warnMessage = "Check settings of 'permissionsClass' parameter under Workspace>WorkspaceSecurity>AccessControlProvider>. " +
+            "Using default " + defaultPermissionsClass + " instead. Only classes extended from this default class can be used.";
+
     @Override
     public void init(Session systemSession, Map configuration) throws RepositoryException {
+
         log.debug("init({}, {})", systemSession, configuration);
         super.init(systemSession, configuration);
-        RootOnlyPermission = new RootOnlyPermissions();
+        RootOnlyPermission = new RootOnlyPermissions(session);
+        this.configuration = configuration;
+
+        Object compiledPermissionsClass = configuration.get("permissionsClass");
+        if (compiledPermissionsClass == null) {
+            permissionsClass = defaultPermissionsClass;
+            return;
+        }
+        try {
+            permissionsClass = Classes.getClassFactory().forName((String)compiledPermissionsClass);
+            if (!(DefaultACLBasedPermissions.class).isAssignableFrom(permissionsClass)) {
+                log.warn("The '{}' cannot be used as permissionClass. " + warnMessage, permissionsClass, defaultPermissionsClass);
+                permissionsClass = defaultPermissionsClass;
+            } else { //try to instantiate
+                Classes.getClassFactory().newInstance(permissionsClass, new LinkedList<Permission>(), session, configuration);
+            }
+        } catch (ClassNotFoundException e) {
+            log.warn("The class '{}' doesn't exist. " + warnMessage, compiledPermissionsClass, defaultPermissionsClass);
+            permissionsClass = defaultPermissionsClass;
+
+        } catch (MgnlInstantiationException e) {
+            log.warn("Cannot instantiate '{}'. The permissionClass must have constructor with exact same arguments like '{}'. Using the default permission class '{}' instead.", permissionsClass, defaultPermissionsClass);
+            permissionsClass = defaultPermissionsClass;
+
+        } catch (Exception e) { //use default permission class if any exception occurs
+            log.warn("Cannot instantiate permissionsClass '{}'. " + warnMessage, permissionsClass, e);
+            permissionsClass = defaultPermissionsClass;
+        }
     }
 
     @Override
@@ -363,5 +192,4 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         sb.delete(0,4);
         return sb.toString();
     }
-
 }
