@@ -55,7 +55,6 @@ public class RootOnlyPermissionTest extends MgnlTestCase {
     private final Element rootElement = mock(Element.class);
     private final Element pageElement = mock(Element.class);
     private final Element contentNodeElement = mock(Element.class);
-    private final Element[] elements = new Element[]{pageElement,contentNodeElement};
     private final Path itemPath = mock(Path.class);
     private final Name rootName = mock(Name.class);
     private final Name pageName = mock(Name.class);
@@ -64,7 +63,6 @@ public class RootOnlyPermissionTest extends MgnlTestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        when(itemPath.getElements()).thenReturn(elements);
         when(rootElement.getName()).thenReturn(rootName);
         when(rootElement.denotesRoot()).thenReturn(true);
         when(pageElement.getName()).thenReturn(pageName);

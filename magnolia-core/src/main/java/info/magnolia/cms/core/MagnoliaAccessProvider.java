@@ -157,6 +157,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
                 permissionsClass = defaultPermissionsClass;
             } else { //try to instantiate
                 Classes.getClassFactory().newInstance(permissionsClass, new LinkedList<Permission>(), session, configuration);
+                log.info("Using {} for resolving permissions.", permissionsClass);
             }
         } catch (ClassNotFoundException e) {
             log.warn("The class '{}' doesn't exist. " + warnMessage, compiledPermissionsClass, defaultPermissionsClass);

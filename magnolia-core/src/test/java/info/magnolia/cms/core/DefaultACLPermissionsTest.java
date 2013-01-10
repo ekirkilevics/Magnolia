@@ -87,17 +87,15 @@ public class DefaultACLPermissionsTest extends MgnlTestCase {
         HierarchyManager hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.WEBSITE, "");
         hm.createContent("/", "", MgnlNodeType.NT_PAGE);
         Content page = hm.createContent("/", "page", MgnlNodeType.NT_PAGE);
-        Content contentNode = hm.createContent("/", "contentNode", MgnlNodeType.NT_CONTENTNODE);
+        Content contentNode = hm.createContent("/page", "contentNode", MgnlNodeType.NT_CONTENTNODE);
 
         when(session.nodeExists("page/contentNode")).thenReturn(true);
         when(session.getNode("/")).thenReturn(page.getJCRNode());
         when(session.getNode("page")).thenReturn(page.getJCRNode());
         when(session.getNode("page/contentNode")).thenReturn(contentNode.getJCRNode());
 
-        when(itemPath.getElements()).thenReturn(elements);
         when(itemPath.getAncestor(0)).thenReturn(itemPath);
         when(itemPath.getAncestor(1)).thenReturn(ancestorPath);
-        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
 
         when(rootElement.getName()).thenReturn(rootName);
         when(rootElement.denotesRoot()).thenReturn(true);
