@@ -36,7 +36,6 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,16 +64,12 @@ import org.slf4j.LoggerFactory;
  * Permissions are retrieved from requested node or from its ancestor, if the node isn't one of valid node types specified via constructor.
  * Permission based on user ACL for given workspace. Caches the result of resolving paths from ids, the caching
  * implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}.
- *
- * @version $Id$
  */
 public class NodeTypeBasedPermissions extends DefaultACLBasedPermissions {
 
-    private final Set<String> validNodeTypes = new HashSet<String>();
+    private final Set<String> allowedNodeTypes = new HashSet<String>();
 
     private static final Logger log = LoggerFactory.getLogger(NodeTypeBasedPermissions.class);
-
-    private static Method method;
 
     /**
      * Used to convert a jackrabbit Path abstraction into a path string with slashes and no namespaces.
@@ -94,15 +89,19 @@ public class NodeTypeBasedPermissions extends DefaultACLBasedPermissions {
 
     /**
      * Constructor.
-     * @param permissions List of permissions
-     * @param validNodeTypes MgnlNodeType types of node from which will be permissions retrieved
-     * @param session session with the workspace
+     * @param permissions list of permissions
+     * @param session workspace session
+     * @param configuration AccessControlProvider configuration, parameters from workspace.xml, in this class for obtaining noTypes parameter
      */
     public NodeTypeBasedPermissions(List<Permission> permissions, SessionImpl session, Map<?, ?> configuration) {
-        super(permissions,session, configuration); //TODO retrieve parameter here
-        Object nodeType = configuration.get("nodeType"); //get after in Permission class
-        if (nodeType != null) {
-            validNodeTypes.add((String)nodeType);
+        super(permissions,session, configuration);
+        String nodeTypes = (String)configuration.get("nodeTypes");
+
+        if (nodeTypes != null) {
+            String[] splittedTypes = nodeTypes.split(",");
+            for (String type: splittedTypes) {
+                    allowedNodeTypes.add(type);
+            }
         }
     }
 
@@ -142,10 +141,6 @@ public class NodeTypeBasedPermissions extends DefaultACLBasedPermissions {
         return ami.isGranted(path, Permission.READ);
     }
 
-
-
-
-
     @Override
     public boolean grants(Path itemPath, int permissions) throws RepositoryException {
 
@@ -169,16 +164,18 @@ public class NodeTypeBasedPermissions extends DefaultACLBasedPermissions {
                     node = node.getParent();
                     emersion++;
                 }
-            } catch (ItemNotFoundException e) {} //root node reached
+            } catch (ItemNotFoundException e) {
+                return 0; //node with an allowed type wasn't find, behave like DefaultACLBasedPermissions
+            }
         }
         return emersion;
     }
 
     private boolean isAllowedNodeType(Node node) throws RepositoryException {
-        if (validNodeTypes.isEmpty()) {
-            return true;
+        if (allowedNodeTypes.isEmpty()) {
+            return true;  //allowed node types aren't specified, behave like DefaultACLBasedPermissions
         }
-        for(String nodeType: validNodeTypes) {
+        for(String nodeType: allowedNodeTypes) {
             if (node.isNodeType(nodeType)) {
                 return true;
             }

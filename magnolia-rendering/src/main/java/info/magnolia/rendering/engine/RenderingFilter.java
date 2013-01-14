@@ -46,7 +46,6 @@ import java.io.InputStream;
 import java.util.Collections;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -253,15 +252,11 @@ public class RenderingFilter extends AbstractMgnlFilter {
                     if (NumberUtils.isNumber(sizeString)) {
                         res.setContentLength(Integer.parseInt(sizeString));
                     }
+                    Property streamProperty = atom.getProperty(JcrConstants.JCR_DATA);
+                    return streamProperty.getStream();
                 }
-                Property streamProperty = atom.getProperty(JcrConstants.JCR_DATA);
-                return streamProperty.getStream();
             }
 
-            log.warn("Resource not found: [{}]", path);
-
-        }
-        catch (PathNotFoundException e) {
             log.warn("Resource not found: [{}]", path);
         }
         catch (RepositoryException e) {

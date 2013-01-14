@@ -33,7 +33,7 @@
  */
 package info.magnolia.rendering.engine;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -249,4 +249,43 @@ public class RenderingFilterTest {
         verify(response).setContentLength(1);
         assertEquals("X", outputStream.getContent());
     }
+
+    @Test
+    public void testHandleResourceRequestWhenNoJCRDataIsAvailable() throws Exception {
+        // GIVEN
+        String contentProperties = StringUtils.join(Arrays.asList(
+                "/first/attachment2.@type=mgnl:resource",
+                "/first/attachment2.fileName=test",
+                "/first/attachment2.extension=jpeg",
+                "/first/attachment2.jcr\\:mimeType=image/jpeg",
+                "/first/attachment2.size=1"
+        ), "\n");
+
+        final String first = "first";
+
+        MockSession session = SessionTestUtil.createSession("testWorkspace", contentProperties);
+
+        final String binaryNodeName = "attachment2";
+
+        AggregationState aggState = new AggregationState();
+        aggState.setHandle("/" + first + "/" + binaryNodeName);
+        final String repository = "testRepository";
+        aggState.setRepository(repository);
+        WebContext context = mock(WebContext.class);
+        MgnlContext.setInstance(context);
+        when(context.getJCRSession(repository)).thenReturn(session);
+        MockServletOutputStream outputStream = new MockServletOutputStream();
+
+        when(response.getOutputStream()).thenReturn(outputStream);
+
+        RenderingFilter filter = new RenderingFilter(renderingEngine, templateDefinitionRegistry);
+
+        // WHEN
+        filter.handleResourceRequest(aggState, request, response);
+
+        // THEN
+        verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+        assertEquals("", outputStream.getContent());
+    }
+
 }

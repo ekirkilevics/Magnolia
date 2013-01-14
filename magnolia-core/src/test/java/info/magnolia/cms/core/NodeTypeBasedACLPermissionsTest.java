@@ -71,7 +71,6 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
     private final Element rootElement = mock(Element.class);
     private final Element pageElement = mock(Element.class);
     private final Element contentNodeElement = mock(Element.class);
-    private final Element[] elements = new Element[]{pageElement,contentNodeElement};
     private final Path itemPath = mock(Path.class);
     private final Path ancestorPath = mock(Path.class);
     private final Name rootName = mock(Name.class);
@@ -90,7 +89,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         HierarchyManager hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.WEBSITE, "");
         Content root = hm.getContent("/");
         Content page = hm.createContent("/", "page", MgnlNodeType.NT_PAGE);
-        Content contentNode = hm.createContent("/", "contentNode", MgnlNodeType.NT_CONTENTNODE);
+        Content contentNode = hm.createContent("/page", "contentNode", MgnlNodeType.NT_CONTENTNODE);
 
         when(session.nodeExists("page/contentNode")).thenReturn(true);
         when(session.nodeExists("page")).thenReturn(true);
@@ -102,10 +101,8 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         list.add(permissionImpl);
         principals.add(principal);
 
-        when(itemPath.getElements()).thenReturn(elements);
         when(itemPath.getAncestor(0)).thenReturn(itemPath);
         when(itemPath.getAncestor(1)).thenReturn(ancestorPath);
-        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
         when(ancestorPath.getElements()).thenReturn(new Element[]{pageElement});
 
         when(rootElement.getName()).thenReturn(rootName);
@@ -126,7 +123,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         permissionImpl.setPermissions(info.magnolia.cms.security.Permission.READ);
         Map<Object, Object> configuration = new HashMap<Object, Object>();
         configuration.put("permissionsClass", "info.magnolia.cms.core.NodeTypeBasedPermissions");
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
         when(itemPath.getElements()).thenReturn(new Element[]{pageElement});
 
         NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
@@ -145,7 +142,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         permissionImpl.setPermissions(info.magnolia.cms.security.Permission.READ);
         Map<Object, Object> configuration = new HashMap<Object, Object>();
         configuration.put("permissionsClass", "info.magnolia.cms.core.NodeTypeBasedPermissions");
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
         when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
 
         NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
@@ -165,7 +162,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
 
         Map<Object, Object> configuration = new HashMap<Object, Object>();
         configuration.put("permissionsClass", "info.magnolia.cms.core.NodeTypeBasedPermissions");
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
 
         when(itemPath.getElements()).thenReturn(new Element[]{rootElement});
 
@@ -183,7 +180,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         UrlPattern urlPattern = new SimpleUrlPattern("page");
         Map<Object, Object> configuration = new HashMap<Object, Object>();
         configuration.put("permissionsClass", "info.magnolia.cms.core.NodeTypeBasedPermissions");
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
         when(itemPath.getElements()).thenReturn(new Element[]{pageElement});
 
         NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
@@ -202,7 +199,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         //GIVEN
         UrlPattern urlPattern = new SimpleUrlPattern("page");
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
         when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
 
         NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
@@ -221,7 +218,7 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
         //GIVEN
         UrlPattern urlPattern = new SimpleUrlPattern("page");
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("nodeType", MgnlNodeType.NT_PAGE);
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE);
 
         when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
 
@@ -232,6 +229,59 @@ public class NodeTypeBasedACLPermissionsTest extends MgnlTestCase {
 
         //WHEN
         boolean access = permissions.grants(itemPath, org.apache.jackrabbit.core.security.authorization.Permission.ALL);
+        //THEN
+        assertFalse(access);
+    }
+
+    @Test
+    public void testGrantsMultipleNodeTypesSpecified() throws RepositoryException {
+        //GIVEN
+        UrlPattern urlPattern = new SimpleUrlPattern("page");
+        Map<Object, Object> configuration = new HashMap<Object, Object>();
+        configuration.put("nodeTypes", MgnlNodeType.NT_PAGE + "," + MgnlNodeType.NT_CONTENTNODE);
+        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
+
+        NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
+        long convertedPermissions = permissions.convertJackrabbitPermissionsToMagnoliaPermissions(org.apache.jackrabbit.core.security.authorization.Permission.READ);
+        permissionImpl.setPattern(urlPattern);
+        permissionImpl.setPermissions(convertedPermissions);
+
+        //WHEN
+        boolean access = permissions.grants(itemPath, org.apache.jackrabbit.core.security.authorization.Permission.READ);
+        //THEN
+        assertFalse(access);
+    }
+
+    @Test
+    public void testCanReadAnyNodeTypesSpecified() throws RepositoryException {
+        //GIVEN
+        UrlPattern urlPattern = new SimpleUrlPattern("page");
+        permissionImpl.setPattern(urlPattern);
+        permissionImpl.setPermissions(info.magnolia.cms.security.Permission.READ);
+        Map<Object, Object> configuration = new HashMap<Object, Object>();
+        //any node type specified, should behave like DefaultACLBasedPermissions
+        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
+
+        NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
+        //WHEN
+        boolean access = permissions.canRead(itemPath, itemId);
+        //THEN
+        assertFalse(access);
+    }
+
+    @Test
+    public void testCanReadInvalidNodeTypeSpecified() throws RepositoryException {
+        //GIVEN
+        UrlPattern urlPattern = new SimpleUrlPattern("page");
+        permissionImpl.setPattern(urlPattern);
+        permissionImpl.setPermissions(info.magnolia.cms.security.Permission.READ);
+        Map<Object, Object> configuration = new HashMap<Object, Object>();
+        configuration.put("nodeTypes", "someUnexistingNodeType");
+        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
+
+        NodeTypeBasedPermissions permissions = new NodeTypeBasedPermissions(list, session, configuration);
+        //WHEN
+        boolean access = permissions.canRead(itemPath, itemId); //invalid node type specified, should behave like DefaultACLBasedPermissions
         //THEN
         assertFalse(access);
     }

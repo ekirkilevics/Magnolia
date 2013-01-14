@@ -47,8 +47,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Permissions granting access to all users to root Caches the result of resolving paths from ids, the caching implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}. See {@link MagnoliaAccessProvider#canAccessRoot()} for details.
- *
- * @version $Id$
  */
 public class RootOnlyPermissions extends DefaultACLBasedPermissions {
 

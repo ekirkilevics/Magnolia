@@ -63,8 +63,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Permission based on user ACL for given workspace. Caches the result of resolving paths from ids, the caching
  * implementation based {@link org.apache.jackrabbit.core.security.authorization.principalbased.ACLProvider.CompiledPermissionImpl}.
- *
- * @version $Id$
  */
 public class DefaultACLBasedPermissions extends AbstractCompiledPermissions {
 
