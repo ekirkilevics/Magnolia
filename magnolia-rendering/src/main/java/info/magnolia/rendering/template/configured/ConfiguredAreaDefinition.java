@@ -52,6 +52,7 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
     // default value is undefined to allow for merging with possibly defined values by parents
     private Boolean enabled;
     private Boolean optional;
+    private Integer maxComponents;
     private String type;
     private String contentStructure;
     private InheritanceConfiguration inheritance = new ConfiguredInheritance();
@@ -114,4 +115,12 @@ public class ConfiguredAreaDefinition extends ConfiguredTemplateDefinition imple
         this.optional = optional;
     }
 
+    @Override
+    public Integer getMaxComponents() {
+        return maxComponents;
+    }
+
+    public void setMaxComponents(Integer maxComponents) {
+        this.maxComponents = maxComponents;
+    }
 }

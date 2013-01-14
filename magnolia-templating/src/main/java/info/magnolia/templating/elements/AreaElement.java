@@ -100,6 +100,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private Boolean inherit;
     private Boolean optional;
     private Boolean editable;
+    private Integer maxComponents;
 
     private Map<String, Object> contextAttributes = new HashMap<String, Object>();
 
@@ -142,6 +143,8 @@ public class AreaElement extends AbstractContentTemplatingElement {
         if(this.areaDefinition == null){
             buildAdHocAreaDefinition();
         }
+
+        this.maxComponents = resolveMaximumOfComponents();
 
         // read area node and calculate the area path
         this.areaNode = getPassedContent();
@@ -242,10 +245,20 @@ public class AreaElement extends AbstractContentTemplatingElement {
                 List<ContentMap> components = new ArrayList<ContentMap>();
 
                 if (areaNode != null) {
-                    for (Node node : NodeUtil.getNodes(areaNode, NodeTypes.Component.NAME)) {
+                    List<Node> listOfComponents = NodeUtil.asList(NodeUtil.getNodes(areaNode, NodeTypes.Component.NAME));
+                    int numberOfComponents = listOfComponents.size();
+
+                    if (numberOfComponents > maxComponents) {
+                        listOfComponents = listOfComponents.subList(0, maxComponents);
+                        log.warn("The area {} have maximum number of components set to {}, but has got " + numberOfComponents +
+                              " components. Exceeded components won't be added.", areaNode, maxComponents);
+                    }
+
+                    for (Node node : listOfComponents) {
                         components.add(new ContentMap(node));
                     }
                 }
+
                 if(AreaDefinition.TYPE_SINGLE.equals(type)) {
                     if(components.size() > 1) {
                         throw new RenderException("Can't render single area [" + areaNode + "]: expected one component node but found more.");
@@ -399,6 +412,10 @@ public class AreaElement extends AbstractContentTemplatingElement {
         return editable != null ? editable : areaDefinition != null && areaDefinition.getEditable() != null ? areaDefinition.getEditable() : null;
     }
 
+    private Integer resolveMaximumOfComponents() {
+        return maxComponents != null ? maxComponents : areaDefinition != null && areaDefinition.getMaxComponents() != null ? areaDefinition.getMaxComponents() : Integer.MAX_VALUE;
+    }
+
     private boolean isInheritanceEnabled() {
         return areaDefinition != null && areaDefinition.getInheritance() != null && areaDefinition.getInheritance().isEnabled() != null && areaDefinition.getInheritance().isEnabled();
     }
@@ -410,6 +427,14 @@ public class AreaElement extends AbstractContentTemplatingElement {
     private boolean hasComponents(Node parent) throws RenderException {
         try {
             return NodeUtil.getNodes(parent, NodeTypes.Component.NAME).iterator().hasNext();
+        } catch (RepositoryException e) {
+            throw new RenderException(e);
+        }
+    }
+
+    private int numberOfComponents(Node parent) throws RenderException {
+        try {
+            return NodeUtil.asList(NodeUtil.getNodes(parent, NodeTypes.Component.NAME)).size();
         } catch (RepositoryException e) {
             throw new RenderException(e);
         }
@@ -444,7 +469,7 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     private boolean shouldShowAddButton() throws RenderException {
 
-        if(areaNode == null || type.equals(AreaDefinition.TYPE_NO_COMPONENT) || (type.equals(AreaDefinition.TYPE_SINGLE) && hasComponents(areaNode))) {
+        if(areaNode == null || type.equals(AreaDefinition.TYPE_NO_COMPONENT) || (type.equals(AreaDefinition.TYPE_SINGLE) && hasComponents(areaNode)) || numberOfComponents(areaNode) >= maxComponents) {
             return false;
         }
 
@@ -529,5 +554,13 @@ public class AreaElement extends AbstractContentTemplatingElement {
 
     public void setContextAttributes(Map<String, Object> contextAttributes) {
         this.contextAttributes = contextAttributes;
+    }
+
+    public Integer getMaxComponents() {
+        return maxComponents;
+    }
+
+    public void setMaxComponents(Integer maxComponents) {
+        this.maxComponents = maxComponents;
     }
 }

@@ -71,4 +71,5 @@ public interface AreaDefinition extends TemplateDefinition, Cloneable {
      */
     Boolean isOptional();
 
+    Integer getMaxComponents();
 }
