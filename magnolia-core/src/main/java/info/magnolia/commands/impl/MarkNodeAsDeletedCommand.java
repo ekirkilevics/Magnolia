@@ -45,7 +45,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
-import info.magnolia.jcr.predicate.JCRPropertyHidingPredicate;
+import info.magnolia.jcr.predicate.JCRMgnlPropertyHidingPredicate;
 import info.magnolia.jcr.predicate.NodeTypePredicate;
 import info.magnolia.jcr.util.MetaDataUtil;
 import info.magnolia.objectfactory.Components;
@@ -158,7 +158,7 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
             iter.next().remove();
         }
         // delete properties (incl title ??)
-        for (Iterator<Property> iter = new FilteringPropertyIterator(node.getProperties(), new JCRPropertyHidingPredicate()); iter.hasNext();) {
+        for (Iterator<Property> iter = new FilteringPropertyIterator(node.getProperties(), new JCRMgnlPropertyHidingPredicate()); iter.hasNext();) {
             Property property = iter.next();
             property.remove();
         }
