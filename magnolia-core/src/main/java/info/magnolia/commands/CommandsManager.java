@@ -36,11 +36,15 @@ package info.magnolia.commands;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.objectfactory.Components;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,8 +59,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Manages the Commands and Catalogs.
  *
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
  */
 @Singleton
 public class CommandsManager extends ObservedManager {
@@ -161,6 +163,43 @@ public class CommandsManager extends ObservedManager {
     @Deprecated
     public static CommandsManager getInstance() {
         return Components.getSingleton(CommandsManager.class);
+    }
+
+    /**
+     * Executes the given command at the given catalog with the given parameters.
+     * 
+     * @throws Exception if an error occurs during command execution or if the command could not be found in any catalog.
+     * 
+     */
+    public boolean executeCommand(final String catalogName, final String commandName, final Map<String, Object> params) throws Exception {
+        final Command command = getCommand(catalogName, commandName);
+        log.debug("Executing command [{}] from catalog [{}] and params [{}]...", new Object[] { commandName, catalogName, params });
+        return executeCommand(command, params);
+    }
+
+    /**
+     * Executes the given command by first looking in the default catalog. Should the command not be found, it will try to look in all other catalogs.
+     * 
+     * @see CommandsManager#executeCommand(String, String, Map)
+     */
+    public boolean executeCommand(final String commandName, final Map<String, Object> params) throws Exception {
+        return executeCommand(DEFAULT_CATALOG, commandName, params);
+    }
+
+    /**
+     * Executes the given command.
+     * 
+     * @see CommandsManager#executeCommand(String, Map)
+     */
+    public boolean executeCommand(final Command command, final Map<String, Object> params) throws Exception {
+
+        Context context = MgnlContext.getInstance();
+        if (params != null) {
+            for (Entry<String, Object> param : params.entrySet()) {
+                context.put(param.getKey(), param.getValue());
+            }
+        }
+        return command.execute(context);
     }
 
 }
