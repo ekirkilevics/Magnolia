@@ -282,10 +282,10 @@ public class MgnlUserManagerTest {
     public void testUserWasCreatedUnderCertainPath() throws PathNotFoundException, RepositoryException {
         // GIVEN
         final MgnlUserManager um = new MgnlUserManager();
-        um.setRealmName("usersAdmin");
+        um.setRealmName("admin");
         final SystemContext ctx = mock(SystemContext.class);
         final MockSession session = new MockSession("users");
-        session.getRootNode().addNode("usersAdmin").addNode("path").addNode("to").addNode("my").addNode("folder");
+        session.getRootNode().addNode("admin").addNode("path").addNode("to").addNode("my").addNode("folder");
 
         when(ctx.getJCRSession("users")).thenReturn(session);
 
@@ -296,10 +296,10 @@ public class MgnlUserManagerTest {
         MgnlContext.setInstance(ctx);
 
         // WHEN
-        um.createUser("/path/to/my/folder", "peter", "peter");
+        um.createUser("/admin/path/to/my/folder", "peter", "peter");
 
         // THEN
-        assertNotNull(session.getNode("/usersAdmin/path/to/my/folder/peter"));
+        assertNotNull(session.getNode("/admin/path/to/my/folder/peter"));
     }
 
 }
