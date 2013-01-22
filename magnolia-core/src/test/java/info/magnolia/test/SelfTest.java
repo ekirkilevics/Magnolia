@@ -65,7 +65,7 @@ public class SelfTest {
         ComponentsTestUtil.setImplementation(SystemContext.class, MockContext.class);
         ComponentsTestUtil.setImplementation(MessagesManager.class, DefaultMessagesManager.class);
         MgnlContext.setInstance(ctx);
-        new TestCommand().execute((org.apache.commons.chain.Context) ctx);
+        new TestCommand().execute((info.magnolia.context.Context) ctx);
     }
 
 }

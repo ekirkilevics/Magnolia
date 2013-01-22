@@ -34,14 +34,14 @@
 package info.magnolia.jcr.node2bean;
 
 import info.magnolia.commands.MgnlCommand;
+import info.magnolia.commands.chain.Chain;
+import info.magnolia.commands.chain.Command;
 import info.magnolia.jcr.node2bean.impl.Node2BeanTransformerImpl;
 import info.magnolia.objectfactory.ComponentProvider;
 
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.chain.Chain;
-import org.apache.commons.chain.Command;
 
 /**
  * Transformer used in Node2BeanTest.

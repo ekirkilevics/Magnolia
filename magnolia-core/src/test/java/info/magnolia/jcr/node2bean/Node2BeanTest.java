@@ -63,8 +63,9 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.impl.ChainBase;
+import info.magnolia.commands.chain.ChainBase;
+import info.magnolia.commands.chain.Command;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
