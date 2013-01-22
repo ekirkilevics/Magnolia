@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2010-2012 Magnolia International
+ * This file Copyright (c) 2010-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -49,11 +49,12 @@ import java.util.Map;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.chain.Catalog;
-import org.apache.commons.chain.Chain;
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.commands.chain.Catalog;
+import info.magnolia.commands.chain.Chain;
+import info.magnolia.commands.chain.ChainBase;
+import info.magnolia.commands.chain.Command;
 
 /**
 * Command to transform old "impl" reference to implementing class to new "class" node data name for references.
