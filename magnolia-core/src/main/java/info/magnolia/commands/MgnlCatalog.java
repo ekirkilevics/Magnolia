@@ -55,6 +55,10 @@ public class MgnlCatalog {
     protected Map commands = Collections.synchronizedMap(new HashMap());
 
     // --------------------------------------------------------- Constructors
+
+    public MgnlCatalog() {
+    }
+
     public MgnlCatalog(Map commands) {
         this.commands = Collections.synchronizedMap(commands);
     }
