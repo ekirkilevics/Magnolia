@@ -30,10 +30,10 @@
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
       <exclusions>
-      	<exclusion>
-      		<artifactId>bcprov-jdk15</artifactId>
-      		<groupId>org.bouncycastle</groupId>
-      	</exclusion>
+          <exclusion>
+              <artifactId>bcprov-jdk15</artifactId>
+              <groupId>org.bouncycastle</groupId>
+          </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -87,10 +87,6 @@
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-chain</groupId>
-      <artifactId>commons-chain</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-lang</groupId>
