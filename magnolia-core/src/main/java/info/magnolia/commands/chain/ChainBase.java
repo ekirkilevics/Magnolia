@@ -30,7 +30,6 @@
  * Any modifications to this file must keep this entire header
  * intact.
  *
- *
  */
 package info.magnolia.commands.chain;
 
