@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -56,8 +56,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Creates a version for the passed path in the website repository.
- * @author Philipp Bracher
- * @version $Id$
+ * 
  */
 public class VersionCommand extends RuleBasedCommand {
 
@@ -68,7 +67,7 @@ public class VersionCommand extends RuleBasedCommand {
     private String comment;
 
     /**
-     * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context)
+     * @see info.magnolia.commands.MgnlCommand#execute(info.magnolia.context.Context)
      */
     @Override
     public boolean execute(Context ctx) {

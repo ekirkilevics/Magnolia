@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,8 +33,9 @@
  */
 package info.magnolia.commands;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
+import info.magnolia.commands.chain.Command;
+import info.magnolia.context.Context;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
