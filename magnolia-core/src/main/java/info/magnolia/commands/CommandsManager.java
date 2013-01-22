@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,12 +36,14 @@ package info.magnolia.commands;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.commands.chain.Command;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
 import info.magnolia.objectfactory.Components;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,9 +52,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.chain.Catalog;
-import org.apache.commons.chain.CatalogFactory;
-import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -71,10 +70,13 @@ public class CommandsManager extends ObservedManager {
 
     private final Node2BeanProcessor nodeToBean;
 
+    private Map<String, MgnlCatalog> catalogs;
+
     @Inject
     public CommandsManager(Node2BeanProcessor nodeToBean) {
         this.nodeToBean = nodeToBean;
         this.commandTransformer = new CommandTransformer();
+        this.catalogs = new HashMap<String, MgnlCatalog>();
     }
 
     /**
@@ -96,9 +98,8 @@ public class CommandsManager extends ObservedManager {
     protected void registerCatalog(Content node) {
         try {
             MgnlCatalog catalog = (MgnlCatalog) nodeToBean.toBean(node.getJCRNode(), true, commandTransformer, Components.getComponentProvider());
-            CatalogFactory factory = CatalogFactory.getInstance();
-            if (factory.getCatalog(catalog.getName()) == null) {
-                factory.addCatalog(catalog.getName(), catalog);
+            if (catalogs.get(catalog.getName()) == null) {
+                catalogs.put(catalog.getName(), catalog);
             } else {
                 // runtime because this code is called by observation and there's no place to catch it anyway
                 throw new RuntimeException("Catalog [" + catalog.getName() + "] is already registered. Please run: select * from nt:base where jcr:path like '/modules/%/commands/"+ catalog.getName()+"' on config repository to find out the duplicate.");
@@ -119,7 +120,7 @@ public class CommandsManager extends ObservedManager {
      */
     @Override
     protected void onClear() {
-        CatalogFactory.clear();
+        catalogs.clear();
     }
 
     /**
@@ -129,7 +130,7 @@ public class CommandsManager extends ObservedManager {
      * @return the command to execute
      */
     public Command getCommand(String catalogName, String commandName) {
-        Catalog catalog = CatalogFactory.getInstance().getCatalog(catalogName);
+        MgnlCatalog catalog = catalogs.get(catalogName);
         if (catalog != null) {
             return catalog.getCommand(commandName);
         }
@@ -166,9 +167,12 @@ public class CommandsManager extends ObservedManager {
     }
 
     /**
-     * Executes the given command at the given catalog with the given parameters.
+     * Executes the given command at the given catalog with the given
+     * parameters.
      * 
-     * @throws Exception if an error occurs during command execution or if the command could not be found in any catalog.
+     * @throws Exception
+     *             if an error occurs during command execution or if the command
+     *             could not be found in any catalog.
      * 
      */
     public boolean executeCommand(final String catalogName, final String commandName, final Map<String, Object> params) throws Exception {
@@ -178,7 +182,9 @@ public class CommandsManager extends ObservedManager {
     }
 
     /**
-     * Executes the given command by first looking in the default catalog. Should the command not be found, it will try to look in all other catalogs.
+     * Executes the given command by first looking in the default catalog.
+     * Should the command not be found, it will try to look in all other
+     * catalogs.
      * 
      * @see CommandsManager#executeCommand(String, String, Map)
      */
