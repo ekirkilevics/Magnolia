@@ -186,16 +186,15 @@ public class CommandsManager extends ObservedManager {
     }
 
     /**
-     * Executes the given command at the given catalog with the given
-     * parameters.
+     * Executes the given command at the given catalog with the given parameters.
      * 
-     * @throws Exception
-     *             if an error occurs during command execution or if the command
-     *             could not be found in any catalog.
-     * 
+     * @throws Exception if an error occurs during command execution or if the command could not be found in any catalog.
      */
     public boolean executeCommand(final String catalogName, final String commandName, final Map<String, Object> params) throws Exception {
         final Command command = getCommand(catalogName, commandName);
+        if (command == null) {
+            throw new Exception(String.format("Command [%s] could not be found in catalog [%s]", commandName, catalogName));
+        }
         log.debug("Executing command [{}] from catalog [{}] and params [{}]...", new Object[] { commandName, catalogName, params });
         return executeCommand(command, params);
     }
