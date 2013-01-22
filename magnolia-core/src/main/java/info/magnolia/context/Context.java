@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -55,7 +55,7 @@ import javax.security.auth.Subject;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public interface Context extends org.apache.commons.chain.Context {
+public interface Context extends Map {
 
     /**
      * Attribute visibility scope.
