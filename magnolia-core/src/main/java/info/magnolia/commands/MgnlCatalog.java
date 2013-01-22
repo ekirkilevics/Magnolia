@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,17 +33,57 @@
  */
 package info.magnolia.commands;
 
-import org.apache.commons.chain.impl.CatalogBase;
+import info.magnolia.commands.chain.Command;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
- * Named command catalogs. Used to choose from multiple commands of the same name. The commands from catalog with name matching the repository will be used.
- * @author philipp
- * @version $Id$
- *
+ * Named command catalogs. Used to choose from multiple commands of the same
+ * name. The commands from catalog with name matching the repository will be
+ * used.
+ * 
+ * Replaces the functionality of the org.apache.commons.chain.CatalogBase class.
+ * 
  */
-public class MgnlCatalog extends CatalogBase {
+public class MgnlCatalog {
 
+    // ----------------------------------------------------- Instance Variables
     private String name;
+    protected Map commands = Collections.synchronizedMap(new HashMap());
+
+    // --------------------------------------------------------- Constructors
+    public MgnlCatalog(Map commands) {
+        this.commands = Collections.synchronizedMap(commands);
+    }
+
+    // --------------------------------------------------------- Public Methods
+    public void addCommand(String name, Command command) {
+        commands.put(name, command);
+    }
+
+    public Command getCommand(String name) {
+        return ((Command) commands.get(name));
+    }
+
+    public Iterator getNames() {
+        return (commands.keySet().iterator());
+    }
+
+    public String toString() {
+        Iterator names = getNames();
+        StringBuffer str = new StringBuffer("[" + this.getClass().getName() + ": ");
+        while (names.hasNext()) {
+            str.append(names.next());
+            if (names.hasNext()) {
+                str.append(", ");
+            }
+        }
+        str.append("]");
+        return str.toString();
+    }
 
     public String getName() {
         return this.name;
@@ -52,5 +92,4 @@ public class MgnlCatalog extends CatalogBase {
     public void setName(String name) {
         this.name = name;
     }
-
 }
