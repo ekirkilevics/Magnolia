@@ -36,6 +36,7 @@ package info.magnolia.commands;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.commands.chain.Catalog;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -98,14 +99,22 @@ public class CommandsManager extends ObservedManager {
     protected void registerCatalog(Content node) {
         try {
             MgnlCatalog catalog = (MgnlCatalog) nodeToBean.toBean(node.getJCRNode(), true, commandTransformer, Components.getComponentProvider());
-            if (catalogs.get(catalog.getName()) == null) {
+            MgnlCatalog current = catalogs.get(catalog.getName());
+            if (current == null) {
                 catalogs.put(catalog.getName(), catalog);
+                log.debug("Catalog {} registered: {}", new Object[] { catalog.getName(), catalog });
             } else {
-                // runtime because this code is called by observation and there's no place to catch it anyway
-                throw new RuntimeException("Catalog [" + catalog.getName() + "] is already registered. Please run: select * from nt:base where jcr:path like '/modules/%/commands/"+ catalog.getName()+"' on config repository to find out the duplicate.");
+                Iterator names = catalog.getNames();
+                while (names.hasNext()) {
+                    String commandName = (String) names.next();
+                    Command command = current.getCommand(commandName);
+                    if (command != null) {
+                        log.warn("Command [" + commandName + "] already exists in the catalog [" + current.getName() + "], skipping.");
+                    } else {
+                        current.addCommand(commandName, command);
+                    }
+                }
             }
-
-            log.debug("Catalog {} registered: {}", new Object[]{catalog.getName(), catalog});
         }
         catch (RepositoryException e) {
             log.error("Can't read catalog [" + node + "]", e);
@@ -130,9 +139,19 @@ public class CommandsManager extends ObservedManager {
      * @return the command to execute
      */
     public Command getCommand(String catalogName, String commandName) {
-        MgnlCatalog catalog = catalogs.get(catalogName);
+        // if empty catalog name, use default catalog
+        MgnlCatalog catalog = catalogs.get(StringUtils.isNotEmpty(catalogName) ? catalogName : DEFAULT_CATALOG);
         if (catalog != null) {
-            return catalog.getCommand(commandName);
+            Command command = catalog.getCommand(commandName);
+            try {
+                if (command != null) {
+                    return command.getClass().newInstance();
+                }
+            } catch (IllegalAccessException iae) {
+                log.warn("Cannot create new instance of command [" + commandName + "] from catalog [" + catalogName + "].", iae);
+            } catch (InstantiationException ie) {
+                log.warn("Cannot create new instance of command [" + commandName + "] from catalog [" + catalogName + "].", ie);
+            }
         }
 
         return null;

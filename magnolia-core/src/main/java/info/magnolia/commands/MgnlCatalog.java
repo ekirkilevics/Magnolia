@@ -33,6 +33,7 @@
  */
 package info.magnolia.commands;
 
+import info.magnolia.commands.chain.Catalog;
 import info.magnolia.commands.chain.Command;
 
 import java.util.Collections;
@@ -48,7 +49,7 @@ import java.util.Map;
  * Replaces the functionality of the org.apache.commons.chain.CatalogBase class.
  * 
  */
-public class MgnlCatalog {
+public class MgnlCatalog implements Catalog {
 
     // ----------------------------------------------------- Instance Variables
     private String name;
