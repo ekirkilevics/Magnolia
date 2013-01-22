@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -34,25 +34,24 @@
 package info.magnolia.commands;
 
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.commands.chain.Command;
+import info.magnolia.context.Context;
 
 import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.apache.commons.lang.exception.NestableException;
-import org.apache.commons.pool.BasePoolableObjectFactory;
-import org.apache.commons.pool.impl.StackObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * To make the coding of commands as easy as possible the default values set in the config are set and the values of the
- * context are set as properties too if the naming matches. To get a better performance we use an inner object pool. The
- * execution of the command gets a clone from the pool and executes the clone
+ * To make the coding of commands as easy as possible the default values set in
+ * the config are set and the values of the context are set as properties too if
+ * the naming matches.
+ * 
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -70,57 +69,6 @@ public abstract class MgnlCommand implements Command {
     private boolean isEnabled = true;
 
     /**
-     * Command factory creating clones of the master/prototype command and pooling the cloned instances.
-     * @author Philipp Bracher
-     * @version $Id$
-     */
-    class MgnlCommandFactory extends BasePoolableObjectFactory {
-
-        /**
-         * The prototype we clone for faster execution.
-         */
-        private MgnlCommand prototype;
-
-        /**
-         * @param prototype
-         */
-        public MgnlCommandFactory(MgnlCommand prototype) {
-            this.prototype = prototype;
-        }
-
-        @Override
-        public Object makeObject() throws Exception {
-            MgnlCommand cmd = (MgnlCommand) BeanUtils.cloneBean(this.prototype);
-            cmd.setClone(true);
-            return cmd;
-        }
-
-        @Override
-        public void activateObject(Object arg0) throws Exception {
-            super.activateObject(arg0);
-            // set default properties
-            BeanUtils.populate(arg0, defaultProperties);
-        }
-
-        @Override
-        public void passivateObject(Object cmd) throws Exception {
-            ((MgnlCommand) cmd).release();
-            super.passivateObject(cmd);
-        }
-
-    }
-
-    /**
-     * Pool of inner commands.
-     */
-    private StackObjectPool pool;
-
-    /**
-     * True if we can use object pooling. Else we synchronize the execution.
-     */
-    private boolean pooling = true;
-
-    /**
      * Make sure that the context is castable to a magnolia context.
      * @return true on success, false otherwise
      */
@@ -134,29 +82,7 @@ public abstract class MgnlCommand implements Command {
             initDefaultProperties();
         }
 
-        MgnlCommand cmd;
-
-        if (pooling) {
-            // do not instantiate until the pool is really needed
-            // means: do not create a pool for command objects created in the pool itself
-            if (pool == null) {
-                pool = new StackObjectPool(new MgnlCommandFactory(this));
-            }
-
-            try {
-                // try to use the pool
-                cmd = (MgnlCommand) pool.borrowObject();
-            }
-            // this happens if the commons constructor is not public: anonymous classes for example
-            catch (Throwable t) {
-                pooling = false;
-                // start again
-                return execute(ctx);
-            }
-        }
-        else {
-            cmd = this;
-        }
+        MgnlCommand cmd = this;
 
         boolean success = executePooledOrSynchronized(ctx, cmd);
         // convert the confusing true false behavior to fit commons chain
@@ -166,40 +92,16 @@ public abstract class MgnlCommand implements Command {
     private boolean executePooledOrSynchronized(Context ctx, MgnlCommand cmd) throws Exception {
         boolean success = false; // break execution
 
-        // populate the command if we are using a pool
-        if (pooling) {
+        synchronized (cmd) {
             BeanUtils.populate(cmd, ctx);
-            // cast to mgnl context class
             try {
                 success = cmd.execute((info.magnolia.context.Context) ctx);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 AlertUtil.setException(e, (info.magnolia.context.Context) ctx);
                 throw new NestableException("exception during executing command", e);
-            }
-            finally {
-                pool.returnObject(cmd);
-            }
-        }
-        else {
-            synchronized (cmd) {
-                BeanUtils.populate(cmd, ctx);
-                try {
-                    success = cmd.execute((info.magnolia.context.Context) ctx);
-                }
-                catch (Exception e) {
-                    AlertUtil.setException(e, (info.magnolia.context.Context) ctx);
-                    throw new NestableException("exception during executing command", e);
-                }
-                finally {
-                    if (pooling) {
-                        pool.returnObject(cmd);
-                    }
-                    else {
-                        cmd.release();
-                        BeanUtils.populate(cmd, defaultProperties);
-                    }
-                }
+            } finally {
+                cmd.release();
+                BeanUtils.populate(cmd, defaultProperties);
             }
         }
         return success;
@@ -217,8 +119,6 @@ public abstract class MgnlCommand implements Command {
             this.defaultProperties = Collections.EMPTY_MAP;
         }
     }
-
-    public abstract boolean execute(info.magnolia.context.Context context) throws Exception;
 
     /**
      * If a clone is passivated we call this method. Please clean up private properties.
