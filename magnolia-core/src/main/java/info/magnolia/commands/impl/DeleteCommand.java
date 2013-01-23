@@ -33,20 +33,20 @@
  */
 package info.magnolia.commands.impl;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * The command to delete one node.
+ * The command to delete one node (with all subnodes).
  * 
- * @author jackie
  */
 public class DeleteCommand extends BaseRepositoryCommand {
 
@@ -55,14 +55,17 @@ public class DeleteCommand extends BaseRepositoryCommand {
     @Override
     public boolean execute(Context ctx) {
         try {
+            if (log.isDebugEnabled()) {
+                log.debug("Going to remove node [{}].", getPath());
+            }
             String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
             String label = StringUtils.substringAfterLast(getPath(), "/");
 
-            Content parentNode = MgnlContext.getHierarchyManager(this.getRepository()).getContent(parentPath);
-            parentNode.delete(label);
-            parentNode.save();
-        }
-        catch (Exception e) {
+            Node parentNode = MgnlContext.getJCRSession(this.getRepository()).getNode(parentPath);
+            Node toRemove = parentNode.getNode(label);
+            toRemove.remove();
+            parentNode.getSession().save();
+        } catch (RepositoryException e) {
             AlertUtil.setException("cannot do delete", e, ctx);
             return false;
         }
