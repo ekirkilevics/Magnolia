@@ -58,19 +58,16 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
     private Rule rule;
 
     public Rule getRule() {
-        // lazy bound but only if this is a clone
-        if (rule == null && isClone()) {
-            rule = new Rule();
-            String[] nodeTypes = StringUtils.split(this.getItemTypes(), " ,");
-            for (int i = 0; i < nodeTypes.length; i++) {
-                String nodeType = nodeTypes[i];
-                rule.addAllowType(nodeType);
-            }
-
-            // magnolia resource and metadata must always be included
-            rule.addAllowType(ItemType.NT_METADATA);
-            rule.addAllowType(ItemType.NT_RESOURCE);
+        rule = new Rule();
+        String[] nodeTypes = StringUtils.split(this.getItemTypes(), " ,");
+        for (int i = 0; i < nodeTypes.length; i++) {
+            String nodeType = nodeTypes[i];
+            rule.addAllowType(nodeType);
         }
+
+        // magnolia resource and metadata must always be included
+        rule.addAllowType(ItemType.NT_METADATA);
+        rule.addAllowType(ItemType.NT_RESOURCE);
         return rule;
     }
 
