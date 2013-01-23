@@ -33,8 +33,6 @@
  */
 package info.magnolia.commands.chain;
 
-import info.magnolia.context.Context;
-
 import java.util.Collection;
 import java.util.Iterator;
 

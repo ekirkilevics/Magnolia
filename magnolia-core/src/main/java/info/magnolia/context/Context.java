@@ -55,7 +55,7 @@ import javax.security.auth.Subject;
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
-public interface Context extends Map {
+public interface Context extends info.magnolia.commands.chain.Context {
 
     /**
      * Attribute visibility scope.

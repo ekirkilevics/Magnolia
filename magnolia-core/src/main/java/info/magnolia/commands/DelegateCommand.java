@@ -34,7 +34,7 @@
 package info.magnolia.commands;
 
 import info.magnolia.commands.chain.Command;
-import info.magnolia.context.Context;
+import info.magnolia.commands.chain.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

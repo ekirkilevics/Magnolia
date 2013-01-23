@@ -33,13 +33,12 @@
  */
 package info.magnolia.commands.chain;
 
+import java.util.Map;
 
 /**
- * A replacement for org.apache.commons.chain.Filter.
+ * Replacement for org.apache.commons.chain.Context
  * 
  */
-public interface Filter extends Command {
-
-    boolean postprocess(Context context, Exception exception);
+public interface Context extends Map {
 
 }

@@ -33,7 +33,6 @@
  */
 package info.magnolia.commands.chain;
 
-import info.magnolia.context.Context;
 
 /**
  * A replacement for the org.apache.commons.chain.Command interface.

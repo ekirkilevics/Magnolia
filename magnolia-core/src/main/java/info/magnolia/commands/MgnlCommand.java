@@ -35,7 +35,7 @@ package info.magnolia.commands;
 
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.chain.Command;
-import info.magnolia.context.Context;
+import info.magnolia.commands.chain.Context;
 
 import java.util.Collections;
 import java.util.Map;
@@ -69,7 +69,11 @@ public abstract class MgnlCommand implements Command {
     private boolean isEnabled = true;
 
     /**
-     * Make sure that the context is castable to a magnolia context.
+     * Make sure that the context is castable to a magnolia context. DO NOT
+     * override this method (with the info.magnolia.commands.chain.Context
+     * parameter type) in the descendant classes - unless you know for 100% what
+     * you are going to do.
+     * 
      * @return true on success, false otherwise
      */
     @Override
@@ -121,7 +125,13 @@ public abstract class MgnlCommand implements Command {
     }
 
     /**
-     * If a clone is passivated we call this method. Please clean up private properties.
+     * This is the actual method to be overridden in descendant classes.
+     */
+    public abstract boolean execute(info.magnolia.context.Context context) throws Exception;
+
+    /**
+     * If a clone is passivated we call this method. Please clean up private
+     * properties.
      */
     public void release() {
     }
