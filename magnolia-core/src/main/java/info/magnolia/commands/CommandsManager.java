@@ -188,9 +188,7 @@ public class CommandsManager extends ObservedManager {
      * Executes the given command at the given catalog with the given
      * parameters.
      * 
-     * @throws Exception
-     * if an error occurs during command execution or if the command
-     * could not be found in any catalog.
+     * @throws Exception if an error occurs during command execution or if the command could not be found in any catalog.
      */
     public boolean executeCommand(final String catalogName, final String commandName, final Map<String, Object> params) throws Exception {
         final Command command = getCommand(catalogName, commandName);
@@ -203,8 +201,7 @@ public class CommandsManager extends ObservedManager {
 
     /**
      * Executes the given command by first looking in the default catalog.
-     * Should the command not be found, it will try to look in all other
-     * catalogs.
+     * Should the command not be found, it will try to look in all other catalogs.
      * 
      * @see CommandsManager#executeCommand(String, String, Map)
      */
