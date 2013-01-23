@@ -36,7 +36,6 @@ package info.magnolia.commands;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.commands.chain.Catalog;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 import info.magnolia.context.MgnlContext;
@@ -190,8 +189,8 @@ public class CommandsManager extends ObservedManager {
      * parameters.
      * 
      * @throws Exception
-     *             if an error occurs during command execution or if the command
-     *             could not be found in any catalog.
+     * if an error occurs during command execution or if the command
+     * could not be found in any catalog.
      */
     public boolean executeCommand(final String catalogName, final String commandName, final Map<String, Object> params) throws Exception {
         final Command command = getCommand(catalogName, commandName);
