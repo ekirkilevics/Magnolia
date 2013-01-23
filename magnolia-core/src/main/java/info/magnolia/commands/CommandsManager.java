@@ -36,7 +36,6 @@ package info.magnolia.commands;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.commands.chain.Catalog;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 import info.magnolia.context.MgnlContext;

@@ -36,7 +36,7 @@ package info.magnolia.commands.chain;
 import java.util.Map;
 
 /**
- * Replacement for org.apache.commons.chain.Context
+ * Replacement for org.apache.commons.chain.Context interface.
  * 
  */
 public interface Context extends Map {
