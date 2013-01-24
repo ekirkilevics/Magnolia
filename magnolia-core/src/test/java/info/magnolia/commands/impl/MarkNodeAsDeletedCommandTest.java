@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2012 Magnolia International
+ * This file Copyright (c) 2012-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -37,13 +37,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContext;
@@ -84,8 +83,8 @@ public class MarkNodeAsDeletedCommandTest extends RepositoryTestCase {
         when(activationManager.getSubscribers()).thenReturn(subscribers);
         when(subscriber.isActive()).thenReturn(true);
 
-        node = MgnlContext.getJCRSession("website").getRootNode().addNode("home-test", MgnlNodeType.NT_PAGE);
-        childNode = node.addNode("child-test", MgnlNodeType.NT_PAGE);
+        node = MgnlContext.getJCRSession("website").getRootNode().addNode("home-test", NodeTypes.Page.NAME);
+        childNode = node.addNode("child-test", NodeTypes.Page.NAME);
 
         cmd = new MarkNodeAsDeletedCommand();
         cmd.setPath("/");
@@ -95,14 +94,10 @@ public class MarkNodeAsDeletedCommandTest extends RepositoryTestCase {
     @Test
     public void testUpdateAuthorIdAndModificationDateWhenMarkNodeAsDelete() throws  Exception{
         // GIVEN
-        MetaData md = new MetaData(node);
         Calendar timeBeforeDelete = new GregorianCalendar(TimeZone.getDefault());
-        md.setProperty("lastmodified", timeBeforeDelete);
-        md.setAuthorId("user-before-delete");
+        NodeTypes.LastModified.update(node, "user-before-delete", timeBeforeDelete);
+        NodeTypes.LastModified.update(childNode, "user-before-delete", timeBeforeDelete);
 
-        MetaData childMD = new MetaData(childNode);
-        childMD.setProperty("lastmodified", timeBeforeDelete);
-        childMD.setAuthorId("user-before-delete");
 
         node.getSession().save();
 
@@ -113,11 +108,11 @@ public class MarkNodeAsDeletedCommandTest extends RepositoryTestCase {
         cmd.execute(ctx);
 
         // THEN
-        assertEquals("user-after-delete", md.getAuthorId());
-        assertTrue(timeBeforeDelete.getTimeInMillis() < md.getModificationDate().getTimeInMillis());
+        assertEquals("user-after-delete", NodeTypes.Deleted.getDeletedBy(node));
+        assertTrue(timeBeforeDelete.getTimeInMillis() < NodeTypes.Deleted.getDeleted(node).getTimeInMillis());
 
-        assertEquals("user-after-delete", childMD.getAuthorId());
-        assertTrue(timeBeforeDelete.getTimeInMillis() < childMD.getModificationDate().getTimeInMillis());
+        assertEquals("user-after-delete", NodeTypes.Deleted.getDeletedBy(childNode));
+        assertTrue(timeBeforeDelete.getTimeInMillis() < NodeTypes.Deleted.getDeleted(childNode).getTimeInMillis());
     }
 
 }

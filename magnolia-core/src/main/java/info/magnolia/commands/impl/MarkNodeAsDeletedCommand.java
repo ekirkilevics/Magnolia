@@ -33,31 +33,24 @@
  */
 package info.magnolia.commands.impl;
 
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.iterator.FilteringNodeIterator;
 import info.magnolia.jcr.iterator.FilteringPropertyIterator;
 import info.magnolia.jcr.predicate.JCRMgnlPropertyHidingPredicate;
 import info.magnolia.jcr.predicate.NodeTypePredicate;
-import info.magnolia.jcr.util.MetaDataUtil;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 
-import java.util.Calendar;
 import java.util.Iterator;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 
 /**
  * Command to mark node as deleted and remove all the non-system content.
@@ -80,7 +73,7 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
 
     @Override
     public boolean execute(Context context) throws Exception {
-        versionManager = Components.getSingleton(VersionManager.class);
+        versionManager = Components.getComponent(VersionManager.class);
 
         final Node parentNode = getJCRNode(context);
         final Node node = parentNode.getNode((String) context.get(DELETED_NODE_PROP_NAME));
@@ -101,8 +94,9 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
         return true;
     }
 
-    private void preDeleteNode(Node node, Context context) throws RepositoryException, AccessDeniedException {
-        // TODO: versioning might be "unsupported" do we still purge in such case?
+    private void preDeleteNode(Node node, Context context) throws RepositoryException {
+        // TODO: MAGNOLIA-4793 - versioning might be "unsupported" do we still
+        // purge in such case?
         version(node, context);
         synchronized (ExclusiveWrite.getInstance()) {
             markAsDeleted(node);
@@ -111,50 +105,44 @@ public class MarkNodeAsDeletedCommand extends BaseRepositoryCommand {
             // save changes before progressing on sub node - means we can't roll back, but session doesn't grow out of limits
             node.getSession().save();
         }
-        for (Iterator<Node> iter = new FilteringNodeIterator(node.getNodes(), new NodeTypePredicate(MgnlNodeType.NT_CONTENT, true)); iter.hasNext();) {
+        for (Iterator<Node> iter = new FilteringNodeIterator(node.getNodes(), new NodeTypePredicate(NodeTypes.Content.NAME, true)); iter.hasNext();) {
             preDeleteNode(iter.next(), context);
         }
     }
 
-    private void storeDeletionInfo(Node node, Context context) throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.setProperty(DELETED_NODE_DELETED_BY, MgnlContext.getUser().getName());
-        node.setProperty(DELETED_NODE_DELETED_ON, Calendar.getInstance());
+    private void storeDeletionInfo(Node node, Context context) throws RepositoryException {
         String comment = (String) context.get("comment");
         if (comment == null) {
             comment = MessagesManager.get("versions.comment.restore");
         }
-        MetaDataUtil.getMetaData(node).setProperty(Context.ATTRIBUTE_COMMENT, comment);
+        NodeTypes.Deleted.set(node, comment);
     }
 
-    private void version(Node node, Context context) throws UnsupportedRepositoryOperationException, RepositoryException {
+    private void version(Node node, Context context) throws RepositoryException {
         if (isVersionManually()) {
             synchronized (ExclusiveWrite.getInstance()) {
                 String comment = (String) context.get("comment");
                 if (comment == null) {
                     comment = MessagesManager.get("versions.comment.deleted");
                 }
-                MetaDataUtil.getMetaData(node).setProperty(Context.ATTRIBUTE_COMMENT, comment);
+                node.setProperty(NodeTypes.Deleted.COMMENT, comment);
                 node.getSession().save();
             }
             versionManager.addVersion(node);
         }
     }
 
-    protected void markAsDeleted(Node node) throws RepositoryException, AccessDeniedException {
+    protected void markAsDeleted(Node node) throws RepositoryException {
         // add mixin
-        node.addMixin(MgnlNodeType.MIX_DELETED);
+        node.addMixin(NodeTypes.Deleted.NAME);
         // change template
-        MetaData metadata = MetaDataUtil.getMetaData(node);
-        metadata.setTemplate(DELETED_NODE_TEMPLATE);
-        if (metadata.getActivationStatus() != MetaData.ACTIVATION_STATUS_NOT_ACTIVATED) {
-            metadata.setModificationDate();
-        }
-        MetaDataUtil.updateMetaData(node);
+        NodeTypes.Renderable.set(node, DELETED_NODE_TEMPLATE);
+        NodeTypes.LastModified.update(node);
     }
 
     protected void purgeContent(Node node) throws RepositoryException {
         // delete paragraphs & collections
-        for (Iterator<Node> iter = new FilteringNodeIterator(node.getNodes(), new NodeTypePredicate(MgnlNodeType.NT_CONTENTNODE)); iter.hasNext();) {
+        for (Iterator<Node> iter = new FilteringNodeIterator(node.getNodes(), new NodeTypePredicate(NodeTypes.ContentNode.NAME)); iter.hasNext();) {
             iter.next().remove();
         }
         // delete properties (incl title ??)
