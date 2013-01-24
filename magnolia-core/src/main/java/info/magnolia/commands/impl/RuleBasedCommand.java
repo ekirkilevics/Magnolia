@@ -57,16 +57,17 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
     private Rule rule;
 
     public Rule getRule() {
-        rule = new Rule();
-        String[] nodeTypes = StringUtils.split(this.getItemTypes(), " ,");
-        for (int i = 0; i < nodeTypes.length; i++) {
-            String nodeType = nodeTypes[i];
-            rule.addAllowType(nodeType);
+        if (rule == null) {
+            rule = new Rule();
+            String[] nodeTypes = StringUtils.split(this.getItemTypes(), " ,");
+            for (int i = 0; i < nodeTypes.length; i++) {
+                String nodeType = nodeTypes[i];
+                rule.addAllowType(nodeType);
+            }
+            // magnolia resource and metadata must always be included
+            rule.addAllowType(NodeTypes.MetaData.NAME);
+            rule.addAllowType(NodeTypes.Resource.NAME);
         }
-
-        // magnolia resource and metadata must always be included
-        rule.addAllowType(NodeTypes.MetaData.NAME);
-        rule.addAllowType(NodeTypes.Resource.NAME);
         return rule;
     }
 
