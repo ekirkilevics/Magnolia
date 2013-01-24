@@ -35,12 +35,12 @@ package info.magnolia.commands;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 
 import java.util.HashMap;
@@ -85,32 +85,35 @@ public class CommandsManager extends ObservedManager {
     @Override
     protected void onRegister(Content node) {
         // is this a catalog or a collection of catalogs?
-        if(node.getChildren(ItemType.CONTENT).size() == 0){
+        if (node.getChildren(NodeTypes.Content.NAME).size() == 0) {
             registerCatalog(node);
         }
         else{
-            for (Iterator iter = node.getChildren(ItemType.CONTENT).iterator(); iter.hasNext();) {
+            for (Iterator iter = node.getChildren(NodeTypes.Content.NAME).iterator(); iter.hasNext();) {
                 onRegister((Content) iter.next());
             }
         }
     }
 
+
     protected void registerCatalog(Content node) {
+        log.debug("Registering commands at {}...", node.getHandle());
         try {
             MgnlCatalog catalog = (MgnlCatalog) nodeToBean.toBean(node.getJCRNode(), true, commandTransformer, Components.getComponentProvider());
             MgnlCatalog current = catalogs.get(catalog.getName());
             if (current == null) {
                 catalogs.put(catalog.getName(), catalog);
-                log.debug("Catalog {} registered: {}", new Object[] { catalog.getName(), catalog });
+                log.info("Catalog {} registered: {}", catalog.getName(), catalog);
             } else {
-                Iterator names = catalog.getNames();
+                Iterator<String> names = catalog.getNames();
                 while (names.hasNext()) {
-                    String commandName = (String) names.next();
+                    String commandName = names.next();
                     Command command = current.getCommand(commandName);
                     if (command != null) {
-                        log.warn("Command [" + commandName + "] already exists in the catalog [" + current.getName() + "], skipping.");
+                        log.warn(String.format("Command [%s] found at [%s] already exists in the catalog [%s], skipping.", commandName, node.getHandle(), current.getName()));
                     } else {
-                        current.addCommand(commandName, command);
+                        log.debug("Adding new command [{}] to already registered catalog [{}]...", commandName, current.getName());
+                        current.addCommand(commandName, catalog.getCommand(commandName));
                     }
                 }
             }
