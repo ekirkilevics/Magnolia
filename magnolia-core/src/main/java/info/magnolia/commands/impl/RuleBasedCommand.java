@@ -33,14 +33,13 @@
  */
 package info.magnolia.commands.impl;
 
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.jcr.util.NodeTypes;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Base class for rule based commands.
- * 
- * @author Sameer Charles $Id$
  */
 public abstract class RuleBasedCommand extends BaseRepositoryCommand {
 
@@ -53,7 +52,7 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
      * All subnodes of this types are activated imediately (without using the
      * recursion).
      */
-    private String itemTypes = ItemType.CONTENTNODE.getSystemName();
+    private String itemTypes = NodeTypes.ContentNode.NAME;
 
     private Rule rule;
 
@@ -66,8 +65,8 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
         }
 
         // magnolia resource and metadata must always be included
-        rule.addAllowType(ItemType.NT_METADATA);
-        rule.addAllowType(ItemType.NT_RESOURCE);
+        rule.addAllowType(NodeTypes.MetaData.NAME);
+        rule.addAllowType(NodeTypes.Resource.NAME);
         return rule;
     }
 
@@ -89,7 +88,7 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
     @Override
     public void release() {
         super.release();
-        this.itemTypes = ItemType.CONTENTNODE.getSystemName();
+        this.itemTypes = NodeTypes.ContentNode.NAME;
         this.rule = null;
     }
 }
