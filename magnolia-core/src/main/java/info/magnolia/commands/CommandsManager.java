@@ -103,7 +103,7 @@ public class CommandsManager extends ObservedManager {
             MgnlCatalog current = catalogs.get(catalog.getName());
             if (current == null) {
                 catalogs.put(catalog.getName(), catalog);
-                log.info("Catalog {} registered: {}", catalog.getName(), catalog);
+                log.debug("Catalog {} registered: {}", catalog.getName(), catalog);
             } else {
                 Iterator<String> names = catalog.getNames();
                 while (names.hasNext()) {
