@@ -610,16 +610,18 @@ public class NodeUtilTest {
         // WHEN
         siblings = NodeUtil.getSiblings(subFirst1, NodeUtil.MAGNOLIA_FILTER);
         // THEN
-        assertEquals(2, siblings.size());
+        assertEquals(3, siblings.size());
         assertEquals(subFirst0, siblings.get(0));
         assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
 
         // WHEN
         siblings = NodeUtil.getSiblings(subFirst2, NodeUtil.MAGNOLIA_FILTER);
         // THEN
-        assertEquals(2, siblings.size());
+        assertEquals(3, siblings.size());
         assertEquals(subFirst0, siblings.get(0));
         assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
 
         // WHEN
         siblings = NodeUtil.getSiblings(subFirst3, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER);
