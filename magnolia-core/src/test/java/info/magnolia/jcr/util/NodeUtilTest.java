@@ -33,10 +33,13 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
@@ -497,5 +500,290 @@ public class NodeUtilTest {
 
         // THEN
         assertEquals(rootPath + subNodeName, result);
+    }
+
+    @Test
+    public void testGetSiblings() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst0);
+        // THEN
+        assertEquals(3, siblings.size());
+        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst1);
+        // THEN
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst2);
+        // THEN
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst3);
+        // THEN
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst2, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst4);
+        // THEN
+        assertEquals(0, siblings.size());
+    }
+
+    @Test
+    public void testGetSiblingsWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subSecond4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst0, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst3, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst1, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst2, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(1, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst3, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(1, siblings.size());
+        assertEquals(subFirst1, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subSecond4, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(0, siblings.size());
+    }
+
+    @Test
+    public void testGetSiblingsWithPredicate() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.ContentNode.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subSecond4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst0, NodeUtil.EXCLUDE_META_DATA_FILTER);
+        // THEN
+        assertEquals(3, siblings.size());
+        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst1, NodeUtil.MAGNOLIA_FILTER);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst2, NodeUtil.MAGNOLIA_FILTER);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subFirst3, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER);
+        // THEN
+        assertEquals(3, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst2, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblings(subSecond4, NodeUtil.MAGNOLIA_FILTER);
+        // THEN
+        assertEquals(0, siblings.size());
+    }
+
+    @Test
+    public void testGetSiblingsBefore() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst0);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst1);
+        // THEN
+        assertEquals(subFirst0, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst3);
+        // THEN
+        assertEquals(3, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst2, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst4);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst2);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst1, siblings.get(1));
+    }
+
+    @Test
+    public void testGetSiblingsAfter() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst0);
+        // THEN
+        assertEquals(3, siblings.size());
+        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst3, siblings.get(2));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst2);
+        // THEN
+        assertEquals(subFirst3, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst3);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst4);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst1);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst2, siblings.get(0));
+        assertEquals(subFirst3, siblings.get(1));
+    }
+
+    @Test
+    public void testGetSiblingsBeforeWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst0, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(subFirst1, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(subFirst0, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsBefore(subFirst3, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst2, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(0, siblings.size());
+    }
+
+    @Test
+    public void testGetSiblingsAfterWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Area.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Component.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        List<Node> siblings;
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(0, siblings.size());
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(2, siblings.size());
+        assertEquals(subFirst2, siblings.get(0));
+        assertEquals(subFirst3, siblings.get(1));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst2, NodeTypes.Component.NAME);
+        // THEN
+        assertEquals(subFirst3, siblings.get(0));
+
+        // WHEN
+        siblings = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME);
+        // THEN
+        assertEquals(0, siblings.size());
     }
 }
