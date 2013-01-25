@@ -37,11 +37,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 
-import java.util.Collections;
-import java.util.Map;
-
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.exception.NestableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,18 +47,10 @@ import org.slf4j.LoggerFactory;
  * To make the coding of commands as easy as possible the default values set in
  * the config are set and the values of the context are set as properties too if
  * the naming matches.
- * 
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
  */
 public abstract class MgnlCommand implements Command {
 
     public static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
-
-    /**
-     * The default properties. Lazy bound.
-     */
-    private Map defaultProperties;
 
     private boolean isClone = false;
 
@@ -80,10 +68,6 @@ public abstract class MgnlCommand implements Command {
     public boolean execute(Context ctx) throws Exception {
         if (!(ctx instanceof info.magnolia.context.Context)) {
             throw new IllegalArgumentException("context must be of type " + info.magnolia.context.Context.class);
-        }
-
-        if (this.defaultProperties == null) {
-            initDefaultProperties();
         }
 
         MgnlCommand cmd = this;
@@ -105,23 +89,9 @@ public abstract class MgnlCommand implements Command {
                 throw new NestableException("exception during executing command", e);
             } finally {
                 cmd.release();
-                BeanUtils.populate(cmd, defaultProperties);
             }
         }
         return success;
-    }
-
-    private void initDefaultProperties() {
-        try {
-            this.defaultProperties = PropertyUtils.describe(this);
-        } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.warn("Failed to persist "+ this.getClass().getName()+" command properties due to "+ e.getMessage()+". Please review your configuration.", e);
-            } else {
-                log.warn("Failed to persist {} command properties due to {}. Please review your configuration.", this.getClass().getName(), e.getMessage());
-            }
-            this.defaultProperties = Collections.EMPTY_MAP;
-        }
     }
 
     /**
