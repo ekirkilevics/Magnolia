@@ -354,17 +354,17 @@ public class NodeUtil {
      * @param nodeTypeName requested type of siblings nodes
      * @return list of siblings of the given Node (only the given node is excluded)
      */
-    public static List<Node> getSiblings(Node node) throws RepositoryException {
+    public static Iterable<Node> getSiblings(Node node) throws RepositoryException {
         Node parent = node.getParent();
         Iterable<Node> allSiblings = NodeUtil.getNodes(parent);
-        List<Node> sameTypeSiblings = new LinkedList<Node>();
+        List<Node> siblings = new ArrayList<Node>();
 
         for(Node sibling: allSiblings) {
             if (!NodeUtil.isSame(node, sibling)) {
-                sameTypeSiblings.add(sibling);
+                siblings.add(sibling);
             }
         }
-        return sameTypeSiblings;
+        return siblings;
     }
 
     /**
@@ -373,10 +373,10 @@ public class NodeUtil {
      * @param nodeTypeName requested type of siblings nodes
      * @return list of siblings of the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblings(Node node, String nodeTypeName) throws RepositoryException {
+    public static Iterable<Node> getSiblings(Node node, String nodeTypeName) throws RepositoryException {
         Node parent = node.getParent();
         Iterable<Node> allSiblings = NodeUtil.getNodes(parent, nodeTypeName);
-        List<Node> sameTypeSiblings = new LinkedList<Node>();
+        List<Node> sameTypeSiblings = new ArrayList<Node>();
 
         for(Node sibling: allSiblings) {
             if (!NodeUtil.isSame(node, sibling)) {
@@ -392,10 +392,10 @@ public class NodeUtil {
      * @param predicate predicate
      * @return list of siblings of the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblings(Node node, Predicate predicate) throws RepositoryException {
+    public static Iterable<Node> getSiblings(Node node, Predicate predicate) throws RepositoryException {
         Node parent = node.getParent();
         Iterable<Node> allSiblings = NodeUtil.getNodes(parent, predicate);
-        List<Node> sameTypeSiblings = new LinkedList<Node>();
+        List<Node> sameTypeSiblings = new ArrayList<Node>();
 
         for(Node sibling: allSiblings) {
             if (!NodeUtil.isSame(node, sibling)) {
@@ -410,7 +410,7 @@ public class NodeUtil {
      * @param node node from which will be siblings retrieved
      * @return list of siblings before the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblingsBefore(Node node) throws RepositoryException {
+    public static Iterable<Node> getSiblingsBefore(Node node) throws RepositoryException {
         int toIndex = 0;
         Node parent = node.getParent();
         List<Node> allSiblings = NodeUtil.asList(NodeUtil.getNodes(parent));
@@ -429,7 +429,7 @@ public class NodeUtil {
      * @param node node from which will be siblings retrieved
      * @return list of siblings after the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblingsAfter(Node node) throws RepositoryException {
+    public static Iterable<Node> getSiblingsAfter(Node node) throws RepositoryException {
         int fromIndex = 0;
         Node parent = node.getParent();
         List<Node> allSiblings = NodeUtil.asList(NodeUtil.getNodes(parent));
@@ -450,10 +450,10 @@ public class NodeUtil {
      * @param nodeTypeName requested type of siblings nodes
      * @return list of siblings before the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblingsBefore(Node node, String nodeTypeName) throws RepositoryException {
+    public static Iterable<Node> getSiblingsBefore(Node node, String nodeTypeName) throws RepositoryException {
         Node parent = node.getParent();
         Iterable<Node> allSiblings = NodeUtil.getNodes(parent);
-        List<Node> sameTypeSiblings = new LinkedList<Node>();
+        List<Node> sameTypeSiblings = new ArrayList<Node>();
 
         for(Node sibling: allSiblings) {
             if (NodeUtil.isSame(node, sibling)) {
@@ -472,7 +472,7 @@ public class NodeUtil {
      * @param nodeTypeName requested type of siblings nodes
      * @return list of siblings after the given Node (the given node is excluded)
      */
-    public static List<Node> getSiblingsAfter(Node node, String nodeTypeName) throws RepositoryException {
+    public static Iterable<Node> getSiblingsAfter(Node node, String nodeTypeName) throws RepositoryException {
         Node parent = node.getParent();
         List<Node> allSiblings = NodeUtil.asList(NodeUtil.getNodes(parent));
         int fromIndex = 0;
@@ -484,7 +484,7 @@ public class NodeUtil {
             }
         }
 
-        List<Node> sameTypeSiblings = new LinkedList<Node>();
+        List<Node> sameTypeSiblings = new ArrayList<Node>();
         for(Node sibling: allSiblings.subList(fromIndex, allSiblings.size())) {
             if (isNodeType(sibling, nodeTypeName)) {
                 sameTypeSiblings.add(sibling);

@@ -510,41 +510,44 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subFirst4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst0);
+        iterator = NodeUtil.getSiblings(subFirst0).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst1, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst1);
+        iterator = NodeUtil.getSiblings(subFirst1).iterator();
         // THEN
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst2);
+        iterator = NodeUtil.getSiblings(subFirst2).iterator();
         // THEN
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst3);
+        iterator = NodeUtil.getSiblings(subFirst3).iterator();
         // THEN
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
-        assertEquals(subFirst2, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst4);
+        iterator = NodeUtil.getSiblings(subFirst4).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -555,86 +558,85 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subSecond4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst0, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblings(subFirst0, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst1, siblings.get(0));
-        assertEquals(subFirst3, siblings.get(1));
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst1, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblings(subFirst1, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst2, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblings(subFirst2, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(1, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst3, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblings(subFirst3, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(1, siblings.size());
-        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subSecond4, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblings(subSecond4, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
     public void testGetSiblingsWithPredicate() throws RepositoryException {
         // GIVEN
         Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
-        Node subFirst1 = first.addNode("subFirst1", NodeTypes.ContentNode.NAME);
+        Node subFirst1 = first.addNode("subFirst1", "someOtherNodeType");
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subSecond4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst0, NodeUtil.EXCLUDE_META_DATA_FILTER);
+        iterator = NodeUtil.getSiblings(subFirst0, NodeUtil.EXCLUDE_META_DATA_FILTER).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst1, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst1, NodeUtil.MAGNOLIA_FILTER);
+        iterator = NodeUtil.getSiblings(subFirst1, NodeUtil.MAGNOLIA_FILTER).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst2, NodeUtil.MAGNOLIA_FILTER);
+        iterator = NodeUtil.getSiblings(subFirst2, NodeUtil.MAGNOLIA_FILTER).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subFirst3, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER);
+        iterator = NodeUtil.getSiblings(subFirst3, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
-        assertEquals(subFirst2, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblings(subSecond4, NodeUtil.MAGNOLIA_FILTER);
+        iterator = NodeUtil.getSiblings(subSecond4, NodeUtil.MAGNOLIA_FILTER).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -645,37 +647,38 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subFirst4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst0);
+        iterator = NodeUtil.getSiblingsBefore(subFirst0).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst1);
+        iterator = NodeUtil.getSiblingsBefore(subFirst1).iterator();
         // THEN
-        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst3);
+        iterator = NodeUtil.getSiblingsBefore(subFirst3).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
-        assertEquals(subFirst2, siblings.get(2));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst4);
+        iterator = NodeUtil.getSiblingsBefore(subFirst4).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst2);
+        iterator = NodeUtil.getSiblingsBefore(subFirst2).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst1, siblings.get(1));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -686,37 +689,37 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subFirst4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst0);
+        iterator = NodeUtil.getSiblingsAfter(subFirst0).iterator();
         // THEN
-        assertEquals(3, siblings.size());
-        assertEquals(subFirst1, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
-        assertEquals(subFirst3, siblings.get(2));
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst2);
+        iterator = NodeUtil.getSiblingsAfter(subFirst2).iterator();
         // THEN
-        assertEquals(subFirst3, siblings.get(0));
+        assertEquals(subFirst3, iterator.next());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst3);
+        iterator = NodeUtil.getSiblingsAfter(subFirst3).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst4);
+        iterator = NodeUtil.getSiblingsAfter(subFirst4).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst1);
+        iterator = NodeUtil.getSiblingsAfter(subFirst1).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst2, siblings.get(0));
-        assertEquals(subFirst3, siblings.get(1));
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -727,34 +730,36 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subFirst4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst0, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsBefore(subFirst0, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(subFirst1, siblings.get(0));
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(subFirst0, siblings.get(0));
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsBefore(subFirst3, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsBefore(subFirst3, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst0, siblings.get(0));
-        assertEquals(subFirst2, siblings.get(1));
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -764,28 +769,28 @@ public class NodeUtilTest {
         Node subFirst2 = first.addNode("subFirst2", NodeTypes.Component.NAME);
         Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
         Node subFirst4 = second.addNode("subSecond0");
-        List<Node> siblings;
+        Iterator<Node> iterator;
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(2, siblings.size());
-        assertEquals(subFirst2, siblings.get(0));
-        assertEquals(subFirst3, siblings.get(1));
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst2, NodeTypes.Component.NAME);
+        iterator = NodeUtil.getSiblingsAfter(subFirst2, NodeTypes.Component.NAME).iterator();
         // THEN
-        assertEquals(subFirst3, siblings.get(0));
+        assertEquals(subFirst3, iterator.next());
 
         // WHEN
-        siblings = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME);
+        iterator = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME).iterator();
         // THEN
-        assertEquals(0, siblings.size());
+        assertFalse(iterator.hasNext());
     }
 }
