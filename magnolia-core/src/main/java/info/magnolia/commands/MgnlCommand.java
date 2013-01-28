@@ -33,7 +33,6 @@
  */
 package info.magnolia.commands;
 
-import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 
@@ -52,8 +51,6 @@ public abstract class MgnlCommand implements Command {
 
     public static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
 
-    private boolean isClone = false;
-
     private boolean isEnabled = true;
 
     /**
@@ -61,7 +58,7 @@ public abstract class MgnlCommand implements Command {
      * override this method (with the info.magnolia.commands.chain.Context
      * parameter type) in the descendant classes - unless you know for 100% what
      * you are going to do.
-     * 
+     *
      * @return true on success, false otherwise
      */
     @Override
@@ -72,12 +69,12 @@ public abstract class MgnlCommand implements Command {
 
         MgnlCommand cmd = this;
 
-        boolean success = executePooledOrSynchronized(ctx, cmd);
+        boolean success = executeSynchronized(ctx, cmd);
         // convert the confusing true false behavior to fit commons chain
         return !success;
     }
 
-    private boolean executePooledOrSynchronized(Context ctx, MgnlCommand cmd) throws Exception {
+    private boolean executeSynchronized(Context ctx, MgnlCommand cmd) throws Exception {
         boolean success = false; // break execution
 
         synchronized (cmd) {
@@ -85,8 +82,7 @@ public abstract class MgnlCommand implements Command {
             try {
                 success = cmd.execute((info.magnolia.context.Context) ctx);
             } catch (Exception e) {
-                AlertUtil.setException(e, (info.magnolia.context.Context) ctx);
-                throw new NestableException("exception during executing command", e);
+                throw new NestableException("Exception during executing command", e);
             } finally {
                 cmd.release();
             }
@@ -105,21 +101,6 @@ public abstract class MgnlCommand implements Command {
      */
     public void release() {
     }
-
-    /**
-     * @return the isClone
-     */
-    protected boolean isClone() {
-        return isClone;
-    }
-
-    /**
-     * @param isClone the isClone to set
-     */
-    protected void setClone(boolean isClone) {
-        this.isClone = isClone;
-    }
-
 
     public boolean isEnabled() {
         return this.isEnabled;

@@ -162,8 +162,6 @@ public class CommandsManager extends ObservedManager {
 
     /**
      * Use a delimiter to separate the catalog and command name.
-     * @param commandName
-     * @return the command
      */
     public Command getCommand(String commandName) {
         String catalogName = DEFAULT_CATALOG;
@@ -185,12 +183,11 @@ public class CommandsManager extends ObservedManager {
      */
     @Deprecated
     public static CommandsManager getInstance() {
-        return Components.getSingleton(CommandsManager.class);
+        return Components.getComponent(CommandsManager.class);
     }
 
     /**
-     * Executes the given command at the given catalog with the given
-     * parameters.
+     * Executes the given command at the given catalog with the given parameters.
      * 
      * @throws Exception if an error occurs during command execution or if the command could not be found in any catalog.
      */

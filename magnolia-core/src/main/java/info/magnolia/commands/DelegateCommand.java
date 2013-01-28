@@ -36,14 +36,14 @@ package info.magnolia.commands;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Delegate to an other command at runtime.
  *
- * @author Philipp Bracher
- * @version $Id$
  */
 public class DelegateCommand implements Command {
     private final static Logger log = LoggerFactory.getLogger(DelegateCommand.class);
@@ -53,12 +53,16 @@ public class DelegateCommand implements Command {
      */
     private String commandName;
 
-    public DelegateCommand() {
+    private CommandsManager commandsManager;
+
+    @Inject
+    public DelegateCommand(CommandsManager commandsManager) {
+        this.commandsManager = commandsManager;
     }
 
     @Override
     public boolean execute(Context ctx) throws Exception {
-        Command cmd = CommandsManager.getInstance().getCommand(commandName);
+        Command cmd = commandsManager.getCommand(commandName);
         if(cmd != null){
             return cmd.execute(ctx);
         }
