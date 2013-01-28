@@ -35,6 +35,7 @@ package info.magnolia.commands;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.commands.chain.Catalog;
 import info.magnolia.commands.chain.Command;
 import info.magnolia.commands.chain.Context;
 import info.magnolia.context.MgnlContext;
@@ -97,22 +98,22 @@ public class CommandsManager extends ObservedManager {
 
 
     protected void registerCatalog(Content node) {
-        log.debug("Registering commands at {}...", node.getHandle());
+        log.info("Registering commands at {}...", node.getHandle());
         try {
             MgnlCatalog catalog = (MgnlCatalog) nodeToBean.toBean(node.getJCRNode(), true, commandTransformer, Components.getComponentProvider());
             MgnlCatalog current = catalogs.get(catalog.getName());
             if (current == null) {
                 catalogs.put(catalog.getName(), catalog);
-                log.debug("Catalog {} registered: {}", catalog.getName(), catalog);
+                log.info("Catalog [{}] registered: {}", catalog.getName(), catalog);
             } else {
                 Iterator<String> names = catalog.getNames();
                 while (names.hasNext()) {
                     String commandName = names.next();
                     Command command = current.getCommand(commandName);
                     if (command != null) {
-                        log.warn(String.format("Command [%s] found at [%s] already exists in the catalog [%s], skipping.", commandName, node.getHandle(), current.getName()));
+                        log.warn(String.format("Command [%s] found at [%s] already exists in the catalog [%s], skipping...", commandName, node.getHandle(), current.getName()));
                     } else {
-                        log.debug("Adding new command [{}] to already registered catalog [{}]...", commandName, current.getName());
+                        log.info("Adding new command [{}] to already registered catalog [{}]...", commandName, current.getName());
                         current.addCommand(commandName, catalog.getCommand(commandName));
                     }
                 }
@@ -226,6 +227,10 @@ public class CommandsManager extends ObservedManager {
             }
         }
         return command.execute(context);
+    }
+
+    Catalog getCatalogByName(String name) {
+        return catalogs.get(name);
     }
 
 }
