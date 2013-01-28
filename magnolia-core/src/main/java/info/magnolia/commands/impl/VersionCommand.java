@@ -36,7 +36,6 @@ package info.magnolia.commands.impl;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 
@@ -53,10 +52,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * Creates a version for the passed path in the website repository.
- * 
  */
 public class VersionCommand extends RuleBasedCommand {
 
@@ -70,26 +67,20 @@ public class VersionCommand extends RuleBasedCommand {
      * @see info.magnolia.commands.MgnlCommand#execute(info.magnolia.context.Context)
      */
     @Override
-    public boolean execute(Context ctx) {
-        try {
-            final Content node = getNode(ctx);
-            if (isRecursive()) {
-                // set versionMap and version name for this node
-                List versionMap = new ArrayList();
-                versionRecursively(node, ctx, versionMap);
-                ctx.setAttribute(Context.ATTRIBUTE_VERSION_MAP, versionMap, Context.LOCAL_SCOPE);
-            } else {
-                addComment(node);
-                Version version = node.addVersion(getRule());
-                ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
-                cleanComment(node);
-            }
+    public boolean execute(Context ctx) throws Exception {
+        final Content node = getNode(ctx);
+        if (isRecursive()) {
+            // set versionMap and version name for this node
+            List versionMap = new ArrayList();
+            versionRecursively(node, ctx, versionMap);
+            ctx.setAttribute(Context.ATTRIBUTE_VERSION_MAP, versionMap, Context.LOCAL_SCOPE);
+        } else {
+            addComment(node);
+            Version version = node.addVersion(getRule());
+            ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
+            cleanComment(node);
         }
-        catch (Exception e) {
-            log.error("can't version", e);
-            AlertUtil.setMessage("can't version: " + e.getMessage(), ctx);
-            return false;
-        }
+
         return true;
     }
 
@@ -117,7 +108,7 @@ public class VersionCommand extends RuleBasedCommand {
         entry.put("version", version.getName());
         entry.put("uuid", node.getUUID());
         versionMap.add(entry);
-        if(StringUtils.isEmpty((String)ctx.getAttribute(Context.ATTRIBUTE_VERSION))){
+        if (StringUtils.isEmpty((String) ctx.getAttribute(Context.ATTRIBUTE_VERSION))) {
             ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
         }
 

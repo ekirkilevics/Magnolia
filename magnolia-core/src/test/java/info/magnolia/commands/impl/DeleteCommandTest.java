@@ -42,14 +42,13 @@ import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Test for the DeleteCommand.
- * 
  */
 public class DeleteCommandTest extends RepositoryTestCase {
 
@@ -75,7 +74,7 @@ public class DeleteCommandTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testDeleteLeaveNode() throws RepositoryException {
+    public void testDeleteLeaveNode() throws Exception {
         // GIVEN
         cmd.setRepository(WEBSITE);
         cmd.setPath(secondLevel.getPath());
@@ -89,7 +88,7 @@ public class DeleteCommandTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testDeleteNodeWithSubnodes() throws RepositoryException {
+    public void testDeleteNodeWithSubnodes() throws Exception {
         // GIVEN
         cmd.setRepository(WEBSITE);
         cmd.setPath(firstLevel.getPath());
@@ -102,14 +101,14 @@ public class DeleteCommandTest extends RepositoryTestCase {
         assertFalse(node.hasNode("first-level/second-level"));
     }
 
-    @Test
-    public void testDeleteNonexistentNode() throws RepositoryException {
+    @Test(expected = PathNotFoundException.class)
+    public void testDeleteNonexistentNode() throws Exception {
         // GIVEN
         cmd.setRepository(WEBSITE);
         cmd.setPath("/some/non/existent/path");
 
         // WHEN
-        assertFalse(cmd.execute(ctx));
+        cmd.execute(ctx); // this will throw PNFE
 
         // THEN
         // just check, whether the existing nodes are untouched

@@ -33,25 +33,22 @@
  */
 package info.magnolia.commands.impl;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
-import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.RepositoryTestCase;
+
+import javax.jcr.Node;
+
+import org.apache.commons.lang.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 public class VersionCommandTest extends RepositoryTestCase {
 
@@ -68,19 +65,19 @@ public class VersionCommandTest extends RepositoryTestCase {
 
         ctx = mock(Context.class);
 
-        node = MgnlContext.getJCRSession("website").getRootNode().addNode("home-test", MgnlNodeType.NT_PAGE);
-        childNode = node.addNode("child-test", MgnlNodeType.NT_PAGE);
+        node = MgnlContext.getJCRSession("website").getRootNode().addNode("home-test", NodeTypes.Page.NAME);
+        childNode = node.addNode("child-test", NodeTypes.Page.NAME);
         node.getSession().save();
 
         cmd = new VersionCommand();
         cmd.setComment("comment");
         cmd.setRepository("website");
         cmd.setUuid(node.getIdentifier());
-        cmd.setRule(new Rule(new String[]{MgnlNodeType.NT_CONTENTNODE, MgnlNodeType.NT_METADATA }));
+        cmd.setRule(new Rule(new String[] { NodeTypes.ContentNode.NAME, NodeTypes.MetaData.NAME }));
     }
 
     @Test
-    public void testHadleWithVersionCommentWhenRecursiveFalse() throws  RepositoryException{
+    public void testHadleWithVersionCommentWhenRecursiveFalse() throws Exception {
         // GIVEN
         cmd.setRecursive(false);
 
@@ -96,7 +93,7 @@ public class VersionCommandTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testHadleWithVersionCommentWhenWhenRecursiveTrue() throws  RepositoryException{
+    public void testHadleWithVersionCommentWhenWhenRecursiveTrue() throws Exception {
         // GIVEN
         cmd.setRecursive(true);
 
@@ -116,7 +113,7 @@ public class VersionCommandTest extends RepositoryTestCase {
     }
 
     @Test
-    public void testWhenVersionCommentIsNullAndNodeAlreadyHasVersionComment() throws  RepositoryException{
+    public void testWhenVersionCommentIsNullAndNodeAlreadyHasVersionComment() throws Exception {
         // GIVEN
         node.setProperty(COMMENT_PROPERTY, "already presented comment");
         cmd.setComment(null);

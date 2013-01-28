@@ -33,12 +33,10 @@
  */
 package info.magnolia.commands.impl;
 
-import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,29 +44,23 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The command to delete one node (with all subnodes).
- * 
  */
 public class DeleteCommand extends BaseRepositoryCommand {
 
     private static Logger log = LoggerFactory.getLogger(DeleteCommand.class);
 
     @Override
-    public boolean execute(Context ctx) {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Going to remove node [{}].", getPath());
-            }
-            String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
-            String label = StringUtils.substringAfterLast(getPath(), "/");
+    public boolean execute(Context ctx) throws Exception {
+        log.debug("Going to remove node [{}].", getPath());
 
-            Node parentNode = MgnlContext.getJCRSession(this.getRepository()).getNode(parentPath);
-            Node toRemove = parentNode.getNode(label);
-            toRemove.remove();
-            parentNode.getSession().save();
-        } catch (RepositoryException e) {
-            AlertUtil.setException("cannot do delete", e, ctx);
-            return false;
-        }
+        String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
+        String label = StringUtils.substringAfterLast(getPath(), "/");
+
+        Node parentNode = MgnlContext.getJCRSession(this.getRepository()).getNode(parentPath);
+        Node toRemove = parentNode.getNode(label);
+        toRemove.remove();
+        parentNode.getSession().save();
+
         return true;
     }
 
