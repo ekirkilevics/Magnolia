@@ -49,6 +49,7 @@ import info.magnolia.test.mock.jcr.MockValue;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
@@ -275,6 +276,30 @@ public class MgnlUserManagerTest {
 
         // THEN
         assertEquals(propValue, usersNode.getProperty(propName).getString());
+    }
+
+    @Test
+    public void testUserWasCreatedUnderCertainPath() throws PathNotFoundException, RepositoryException {
+        // GIVEN
+        final MgnlUserManager um = new MgnlUserManager();
+        um.setRealmName("admin");
+        final SystemContext ctx = mock(SystemContext.class);
+        final MockSession session = new MockSession("users");
+        session.getRootNode().addNode("admin").addNode("path").addNode("to").addNode("my").addNode("folder");
+
+        when(ctx.getJCRSession("users")).thenReturn(session);
+
+        Components.setComponentProvider(new MockComponentProvider());
+        ComponentsTestUtil.setImplementation(SecuritySupport.class, SecuritySupportImpl.class);
+        ComponentsTestUtil.setInstance(SystemContext.class, ctx);
+
+        MgnlContext.setInstance(ctx);
+
+        // WHEN
+        um.createUser("/admin/path/to/my/folder", "peter", "peter");
+
+        // THEN
+        assertNotNull(session.getNode("/admin/path/to/my/folder/peter"));
     }
 
 }

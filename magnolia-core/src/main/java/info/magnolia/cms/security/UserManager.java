@@ -110,6 +110,12 @@ public interface UserManager {
     public User createUser(String name, String pw) throws UnsupportedOperationException;
 
     /**
+     * Creates a user on given path.
+     * @throws UnsupportedOperationException if the current implementation doesn't support this operation
+     */
+    public User createUser(String path, String name, String pw) throws UnsupportedOperationException;
+
+    /**
      * Sets a new password.
      * @return user object with updated password.
      * @throws UnsupportedOperationException if the current implementation doesn't support this operation

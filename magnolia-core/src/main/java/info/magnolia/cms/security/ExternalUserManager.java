@@ -91,6 +91,11 @@ public class ExternalUserManager implements UserManager {
     }
 
     @Override
+    public User createUser(String path, String name, String pw) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Override
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented yet");
     }

@@ -71,6 +71,17 @@ public class DelegatingUserManager implements UserManager {
     }
 
     @Override
+    public User createUser(final String path, final String name, final String pw) throws UnsupportedOperationException {
+        final Op<User> op = new Op<User>() {
+            @Override
+            public User delegate(UserManager um) {
+                return um.createUser(path, name, pw);
+            }
+        };
+        return delegateUntilSupported(op);
+    }
+
+    @Override
     public User changePassword(User user, String newPassword) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Please use a specific instance of UserManager to do this.");
     }

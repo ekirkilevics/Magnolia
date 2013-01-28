@@ -33,10 +33,13 @@
  */
 package info.magnolia.jcr.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import info.magnolia.cms.core.version.VersionedNode;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.RuntimeRepositoryException;
@@ -497,5 +500,297 @@ public class NodeUtilTest {
 
         // THEN
         assertEquals(rootPath + subNodeName, result);
+    }
+
+    @Test
+    public void testGetSiblings() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst0).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst1).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst2).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst3).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst4).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subSecond4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst0, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst1, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst2, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst3, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subSecond4, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsWithPredicate() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", "someOtherNodeType");
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subSecond4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst0, NodeUtil.EXCLUDE_META_DATA_FILTER).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst1, NodeUtil.MAGNOLIA_FILTER).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst2, NodeUtil.MAGNOLIA_FILTER).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subFirst3, NodeUtil.ALL_NODES_EXCEPT_JCR_FILTER).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblings(subSecond4, NodeUtil.MAGNOLIA_FILTER).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsBefore() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst0).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst1).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst3).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst4).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst2).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsAfter() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst0).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst2).iterator();
+        // THEN
+        assertEquals(subFirst3, iterator.next());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst3).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst4).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst1).iterator();
+        // THEN
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsBeforeWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst0 = first.addNode("subFirst0", NodeTypes.Area.NAME);
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Component.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Area.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst0, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertEquals(subFirst1, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst2, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsBefore(subFirst3, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertEquals(subFirst0, iterator.next());
+        assertEquals(subFirst2, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testGetSiblingsAfterWithType() throws RepositoryException {
+        // GIVEN
+        Node subFirst1 = first.addNode("subFirst1", NodeTypes.Area.NAME);
+        Node subFirst2 = first.addNode("subFirst2", NodeTypes.Component.NAME);
+        Node subFirst3 = first.addNode("subFirst3", NodeTypes.Component.NAME);
+        Node subFirst4 = second.addNode("subSecond0");
+        Iterator<Node> iterator;
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst1, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertEquals(subFirst2, iterator.next());
+        assertEquals(subFirst3, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst2, NodeTypes.Component.NAME).iterator();
+        // THEN
+        assertEquals(subFirst3, iterator.next());
+
+        // WHEN
+        iterator = NodeUtil.getSiblingsAfter(subFirst4, NodeTypes.Area.NAME).iterator();
+        // THEN
+        assertFalse(iterator.hasNext());
     }
 }

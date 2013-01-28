@@ -33,9 +33,7 @@
  */
 package info.magnolia.cms.security;
 
-import static info.magnolia.cms.security.SecurityConstants.NODE_GROUPS;
-import static info.magnolia.cms.security.SecurityConstants.NODE_ROLES;
-
+import static info.magnolia.cms.security.SecurityConstants.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
@@ -401,12 +399,18 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     @Override
     public User createUser(final String name, final String pw) {
+        return this.createUser(null, name, pw);
+    }
+
+    @Override
+    public User createUser(final String path, final String name, final String pw) throws UnsupportedOperationException {
         validateUsername(name);
         return MgnlContext.doInSystemContext(new SilentSessionOp<MgnlUser>(getRepositoryName()) {
 
             @Override
             public MgnlUser doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/" + getRealmName()).addNode(name,NodeTypes.User.NAME);
+                String uPath = path == null ? "/" + getRealmName() : path;
+                Node userNode = session.getNode(uPath).addNode(name, NodeTypes.User.NAME);
                 userNode.setProperty("name", name);
                 setPasswordProperty(userNode, pw);
                 userNode.setProperty("language", "en");

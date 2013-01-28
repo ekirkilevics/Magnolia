@@ -82,11 +82,11 @@ public class SecurityUtil {
     private static final String PRIVATE_KEY = "key.private";
     private static final String PUBLIC_KEY = "key.public";
     private static final String KEY_LOCATION_PROPERTY = "magnolia.author.key.location";
-    
-    
+
+
     public static final String SHA1 = "SHA-1"; //$NON-NLS-1$
     public static final String MD5 = "MD5"; //$NON-NLS-1$
-    
+
     /**
      * There are five (5) FIPS-approved* algorithms for generating a condensed representation of a message (message
      * digest): SHA-1, SHA-224, SHA-256,SHA-384, and SHA-512. <strong>Not supported yet</strong>
@@ -275,7 +275,10 @@ public class SecurityUtil {
                 defaultProps.put(PRIVATE_KEY, keys.getPrivateKey());
                 defaultProps.put(PUBLIC_KEY, keys.getPublicKey());
                 File keystore = new File(path);
-                keystore.getParentFile().mkdirs();
+                File parentFile = keystore.getParentFile();
+                if (parentFile != null) {
+                    parentFile.mkdirs();
+                }
                 FileWriter writer = new FileWriter(keystore);
                 String date = new SimpleDateFormat("dd.MMM.yyyy hh:mm").format(new Date());
                 defaultProps.store(writer, "generated " + date + " by " + MgnlContext.getUser().getName());
@@ -381,40 +384,40 @@ public class SecurityUtil {
             throw new SecurityException("Private key store doesn't exist at [" + keypair.getAbsolutePath() + "]. Please, ensure that [" + KEY_LOCATION_PROPERTY + "] actually points to the correct location");
         }
     }
-    
+
     public static String getBCrypt(String text) {
         // gensalt's log_rounds parameter determines the complexity
         // the work factor is 2^log_rounds, and the default is 10
         String hashed = BCrypt.hashpw(text, BCrypt.gensalt(12));
         return hashed;
     }
-    
+
     public static boolean matchBCrypted(String candidate, String hash) {
         // Check that an unencrypted password matches one that has
         // previously been hashed
         return BCrypt.checkpw(candidate, hash);
     }
-    
+
     /**
      * Message Digesting function.
-     * 
+     *
      */
     public static String getDigest(String data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
         md.reset();
         return new String(md.digest(data.getBytes()));
     }
-    
+
     /**
      * Message Digesting function.
-     * 
+     *
      */
     public static byte[] getDigest(byte[] data, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
         md.reset();
         return md.digest(data);
     }
-    
+
     /**
      * Gets SHA-1 encoded -> hex string.
      */
@@ -426,11 +429,11 @@ public class SecurityUtil {
             throw new SecurityException("Couldn't digest with " + SecurityUtil.SHA1 + " algorithm!");
         }
     }
-    
+
     public static String getSHA1Hex(String data) {
         return getSHA1Hex(data.getBytes());
     }
-     
+
     /**
      * Gets MD5 encoded -> hex string.
      */
@@ -442,7 +445,7 @@ public class SecurityUtil {
             throw new SecurityException("Couldn't digest with " + SecurityUtil.MD5 + " algorithm!");
         }
     }
-    
+
     public static String getMD5Hex(String data) {
         return getMD5Hex(data.getBytes());
     }

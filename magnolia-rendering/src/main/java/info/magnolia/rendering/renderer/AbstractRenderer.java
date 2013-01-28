@@ -200,6 +200,8 @@ public abstract class AbstractRenderer implements Renderer, RenderingModelBasedR
 
             // populate the instance with values given as request parameters
             Map<String, String[]> params = MgnlContext.getWebContext().getRequest().getParameterMap();
+            // needed workaround to not break rendering when there is no index between square brackets
+            // see https://issues.apache.org/jira/browse/BEANUTILS-419
             Map<String, Object> filtered = new HashMap<String, Object>();
             if (params != null) {
                 for (Entry<String, String[]> entry : params.entrySet()) {
