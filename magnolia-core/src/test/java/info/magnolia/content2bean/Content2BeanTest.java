@@ -431,6 +431,40 @@ public class Content2BeanTest {
         }
     }
 
+    @Test
+    public void testWillNotAddIncorrectTypesToMap() throws RepositoryException, IOException, Content2BeanException {
+        // GIVEN
+        final Content node = MockUtil.createNode("/foo",
+                "/foo.class=" + BeanWithMapAndAdder.class.getName(),
+                "/foo/beans.untitled=",
+                "/foo/beans/a.prop1=test"
+                );
+
+        // WHEN
+        final BeanWithMapAndAdder bean = (BeanWithMapAndAdder) Content2BeanUtil.toBean(node, true);
+
+        // THEN
+        assertEquals(1, bean.getBeans().size());
+        assertTrue(bean.getBeans().get("a") instanceof SimpleBean);
+    }
+
+    @Test
+    public void testWillNodAddIncorrectTypesToCollection() throws RepositoryException, IOException, Content2BeanException {
+        // GIVEN
+        final Content node = MockUtil.createNode("/foo",
+                "/foo.class=" + BeanWithCollectionAndAdder.class.getName(),
+                "/foo/beans.untitled=",
+                "/foo/beans/a.prop1=test"
+                );
+
+        // WHEN
+        final BeanWithCollectionAndAdder bean = (BeanWithCollectionAndAdder) Content2BeanUtil.toBean(node, true);
+
+        // THEN
+        assertEquals(1, bean.getBeans().size());
+        assertTrue(bean.getBeans().iterator().next() instanceof SimpleBean);
+    }
+
     public static class MyMap extends HashMap {
     }
 

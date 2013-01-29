@@ -784,6 +784,42 @@ public class Node2BeanTest {
         assertEquals(2, ((MyChain) bean.getCommand()).getCommands().length);
     }
 
+    @Test
+    public void testWillNotAddIncorrectTypesToMap() throws RepositoryException, IOException, Node2BeanException {
+        // GIVEN
+        final Session session = SessionTestUtil.createSession("/foo",
+                "/foo.class=" + BeanWithMapWithGenerics.class.getName(),
+                "/foo/beans.untitled=",
+                "/foo/beans/a.prop1=test"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
+
+        // WHEN
+        final BeanWithMapWithGenerics bean = (BeanWithMapWithGenerics) n2b.toBean(session.getNode("/foo"));
+
+        // THEN
+        assertEquals(1, bean.getBeans().size());
+        assertTrue(bean.getBeans().get("a") instanceof SimpleBean);
+    }
+
+    @Test
+    public void testWillNodAddIncorrectTypesToCollection() throws RepositoryException, IOException, Node2BeanException {
+        // GIVEN
+        final Session session = SessionTestUtil.createSession("/foo",
+                "/foo.class=" + BeanWithCollectionOfSimpleBean.class.getName(),
+                "/foo/beans.untitled=",
+                "/foo/beans/a.message=test"
+                );
+        Node2BeanProcessorImpl n2b = new Node2BeanProcessorImpl(typeMapping, transformer);
+
+        // WHEN
+        final BeanWithCollectionOfSimpleBean bean = (BeanWithCollectionOfSimpleBean) n2b.toBean(session.getNode("/foo"));
+
+        // THEN
+        assertEquals(1, bean.getBeans().size());
+        assertTrue(bean.getBeans().iterator().next() instanceof SimpleBean);
+    }
+
     private class ProxyingNode2BeanTransformer extends Node2BeanTransformerImpl {
 
         @Override

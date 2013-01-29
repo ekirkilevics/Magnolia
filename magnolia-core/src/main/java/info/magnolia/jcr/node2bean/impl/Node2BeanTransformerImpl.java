@@ -356,6 +356,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                         if (dscr.getWriteMethod() != null) {
                             Method method = dscr.getWriteMethod();
                             clearCollection(bean, propertyName);
+                            filterOutWrongValues(dscr, (Map<Object, Object>) value);
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
                             } else if (dscr.isArray()) {
@@ -384,14 +385,16 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                 Object key = iter.next();
                                 Object entryValue = ((Map<Object, Object>) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
-                                if (dscr.isCollection() || dscr.isArray()) {
-                                    log.debug("will add value {}", entryValue);
-                                    method.invoke(bean, new Object[] { entryValue });
-                                }
-                                // is a map
-                                else {
-                                    log.debug("will add key {} with value {}", key, entryValue);
-                                    method.invoke(bean, new Object[] { key, entryValue });
+                                if (entryClass.isAssignableFrom(entryValue.getClass())) {
+                                    if (dscr.isCollection() || dscr.isArray()) {
+                                        log.debug("will add value {}", entryValue);
+                                        method.invoke(bean, new Object[] { entryValue });
+                                    }
+                                    // is a map
+                                    else {
+                                        log.debug("will add key {} with value {}", key, entryValue);
+                                        method.invoke(bean, new Object[] { key, entryValue });
+                                    }
                                 }
                             }
                             return;
@@ -434,6 +437,18 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                 log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
                         new Object[] { propertyName, value, bean.getClass().getName(),
                                 state.getCurrentNode().getPath(), e.toString() });
+            }
+        }
+    }
+
+    private void filterOutWrongValues(PropertyTypeDescriptor dscr, Map<Object, Object> value) {
+        Class<?> entryClass = dscr.getCollectionEntryType().getType();
+        Iterator<Map.Entry<Object, Object>> iter = value.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Object, Object> entry = iter.next();
+            Class<?> realEntryType = entry.getValue().getClass();
+            if (!entryClass.isAssignableFrom(realEntryType)) {
+                iter.remove();
             }
         }
     }

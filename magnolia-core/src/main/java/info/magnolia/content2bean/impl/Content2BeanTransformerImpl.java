@@ -280,14 +280,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                                 Object key = iter.next();
                                 Object entryValue = ((Map<Object, Object>) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
-                                if (dscr.isCollection()) {
-                                    log.debug("will add value {}", entryValue);
-                                    method.invoke(bean, new Object[] { entryValue });
-                                }
-                                // is a map
-                                else {
-                                    log.debug("will add key {} with value {}", key, entryValue);
-                                    method.invoke(bean, new Object[] { key, entryValue });
+                                if (entryClass.isAssignableFrom(entryValue.getClass())) {
+                                    if (dscr.isCollection()) {
+                                        log.debug("will add value {}", entryValue);
+                                        method.invoke(bean, new Object[] { entryValue });
+                                    }
+                                    // is a map
+                                    else {
+                                        log.debug("will add key {} with value {}", key, entryValue);
+                                        method.invoke(bean, new Object[] { key, entryValue });
+                                    }
                                 }
                             }
 
