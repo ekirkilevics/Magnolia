@@ -33,10 +33,8 @@
  */
 package info.magnolia.templating.jsp.taglib;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -91,7 +89,7 @@ public class SimpleNavigationTagTest {
         NodeData bool = createStrictMock(NodeData.class);
         NodeData string = createStrictMock(NodeData.class);
         AggregationState aggState = new AggregationState();
-        PageContext pageContext = new MockPageContext(new MockServletConfig(),new MockHttpServletRequest(), new MockHttpServletResponse());
+        PageContext pageContext = new MockPageContext(new MockServletConfig(), new MockHttpServletRequest(), new MockHttpServletResponse());
         MgnlContext.setInstance(ctx);
         expect(ctx.getAggregationState()).andReturn(aggState);
         aggState.setCurrentContent(current);
@@ -101,8 +99,8 @@ public class SimpleNavigationTagTest {
         expect(current.getLevel()).andReturn(0);
         expect(current.getAncestor(0)).andReturn(parent);
 
-        //drawChildren()
-        expect(parent.getChildren(ItemType.CONTENT)).andReturn(Arrays.asList(new Content[] {dummy, hideInNav, current}));
+        // drawChildren()
+        expect(parent.getChildren(ItemType.CONTENT)).andReturn(Arrays.asList(new Content[] { dummy, hideInNav, current }));
         expect(parent.getLevel()).andReturn(0);
 
         // loop children
@@ -115,8 +113,8 @@ public class SimpleNavigationTagTest {
         expect(current.getNodeData("hideInNav")).andReturn(bool);
         expect(bool.getBoolean()).andReturn(new Boolean(false));
 
-        //draw visible children
-        //dummy
+        // draw visible children
+        // dummy
         expect(dummy.getNodeData("navTitle")).andReturn(string);
         expect(string.getString("")).andReturn("dummyTitle");
 
@@ -137,7 +135,7 @@ public class SimpleNavigationTagTest {
         expect(string.getString("")).andReturn("");
         expect(dummy.getHandle()).andReturn("/dummy");
 
-        //hideInNav
+        // hideInNav
         // - nothing
 
         // current
@@ -161,8 +159,7 @@ public class SimpleNavigationTagTest {
         expect(string.getString("")).andReturn("");
         expect(current.getHandle()).andReturn("/current");
 
-
-        Object mocks[] = new Object[] {current, ctx, parent, dummy, hideInNav, bool, string};
+        Object mocks[] = new Object[] { current, ctx, parent, dummy, hideInNav, bool, string };
         replay(mocks);
         tag.doEndTag();
         verify(mocks);

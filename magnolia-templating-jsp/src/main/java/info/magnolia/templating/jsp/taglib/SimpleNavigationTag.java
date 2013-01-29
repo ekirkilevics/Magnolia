@@ -57,7 +57,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tldgen.annotations.BodyContent;
 import org.tldgen.annotations.Tag;
 
@@ -69,14 +68,14 @@ import org.tldgen.annotations.Tag;
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
  * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the &lt;a&gt; tag wrapping the anchor text
  * </ul>
- *
+ * 
  * @jsp.tag name="simpleNavigation" body-content="empty"
  * @jsp.tag-example
  * <pre>
  * &lt;cmsu:simpleNavigation startLevel="3" style="mystyle"/&gt;
- *
+ * 
  * Will output the following:
- *
+ * 
  * &lt;ul class="level3 mystyle"&gt;
  *     &lt;li&gt;&lt;a href="..."&gt;page 1 name &lt;/a&gt;&lt;/li&gt;
  *     &lt;li&gt;&lt;a href="..."&gt;page 2 name &lt;/a&gt;&lt;/li&gt;
@@ -89,13 +88,11 @@ import org.tldgen.annotations.Tag;
  *     &lt;/li&gt;
  *     &lt;li&gt;&lt;a href="..."&gt;page 4 name &lt;/a&gt;&lt;/li&gt;
  * &lt;/ul&gt;
- *</pre>
- *
+ * </pre>
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-@Tag(name="simpleNavigation", bodyContent=BodyContent.EMPTY)
-
+@Tag(name = "simpleNavigation", bodyContent = BodyContent.EMPTY)
 public class SimpleNavigationTag extends TagSupport {
 
     /**
@@ -111,52 +108,52 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Css class added to leaf pages.
      */
-    private static final String CSS_LI_LEAF = "leaf"; 
+    private static final String CSS_LI_LEAF = "leaf";
 
     /**
      * Css class added to open trees.
      */
-    private static final String CSS_LI_CLOSED = "closed"; 
+    private static final String CSS_LI_CLOSED = "closed";
 
     /**
      * Css class added to closed trees.
      */
-    private static final String CSS_LI_OPEN = "open"; 
+    private static final String CSS_LI_OPEN = "open";
 
     /**
      * Css class added to first li in ul.
      */
-    private static final String CSS_LI_FIRST = "first"; 
+    private static final String CSS_LI_FIRST = "first";
 
     /**
      * Css class added to last li in ul.
      */
-    private static final String CSS_LI_LAST = "last"; 
+    private static final String CSS_LI_LAST = "last";
 
     /**
      * Page property: navigation title.
      */
-    private static final String NODEDATA_NAVIGATIONTITLE = "navTitle"; 
+    private static final String NODEDATA_NAVIGATIONTITLE = "navTitle";
 
     /**
      * Page property: access key.
      */
-    public static final String NODEDATA_ACCESSKEY = "accessKey"; 
+    public static final String NODEDATA_ACCESSKEY = "accessKey";
 
     /**
      * Default name for "open menu" nodeData.
      */
-    public static final String DEFAULT_OPENMENU_NODEDATA = "openMenu"; 
+    public static final String DEFAULT_OPENMENU_NODEDATA = "openMenu";
 
     /**
      * Default name for "hide in nav" nodeData.
      */
-    public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav"; 
+    public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav";
 
     /**
      * Default name for "wrapperElement" nodeData.
      */
-    public static final String DEFAULT_WRAPPERELEMENT_NODEDATA = ""; 
+    public static final String DEFAULT_WRAPPERELEMENT_NODEDATA = "";
 
     /**
      * Expand all expand all the nodes.
@@ -230,7 +227,6 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private String nofollow;
 
-
     /**
      * Content Filter to use to evaluate if a page should be drawn.
      */
@@ -245,6 +241,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * The start level for navigation, defaults to 0.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStartLevel(int startLevel) {
@@ -253,6 +250,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * The end level for navigation, defaults to 0.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setEndLevel(int endLevel) {
@@ -261,6 +259,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * The css class to be applied to the first ul. Default is empty.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String style) {
@@ -270,6 +269,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and
      * it is set to true, the page is not shown in navigation. Defaults to "hideInNav".
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setHideInNav(String hideInNav) {
@@ -280,6 +280,7 @@ public class SimpleNavigationTag extends TagSupport {
      * Name for the "open menu" nodeData. If a page contains a boolean property with this name and
      * it is set to true, subpages are always shown also if the page is not selected.
      * Defaults to "openMenu".
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setOpenMenu(String openMenu) {
@@ -290,6 +291,7 @@ public class SimpleNavigationTag extends TagSupport {
      * Name for the "nofollow" nodeData. If a page contains a boolean property with this name
      * and it is set to true, rel="nofollow" will be added to the generated link
      * (for links the should be ignored by search engines).
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNofollow(String nofollow) {
@@ -298,6 +300,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * A variable in the pageContext that contains a content filter, determining if a given page should be drawn or not.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentFilter(String contentFilter) {
@@ -307,6 +310,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Sitemap mode. Can be assigned the "show" value. Only showable pages will be displayed. Any other value will
      * result in displaying all pages.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setExpandAll(String expandAll) {
@@ -321,6 +325,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * If set to true, the startLevel and endLevel values are treated relatively to the current active page.
      * The default value is false.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setRelativeLevels(boolean relativeLevels) {
@@ -329,6 +334,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * Name for a page property that will hold a css class name which will be added to the html class attribute.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClassProperty(String classProperty) {
@@ -337,6 +343,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * When specified, all links will have the anchortext wrapped in the supplied element. (such as "span")
+     * 
      * @param wrapperElement name of an html element that will be included in the anchor, wrapping the anchortext
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -347,6 +354,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * If set to true, a "first" or "last" css class will be added to the list of css classes of the
      * first and the last li in each ul.
+     * 
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setMarkFirstAndLastElement(boolean flag) {
@@ -369,8 +377,7 @@ public class SimpleNavigationTag extends TagSupport {
         if (StringUtils.isNotEmpty(this.contentFilter)) {
             try {
                 filter = (ContentFilter) this.pageContext.getAttribute(this.contentFilter);
-            }
-            catch(ClassCastException e) {
+            } catch (ClassCastException e) {
                 log.error("contentFilter assigned was not a content filter", e);
             }
         } else {
@@ -394,12 +401,10 @@ public class SimpleNavigationTag extends TagSupport {
                 drawChildren(startContent, activePage, out);
             }
 
-        }
-        catch (RepositoryException e) {
-            log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); 
+        } catch (RepositoryException e) {
+            log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e);
             return EVAL_PAGE;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // should never happen
             throw new NestableRuntimeException(e);
         }
@@ -427,6 +432,7 @@ public class SimpleNavigationTag extends TagSupport {
 
     /**
      * Draws page children as an unordered list.
+     * 
      * @param page current page
      * @param activePage active page
      * @param out jsp writer
@@ -451,12 +457,12 @@ public class SimpleNavigationTag extends TagSupport {
 
         Iterator<Content> iter = children.iterator();
         // loop through all children and discard those we don't want to display
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             final Content child = iter.next();
 
             if (expandAll.equalsIgnoreCase(EXPAND_NONE) || expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
                 if (child
-                    .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
+                        .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA)).getBoolean()) {
                     iter.remove();
                     continue;
                 }
@@ -508,24 +514,24 @@ public class SimpleNavigationTag extends TagSupport {
                 cssClasses.add(CSS_LI_ACTIVE);
             }
             else if (!showChildren) {
-                showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
-                    child.getLevel()).getHandle().equals(child.getHandle()));
+                showChildren = child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
+                        child.getLevel()).getHandle().equals(child.getHandle());
             }
 
             if (!showChildren) {
                 showChildren = child
-                    .getNodeData(StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA))
-                    .getBoolean();
+                        .getNodeData(StringUtils.defaultString(this.openMenu, DEFAULT_OPENMENU_NODEDATA))
+                        .getBoolean();
             }
 
             if (endLevel > 0) {
                 showChildren &= child.getLevel() < endLevel;
             }
 
-            cssClasses.add(hasVisibleChildren(child) ? (showChildren ? CSS_LI_OPEN : CSS_LI_CLOSED) : CSS_LI_LEAF);
+            cssClasses.add(hasVisibleChildren(child) ? showChildren ? CSS_LI_OPEN : CSS_LI_CLOSED : CSS_LI_LEAF);
 
             if (child.getLevel() < activePage.getLevel()
-                && activePage.getAncestor(child.getLevel()).getHandle().equals(child.getHandle())) {
+                    && activePage.getAncestor(child.getLevel()).getHandle().equals(child.getHandle())) {
                 cssClasses.add(CSS_LI_TRAIL);
             }
 
@@ -547,66 +553,66 @@ public class SimpleNavigationTag extends TagSupport {
             while (iterator.hasNext()) {
                 css.append(iterator.next());
                 if (iterator.hasNext()) {
-                    css.append(" "); 
+                    css.append(" ");
                 }
             }
 
-            out.print("<li class=\""); 
+            out.print("<li class=\"");
             out.print(css.toString());
-            out.print("\">"); 
+            out.print("\">");
 
             if (self) {
-                out.println("<strong>"); 
+                out.println("<strong>");
             }
 
             String accesskey = child.getNodeData(NODEDATA_ACCESSKEY).getString(StringUtils.EMPTY);
 
-            out.print("<a href=\""); 
+            out.print("<a href=\"");
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
             out.print(I18nContentSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
-            out.print(".html\""); 
+            out.print(".html\"");
 
             if (StringUtils.isNotEmpty(accesskey)) {
-                out.print(" accesskey=\""); 
+                out.print(" accesskey=\"");
                 out.print(accesskey);
-                out.print("\""); 
+                out.print("\"");
             }
 
             if (nofollow != null && child.getNodeData(this.nofollow).getBoolean())
             {
-                out.print(" rel=\"nofollow\""); 
+                out.print(" rel=\"nofollow\"");
             }
 
-            out.print(">"); 
+            out.print(">");
 
             if (StringUtils.isNotEmpty(this.wrapperElement)) {
-                out.print("<" + this.wrapperElement + ">"); 
+                out.print("<" + this.wrapperElement + ">");
             }
 
             out.print(StringEscapeUtils.escapeHtml(title));
 
             if (StringUtils.isNotEmpty(this.wrapperElement)) {
-                out.print("</" + this.wrapperElement + ">"); 
+                out.print("</" + this.wrapperElement + ">");
             }
 
-            out.print(" </a>"); 
+            out.print(" </a>");
 
             if (self) {
-                out.println("</strong>"); 
+                out.println("</strong>");
             }
 
             if (showChildren) {
                 drawChildren(child, activePage, out);
             }
-            out.print("</li>"); 
+            out.print("</li>");
         }
 
-        out.print("</ul>"); 
+        out.print("</ul>");
     }
 
     /**
-     * Checks if the page has a visible children. Pages with the <code>hide in nav</code> attribute set to
-     * <code>true</code> are ignored.
+     * Checks if the page has a visible children. Pages with the <code>hide in nav</code> attribute set to <code>true</code> are ignored.
+     * 
      * @param page root page
      * @return <code>true</code> if the given page has at least one visible child.
      */
@@ -622,8 +628,8 @@ public class SimpleNavigationTag extends TagSupport {
         }
         return false;
     }
-    
-    protected Content getCurrentActivePage(){
+
+    protected Content getCurrentActivePage() {
         Content currentActpage = MgnlContext.getAggregationState().getCurrentContent();
         if (currentActpage == null) {
             currentActpage = MgnlContext.getAggregationState().getMainContent();
