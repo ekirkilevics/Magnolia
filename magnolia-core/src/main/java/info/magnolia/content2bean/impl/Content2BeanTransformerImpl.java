@@ -44,6 +44,18 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.ComponentProvider;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -53,19 +65,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.jcr.RepositoryException;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-
 /**
  * Concrete implementation using reflection and adder methods.
- *
+ * 
  * @author philipp
  * @version $Id$
  */
@@ -196,8 +198,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
     }
 
     /**
-     * @deprecated since 4.5, use
-     *             {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor, info.magnolia.objectfactory.ComponentProvider)}
+     * @deprecated since 4.5, use {@link #onResolveType(info.magnolia.content2bean.TypeMapping, info.magnolia.content2bean.TransformationState, info.magnolia.content2bean.TypeDescriptor, info.magnolia.objectfactory.ComponentProvider)}
      */
     protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType, ComponentProvider componentProvider) {
         return onResolveType(getTypeMapping(), state, resolvedType, componentProvider);
@@ -247,7 +248,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             return;
         }
 
-        log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
+        log.debug("try to set {}.{} with value {}", new Object[] { bean, propertyName, value });
 
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
@@ -281,12 +282,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
                                 entryValue = convertPropertyValue(entryClass, entryValue);
                                 if (dscr.isCollection()) {
                                     log.debug("will add value {}", entryValue);
-                                    method.invoke(bean, new Object[] {entryValue});
+                                    method.invoke(bean, new Object[] { entryValue });
                                 }
                                 // is a map
                                 else {
                                     log.debug("will add key {} with value {}", key, entryValue);
-                                    method.invoke(bean, new Object[] {key, entryValue});
+                                    method.invoke(bean, new Object[] { key, entryValue });
                                 }
                             }
 
@@ -304,8 +305,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             } catch (Exception e) {
                 // do it better
                 log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                        new Object[] {propertyName, value, bean.getClass().getName(),
-                                state.getCurrentContent().getHandle(), e.toString()});
+                        new Object[] { propertyName, value, bean.getClass().getName(),
+                                state.getCurrentContent().getHandle(), e.toString() });
                 log.debug("stacktrace", e);
             }
         }
@@ -324,8 +325,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         } catch (Exception e) {
             // do it better
             log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                    new Object[] {propertyName, value, bean.getClass().getName(),
-                            state.getCurrentContent().getHandle(), e.toString()});
+                    new Object[] { propertyName, value, bean.getClass().getName(),
+                            state.getCurrentContent().getHandle(), e.toString() });
             log.debug("stacktrace", e);
         }
 
@@ -355,13 +356,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
             }
         }
 
-        if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+        if (Collection.class.equals(propertyType) && value instanceof Map) {
             // TODO never used ?
             return ((Map) value).values();
         }
 
         // this is mainly the case when we are flattening node hierarchies
-        if ((String.class.equals(propertyType)) && (value instanceof Map) && (((Map) value).size() == 1)) {
+        if (String.class.equals(propertyType) && value instanceof Map && ((Map) value).size() == 1) {
             return ((Map) value).values().iterator().next();
         }
 
@@ -431,7 +432,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
 
     /**
      * Returns the default mapping.
-     *
+     * 
      * @deprecated since 4.5, do not use.
      */
     @Override

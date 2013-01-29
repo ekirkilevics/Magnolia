@@ -118,7 +118,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         convertUtilsBean.register(new Converter() {
             @Override
             public Object convert(Class type, Object value) {
-                    return new MessageFormat((String) value);
+                return new MessageFormat((String) value);
             }
         }, MessageFormat.class);
 
@@ -219,7 +219,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                 try {
                     return !(t.getName().startsWith(NodeTypes.JCR_PREFIX) ||
                             t.getName().startsWith(NodeTypes.MGNL_PREFIX) ||
-                            t.isNodeType(NodeTypes.MetaData.NAME));
+                    t.isNodeType(NodeTypes.MetaData.NAME));
                 } catch (RepositoryException e) {
                     return false;
                 }
@@ -298,13 +298,13 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             }
         }
 
-        if ((Collection.class.equals(propertyType)) && (value instanceof Map)) {
+        if (Collection.class.equals(propertyType) && value instanceof Map) {
             // TODO never used ?
             return ((Map) value).values();
         }
 
         // this is mainly the case when we are flattening node hierarchies
-        if ((String.class.equals(propertyType)) && (value instanceof Map) && (((Map) value).size() == 1)) {
+        if (String.class.equals(propertyType) && value instanceof Map && ((Map) value).size() == 1) {
             return ((Map) value).values().iterator().next();
         }
 
@@ -331,7 +331,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         if (propertyName.equals("content") && value == null) {
             // TODO this should be changed to node but this would require to
             // rewrite some classes to use node instead of content
-            value = new SystemContentWrapper(ContentUtil.asContent((state.getCurrentNode())));
+            value = new SystemContentWrapper(ContentUtil.asContent(state.getCurrentNode()));
         } else if (propertyName.equals("name") && value == null) {
             value = state.getCurrentNode().getName();
         } else if (propertyName.equals("className") && value == null) {
@@ -343,7 +343,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             return;
         }
 
-        log.debug("try to set {}.{} with value {}", new Object[] {bean, propertyName, value});
+        log.debug("try to set {}.{} with value {}", new Object[] { bean, propertyName, value });
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
             try {
@@ -358,7 +358,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                             clearCollection(bean, propertyName);
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
-                            } else if (dscr.isArray()){
+                            } else if (dscr.isArray()) {
                                 Class<?> entryClass = dscr.getCollectionEntryType().getType();
                                 Collection<Object> list = new LinkedList<Object>(((Map<Object, Object>) value).values());
 
@@ -366,7 +366,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                                 for (int i = 0; i < arr.length; i++) {
                                     arr[i] = Iterables.get(list, i);
                                 }
-                                method.invoke(bean, new Object[] {arr});
+                                method.invoke(bean, new Object[] { arr });
                             } else if (dscr.isCollection()) {
                                 if (value instanceof Map) {
                                     value = createCollectionFromMap((Map<Object, Object>) value, dscr.getType().getType());
@@ -407,12 +407,12 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
             } catch (Exception e) {
                 if (log.isDebugEnabled()) {
                     log.debug("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                        new Object[] { propertyName, value, bean.getClass().getName(),
-                            state.getCurrentNode().getPath(), e.toString() });
+                            new Object[] { propertyName, value, bean.getClass().getName(),
+                                    state.getCurrentNode().getPath(), e.toString() });
                 } else {
                     log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                        new Object[] {propertyName, value, bean.getClass().getName(),
-                                state.getCurrentNode().getPath(), e.toString()});
+                            new Object[] { propertyName, value, bean.getClass().getName(),
+                                    state.getCurrentNode().getPath(), e.toString() });
                 }
             }
         }
@@ -428,12 +428,12 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                    new Object[] { propertyName, value, bean.getClass().getName(),
-                        state.getCurrentNode().getPath(), e.toString() });
+                        new Object[] { propertyName, value, bean.getClass().getName(),
+                                state.getCurrentNode().getPath(), e.toString() });
             } else {
                 log.error("Can't set property [{}] to value [{}] in bean [{}] for node {} due to {}",
-                    new Object[] {propertyName, value, bean.getClass().getName(),
-                            state.getCurrentNode().getPath(), e.toString()});
+                        new Object[] { propertyName, value, bean.getClass().getName(),
+                                state.getCurrentNode().getPath(), e.toString() });
             }
         }
     }
@@ -464,6 +464,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
      * </ul>
      * If passed class parameter is an implementation of any collection type, then this method will create
      * this implementation and returns it.
+     * 
      * @param map a map which values will be converted to a collection
      * @param clazz collection type
      * @return Collection of elements or null.

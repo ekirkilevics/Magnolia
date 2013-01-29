@@ -33,10 +33,8 @@
  */
 package info.magnolia.content2bean;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
@@ -49,13 +47,17 @@ import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.jcr.RepositoryException;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -77,11 +79,11 @@ public class Content2BeanTest {
     }
 
     @Test
-    public void testContentToBeanWithClassDefined() throws Content2BeanException{
-        Content node = MockUtil.createNode("node", new Object[][]{
-            {"class", "info.magnolia.content2bean.SimpleBean"},
-            {"prop1", "prop1Value"},
-            {"prop2", "prop2Value"}});
+    public void testContentToBeanWithClassDefined() throws Content2BeanException {
+        Content node = MockUtil.createNode("node", new Object[][] {
+                { "class", "info.magnolia.content2bean.SimpleBean" },
+                { "prop1", "prop1Value" },
+                { "prop2", "prop2Value" } });
 
         Object bean = Content2BeanUtil.toBean(node);
         assertTrue(bean instanceof SimpleBean);
@@ -90,8 +92,8 @@ public class Content2BeanTest {
     }
 
     @Test
-    public void testContentToBeanWithDefaultClass() throws Content2BeanException{
-        Content node = MockUtil.createNode("node", new Object[][]{{"prop1", "prop1Value"}, {"prop2", "prop2Value"}});
+    public void testContentToBeanWithDefaultClass() throws Content2BeanException {
+        Content node = MockUtil.createNode("node", new Object[][] { { "prop1", "prop1Value" }, { "prop2", "prop2Value" } });
 
         Object bean = Content2BeanUtil.toBean(node, SimpleBean.class);
         assertTrue(bean instanceof SimpleBean);
@@ -101,14 +103,14 @@ public class Content2BeanTest {
 
     @Test
     public void testContentToBeanWithSubBean() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithSubBean"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-            new Content[]{MockUtil.createNode("sub", new String[][]{
-                {"class", "info.magnolia.content2bean.OtherSimpleBean"},
-                {"prop1", "propSub1Value"},
-                {"prop2", "propSub2Value"}})});
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithSubBean" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] { MockUtil.createNode("sub", new String[][] {
+                { "class", "info.magnolia.content2bean.OtherSimpleBean" },
+                { "prop1", "propSub1Value" },
+                { "prop2", "propSub2Value" } }) });
 
         BeanWithSubBean bean = (BeanWithSubBean) Content2BeanUtil.toBean(node, true);
         OtherSimpleBean sub = (OtherSimpleBean) bean.getSub();
@@ -122,13 +124,13 @@ public class Content2BeanTest {
 
     @Test
     public void testContentToBeanWithSubBeanAndAutoTypeResolving() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithSubBean"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-            new Content[]{MockUtil.createNode("sub", new String[][]{
-                {"prop1", "propSub1Value"},
-                {"prop2", "propSub2Value"}})});
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithSubBean" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] { MockUtil.createNode("sub", new String[][] {
+                { "prop1", "propSub1Value" },
+                { "prop2", "propSub2Value" } }) });
 
         BeanWithSubBean bean = (BeanWithSubBean) Content2BeanUtil.toBean(node, true);
         SimpleBean sub = bean.getSub();
@@ -142,27 +144,27 @@ public class Content2BeanTest {
 
     @Test
     public void testContentToBeanWithSubMap() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithMap"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-                new Content[]{
-                    MockUtil.createContent("beans", new String[][]{},
-                        new Content[]{
-                            MockUtil.createNode("sub1", new String[][]{
-                                {"class", "info.magnolia.content2bean.SimpleBean"},
-                                {"prop1", "prop1Sub1Value"},
-                                {"prop2", "prop2Sub1Value"}
-                            }),
-                            MockUtil.createNode("sub2", new String[][]{
-                                {"class", "info.magnolia.content2bean.SimpleBean"},
-                                {"prop1", "prop1Sub2Value"},
-                                {"prop2", "prop2Sub2Value"}
-                            }),
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithMap" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] {
+                MockUtil.createContent("beans", new String[][] {},
+                        new Content[] {
+                                MockUtil.createNode("sub1", new String[][] {
+                                { "class", "info.magnolia.content2bean.SimpleBean" },
+                                { "prop1", "prop1Sub1Value" },
+                                { "prop2", "prop2Sub1Value" }
+                                }),
+                                MockUtil.createNode("sub2", new String[][] {
+                                { "class", "info.magnolia.content2bean.SimpleBean" },
+                                { "prop1", "prop1Sub2Value" },
+                                { "prop2", "prop2Sub2Value" }
+                                }),
 
-                    })
+                        })
 
-        });
+                });
 
         BeanWithMap bean = (BeanWithMap) Content2BeanUtil.toBean(node, true);
         Map beans = bean.getBeans();
@@ -171,33 +173,33 @@ public class Content2BeanTest {
         assertNotNull(beans.get("sub1"));
         assertNotNull(beans.get("sub2"));
 
-        assertEquals("prop1Sub1Value", ((SimpleBean)beans.get("sub1")).getProp1());
-        assertEquals("prop2Sub1Value", ((SimpleBean)beans.get("sub1")).getProp2());
-        assertEquals("prop1Sub2Value", ((SimpleBean)beans.get("sub2")).getProp1());
-        assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
+        assertEquals("prop1Sub1Value", ((SimpleBean) beans.get("sub1")).getProp1());
+        assertEquals("prop2Sub1Value", ((SimpleBean) beans.get("sub1")).getProp2());
+        assertEquals("prop1Sub2Value", ((SimpleBean) beans.get("sub2")).getProp1());
+        assertEquals("prop2Sub2Value", ((SimpleBean) beans.get("sub2")).getProp2());
     }
 
     @Test
     public void testContentToBeanWithSubMapUsingMapping() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithMap"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-                new Content[]{
-                    MockUtil.createContent("beans", new String[][]{},
-                        new Content[]{
-                            MockUtil.createNode("sub1", new String[][]{
-                                {"prop1", "prop1Sub1Value"},
-                                {"prop2", "prop2Sub1Value"}
-                            }),
-                            MockUtil.createNode("sub2", new String[][]{
-                                {"prop1", "prop1Sub2Value"},
-                                {"prop2", "prop2Sub2Value"}
-                            }),
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithMap" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] {
+                MockUtil.createContent("beans", new String[][] {},
+                        new Content[] {
+                                MockUtil.createNode("sub1", new String[][] {
+                                { "prop1", "prop1Sub1Value" },
+                                { "prop2", "prop2Sub1Value" }
+                                }),
+                                MockUtil.createNode("sub2", new String[][] {
+                                { "prop1", "prop1Sub2Value" },
+                                { "prop2", "prop2Sub2Value" }
+                                }),
 
-                    })
+                        })
 
-        });
+                });
 
         Content2BeanUtil.addCollectionPropertyMapping(BeanWithMap.class, "beans", SimpleBean.class);
 
@@ -208,33 +210,33 @@ public class Content2BeanTest {
         assertNotNull(beans.get("sub1"));
         assertNotNull(beans.get("sub2"));
 
-        assertEquals("prop1Sub1Value", ((SimpleBean)beans.get("sub1")).getProp1());
-        assertEquals("prop2Sub1Value", ((SimpleBean)beans.get("sub1")).getProp2());
-        assertEquals("prop1Sub2Value", ((SimpleBean)beans.get("sub2")).getProp1());
-        assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
+        assertEquals("prop1Sub1Value", ((SimpleBean) beans.get("sub1")).getProp1());
+        assertEquals("prop2Sub1Value", ((SimpleBean) beans.get("sub1")).getProp2());
+        assertEquals("prop1Sub2Value", ((SimpleBean) beans.get("sub2")).getProp1());
+        assertEquals("prop2Sub2Value", ((SimpleBean) beans.get("sub2")).getProp2());
     }
 
     @Test
     public void testContentToBeanWithSubMapUsingAdder() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithMapAndAdder"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-                new Content[]{
-                    MockUtil.createContent("beans", new String[][]{},
-                        new Content[]{
-                            MockUtil.createNode("sub1", new String[][]{
-                                {"prop1", "prop1Sub1Value"},
-                                {"prop2", "prop2Sub1Value"}
-                            }),
-                            MockUtil.createNode("sub2", new String[][]{
-                                {"prop1", "prop1Sub2Value"},
-                                {"prop2", "prop2Sub2Value"}
-                            }),
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithMapAndAdder" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] {
+                MockUtil.createContent("beans", new String[][] {},
+                        new Content[] {
+                                MockUtil.createNode("sub1", new String[][] {
+                                { "prop1", "prop1Sub1Value" },
+                                { "prop2", "prop2Sub1Value" }
+                                }),
+                                MockUtil.createNode("sub2", new String[][] {
+                                { "prop1", "prop1Sub2Value" },
+                                { "prop2", "prop2Sub2Value" }
+                                }),
 
-                    })
+                        })
 
-        });
+                });
 
         BeanWithMapAndAdder bean = (BeanWithMapAndAdder) Content2BeanUtil.toBean(node, true);
         Map beans = bean.getBeans();
@@ -243,33 +245,33 @@ public class Content2BeanTest {
         assertNotNull(beans.get("sub1"));
         assertNotNull(beans.get("sub2"));
 
-        assertEquals("prop1Sub1Value", ((SimpleBean)beans.get("sub1")).getProp1());
-        assertEquals("prop2Sub1Value", ((SimpleBean)beans.get("sub1")).getProp2());
-        assertEquals("prop1Sub2Value", ((SimpleBean)beans.get("sub2")).getProp1());
-        assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
+        assertEquals("prop1Sub1Value", ((SimpleBean) beans.get("sub1")).getProp1());
+        assertEquals("prop2Sub1Value", ((SimpleBean) beans.get("sub1")).getProp2());
+        assertEquals("prop1Sub2Value", ((SimpleBean) beans.get("sub2")).getProp1());
+        assertEquals("prop2Sub2Value", ((SimpleBean) beans.get("sub2")).getProp2());
     }
 
     @Test
     public void testContentToBeanWithArraysUsingAdder() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithArrayAndAdder"},
-                {"prop1", "propParent1Value"},
-                {"prop2", "propParent2Value"}},
-                new Content[]{
-                    MockUtil.createContent("beans", new String[][]{},
-                        new Content[]{
-                            MockUtil.createNode("sub1", new String[][]{
-                                {"prop1", "prop1Sub1Value"},
-                                {"prop2", "prop2Sub1Value"}
-                            }),
-                            MockUtil.createNode("sub2", new String[][]{
-                                {"prop1", "prop1Sub2Value"},
-                                {"prop2", "prop2Sub2Value"}
-                            }),
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithArrayAndAdder" },
+                { "prop1", "propParent1Value" },
+                { "prop2", "propParent2Value" } },
+                new Content[] {
+                MockUtil.createContent("beans", new String[][] {},
+                        new Content[] {
+                                MockUtil.createNode("sub1", new String[][] {
+                                { "prop1", "prop1Sub1Value" },
+                                { "prop2", "prop2Sub1Value" }
+                                }),
+                                MockUtil.createNode("sub2", new String[][] {
+                                { "prop1", "prop1Sub2Value" },
+                                { "prop2", "prop2Sub2Value" }
+                                }),
 
-                    })
+                        })
 
-        });
+                });
 
         BeanWithArrayAndAdder bean = (BeanWithArrayAndAdder) Content2BeanUtil.toBean(node, true);
 
@@ -285,10 +287,10 @@ public class Content2BeanTest {
 
     @Test
     public void testClassPropertiesAreConvertedProperly() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithClass"},
-                {"foo", "blah"},
-                {"clazz", "java.lang.String"}}, new Content[0]);
+        Content node = MockUtil.createContent("parent", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithClass" },
+                { "foo", "blah" },
+                { "clazz", "java.lang.String" } }, new Content[0]);
 
         BeanWithClass o = (BeanWithClass) Content2BeanUtil.toBean(node, true);
         assertEquals("blah", o.getFoo());
@@ -297,10 +299,10 @@ public class Content2BeanTest {
 
     @Test
     public void testJCRPropertiesTypes() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new Object[][]{
-                {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
-                                {"integer", Integer.valueOf(5)},
- {"bool", Boolean.TRUE}
+        Content node = MockUtil.createContent("parent", new Object[][] {
+                { "class", "info.magnolia.content2bean.BeanWithPrimitiveProperties" },
+                { "integer", Integer.valueOf(5) },
+                { "bool", Boolean.TRUE }
         }, new Content[0]);
 
         BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) Content2BeanUtil.toBean(node, true);
@@ -310,10 +312,10 @@ public class Content2BeanTest {
 
     @Test
     public void testFromStringConversion() throws Content2BeanException {
-        Content node = MockUtil.createContent("parent", new Object[][]{
-                {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
-                {"integer", "5"},
-                {"bool", "true"}
+        Content node = MockUtil.createContent("parent", new Object[][] {
+                { "class", "info.magnolia.content2bean.BeanWithPrimitiveProperties" },
+                { "integer", "5" },
+                { "bool", "true" }
         }, new Content[0]);
 
         BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) Content2BeanUtil.toBean(node, true);
@@ -324,12 +326,12 @@ public class Content2BeanTest {
     @Test
     public void testFlatteningSubNodesToSimpleList() throws RepositoryException, Content2BeanException, IOException {
         String data =
-            "/parent.class=" + BeanWithListOfString.class.getName() + "\n" +
-            "/parent/values/sub1.value=one\n" +
-            "/parent/values/sub2.value=two";
+                "/parent.class=" + BeanWithListOfString.class.getName() + "\n" +
+                        "/parent/values/sub1.value=one\n" +
+                        "/parent/values/sub2.value=two";
 
         Content node = MockUtil.createHierarchyManager(RepositoryConstants.WEBSITE, data).getContent("/parent");
-        //System.out.println(Content2BeanUtil.toMap(node.getContent("values"), true));
+        // System.out.println(Content2BeanUtil.toMap(node.getContent("values"), true));
 
         BeanWithListOfString bean = (BeanWithListOfString) Content2BeanUtil.toBean(node, true);
         assertEquals("one", bean.getValues().get(0));
@@ -338,10 +340,10 @@ public class Content2BeanTest {
 
     @Test
     public void testCanConvertStringsToTheAppropriateEnumEquivalent() throws Exception {
-        Content node = MockUtil.createContent("myNode", new String[][]{
-                {"class", "info.magnolia.content2bean.BeanWithEnum"},
-                {"foobar", "Why, Hello !"},
-                {"sample", "two"}
+        Content node = MockUtil.createContent("myNode", new String[][] {
+                { "class", "info.magnolia.content2bean.BeanWithEnum" },
+                { "foobar", "Why, Hello !" },
+                { "sample", "two" }
         }, new Content[0]);
 
         BeanWithEnum result = (BeanWithEnum) Content2BeanUtil.toBean(node, true);
@@ -374,8 +376,8 @@ public class Content2BeanTest {
         assertTrue("we wanted a custom map impl!", map instanceof MyMap);
     }
 
-    /* TODO - MAGNOLIA-3160
     @Test
+    @Ignore("TODO - MAGNOLIA-3160")
     public void testCanSpecifySpecificCollectionImplementation() throws Exception {
         final Content node = MockUtil.createNode("/foo/bar",
                 "/foo/bar.class=" + BeanWithCollection.class.getName(),
@@ -402,7 +404,6 @@ public class Content2BeanTest {
         // actual test:
         assertTrue("we wanted a custom collection impl!", coll instanceof Vector);
     }
-    */
 
     @Test
     public void testWillFailToUseACustomMapWhichIsNotConcrete() throws Exception { // DUH !
@@ -433,5 +434,6 @@ public class Content2BeanTest {
     public static class MyMap extends HashMap {
     }
 
-    public abstract static class StupidMap extends AbstractMap {}
+    public abstract static class StupidMap extends AbstractMap {
+    }
 }
