@@ -43,6 +43,7 @@ import info.magnolia.logging.AuditLoggingManager;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.security.Principal;
@@ -98,6 +99,7 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
     private final PermissionImpl permissionImpl = new PermissionImpl();
     Principal principal = new ACLImpl(RepositoryConstants.WEBSITE, list);
     Set<Principal> principals = new HashSet<Principal>();
+    private MockHierarchyManager hm;
 
     @Override
     public void setUp() throws Exception {
@@ -106,7 +108,7 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
         AuditLoggingManager auditLoggingManager = new AuditLoggingManager();
         ComponentsTestUtil.setInstance(AuditLoggingManager.class, auditLoggingManager);
 
-        HierarchyManager hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.WEBSITE, "");
+        hm = MockUtil.createAndSetHierarchyManager(RepositoryConstants.WEBSITE, "");
         hm.createContent("/", "", MgnlNodeType.NT_PAGE);
         Content page = hm.createContent("/", "page", MgnlNodeType.NT_PAGE);
         Content contentNode = hm.createContent("/", "contentNode", MgnlNodeType.NT_CONTENTNODE);
@@ -221,5 +223,21 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
         CompiledPermissions permissions = provider.compilePermissions(principals);
         // THEN
         assertTrue(permissions instanceof DefaultACLBasedPermissions);
+    }
+
+    @Test
+    public void testReadOnlyPermissionsToJcrSystemAreSetForUser() throws RepositoryException {
+        // GIVEN
+        MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
+        Map<Object, Object> configuration = new HashMap<Object, Object>();
+        when(pageElement.getString()).thenReturn("/jcr:system/jcr:versionStorage");
+
+        // WHEN
+        provider.init(systemSession, configuration);
+        CompiledPermissions permissions = provider.compilePermissions(principals);
+
+        // THEN
+        // 1 stays for READ permissions
+        assertTrue(permissions.grants(itemPath, 1));
     }
 }

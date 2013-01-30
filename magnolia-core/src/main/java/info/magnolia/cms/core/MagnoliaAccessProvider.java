@@ -34,8 +34,10 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.PrincipalUtil;
 import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.objectfactory.Classes;
 import info.magnolia.objectfactory.MgnlInstantiationException;
 
@@ -106,7 +108,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
 
         ACL acl = PrincipalUtil.findAccessControlList(principals, workspaceName);
         if (acl != null) {
-            return getUserPermissions(acl.getList());
+            return getUserPermissions(addJcrSystemReadPermissions(acl.getList()));
         }
 
         return RootOnlyPermission;
@@ -192,5 +194,17 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         }
         sb.delete(0, 4);
         return sb.toString();
+    }
+
+    private List<Permission> addJcrSystemReadPermissions(List<Permission> permissions) {
+        Permission permission = new PermissionImpl();
+        permission.setPattern(new SimpleUrlPattern("/jcr:system"));
+        permission.setPermissions(Permission.READ);
+        permissions.add(permission);
+        permission = new PermissionImpl();
+        permission.setPattern(new SimpleUrlPattern("/jcr:system/*"));
+        permission.setPermissions(Permission.READ);
+        permissions.add(permission);
+        return permissions;
     }
 }
