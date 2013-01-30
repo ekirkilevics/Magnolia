@@ -76,11 +76,11 @@ public class CollectionPropertyHidingTransformer extends Node2BeanTransformerImp
     /**
      *
      * @param beanClass class which collection will be hidden
-     * @param collectioName name of collection to hide
+     * @param collectionName name of collection to hide
      */
-    public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectioName) {
+    public CollectionPropertyHidingTransformer(Class<?> beanClass, String collectionName) {
         this.beanClass = beanClass;
-        this.collectionName = collectioName;
+        this.collectionName = collectionName;
     }
 
     @Override
