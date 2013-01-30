@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Magnolia specific ACL provider. This code depends on JR specific API rather then on JCR API. That's why it'll be moved out from core (SCRUM-636).
- *
+ * 
  * @version $Id$
  */
 // TODO: should extend just abstract control provider!!!
@@ -113,7 +113,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
     }
 
     private CompiledPermissions getUserPermissions(List<Permission> permissions) {
-         return Classes.getClassFactory().newInstance(permissionsClass, permissions, session, configuration);
+        return Classes.getClassFactory().newInstance(permissionsClass, permissions, session, configuration);
     }
 
     @Override
@@ -151,11 +151,11 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             return;
         }
         try {
-            permissionsClass = Classes.getClassFactory().forName((String)compiledPermissionsClass);
-            if (!(DefaultACLBasedPermissions.class).isAssignableFrom(permissionsClass)) {
+            permissionsClass = Classes.getClassFactory().forName((String) compiledPermissionsClass);
+            if (!DefaultACLBasedPermissions.class.isAssignableFrom(permissionsClass)) {
                 log.warn("The '{}' cannot be used as permissionClass. " + warnMessage, permissionsClass, defaultPermissionsClass);
                 permissionsClass = defaultPermissionsClass;
-            } else { //try to instantiate
+            } else { // try to instantiate
                 Classes.getClassFactory().newInstance(permissionsClass, new LinkedList<Permission>(), session, configuration);
                 log.info("Using {} for resolving permissions.", permissionsClass);
             }
@@ -167,7 +167,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
             log.warn("Cannot instantiate '{}'. The permissionClass must have constructor with exact same arguments like '{}'. Using the default permission class '{}' instead.", permissionsClass, defaultPermissionsClass);
             permissionsClass = defaultPermissionsClass;
 
-        } catch (Exception e) { //use default permission class if any exception occurs
+        } catch (Exception e) { // use default permission class if any exception occurs
             log.warn("Cannot instantiate permissionsClass '{}'. " + warnMessage, permissionsClass, e);
             permissionsClass = defaultPermissionsClass;
         }
@@ -190,7 +190,7 @@ public class MagnoliaAccessProvider extends CombinedProvider {
         for (Principal p : principals) {
             sb.append(" or ").append(p.getName()).append("[").append(p.getClass().getName()).append("]");
         }
-        sb.delete(0,4);
+        sb.delete(0, 4);
         return sb.toString();
     }
 }

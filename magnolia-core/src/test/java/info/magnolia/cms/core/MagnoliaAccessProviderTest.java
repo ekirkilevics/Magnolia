@@ -34,8 +34,8 @@
 package info.magnolia.cms.core;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.security.ACLImpl;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.UrlPattern;
@@ -90,7 +90,7 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
     private final Element rootElement = mock(Element.class);
     private final Element pageElement = mock(Element.class);
     private final Element contentNodeElement = mock(Element.class);
-    private final Element[] elements = new Element[]{pageElement,contentNodeElement};
+    private final Element[] elements = new Element[] { pageElement, contentNodeElement };
     private final Path itemPath = mock(Path.class);
     private final Path ancestorPath = mock(Path.class);
     private final Name rootName = mock(Name.class);
@@ -119,9 +119,9 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
         when(systemSession.getNode("/")).thenReturn(page.getJCRNode());
         when(systemSession.getNode("page")).thenReturn(page.getJCRNode());
         when(systemSession.getNode("page/contentNode")).thenReturn(contentNode.getJCRNode());
-        when(((SessionImpl)systemSession).getJCRPath(null)).thenReturn("");
-        when(((SessionImpl)systemSession).getPrincipalManager()).thenReturn(principalManager);
-        when(((SessionImpl)systemSession).getAccessManager()).thenReturn(accessManager);
+        when(((SessionImpl) systemSession).getJCRPath(null)).thenReturn("");
+        when(((SessionImpl) systemSession).getPrincipalManager()).thenReturn(principalManager);
+        when(((SessionImpl) systemSession).getAccessManager()).thenReturn(accessManager);
 
         when(workspace.getPrivilegeManager()).thenReturn(privilegeManager);
         when(workspace.getObservationManager()).thenReturn(observationManager);
@@ -130,12 +130,12 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
         when(rootNode.hasNode(AccessControlConstants.N_ACCESSCONTROL)).thenReturn(true);
         when(rootNode.getNode(AccessControlConstants.N_ACCESSCONTROL)).thenReturn(rootNode);
         when(rootNode.isNodeType(AccessControlConstants.NT_REP_ACCESS_CONTROL)).thenReturn(true);
-//        when(rootNode.getSession()).thenReturn(systemSession);
-//        when(rootNode.sessionContext).thenReturn();
+        // when(rootNode.getSession()).thenReturn(systemSession);
+        // when(rootNode.sessionContext).thenReturn();
 
         when(principalManager.getEveryone()).thenReturn(principal);
-//        when(principalManager.hasPrincipal("website")).thenReturn(true);
-//        when(accessManager.isGranted((Path)anyObject(),(Name)anyObject(),anyInt())).thenReturn(true);
+        // when(principalManager.hasPrincipal("website")).thenReturn(true);
+        // when(accessManager.isGranted((Path)anyObject(),(Name)anyObject(),anyInt())).thenReturn(true);
 
         UrlPattern urlPattern = mock(UrlPattern.class);
         list.add(permissionImpl);
@@ -145,8 +145,8 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
         when(itemPath.getElements()).thenReturn(elements);
         when(itemPath.getAncestor(0)).thenReturn(itemPath);
         when(itemPath.getAncestor(1)).thenReturn(ancestorPath);
-        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
-        when(ancestorPath.getElements()).thenReturn(new Element[]{pageElement});
+        when(itemPath.getElements()).thenReturn(new Element[] { pageElement, contentNodeElement });
+        when(ancestorPath.getElements()).thenReturn(new Element[] { pageElement });
 
         when(rootElement.getName()).thenReturn(rootName);
         when(rootElement.denotesRoot()).thenReturn(true);
@@ -160,66 +160,66 @@ public class MagnoliaAccessProviderTest extends MgnlTestCase {
 
     @Test
     public void testPermissionClassNotDefined() throws RepositoryException {
-        //GIVEN
+        // GIVEN
         MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
         Map<Object, Object> configuration = new HashMap<Object, Object>();
         provider.init(systemSession, configuration);
-        when(itemPath.getElements()).thenReturn(new Element[]{pageElement, contentNodeElement});
-        //WHEN
+        when(itemPath.getElements()).thenReturn(new Element[] { pageElement, contentNodeElement });
+        // WHEN
         CompiledPermissions permissions = provider.compilePermissions(principals);
-        //THEN
+        // THEN
         assertTrue(permissions instanceof DefaultACLBasedPermissions);
     }
 
     @Test
     public void testPermissionClassDefined() throws RepositoryException {
-        //GIVEN
+        // GIVEN
         MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("permissionsClass","info.magnolia.cms.core.NodeTypeBasedPermissions");
-        //WHEN
+        configuration.put("permissionsClass", "info.magnolia.cms.core.NodeTypeBasedPermissions");
+        // WHEN
         provider.init(systemSession, configuration);
         CompiledPermissions permissions = provider.compilePermissions(principals);
-        //THEN
+        // THEN
         assertTrue(permissions instanceof NodeTypeBasedPermissions);
     }
 
     @Test
     public void testPermissionNonexistingClassDefined() throws RepositoryException {
-        //GIVEN
+        // GIVEN
         MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("permissionsClass","info.magnolia.cms.core.someNonexistingClass");
-        //WHEN
+        configuration.put("permissionsClass", "info.magnolia.cms.core.someNonexistingClass");
+        // WHEN
         provider.init(systemSession, configuration);
         CompiledPermissions permissions = provider.compilePermissions(principals);
-        //THEN
+        // THEN
         assertTrue(permissions instanceof DefaultACLBasedPermissions);
     }
 
     @Test
     public void testPermissionWrongClassDefined() throws RepositoryException {
-        //GIVEN
+        // GIVEN
         MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("permissionsClass","info.magnolia.cms.core.MagnoliaAccessProvider");
-        //WHEN
+        configuration.put("permissionsClass", "info.magnolia.cms.core.MagnoliaAccessProvider");
+        // WHEN
         provider.init(systemSession, configuration);
         CompiledPermissions permissions = provider.compilePermissions(principals);
-        //THEN
+        // THEN
         assertTrue(permissions instanceof DefaultACLBasedPermissions);
     }
 
     @Test
     public void testPermissionWrongClassConstructor() throws RepositoryException {
-        //GIVEN
+        // GIVEN
         MagnoliaAccessProvider provider = new MagnoliaAccessProvider();
         Map<Object, Object> configuration = new HashMap<Object, Object>();
-        configuration.put("permissionsClass","info.magnolia.cms.core.RootOnlyPermissions");
-        //WHEN
+        configuration.put("permissionsClass", "info.magnolia.cms.core.RootOnlyPermissions");
+        // WHEN
         provider.init(systemSession, configuration);
         CompiledPermissions permissions = provider.compilePermissions(principals);
-        //THEN
+        // THEN
         assertTrue(permissions instanceof DefaultACLBasedPermissions);
     }
 }
