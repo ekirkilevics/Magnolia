@@ -356,7 +356,7 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
                         if (dscr.getWriteMethod() != null) {
                             Method method = dscr.getWriteMethod();
                             clearCollection(bean, propertyName);
-                            filterOutWrongValues(dscr, (Map<Object, Object>) value);
+                            filterOutWrongValues(dscr, value);
                             if (dscr.isMap()) {
                                 method.invoke(bean, value);
                             } else if (dscr.isArray()) {
@@ -441,14 +441,23 @@ public class Node2BeanTransformerImpl implements Node2BeanTransformer {
         }
     }
 
-    private void filterOutWrongValues(PropertyTypeDescriptor dscr, Map<Object, Object> value) {
-        Class<?> entryClass = dscr.getCollectionEntryType().getType();
-        Iterator<Map.Entry<Object, Object>> iter = value.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<Object, Object> entry = iter.next();
-            Class<?> realEntryType = entry.getValue().getClass();
-            if (!entryClass.isAssignableFrom(realEntryType)) {
-                iter.remove();
+    private void filterOutWrongValues(PropertyTypeDescriptor dscr, Object value) {
+        if (dscr.getCollectionEntryType() != null) {
+            Iterator<?> it = null;
+            Class<?> entryClass = dscr.getCollectionEntryType().getType();
+            if (dscr.getType().isCollection() && value instanceof Collection) {
+                it = ((Collection) value).iterator();
+            }
+            if (value instanceof Map) {
+                it = ((Map<Object, Object>) value).values().iterator();
+            }
+            if (it != null) {
+                while (it.hasNext()) {
+                    Object obj = it.next();
+                    if (!entryClass.isAssignableFrom(obj.getClass())) {
+                        it.remove();
+                    }
+                }
             }
         }
     }
