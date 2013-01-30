@@ -365,7 +365,7 @@ public class SimpleNavigationTag extends TagSupport {
     public int doEndTag() throws JspException {
         Content activePage = getCurrentActivePage();
         try {
-            while (!ItemType.CONTENT.getSystemName().equals(activePage.getNodeTypeName()) && activePage.getParent() != null) {
+            while (!ItemType.CONTENT.getSystemName().equals(activePage.getNodeTypeName()) && activePage.getJCRNode().getDepth() != 0) {
                 activePage = activePage.getParent();
             }
         } catch (RepositoryException e) {
