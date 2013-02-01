@@ -106,6 +106,8 @@ public class MockNode extends AbstractNode {
 
     private boolean isNew = false;
 
+    private NodeType primaryNodeType;
+
     /**
      * Create a root node (name = ROOT_NODE_NAME) without a session.
      */
@@ -348,6 +350,9 @@ public class MockNode extends AbstractNode {
 
     @Override
     public NodeType getPrimaryNodeType() {
+        if (primaryNodeType != null) {
+            return primaryNodeType;
+        }
         return new MockNodeType(this.primaryType);
     }
 
@@ -672,6 +677,10 @@ public class MockNode extends AbstractNode {
     @Override
     public void setPrimaryType(String primaryType) {
         this.primaryType = primaryType;
+    }
+
+    public void setPrimaryNodeType(NodeType primaryNodeType) {
+        this.primaryNodeType = primaryNodeType;
     }
 
     @Override

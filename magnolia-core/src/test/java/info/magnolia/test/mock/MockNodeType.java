@@ -65,16 +65,25 @@ public class MockNodeType implements NodeType {
     }
 
     public MockNodeType(String nodeTypeName) {
+        this(nodeTypeName, null);
+    }
+
+    public MockNodeType(String nodeTypeName, String[] customNodeTypeHierarchy) {
         this.name = nodeTypeName;
         if(JcrConstants.NT_BASE.equals(nodeTypeName)) {
             return;
         }
         List<MockNodeType> superTypes = new ArrayList<MockNodeType>();
+        if (customNodeTypeHierarchy != null) {
+            for (String type : customNodeTypeHierarchy) {
+                superTypes.add(new MockNodeType(type));
+            }
+        }
         superTypes.add(new MockNodeType(JcrConstants.NT_BASE));
 
-        for(Entry<String, List<String>> entry : nodeTypeHierarchy.entrySet()) {
+        for (Entry<String, List<String>> entry : nodeTypeHierarchy.entrySet()) {
             if(entry.getValue().contains(nodeTypeName)) {
-               superTypes.add(new MockNodeType(entry.getKey()));
+                superTypes.add(new MockNodeType(entry.getKey()));
             }
         }
         this.superTypes = superTypes.toArray(this.superTypes);
