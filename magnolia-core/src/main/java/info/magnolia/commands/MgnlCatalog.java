@@ -51,11 +51,8 @@ import java.util.Map;
  */
 public class MgnlCatalog implements Catalog {
 
-    // ----------------------------------------------------- Instance Variables
     private String name;
     protected Map commands = Collections.synchronizedMap(new HashMap());
-
-    // --------------------------------------------------------- Constructors
 
     public MgnlCatalog() {
     }
@@ -64,7 +61,6 @@ public class MgnlCatalog implements Catalog {
         this.commands = Collections.synchronizedMap(commands);
     }
 
-    // --------------------------------------------------------- Public Methods
     public void addCommand(String name, Command command) {
         commands.put(name, command);
     }

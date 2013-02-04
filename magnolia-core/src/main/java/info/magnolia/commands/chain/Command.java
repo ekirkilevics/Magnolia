@@ -36,6 +36,9 @@ package info.magnolia.commands.chain;
 
 /**
  * A replacement for the org.apache.commons.chain.Command interface.
+ * <blockquote>A Command encapsulates a unit of processing work to be performed,
+ * whose purpose is to examine and/or modify the state of a transaction that is
+ * represented by a Context.</blockquote>
  */
 public interface Command {
 

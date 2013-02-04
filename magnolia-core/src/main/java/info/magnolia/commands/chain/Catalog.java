@@ -37,12 +37,15 @@ import java.util.Iterator;
 
 
 /**
- * Replacement for org.apache.commons.chain.Catalog.
+ * Replacement for org.apache.commons.chain.Catalog. <blockquote>A Catalog is a
+ * collection of named Commands (or Chains) that can be used to retrieve the set
+ * of commands that should be performed based on a symbolic
+ * identifier.</blockquote>
  * 
  */
 public interface Catalog {
 
-    String CATALOG_KEY = "org.apache.commons.chain.CATALOG";
+    // String CATALOG_KEY = "info.magnolia.commands.chain.CATALOG";
 
     void addCommand(String name, Command command);
     Command getCommand(String name);

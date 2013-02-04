@@ -34,6 +34,10 @@
 package info.magnolia.commands;
 
 
+import info.magnolia.commands.chain.Catalog;
+import info.magnolia.commands.chain.Chain;
+import info.magnolia.commands.chain.ChainBase;
+import info.magnolia.commands.chain.Command;
 import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.PropertyTypeDescriptor;
 import info.magnolia.jcr.node2bean.TransformationState;
@@ -51,15 +55,8 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.commands.chain.Catalog;
-import info.magnolia.commands.chain.Chain;
-import info.magnolia.commands.chain.ChainBase;
-import info.magnolia.commands.chain.Command;
-
 /**
 * Command to transform old "impl" reference to implementing class to new "class" node data name for references.
-* @author gjoseph
-* @version $Revision: $ ($Author: $)
 */
 public class CommandTransformer extends Node2BeanTransformerImpl {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CommandTransformer.class);

@@ -38,12 +38,15 @@ import java.util.Iterator;
 
 
 /**
- * Replacement for org.apache.commons.chain.impl.ChainBase.
+ * Replacement for org.apache.commons.chain.impl.ChainBase. Base Chain
+ * implementation.
  * 
  */
 public class ChainBase implements Chain {
 
-    // ----------------------------------------------------------- Constructors
+    protected Command[] commands = new Command[0];
+
+    protected boolean frozen = false;
 
     public ChainBase() {
     }
@@ -70,14 +73,6 @@ public class ChainBase implements Chain {
             addCommand((Command) elements.next());
         }
     }
-
-    // ----------------------------------------------------- Instance Variables
-
-    protected Command[] commands = new Command[0];
-
-    protected boolean frozen = false;
-
-    // ---------------------------------------------------------- Chain Methods
 
     public void addCommand(Command command) {
         if (command == null) {
@@ -141,8 +136,6 @@ public class ChainBase implements Chain {
             return (saveResult);
         }
     }
-
-    // -------------------------------------------------------- Package Methods
 
     Command[] getCommands() {
         return (commands);

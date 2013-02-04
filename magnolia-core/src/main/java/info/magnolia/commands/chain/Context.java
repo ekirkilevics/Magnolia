@@ -36,7 +36,9 @@ package info.magnolia.commands.chain;
 import java.util.Map;
 
 /**
- * Replacement for <code>org.apache.commons.chain.Context</code>.
+ * Replacement for <code>org.apache.commons.chain.Context</code>. <blockquote>A
+ * Context represents the state information that is accessed and manipulated by
+ * the execution of a Command or a Chain.</blockquote>
  */
 public interface Context extends Map {
 
