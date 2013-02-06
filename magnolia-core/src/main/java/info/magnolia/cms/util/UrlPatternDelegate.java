@@ -58,11 +58,19 @@ public class UrlPatternDelegate implements PatternDelegate {
 
     private Object delegate;
 
+    private String originalUrl;
+
+    private SimpleUrlPattern originalUrlPattern;
+
     /**
      * Returns the configured Url.
      */
     public String getUrl() {
         return url;
+    }
+
+    public String getOriginalUrl() {
+        return originalUrl;
     }
 
     /**
@@ -87,6 +95,11 @@ public class UrlPatternDelegate implements PatternDelegate {
         this.hostPattern = new SimpleUrlPattern(host);
     }
 
+    public void setOriginalUrl(String pattern) {
+        this.originalUrl = pattern;
+        this.originalUrlPattern = new SimpleUrlPattern(pattern);
+    }
+
     /**
      * Compares the reques with the url and host patterns.
      * @return <code>true</code> if the pattern matches the configured host (if set) and url (if set)
@@ -102,6 +115,10 @@ public class UrlPatternDelegate implements PatternDelegate {
 
         if (urlPattern != null) {
             match = urlPattern.match(MgnlContext.getAggregationState().getCurrentURI());
+        }
+
+        if (originalUrlPattern != null) {
+            match = originalUrlPattern.match(MgnlContext.getAggregationState().getOriginalURI());
         }
 
         return match;
