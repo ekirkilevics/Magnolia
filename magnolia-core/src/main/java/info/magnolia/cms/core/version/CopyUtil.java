@@ -125,7 +125,7 @@ public final class CopyUtil {
             // and there's no need to update its properties
 
             // persist everything (just to be sure)
-            getSession().getRootNode().getSession().save();
+            getSession().save();
 
         }
         // copy all child nodes that need to be versioned under this root
@@ -265,48 +265,51 @@ public final class CopyUtil {
     }
 
     /**
-     * Copy all child nodes from node1 to node2.
+     * Copy all child nodes from source to destination.
      */
-    private void copyAllChildNodes(Node node1, Node node2, Predicate filter)
-            throws RepositoryException {
-        NodeIterator children = new FilteringNodeIterator(node1.getNodes(), filter);
+    private void copyAllChildNodes(Node source, Node destination, Predicate filter) throws RepositoryException {
+        NodeIterator children = new FilteringNodeIterator(source.getNodes(), filter);
         while (children.hasNext()) {
             Node child = children.nextNode();
-            this.clone(child, node2, filter, false);
+            this.clone(child, destination, filter, false);
         }
     }
 
-    public void clone(Node node, Node parent, Predicate filter, boolean removeExisting)
-            throws RepositoryException {
+    public void clone(Node sourceNode, Node destinationParent, Predicate filter, boolean removeExisting) throws RepositoryException {
         try {
-            // it seems to be a bug in jackrabbit - cloning does not work if the node with the same
-            // identifier
-            // exist, "removeExisting" has no effect
-            // if node exist with the same UUID, simply update non protected properties
-            String workspaceName = ContentRepository.getInternalWorkspaceName(parent.getSession().getWorkspace().getName());
-            Node existingNode = null;
-            if (node.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
-                existingNode = getSession(workspaceName).getNodeByIdentifier(node.getIdentifier());
+            // it seems to be a bug in jackrabbit - cloning does not work if the node with the same identifier
+            // exist, "removeExisting" has no effect if node exist with the same UUID, simply update non protected properties
+            String workspaceName = ContentRepository.getInternalWorkspaceName(destinationParent.getSession().getWorkspace().getName());
+            Node existingNodeAtDestination = null;
+            if (sourceNode.isNodeType(MgnlNodeType.MIX_REFERENCEABLE)) {
+                existingNodeAtDestination = getSession(workspaceName).getNodeByIdentifier(sourceNode.getIdentifier());
+                // ok, we found matching node at destination ... have to deal with it below
             }
             if (removeExisting) {
-                if (existingNode != null) {
-                    existingNode.remove();
+                if (existingNodeAtDestination != null) {
+                    // remove matching node at destination
+                    existingNodeAtDestination.remove();
+                    // persist removal at destination
+                    destinationParent.getSession().save();
                 }
-                parent.getSession().save();
-                this.clone(node, parent);
+                this.clone(sourceNode, destinationParent);
                 return;
             }
-            if (existingNode == null) {
+            if (existingNodeAtDestination == null) {
                 // Will end up w/ PNFE in case node doesn't exist. Using exception for flow handling
                 // is not great, but we can't avoid it since same situation can occur also when
                 // checking by UUID and there's no test for existing UUID :(
-                existingNode = parent.getNode(node.getName());
+                existingNodeAtDestination = destinationParent.getNode(sourceNode.getName());
             }
-            this.removeProperties(existingNode);
-            this.updateProperties(node, existingNode);
-            NodeIterator children = new FilteringNodeIterator(node.getNodes(), filter);
+            // when we get here, we are not removing matching child at destination but updating it's props and children instead
+            // this is the case for restoring versions as we do not want to accidentally remove any non versioned sub nodes (e.g. sub pages or sub types in case of data module)
+            this.removeProperties(existingNodeAtDestination);
+            this.updateProperties(sourceNode, existingNodeAtDestination);
+            //persist update of existing child at destination
+            destinationParent.getSession().save();
+            NodeIterator children = new FilteringNodeIterator(sourceNode.getNodes(), filter);
             while (children.hasNext()) {
-                this.clone(children.nextNode(), existingNode, filter, removeExisting);
+                this.clone(children.nextNode(), existingNodeAtDestination, filter, removeExisting);
             }
         }
         catch (ItemNotFoundException e) {
@@ -315,7 +318,7 @@ public final class CopyUtil {
             // clone the node later
         }
         // its safe to clone if UUID does not exist in this workspace
-        this.clone(node, parent);
+        this.clone(sourceNode, destinationParent);
     }
 
     private void clone(Node node, Node parent) throws RepositoryException {
