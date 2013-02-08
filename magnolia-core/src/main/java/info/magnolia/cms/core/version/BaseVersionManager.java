@@ -447,9 +447,9 @@ public abstract class BaseVersionManager {
                     catch (RepositoryException re) {
                         if (log.isDebugEnabled()) {
                             log.debug("error during restore: " + re.getMessage(), re);
-                            } else {
-                                log.error("failed to restore versioned node, reverting all changes make to this node");
-                                }
+                        } else {
+                            log.error("failed to restore versioned node, reverting all changes make to this node");
+                        }
                         destinationNode.refresh(false);
                         throw re;
                     }
