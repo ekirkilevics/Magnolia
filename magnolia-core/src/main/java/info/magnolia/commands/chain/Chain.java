@@ -35,8 +35,9 @@ package info.magnolia.commands.chain;
 
 
 /**
- * Replacement for org.apache.commons.chain.Chain.
- * 
+ * Replacement for org.apache.commons.chain.Chain. <blockquote>A Chain
+ * represents a configured list of Commands that will be executed in order to
+ * perform processing on a specified Context.</blockquote>
  */
 public interface Chain extends Command {
 

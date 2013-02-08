@@ -35,7 +35,9 @@ package info.magnolia.commands.chain;
 
 
 /**
- * A replacement for org.apache.commons.chain.Filter.
+ * A replacement for org.apache.commons.chain.Filter. <blockquote>A Filter is a
+ * specialized Command that also expects the Chain that is executing it to call
+ * the postprocess() method if it called the execute() method.</blockquote>
  * 
  */
 public interface Filter extends Command {
