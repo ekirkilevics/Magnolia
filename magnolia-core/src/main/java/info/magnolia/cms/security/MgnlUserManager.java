@@ -71,7 +71,6 @@ import javax.jcr.ValueFormatException;
 import javax.jcr.query.Query;
 import javax.security.auth.Subject;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,8 +137,13 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                     // setting value to null would remove existing properties anyway, so no need to create a
                     // not-yet-existing-one first and then set it to null.
                     if(propertyValue != null || PropertyUtil.getPropertyOrNull(userNode, propertyName) != null){
-                        userNode.setProperty(propertyName, propertyValue);
-                        session.save();
+                        if(StringUtils.equals(propertyName, PROPERTY_PASSWORD)){
+                            setPasswordProperty(userNode, propertyValue.getString());
+                        }
+                        else{
+                            userNode.setProperty(propertyName, propertyValue);
+                            session.save();
+                       }
                     }
                 }
 
@@ -166,8 +170,13 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
                     // setting value to null would remove existing properties anyway, so no need to create a
                     // not-yet-existing-one first and then set it to null.
                     if (propertyName != null) {
-                        userNode.setProperty(propertyName, propertyValue);
-                        session.save();
+                        if(StringUtils.equals(propertyName, PROPERTY_PASSWORD)){
+                            setPasswordProperty(userNode, propertyValue);
+                        }
+                        else{
+                            userNode.setProperty(propertyName, propertyValue);
+                            session.save();
+                        }
                     }
                 } catch (RepositoryException e) {
                     session.refresh(false);
@@ -472,7 +481,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     }
 
     protected String encodePassword(String clearPassword) {
-        return new String(Base64.encodeBase64(clearPassword.getBytes()));
+        return SecurityUtil.getBCrypt(clearPassword);
     }
 
     protected void validateUsername(String name) {

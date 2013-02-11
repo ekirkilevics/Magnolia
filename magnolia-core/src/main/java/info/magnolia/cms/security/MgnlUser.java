@@ -245,7 +245,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Integer>(RepositoryConstants.USERS) {
             @Override
             public Integer doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/" + getRealm() + "/" + getName());
+                Node userNode = session.getNode(getPath());
                 if (!userNode.hasProperty("failedLoginAttempts")){
                     userNode.setProperty("failedLoginAttempts", 0);
                     session.save();
@@ -258,7 +258,7 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return MgnlContext.doInSystemContext(new SilentSessionOp<Calendar>(RepositoryConstants.USERS) {
             @Override
             public Calendar doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode("/" + getRealm() + "/" + getName());
+                Node userNode = session.getNode(getPath());
                 if (!userNode.hasProperty("releaseTime")){
                     userNode.setProperty("releaseTime", 0);
                     session.save();
