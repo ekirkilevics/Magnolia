@@ -186,14 +186,14 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
                     log.warn("Account " + this.name + " was locked for " + getTimeLock() + " minute(s) due to high number of failed login attempts.");
                 }
             }
-            if(user instanceof MgnlUser){
-                MgnlUser mgnlUser = (MgnlUser) user;
-                UserManager userManager = getUserManager();
-                if (getMaxAttempts() > 0 && !UserManager.ANONYMOUS_USER.equals(mgnlUser.getName()) && mgnlUser.getFailedLoginAttempts() > 0){
-                    userManager.setProperty(mgnlUser, "failedLoginAttempts", ValueFactoryImpl.getInstance().createValue(0));
-                }
-            }
             throw new FailedLoginException("Passwords do not match");
+        }
+        if(user instanceof MgnlUser){
+            MgnlUser mgnlUser = (MgnlUser) user;
+            UserManager userManager = getUserManager();
+            if (getMaxAttempts() > 0 && !UserManager.ANONYMOUS_USER.equals(mgnlUser.getName()) && mgnlUser.getFailedLoginAttempts() > 0){
+                userManager.setProperty(mgnlUser, "failedLoginAttempts", ValueFactoryImpl.getInstance().createValue(0));
+            }
         }
     }
 
