@@ -34,6 +34,8 @@
 package info.magnolia.templating.freemarker;
 
 import static org.junit.Assert.assertEquals;
+
+import info.magnolia.freemarker.FreemarkerConfig;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import info.magnolia.rendering.template.TemplateDefinition;
 import info.magnolia.rendering.template.configured.ConfiguredTemplateDefinition;
@@ -109,7 +111,7 @@ public class RenderableDefinitionModelTest {
 
     // TODO -- this could be moved elsewhere for reuse, if we let the model factory be a parameter of the test method for instance
     public static void doTestFreemarkerRendering(String expectedResult, String testTemplate, Map<String, ConfiguredTemplateDefinition> root) throws TemplateException, IOException {
-        final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(null /* not needed in the context of this test*/) {
+        final MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(new FreemarkerConfig()) {
             @Override
             protected ModelFactory getModelFactory(Class clazz) {
                 if (TemplateDefinition.class.isAssignableFrom(clazz)) {

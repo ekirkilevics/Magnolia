@@ -33,9 +33,7 @@
  */
 package info.magnolia.freemarker.models;
 
-import info.magnolia.context.Context;
 import info.magnolia.freemarker.FreemarkerConfig;
-import info.magnolia.jcr.util.ContentMap;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -85,11 +83,6 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     @Override
     public TemplateModel wrap(Object obj) throws TemplateModelException {
-        if (obj instanceof Context) {
-            // bypass the default SimpleHash wrapping, we need a MapModel.
-            // handleUnknownType() will relay to our ContextModelFactory.
-            return handleUnknownType(obj);
-        }
 
         // wrap enums
         // can't do this later, as the Class instance passed to getModelFactory() lost the information about its enum.
@@ -98,10 +91,14 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             return getEnumModels().get(enumClassName);
         }
 
-        // since we implement Map FM will always try to use SimpleHash if passed through
-        if (obj != null && (obj instanceof ContentMap)) {
-            return handleUnknownType(obj);
+        // prioritized model factories have precedence over freemarker defaults, typically to bypass wrapping as SimpleHash
+        if (obj != null) {
+            ModelFactory modelFactory = getModelFactory(obj.getClass());
+            if (modelFactory instanceof PrioritizedMagnoliaModelFactory) {
+                return handleUnknownType(obj);
+            }
         }
+
         return super.wrap(obj);
     }
 

@@ -67,7 +67,7 @@ public class ContentMapModel implements TemplateHashModelEx, TemplateNodeModel, 
 
     private static final Logger log = LoggerFactory.getLogger(ContentMapModel.class);
 
-    static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+    static final MagnoliaModelFactory FACTORY = new PrioritizedMagnoliaModelFactory() {
         @Override
         public Class factoryFor() {
             return ContentMap.class;

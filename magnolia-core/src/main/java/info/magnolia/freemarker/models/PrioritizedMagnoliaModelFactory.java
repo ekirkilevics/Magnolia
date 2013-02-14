@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2009-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,34 +33,13 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.MapModel;
-import freemarker.template.AdapterTemplateModel;
-import freemarker.template.ObjectWrapper;
-import info.magnolia.context.Context;
-
-import java.util.Map;
-
 /**
- * Exposes Context instances as different MapModels.
- * <ul>
- *  <li>SimpleMapModel would prevent us from using Context's specific methods</li>
- *  <li>SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods.</li>
- * </ul>
+ * Interface implemented by model factories that requires precedence over the built-in default wrapping in Freemarker.
+ * Typically used to prevent classes implementing {@link java.util.Map} or {@link java.util.Collection} from being
+ * wrapped as SimpleHash and SimpleSequence.
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @see MagnoliaModelFactory
+ * @see MagnoliaObjectWrapper
  */
-class ContextModelFactory implements PrioritizedMagnoliaModelFactory {
-    static final ContextModelFactory INSTANCE = new ContextModelFactory();
-
-    @Override
-    public Class factoryFor() {
-        return Context.class;
-    }
-
-    @Override
-    public AdapterTemplateModel create(Object object, ObjectWrapper wrapper) {
-        return new MapModel((Map) object, (BeansWrapper) wrapper);
-    }
+public interface PrioritizedMagnoliaModelFactory extends MagnoliaModelFactory {
 }
