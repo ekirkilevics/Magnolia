@@ -91,10 +91,11 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             return getEnumModels().get(enumClassName);
         }
 
-        // prioritized model factories have precedence over freemarker defaults, typically to bypass wrapping as SimpleHash
+        // we let model factories have precedence over freemarker defaults, typically used to prevent classes
+        // implementing Map or Collection from being wrapped as SimpleHash and SimpleSequence.
         if (obj != null) {
             ModelFactory modelFactory = getModelFactory(obj.getClass());
-            if (modelFactory instanceof PrioritizedMagnoliaModelFactory) {
+            if (modelFactory != null) {
                 return handleUnknownType(obj);
             }
         }

@@ -63,7 +63,7 @@ public class MagnoliaObjectWrapperTest {
         }
     }
 
-    public static class CustomMapModelFactory implements PrioritizedMagnoliaModelFactory {
+    public static class CustomMapModelFactory implements MagnoliaModelFactory {
 
         @Override
         public Class factoryFor() {
@@ -77,7 +77,7 @@ public class MagnoliaObjectWrapperTest {
     }
 
     @Test
-    public void testPrioritizedModelFactoryHasPrecedence() throws TemplateModelException {
+    public void testModelFactoryHasPrecedence() throws TemplateModelException {
 
         FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
         freemarkerConfig.getModelFactories().add(new CustomMapModelFactory());

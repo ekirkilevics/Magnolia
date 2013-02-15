@@ -51,7 +51,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class ContextModelFactory implements PrioritizedMagnoliaModelFactory {
+class ContextModelFactory implements MagnoliaModelFactory {
     static final ContextModelFactory INSTANCE = new ContextModelFactory();
 
     @Override
