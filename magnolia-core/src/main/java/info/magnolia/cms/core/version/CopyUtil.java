@@ -220,27 +220,27 @@ public final class CopyUtil {
     /**
      * Recursively removes all child nodes from node using specified filter.
      */
-    private void removeNonExistingChildNodes(Node source, Node destination, Predicate filter)
-            throws RepositoryException {
+    private void removeNonExistingChildNodes(Node source, Node destination, Predicate filter) throws RepositoryException {
         // collect all identifiers from the source node hierarchy using the given filter
         NodeIterator children = new FilteringNodeIterator(destination.getNodes(), filter);
         while (children.hasNext()) {
-            Node child = children.nextNode();
+            Node destinationChild = children.nextNode();
             // check if this child exist in source, if not remove it
-            if (child.getDefinition().isAutoCreated()) {
+            if (destinationChild.getDefinition().isAutoCreated()) {
                 continue;
             }
             try {
-                if (child.isNodeType(JcrConstants.MIX_REFERENCEABLE)) {
-                    source.getSession().getNodeByIdentifier(child.getIdentifier());
+                Node sourceChild;
+                if (destinationChild.isNodeType(JcrConstants.MIX_REFERENCEABLE)) {
+                    sourceChild = source.getSession().getNodeByIdentifier(destinationChild.getIdentifier());
                 } else {
-                    source.getNode(child.getName());
+                    sourceChild = source.getNode(destinationChild.getName());
                 }
                 // if exist its ok, recursively remove all sub nodes
-                this.removeNonExistingChildNodes(source, child, filter);
+                this.removeNonExistingChildNodes(sourceChild, destinationChild, filter);
             }
             catch (ItemNotFoundException e) {
-                PropertyIterator referencedProperties = child.getReferences();
+                PropertyIterator referencedProperties = destinationChild.getReferences();
                 if (referencedProperties.getSize() > 0) {
                     // remove all referenced properties, its safe since source workspace cannot have these
                     // properties if node with this UUID does not exist
@@ -248,9 +248,9 @@ public final class CopyUtil {
                         referencedProperties.nextProperty().remove();
                     }
                 }
-                child.remove();
+                destinationChild.remove();
             } catch (PathNotFoundException e) {
-                PropertyIterator referencedProperties = child.getReferences();
+                PropertyIterator referencedProperties = destinationChild.getReferences();
                 if (referencedProperties.getSize() > 0) {
                     // remove all referenced properties, its safe since source workspace cannot have
                     // these
@@ -259,8 +259,10 @@ public final class CopyUtil {
                         referencedProperties.nextProperty().remove();
                     }
                 }
-                child.remove();
+                destinationChild.remove();
             }
+            // persist the changes before moving on
+            destination.getSession().save();
         }
     }
 

@@ -365,7 +365,7 @@ public class SimpleNavigationTag extends TagSupport {
     public int doEndTag() throws JspException {
         Content activePage = getCurrentActivePage();
         try {
-            while (!ItemType.CONTENT.getSystemName().equals(activePage.getNodeTypeName()) && activePage.getLevel() != 0) {
+            while (!ItemType.PAGE.getSystemName().equals(activePage.getNodeTypeName()) && activePage.getLevel() != 0) {
                 activePage = activePage.getParent();
             }
         } catch (RepositoryException e) {
@@ -488,7 +488,10 @@ public class SimpleNavigationTag extends TagSupport {
             List<String> cssClasses = new ArrayList<String>(4);
 
             NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(child, NODEDATA_NAVIGATIONTITLE);
-            String title = nodeData.getString(StringUtils.EMPTY);
+            String title = null;
+            if(nodeData != null){
+                title = nodeData.getString(StringUtils.EMPTY);
+            }
 
             // if nav title is not set, the main title is taken
             if (StringUtils.isEmpty(title)) {
@@ -514,8 +517,7 @@ public class SimpleNavigationTag extends TagSupport {
                 cssClasses.add(CSS_LI_ACTIVE);
             }
             else if (!showChildren) {
-                showChildren = child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(
-                        child.getLevel()).getHandle().equals(child.getHandle());
+                showChildren = child.getLevel() <= activePage.getAncestors().size() && StringUtils.equals(activePage.getAncestor(child.getLevel()).getHandle(), child.getHandle());
             }
 
             if (!showChildren) {
@@ -565,7 +567,10 @@ public class SimpleNavigationTag extends TagSupport {
                 out.println("<strong>");
             }
 
-            String accesskey = child.getNodeData(NODEDATA_ACCESSKEY).getString(StringUtils.EMPTY);
+            String accesskey = null;
+            if(child.getNodeData(NODEDATA_ACCESSKEY) != null){
+                accesskey = child.getNodeData(NODEDATA_ACCESSKEY).getString(StringUtils.EMPTY);
+            }
 
             out.print("<a href=\"");
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());

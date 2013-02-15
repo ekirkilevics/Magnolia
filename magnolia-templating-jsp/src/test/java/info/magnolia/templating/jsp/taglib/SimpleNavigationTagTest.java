@@ -33,7 +33,7 @@
  */
 package info.magnolia.templating.jsp.taglib;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -52,7 +52,6 @@ import javax.servlet.jsp.PageContext;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
@@ -77,91 +76,88 @@ public class SimpleNavigationTagTest {
         MgnlContext.setInstance(null);
     }
 
-    @Ignore
     @Test
     public void testChildren() throws Exception {
         SimpleNavigationTag tag = new SimpleNavigationTag();
-        Content current = createStrictMock(Content.class);
-        Content parent = createStrictMock(Content.class);
-        Content dummy = createStrictMock(Content.class);
-        Content hideInNav = createStrictMock(Content.class);
-        WebContext ctx = createStrictMock(WebContext.class);
-        NodeData bool = createStrictMock(NodeData.class);
-        NodeData string = createStrictMock(NodeData.class);
+        Content current = mock(Content.class);
+        Content parent = mock(Content.class);
+        Content dummy = mock(Content.class);
+        Content hideInNav = mock(Content.class);
+        WebContext ctx = mock(WebContext.class);
+        NodeData bool = mock(NodeData.class);
+        NodeData string = mock(NodeData.class);
         AggregationState aggState = new AggregationState();
         PageContext pageContext = new MockPageContext(new MockServletConfig(), new MockHttpServletRequest(), new MockHttpServletResponse());
         MgnlContext.setInstance(ctx);
-        expect(ctx.getAggregationState()).andReturn(aggState);
+        when(ctx.getAggregationState()).thenReturn(aggState);
         aggState.setCurrentContent(current);
-        expect(current.getNodeTypeName()).andReturn(ItemType.CONTENT.getSystemName());
+        when(current.getNodeTypeName()).thenReturn(ItemType.CONTENT.getSystemName());
         tag.setPageContext(pageContext);
         // start level is 0 by default, so returning 0 here is enough
-        expect(current.getLevel()).andReturn(0);
-        expect(current.getAncestor(0)).andReturn(parent);
+        when(current.getLevel()).thenReturn(0);
+        when(current.getAncestor(0)).thenReturn(parent);
 
         // drawChildren()
-        expect(parent.getChildren(ItemType.CONTENT)).andReturn(Arrays.asList(new Content[] { dummy, hideInNav, current }));
-        expect(parent.getLevel()).andReturn(0);
+        when(parent.getChildren(ItemType.CONTENT)).thenReturn(Arrays.asList(new Content[] { dummy, hideInNav, current }));
+        when(parent.getLevel()).thenReturn(0);
 
         // loop children
-        expect(dummy.getNodeData("hideInNav")).andReturn(bool);
-        expect(bool.getBoolean()).andReturn(new Boolean(false));
+        when(dummy.getNodeData("hideInNav")).thenReturn(bool);
+        when(bool.getBoolean()).thenReturn(new Boolean(false));
 
-        expect(hideInNav.getNodeData("hideInNav")).andReturn(bool);
-        expect(bool.getBoolean()).andReturn(new Boolean(true));
+        when(hideInNav.getNodeData("hideInNav")).thenReturn(bool);
+        when(bool.getBoolean()).thenReturn(new Boolean(true));
 
-        expect(current.getNodeData("hideInNav")).andReturn(bool);
-        expect(bool.getBoolean()).andReturn(new Boolean(false));
+        when(current.getNodeData("hideInNav")).thenReturn(bool);
+        when(bool.getBoolean()).thenReturn(new Boolean(false));
 
         // draw visible children
         // dummy
-        expect(dummy.getNodeData("navTitle")).andReturn(string);
-        expect(string.getString("")).andReturn("dummyTitle");
+        when(dummy.getNodeData("navTitle")).thenReturn(string);
+        when(string.getString("")).thenReturn("dummyTitle");
 
         // test if child is current page
-        expect(current.getHandle()).andReturn("/");
-        expect(dummy.getHandle()).andReturn("/dummy");
+        when(current.getHandle()).thenReturn("/");
+        when(dummy.getHandle()).thenReturn("/dummy");
 
         // test if children should be rendered too
         // the real level would be higher, but so would be bigger the list of ancestors
-        expect(dummy.getLevel()).andReturn(1);
-        expect(current.getAncestors()).andReturn(Arrays.asList(new Content[] {}));
-        expect(dummy.getNodeData("openMenu")).andReturn(bool);
-        expect(bool.getBoolean()).andReturn(false);
-        expect(dummy.getChildren()).andReturn(new ArrayList<Content>());
-        expect(dummy.getLevel()).andReturn(1);
-        expect(current.getLevel()).andReturn(0);
-        expect(dummy.getNodeData("accessKey")).andReturn(string);
-        expect(string.getString("")).andReturn("");
-        expect(dummy.getHandle()).andReturn("/dummy");
+        when(dummy.getLevel()).thenReturn(1);
+        when(current.getAncestors()).thenReturn(Arrays.asList(new Content[] {}));
+        when(dummy.getNodeData("openMenu")).thenReturn(bool);
+        when(bool.getBoolean()).thenReturn(false);
+        when(dummy.getChildren()).thenReturn(new ArrayList<Content>());
+        when(dummy.getLevel()).thenReturn(1);
+        when(current.getLevel()).thenReturn(0);
+        when(dummy.getNodeData("accessKey")).thenReturn(string);
+        when(string.getString("")).thenReturn("");
+        when(dummy.getHandle()).thenReturn("/dummy");
 
         // hideInNav
         // - nothing
 
         // current
-        expect(current.getNodeData("navTitle")).andReturn(string);
-        expect(string.getString("")).andReturn("currentTitle");
+        when(current.getNodeData("navTitle")).thenReturn(string);
+        when(string.getString("")).thenReturn("currentTitle");
 
         // test if child is current page
-        expect(current.getHandle()).andReturn("/");
-        expect(current.getHandle()).andReturn("/current");
+        when(current.getHandle()).thenReturn("/");
+        when(current.getHandle()).thenReturn("/current");
 
         // test if children should be rendered too
         // the real level would be higher, but so would be bigger the list of ancestors
-        expect(current.getLevel()).andReturn(1);
-        expect(current.getAncestors()).andReturn(Arrays.asList(new Content[] {}));
-        expect(current.getNodeData("openMenu")).andReturn(bool);
-        expect(bool.getBoolean()).andReturn(false);
-        expect(current.getChildren()).andReturn(new ArrayList<Content>());
-        expect(current.getLevel()).andReturn(1);
-        expect(current.getLevel()).andReturn(0);
-        expect(current.getNodeData("accessKey")).andReturn(string);
-        expect(string.getString("")).andReturn("");
-        expect(current.getHandle()).andReturn("/current");
+        when(current.getLevel()).thenReturn(1);
+        when(current.getAncestors()).thenReturn(Arrays.asList(new Content[] {}));
+        when(current.getNodeData("openMenu")).thenReturn(bool);
+        when(bool.getBoolean()).thenReturn(false);
+        when(current.getChildren()).thenReturn(new ArrayList<Content>());
+        when(current.getLevel()).thenReturn(1);
+        when(current.getLevel()).thenReturn(0);
+        when(current.getNodeData("accessKey")).thenReturn(string);
+        when(string.getString("")).thenReturn("");
+        when(current.getHandle()).thenReturn("/current");
 
-        Object mocks[] = new Object[] { current, ctx, parent, dummy, hideInNav, bool, string };
-        replay(mocks);
         tag.doEndTag();
-        verify(mocks);
     }
+
 }
