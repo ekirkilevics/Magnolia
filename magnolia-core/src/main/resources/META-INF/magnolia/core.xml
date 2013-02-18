@@ -71,6 +71,10 @@
     <configurer>
       <class>info.magnolia.objectfactory.configuration.LegacyComponentsConfigurer</class>
     </configurer>
+    <configurer>
+      <class>info.magnolia.event.SystemEventBusConfigurer</class>
+    </configurer>
+
     <component>
       <type>info.magnolia.context.WebContextFactory</type>
       <implementation>info.magnolia.context.WebContextFactoryImpl</implementation>
