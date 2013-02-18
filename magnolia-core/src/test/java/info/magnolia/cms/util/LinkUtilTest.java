@@ -55,6 +55,7 @@ public class LinkUtilTest {
     public void setUp() throws Exception {
         link = "server/path/filename.png";
         linkNoExtension = "server/path/filename";
+
         calendar1 = new GregorianCalendar();
         calendar1.set(2000, 1, 1, 1, 1, 1); // 2000-02-01 01:01:01
 
@@ -141,4 +142,19 @@ public class LinkUtilTest {
         // Returns the same link
         assertEquals(link, link1);
     }
+
+    @Test
+    /**
+     * Basic test of removing fingerprint and extension
+     */
+    public void testRemoveFingerprintAndExtensionFromLink() throws Exception {
+        // GIVEN
+
+        // WHEN
+        String link1 = LinkUtil.removeFingerprintAndExtensionFromLink("server/path/filename.2000-02-01-01-01-01.png");
+
+        // THEN
+        assertEquals("server/path/filename", link1);
+    }
+
 }
