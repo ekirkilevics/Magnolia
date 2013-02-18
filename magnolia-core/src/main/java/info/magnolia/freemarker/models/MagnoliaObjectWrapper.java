@@ -84,20 +84,29 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
     @Override
     public TemplateModel wrap(Object obj) throws TemplateModelException {
 
+        if (obj == null) {
+            return super.wrap(null);
+        }
+
         // wrap enums
         // can't do this later, as the Class instance passed to getModelFactory() lost the information about its enum.
-        if (obj != null && (obj instanceof Class) && ((Class) obj).isEnum()) {
+        if ((obj instanceof Class) && ((Class) obj).isEnum()) {
             final String enumClassName = ((Class) obj).getName();
             return getEnumModels().get(enumClassName);
         }
 
-        // we let model factories have precedence over freemarker defaults, typically used to prevent classes
-        // implementing Map or Collection from being wrapped as SimpleHash and SimpleSequence.
-        if (obj != null) {
-            ModelFactory modelFactory = getModelFactory(obj.getClass());
-            if (modelFactory != null) {
-                return handleUnknownType(obj);
-            }
+        // We let our own model factories have precedence over freemarker defaults, typically used to prevent classes
+        // implementing Map or Collection from being wrapped as SimpleHash and SimpleSequence. We intentionally don't
+        // consider model factories created in the super class method getModelFactory(Class) here because that would
+        // side step default wrapping in super.wrap(Object). I.e. the model factory returned for Map is a MapModel
+        // instead of SimpleHash returned by super.wrap(Object).
+        Class<?> clazz = obj.getClass();
+        ModelFactory modelFactory = getModelFactory(clazz, freemarkerConfig.getModelFactories());
+        if (modelFactory == null) {
+            modelFactory = getModelFactory(clazz, DEFAULT_MODEL_FACTORIES);
+        }
+        if (modelFactory != null) {
+            return handleUnknownType(obj);
         }
 
         return super.wrap(obj);
