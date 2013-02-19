@@ -36,9 +36,11 @@ package info.magnolia.freemarker.models;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import org.junit.Test;
@@ -50,7 +52,7 @@ import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.jcr.MockNode;
 
 /**
- *
+ * Test case for {@link MagnoliaObjectWrapper}.
  */
 public class MagnoliaObjectWrapperTest {
 
@@ -108,5 +110,31 @@ public class MagnoliaObjectWrapperTest {
         TemplateModel templateModel = objectWrapper.wrap(new MockContext());
 
         assertTrue(templateModel instanceof MapModel);
+    }
+
+    private static class SimpleBean {
+
+    }
+
+    @Test
+    public void testWrapsBeanAsBeanModel() throws TemplateModelException {
+
+        FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
+        MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(freemarkerConfig);
+
+        TemplateModel templateModel = objectWrapper.wrap(new SimpleBean());
+
+        assertTrue(templateModel instanceof BeanModel);
+    }
+
+    @Test
+    public void testWrapsMapAsSimpleHash() throws TemplateModelException {
+
+        FreemarkerConfig freemarkerConfig = new FreemarkerConfig();
+        MagnoliaObjectWrapper objectWrapper = new MagnoliaObjectWrapper(freemarkerConfig);
+
+        TemplateModel templateModel = objectWrapper.wrap(new HashMap());
+
+        assertTrue(templateModel instanceof SimpleHash);
     }
 }

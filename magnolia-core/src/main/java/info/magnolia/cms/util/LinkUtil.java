@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import java.util.Calendar;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
 /**
@@ -73,6 +74,22 @@ public class LinkUtil {
         }
 
         return fingerprintedLink;
+    }
+
+    /**
+     * Remove the extension and fingerPrint if present.
+     * Example: (print-logo.2012-11-20-12-15-20.pdf --> print-logo)
+     */
+    public static String removeFingerprintAndExtensionFromLink(String originalPath) {
+
+        String subPath = StringUtils.substringBeforeLast(originalPath, ".");
+        // Get Finger print
+        String fingerPrint = StringUtils.substringAfterLast(subPath, ".");
+        if (fingerPrint != null && fingerPrint.matches("\\d{4}-\\d{2}-\\d{2}-\\d{2}-\\d{2}-\\d{2}")) {
+            return StringUtils.substringBeforeLast(subPath, ".");
+        } else {
+            return subPath;
+        }
     }
 
 }
