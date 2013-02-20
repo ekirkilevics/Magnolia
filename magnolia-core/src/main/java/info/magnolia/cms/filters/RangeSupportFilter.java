@@ -79,9 +79,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
             response = wrapResponse(request, response);
 
             // client might just check on us to see if we support ranged requests before actually requesting the content
-            if ("HEAD".equalsIgnoreCase(request.getMethod())) {
-                isServeContent = false;
-            }
+            isServeContent = !"HEAD".equalsIgnoreCase(request.getMethod());
         }
         chain.doFilter(request, response);
 
@@ -92,7 +90,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
     }
 
     /**
-     * RFP defines ony byte ranges, however writers operate on characters which might be more then one byte long. We might be cutting the character in half at the boundary of range which might make some clients unhappy even tho they asked for it. Default value is true.
+     * RFP defines only byte ranges, however writers operate on characters which might be more then one byte long. We might be cutting the character in half at the boundary of range which might make some clients unhappy even tho they asked for it. Default value is true.
      * 
      * @param wrapWriter
      */
