@@ -38,7 +38,8 @@ import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
- * Class that overrides package protected lifecycle methods in its super class.
+ * Class that overrides package protected lifecycle methods in its super class. The super class is in the same package
+ * so its methods are not hidden and can be overridden. The methods in the super class are never called.
  */
 @Singleton
 public class LifecycleExtendsClassWithPackageProtectedMethods extends LifecyclePackageProtectedMethod {

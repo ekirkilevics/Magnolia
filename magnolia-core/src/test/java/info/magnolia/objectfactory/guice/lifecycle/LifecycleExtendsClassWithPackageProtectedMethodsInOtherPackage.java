@@ -40,7 +40,9 @@ import javax.inject.Singleton;
 import info.magnolia.objectfactory.guice.lifecycle.packageprotected.LifecyclePackageProtectedMethod;
 
 /**
- * Class that extends a class in another package and uses the same names as methods in that class.
+ * Class that extends a class in another package that has package protected methods. This class has the same method
+ * signatures as those in the super class but because those are hidden they are not overloaded. Both the methods in
+ * the super class and those in this class are called.
  */
 @Singleton
 public class LifecycleExtendsClassWithPackageProtectedMethodsInOtherPackage extends LifecyclePackageProtectedMethod {

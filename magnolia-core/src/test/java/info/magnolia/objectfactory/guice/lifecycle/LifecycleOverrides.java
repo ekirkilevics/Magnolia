@@ -38,7 +38,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
- * Class that overrides lifecycle methods in its super class.
+ * Class that overrides lifecycle methods in its super class. The methods in the super class are not invoked.
  */
 @Singleton
 public class LifecycleOverrides extends LifecycleSimple {

@@ -37,7 +37,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Base class used for lifecycle objects.
+ * Base class used for lifecycle objects. Provides support for collecting events when lifecycle methods are called in
+ * order to validate if they're called, how many times they're called and if they're called in the right order.
  */
 public class LifecycleBase {
 

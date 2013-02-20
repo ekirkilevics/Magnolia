@@ -40,7 +40,7 @@ import javax.inject.Singleton;
 import info.magnolia.objectfactory.guice.lifecycle.LifecycleBase;
 
 /**
- * Class with package protected lifecycle methods.
+ * Class with package protected lifecycle methods. These methods are called even though they're not public.
  */
 @Singleton
 public class LifecyclePackageProtectedMethod extends LifecycleBase {

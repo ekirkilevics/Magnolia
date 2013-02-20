@@ -38,7 +38,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
- * Class with multiple lifecycle methods.
+ * Class with multiple lifecycle methods. All of them are invoked but the order in which that happens is not defined.
  */
 @Singleton
 public class LifecycleMultiple extends LifecycleBase {

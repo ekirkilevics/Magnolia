@@ -50,7 +50,7 @@ import info.magnolia.objectfactory.guice.lifecycle.packageprotected.LifecyclePac
 
 /**
  * This test case makes sure that @PostConstruct and @PreDestroy is implemented according to JSR250 when used in a class
- * hierarchy and on private methods.
+ * hierarchy and on private and package protected methods.
  *
  * Support for @PreDestroy is currently disabled because it proved unreliable for lazy singletons and scoped objects.
  */
@@ -60,6 +60,11 @@ public class GuiceComponentProviderLifecycleTest {
 
     private List<String> events = new ArrayList<String>();
 
+    /**
+     * Tests the simplest case where a class has public annotated methods and no inheritance is involved.
+     *
+     * @see LifecycleSimple
+     */
     @Test
     public void testSimpleLifeCycle() {
 
@@ -84,6 +89,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests support for having multiple annotated methods. Note that they can be invoked in any order since the order
+     * methods appear in the binary files are not guaranteed to match that in the source files.
+     *
+     * @see LifecycleMultiple
+     */
     @Test
     public void testMultipleAnnotatedMethods() {
 
@@ -108,6 +119,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that methods are invoked in the correct order when inheritance is used. Methods with @PostConstruct are
+     * invoked top down, and methods with @PreDestroy are invoked bottom up.
+     *
+     * @see LifecycleExtends
+     */
     @Test
     public void testExtends() {
 
@@ -134,6 +151,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that the implementation detects overridden methods and invokes them only once. Otherwise it would call
+     * it twice.
+     *
+     * @see LifecycleOverrides
+     */
     @Test
     public void testOverrides() {
 
@@ -158,6 +181,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that methods that override an annotated method in the super class and does not itself declare the
+     * annotation are not called.
+     *
+     * @see LifecycleOverridesRemovesAnnotations
+     */
     @Test
     public void testOverridesRemovesAnnotations() {
 
@@ -180,6 +209,11 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that private lifecycle methods are invoked.
+     *
+     * @see LifecyclePrivateMethods
+     */
     @Test
     public void testPrivateMethods() {
 
@@ -204,6 +238,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that private lifecycle methods in a class hierarchy where method signatures are identical in different
+     * classes are all called.
+     *
+     * @see LifecyclePrivateMethods
+     */
     @Test
     public void testSameNamePrivateMethods() {
 
@@ -230,6 +270,11 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that package protected methods are invoked.
+     *
+     * @see LifecyclePackageProtectedMethod
+     */
     @Test
     public void testLifeCycleOnPackageProtectedMethods() {
 
@@ -254,6 +299,13 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that in a case where a class A that inherits from another class B and has methods with same signature as
+     * package protected methods in that class, methods on both classes A and B are invoked because they were not
+     * overridden.
+     *
+     * @see LifecycleExtendsClassWithPackageProtectedMethodsInOtherPackage
+     */
     @Test
     public void testLifeCycleOnClassThatExtendsClassWithPackageProtectedMethods() {
 
@@ -280,6 +332,12 @@ public class GuiceComponentProviderLifecycleTest {
         }
     }
 
+    /**
+     * Tests that the implementation detects overridden package protected methods and invokes them only one. If it
+     * doesn't they would be invoked twice.
+     *
+     * @see LifecycleExtendsClassWithPackageProtectedMethods
+     */
     @Test
     public void testLifeCycleOnClassThatOverridesPackageProtectedMethods() {
 

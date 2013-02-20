@@ -38,7 +38,8 @@ import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
- * Class with private lifecycle methods using the same names as those in the super class (also private).
+ * Class with private lifecycle methods using the same names as those in the super class (also private). Methods both
+ * in this class and the super class are called.
  */
 @Singleton
 public class LifecycleSameNamePrivateMethods extends LifecyclePrivateMethods {

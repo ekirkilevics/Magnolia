@@ -36,8 +36,7 @@ package info.magnolia.objectfactory.guice.lifecycle;
 import javax.inject.Singleton;
 
 /**
- * Class that overrides lifecycle methods in its super class without annotating them. This means that they will not be
- * called.
+ * Overrides lifecycle methods in its super class without annotating them. This means that they will not be called.
  */
 @Singleton
 public class LifecycleOverridesRemovesAnnotations extends LifecycleOverrides {

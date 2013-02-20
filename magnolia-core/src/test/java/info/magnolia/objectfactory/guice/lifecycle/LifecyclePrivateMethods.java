@@ -38,7 +38,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 
 /**
- * Class with private lifecycle methods.
+ * Class with private lifecycle methods. They are called.
  */
 @Singleton
 public class LifecyclePrivateMethods extends LifecycleBase {
