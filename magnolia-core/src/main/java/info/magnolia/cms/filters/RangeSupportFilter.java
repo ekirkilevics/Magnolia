@@ -57,7 +57,6 @@ import org.slf4j.LoggerFactory;
  * This filter will process any incoming requests containing Range or If-Range headers and swallow all produced output except for that matching the requested range.
  * 
  * @version $Id$
- * 
  */
 public class RangeSupportFilter extends AbstractMgnlFilter {
 
@@ -70,6 +69,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
     private boolean isServeContent = true;
 
     long lastModTime = -1;
+
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
@@ -316,7 +316,7 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
             }
 
             private int intSubstring(String value) {
-                return (value.length() > 0) ? Integer.parseInt(value) : -1;
+                return value.length() > 0 ? Integer.parseInt(value) : -1;
             }
 
             @Override
@@ -381,14 +381,13 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
         String[] matchValues = matchHeader.split("\\s*,\\s*");
         Arrays.sort(matchValues);
         return Arrays.binarySearch(matchValues, toMatch) > -1
-        || Arrays.binarySearch(matchValues, "*") > -1;
+                || Arrays.binarySearch(matchValues, "*") > -1;
     }
 
     /**
      * Requested byte range.
      * 
      * @version $Id$
-     * 
      */
     protected class RangeInfo {
         final int start;
