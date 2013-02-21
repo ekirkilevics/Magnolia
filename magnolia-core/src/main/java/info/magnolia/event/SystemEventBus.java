@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,18 +33,10 @@
  */
 package info.magnolia.event;
 
-import info.magnolia.objectfactory.guice.AbstractGuiceComponentConfigurer;
-
-import com.google.inject.name.Names;
-import com.google.inject.util.Providers;
-
 /**
- * Configures an {@link EventBus} bound to the name <code>system</code>.
+ * Defines the name of the system event bus.
  */
-public class SystemEventBusConfigurer extends AbstractGuiceComponentConfigurer {
+public interface SystemEventBus {
 
-    @Override
-    protected void configure() {
-        bind(EventBus.class).annotatedWith(Names.named(SystemEventBus.NAME)).toProvider(Providers.of(new SimpleEventBus()));
-    }
+    public static final String NAME = "system";
 }
