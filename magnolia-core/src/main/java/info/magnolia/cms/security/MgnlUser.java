@@ -58,8 +58,8 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.util.ISO8601;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,29 +242,19 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
     }
 
     public int getFailedLoginAttempts(){
-        return MgnlContext.doInSystemContext(new SilentSessionOp<Integer>(RepositoryConstants.USERS) {
-            @Override
-            public Integer doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode(getPath());
-                if (!userNode.hasProperty("failedLoginAttempts")){
-                    userNode.setProperty("failedLoginAttempts", 0);
-                    session.save();
-                }
-                return (int)userNode.getProperty("failedLoginAttempts").getLong();
-            }});
+        try{
+            return Integer.valueOf(this.properties.get("failedLoginAttempts"));
+        }catch(Exception e){
+            return 0;
+        }
     }
 
     public Calendar getReleaseTime(){
-        return MgnlContext.doInSystemContext(new SilentSessionOp<Calendar>(RepositoryConstants.USERS) {
-            @Override
-            public Calendar doExec(Session session) throws RepositoryException {
-                Node userNode = session.getNode(getPath());
-                if (!userNode.hasProperty("releaseTime")){
-                    userNode.setProperty("releaseTime", 0);
-                    session.save();
-                }
-                return userNode.getProperty("releaseTime").getDate();
-            }});
+        try{
+            return ISO8601.parse(this.properties.get("releaseTime"));
+        }catch(Exception e){
+            return null;
+        }
     }
 
     @Override
@@ -278,8 +268,12 @@ public class MgnlUser extends AbstractUser implements User, Serializable {
         return encodedPassword;
     }
 
+    @Deprecated
+    /**
+     * @deprecated Since 4.5.8. Password is now encoded by BCrypt and therefore cannot be decoded.
+     */
     protected String decodePassword(String encodedPassword) {
-        return new String(Base64.decodeBase64(encodedPassword.getBytes()));
+        throw new UnsupportedOperationException();
     }
 
     @Override
