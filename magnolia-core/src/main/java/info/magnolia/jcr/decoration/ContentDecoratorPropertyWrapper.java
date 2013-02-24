@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.decoration;
 
+import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
+
 import javax.jcr.AccessDeniedException;
 import javax.jcr.Item;
 import javax.jcr.ItemNotFoundException;
@@ -41,8 +43,6 @@ import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.ValueFormatException;
-
-import info.magnolia.jcr.wrapper.DelegatePropertyWrapper;
 
 /**
  * Property wrapper that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
@@ -106,5 +106,24 @@ public class ContentDecoratorPropertyWrapper extends DelegatePropertyWrapper {
 
     protected Property wrapProperty(Property property) {
         return contentDecorator.wrapProperty(property);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof ContentDecoratorPropertyWrapper)) {
+            return false;
+        }
+        ContentDecoratorPropertyWrapper that = (ContentDecoratorPropertyWrapper) obj;
+        return (this.getWrappedProperty() == null ? that.getWrappedProperty() == null : this.getWrappedProperty().equals(that.getWrappedProperty()))
+                && this.contentDecorator == null ? that.contentDecorator == null : this.contentDecorator.equals(that.contentDecorator);
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.getWrappedProperty() == null ? 7 : this.getWrappedProperty().hashCode()) + (this.contentDecorator == null ? 6 : this.contentDecorator.hashCode());
     }
 }

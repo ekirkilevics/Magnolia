@@ -33,7 +33,14 @@
  */
 package info.magnolia.jcr.decoration;
 
+import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
+
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
 import javax.jcr.AccessDeniedException;
+import javax.jcr.Binary;
 import javax.jcr.Item;
 import javax.jcr.ItemExistsException;
 import javax.jcr.ItemNotFoundException;
@@ -44,12 +51,12 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Value;
+import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
-
-import info.magnolia.jcr.wrapper.DelegateNodeWrapper;
 
 /**
  * Node wrapper that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
@@ -173,6 +180,86 @@ public class ContentDecoratorNodeWrapper extends DelegateNodeWrapper {
         return wrapPropertyIterator(super.getReferences());
     }
 
+    @Override
+    public Property setProperty(String name, BigDecimal value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, Binary value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, boolean value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, Calendar value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, double value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, InputStream value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, long value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, Node value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, String value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, String value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value, type));
+    }
+
+    @Override
+    public Property setProperty(String name, String[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, values));
+    }
+
+    @Override
+    public Property setProperty(String name, String[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, values, type));
+    }
+
+    @Override
+    public Property setProperty(String name, Value value) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value));
+    }
+
+    @Override
+    public Property setProperty(String name, Value value, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, value, type));
+    }
+
+    @Override
+    public Property setProperty(String name, Value[] values) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, values));
+    }
+
+    @Override
+    public Property setProperty(String name, Value[] values, int type) throws ValueFormatException, VersionException, LockException, ConstraintViolationException, RepositoryException {
+        return wrapProperty(super.setProperty(name, values, type));
+    }
+
     protected Session wrapSession(Session session) {
         return contentDecorator.wrapSession(session);
     }
@@ -191,5 +278,24 @@ public class ContentDecoratorNodeWrapper extends DelegateNodeWrapper {
 
     protected PropertyIterator wrapPropertyIterator(PropertyIterator propertyIterator) {
         return contentDecorator.wrapPropertyIterator(propertyIterator);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof ContentDecoratorNodeWrapper)) {
+            return false;
+        }
+        ContentDecoratorNodeWrapper that = (ContentDecoratorNodeWrapper) obj;
+        return (this.wrapped == null ? that.wrapped == null : this.wrapped.equals(that.wrapped))
+                && this.contentDecorator == null ? that.contentDecorator == null : this.contentDecorator.equals(that.contentDecorator);
+    }
+
+    @Override
+    public int hashCode() {
+        return (this.wrapped == null ? 7 : this.wrapped.hashCode()) + (this.contentDecorator == null ? 6 : this.contentDecorator.hashCode());
     }
 }

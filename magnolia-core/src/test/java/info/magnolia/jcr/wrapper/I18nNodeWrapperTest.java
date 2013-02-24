@@ -33,11 +33,9 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.LocaleDefinition;
@@ -60,7 +58,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Internationalization wrapper test.
  */
 public class I18nNodeWrapperTest extends MgnlTestCase {
 
@@ -92,39 +90,39 @@ public class I18nNodeWrapperTest extends MgnlTestCase {
         // no language
         Property defaultblah = node.setProperty("blah", "val_blah");
         Property localized = wrappedNode.getProperty("blah");
-        assertEquals(defaultblah, localized);
+        assertEquals(defaultblah.getString(), localized.getString());
 
         // exact match doesn't exist, country_lang match doesn't exist, locale is country only
         Property defaultFoo = node.setProperty("foo", "val_foo");
         defSupport.setLocale(new Locale("de"));
         localized = wrappedNode.getProperty("foo");
-        assertEquals(defaultFoo, localized);
+        assertEquals(defaultFoo.getString(), localized.getString());
 
         // exact match on the lang/country
         Property swissBlah = node.setProperty("blah_de_CH", "val_de_ch_blah");
         defSupport.setLocale(new Locale("de", "CH"));
         localized = wrappedNode.getProperty("blah");
-        assertEquals(swissBlah, localized);
+        assertEquals(swissBlah.getString(), localized.getString());
 
         // supported lang, but not country - should default to the same lang but with diff country
         defSupport.setLocale(new Locale("de", "AT"));
         localized = wrappedNode.getProperty("blah");
-        assertEquals(swissBlah, localized);
+        assertEquals(swissBlah.getString(), localized.getString());
 
         // supported lang, but not w/o country code - should default to the same lang but with different country code
         defSupport.setLocale(new Locale("de"));
         localized = wrappedNode.getProperty("blah");
-        assertEquals(swissBlah, localized);
+        assertEquals(swissBlah.getString(), localized.getString());
 
         // not supported language
         defSupport.setLocale(new Locale("fr"));
         localized = wrappedNode.getProperty("blah");
-        assertEquals(defaultblah, localized);
+        assertEquals(defaultblah.getString(), localized.getString());
 
         // disabled language
         defSupport.setLocale(new Locale("it"));
         localized = wrappedNode.getProperty("blah");
-        assertEquals(defaultblah, localized);
+        assertEquals(defaultblah.getString(), localized.getString());
 
     }
 
