@@ -33,16 +33,16 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import static org.junit.Assert.*;
+
+import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 
 import org.junit.Test;
-
-import info.magnolia.test.mock.jcr.MockNode;
-import info.magnolia.test.mock.jcr.MockSession;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test case for {@link HTMLEscapingNodeWrapper}.
@@ -118,6 +118,53 @@ public class HTMLEscapingNodeWrapperTest {
         HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(referrer, false);
 
         Property property = wrapper.getProperty("reference").getNode().getProperty("text");
+        assertTrue(property instanceof HTMLEscapingPropertyWrapper);
+        assertEquals("&lt;html/&gt;", property.getString());
+    }
+
+    @Test
+    public void testNodeReturnedFromParentIsWrapped() throws Exception {
+        MockSession session = new MockSession("sessionName");
+        Node rootNode = session.getRootNode();
+
+        Node foo = rootNode.addNode("foo");
+        Node fooChild = foo.addNode("fooChild");
+        foo.setProperty("text", "<html/>");
+
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(fooChild, false);
+
+        Property property = wrapper.getParent().getProperty("text");
+        assertTrue(property instanceof HTMLEscapingPropertyWrapper);
+        assertEquals("&lt;html/&gt;", property.getString());
+    }
+
+    @Test
+    public void testNodeReturnedFromAncestorIsWrapped() throws Exception {
+        MockSession session = new MockSession("sessionName");
+        Node rootNode = session.getRootNode();
+
+        Node foo = rootNode.addNode("foo");
+        Node fooChild = foo.addNode("fooChild");
+        foo.setProperty("text", "<html/>");
+
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(fooChild, false);
+
+        Property property = ((Node) wrapper.getAncestor(1)).getProperty("text");
+        assertTrue(property instanceof HTMLEscapingPropertyWrapper);
+        assertEquals("&lt;html/&gt;", property.getString());
+    }
+
+    @Test
+    public void testPropertyFromNodeReturnedFromPropertyIsWrapped() throws Exception {
+        MockSession session = new MockSession("sessionName");
+        Node rootNode = session.getRootNode();
+
+        Node foo = rootNode.addNode("foo");
+        foo.setProperty("text", "<html/>");
+
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(foo, false);
+
+        Property property = wrapper.getProperty("text").getParent().getProperty("text");
         assertTrue(property instanceof HTMLEscapingPropertyWrapper);
         assertEquals("&lt;html/&gt;", property.getString());
     }

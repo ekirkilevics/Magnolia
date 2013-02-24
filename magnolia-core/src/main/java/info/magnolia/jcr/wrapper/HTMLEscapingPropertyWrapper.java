@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.decoration.ContentDecoratorPropertyWrapper;
+
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
@@ -46,12 +48,12 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  * @see HTMLEscapingNodeWrapper
  */
-public class HTMLEscapingPropertyWrapper extends WrappingPropertyWrapper {
+public class HTMLEscapingPropertyWrapper extends ContentDecoratorPropertyWrapper {
 
-    private boolean transformLineBreaks;
+    private final boolean transformLineBreaks;
 
-    public HTMLEscapingPropertyWrapper(Property wrapped, boolean transformLineBreaks, HTMLEscapingNodeWrapper propertyWrapperFactory) {
-        super(wrapped, propertyWrapperFactory, propertyWrapperFactory);
+    public HTMLEscapingPropertyWrapper(Property wrapped, boolean transformLineBreaks) {
+        super(wrapped, new HTMLEscapingNodeWrapper.HTMLEscapingContentDecorator(transformLineBreaks));
         this.transformLineBreaks = transformLineBreaks;
     }
 

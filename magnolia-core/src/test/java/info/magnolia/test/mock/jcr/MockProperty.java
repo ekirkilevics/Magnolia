@@ -57,6 +57,7 @@ import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.nodetype.PropertyDefinition;
 import javax.jcr.version.VersionException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.AbstractProperty;
 
 /**
@@ -68,7 +69,7 @@ import org.apache.jackrabbit.commons.AbstractProperty;
  */
 public class MockProperty extends AbstractProperty {
 
-    private String name;
+    private final String name;
     private MockNode parent;
     private Session session;
     private Value value;
@@ -152,6 +153,9 @@ public class MockProperty extends AbstractProperty {
     @Override
     public Property getProperty() throws ItemNotFoundException, ValueFormatException, RepositoryException {
         String path = getValue().getString();
+        if (StringUtils.isEmpty(path)) {
+            return this;
+        }
         if (!path.startsWith("/")) {
             throw new UnsupportedOperationException("Only absolute path references supported yet. This is a fake class.");
         }

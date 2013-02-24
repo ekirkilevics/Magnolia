@@ -35,10 +35,9 @@ package info.magnolia.jcr.wrapper;
 
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.jcr.decoration.AbstractContentDecorator;
+import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
 
-import javax.jcr.AccessDeniedException;
-import javax.jcr.Item;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -50,12 +49,20 @@ import javax.jcr.RepositoryException;
  * @version $Id$
  * @see info.magnolia.cms.i18n.I18nContentSupport
  */
-public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
+public class I18nNodeWrapper extends ContentDecoratorNodeWrapper {
 
     private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
     public I18nNodeWrapper(Node wrapped) {
-        super(wrapped);
+        super(wrapped, new AbstractContentDecorator() {
+            @Override
+            public Node wrapNode(Node node) {
+                if (node == null) {
+                    return null;
+                }
+                return new I18nNodeWrapper(node);
+            }
+        });
     }
 
     @Override
@@ -64,30 +71,8 @@ public class I18nNodeWrapper extends ChildWrappingNodeWrapper {
     }
 
     @Override
-    public Node wrapNode(Node node) {
-        if (node == null) {
-            return null;
-        }
-        return new I18nNodeWrapper(node);
-    }
-
-    @Override
     public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        return i18nSupport.getProperty(getWrappedNode(), relPath);
+        return wrapProperty(i18nSupport.getProperty(getWrappedNode(), relPath));
     }
 
-    @Override
-    public Node getNode(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrapNode(i18nSupport.getNode(getWrappedNode(), relPath));
-    }
-
-    @Override
-    public Node getParent() throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-        return wrapNode(super.getParent());
-    }
-
-    @Override
-    public Item getAncestor(int depth) throws ItemNotFoundException, AccessDeniedException, RepositoryException {
-        return wrapNode((Node) super.getAncestor(depth));
-    }
 }

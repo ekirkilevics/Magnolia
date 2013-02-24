@@ -36,6 +36,7 @@ package info.magnolia.jcr.decoration;
 import static org.junit.Assert.assertEquals;
 
 import info.magnolia.test.mock.jcr.MockNode;
+import info.magnolia.test.mock.jcr.MockSession;
 
 import javax.jcr.Node;
 import javax.jcr.Property;
@@ -60,6 +61,17 @@ public class ContentDecoratorNodeWrapperTest {
 
         Property test = wrapped.setProperty("test", "west");
         assertEquals(wrapped.getProperty("test"), test);
+
+    }
+
+    @Test
+    public void returnsWrappedPropertyGetPropertyFromProperty() throws Exception {
+        MockSession session = new MockSession("blah");
+        Node node = session.getRootNode().addNode("foo");
+        ContentDecoratorNodeWrapper wrapped = new ContentDecoratorNodeWrapper(node, new ContentDecoratorSuperClass());
+
+        Property test = wrapped.setProperty("test", "/foo/test");
+        assertEquals(wrapped.getProperty("test").getProperty(), test);
 
     }
 }

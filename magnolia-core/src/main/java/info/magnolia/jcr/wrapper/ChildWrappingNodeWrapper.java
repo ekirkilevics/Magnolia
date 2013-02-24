@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.iterator.WrappingNodeIterator;
+
 import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -43,14 +45,14 @@ import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import javax.jcr.version.VersionException;
 
-import info.magnolia.jcr.iterator.WrappingNodeIterator;
-
 
 /**
  * Wrapper providing support for wrapping all child nodes of the wrapped node incl those returned by the NodeIterators.
- *
+ * 
  * @version $Id$
+ * @deprecated since magnolia 4.5.8 use {@link info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper} instead
  */
+@Deprecated
 public abstract class ChildWrappingNodeWrapper extends DelegateNodeWrapper implements NodeWrapperFactory {
 
     public ChildWrappingNodeWrapper(Node wrapped) {

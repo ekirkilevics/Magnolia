@@ -33,28 +33,48 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.decoration.AbstractContentDecorator;
+import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
+
 import javax.jcr.Node;
 import javax.jcr.Property;
 
 
 /**
- * Node wrapper for escaping HTML in property values.
- *
- * @version $Id$
+ * Node wrapper for escaping HTML in property values. This wrapper is essential to prevention of XSS vulnerabilities in templates.
+ * 
  * @see HTMLEscapingPropertyWrapper
  */
-public class HTMLEscapingNodeWrapper extends PropertyAndChildWrappingNodeWrapper {
+public class HTMLEscapingNodeWrapper extends ContentDecoratorNodeWrapper {
 
-    private boolean transformLineBreaks = false;
-
-    public HTMLEscapingNodeWrapper(Node wrapped, boolean transformLineBreaks) {
-        super(wrapped);
-        this.transformLineBreaks = transformLineBreaks;
+    public HTMLEscapingNodeWrapper(Node wrapped, final boolean transformLineBreaks) {
+        super(wrapped, new HTMLEscapingContentDecorator(transformLineBreaks));
     }
 
-    @Override
-    public Property wrapProperty(Property property) {
-        return new HTMLEscapingPropertyWrapper(property, transformLineBreaks, this);
+    /**
+     * HTML escaping content decorator for use by node and property wrapper classes.
+     */
+    public static class HTMLEscapingContentDecorator extends AbstractContentDecorator {
+
+        private final boolean transformLineBreaks;
+
+        public HTMLEscapingContentDecorator(boolean transformLineBreaks) {
+            this.transformLineBreaks = transformLineBreaks;
+        }
+
+        @Override
+        public Node wrapNode(Node node) {
+            if (node == null) {
+                return null;
+            }
+            return new HTMLEscapingNodeWrapper(node, transformLineBreaks);
+        }
+
+        @Override
+        public Property wrapProperty(Property property) {
+            return new HTMLEscapingPropertyWrapper(property, transformLineBreaks);
+        }
     }
+
 
 }
