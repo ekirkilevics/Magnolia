@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,37 +33,19 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
+import info.magnolia.jcr.decoration.AbstractContentDecorator;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.RepositoryException;
 
 /**
- * A Node wrapper implementation which knows about i18n support and uses it to select child nodes and properties.
- *
- * @version $Id$
- * @see info.magnolia.cms.i18n.I18nContentSupport
+ * Content decorator providing internationalization support.
  */
-public class I18nNodeWrapper extends ContentDecoratorNodeWrapper {
-
-    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
-
-    public I18nNodeWrapper(Node wrapped) {
-        super(wrapped, new I18nContentDecorator());
-    }
-
+public final class I18nContentDecorator extends AbstractContentDecorator {
     @Override
-    public boolean hasProperty(String relPath) throws RepositoryException {
-        return i18nSupport.hasProperty(getWrappedNode(), relPath);
+    public Node wrapNode(Node node) {
+        if (node == null) {
+            return null;
+        }
+        return new I18nNodeWrapper(node);
     }
-
-    @Override
-    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrapProperty(i18nSupport.getProperty(getWrappedNode(), relPath));
-    }
-
 }

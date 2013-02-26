@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,37 +33,48 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
+import info.magnolia.jcr.decoration.AbstractContentDecorator;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
-import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
- * A Node wrapper implementation which knows about i18n support and uses it to select child nodes and properties.
- *
- * @version $Id$
- * @see info.magnolia.cms.i18n.I18nContentSupport
+ * HTML escaping content decorator for use by node and property wrapper classes.
  */
-public class I18nNodeWrapper extends ContentDecoratorNodeWrapper {
+public class HTMLEscapingContentDecorator extends AbstractContentDecorator {
 
-    private final I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
+    private final boolean transformLineBreaks;
 
-    public I18nNodeWrapper(Node wrapped) {
-        super(wrapped, new I18nContentDecorator());
+    public HTMLEscapingContentDecorator(boolean transformLineBreaks) {
+        this.transformLineBreaks = transformLineBreaks;
     }
 
     @Override
-    public boolean hasProperty(String relPath) throws RepositoryException {
-        return i18nSupport.hasProperty(getWrappedNode(), relPath);
+    public Node wrapNode(Node node) {
+        if (node == null) {
+            return null;
+        }
+        return new HTMLEscapingNodeWrapper(node, this);
     }
 
     @Override
-    public Property getProperty(String relPath) throws PathNotFoundException, RepositoryException {
-        return wrapProperty(i18nSupport.getProperty(getWrappedNode(), relPath));
+    public Property wrapProperty(Property property) {
+        return new HTMLEscapingPropertyWrapper(property, this);
     }
 
+    public boolean getTransformLineBreaks() {
+        return transformLineBreaks;
+    }
+
+    public String decorate(String raw) {
+        final String str = StringEscapeUtils.escapeHtml(raw);
+        if (transformLineBreaks) {
+            return StringUtils.replace(str, "\n", "<br/>");
+        }
+        return str;
+
+    }
 }

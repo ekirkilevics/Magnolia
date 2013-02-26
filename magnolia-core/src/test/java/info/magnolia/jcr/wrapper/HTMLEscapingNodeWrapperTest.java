@@ -62,6 +62,25 @@ public class HTMLEscapingNodeWrapperTest {
     }
 
     @Test
+    public void testNodeNameIsWrappedAndEncoded() throws Exception {
+        MockNode node = new MockNode("<html>");
+
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(node, false);
+
+        String name = wrapper.getName();
+        assertEquals("&lt;html&gt;", name);
+    }
+
+    @Test
+    public void testPropertyNameIsWrappedAndEncoded() throws Exception {
+        MockNode node = new MockNode();
+        node.setProperty("<html>", "bla");
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(node, false);
+
+        assertEquals("&lt;html&gt;", wrapper.getProperty("<html>").getName());
+    }
+
+    @Test
     public void testLineBreakEncoding() throws Exception {
         MockNode node = new MockNode();
         node.setProperty("text", "line1\nline2");
@@ -167,5 +186,18 @@ public class HTMLEscapingNodeWrapperTest {
         Property property = wrapper.getProperty("text").getParent().getProperty("text");
         assertTrue(property instanceof HTMLEscapingPropertyWrapper);
         assertEquals("&lt;html/&gt;", property.getString());
+    }
+
+    @Test
+    public void testNameHaveToBeEscapedBecauseOfXss() throws Exception {
+        // GIVEN
+        MockSession session = new MockSession("sessionName");
+        Node rootNode = session.getRootNode();
+        Node foo = rootNode.addNode("<>\"&");
+        HTMLEscapingNodeWrapper wrapper = new HTMLEscapingNodeWrapper(foo, false);
+        // WHEN
+        String name = wrapper.getName();
+        // THEN
+        assertEquals("&lt;&gt;&quot;&amp;", name);
     }
 }

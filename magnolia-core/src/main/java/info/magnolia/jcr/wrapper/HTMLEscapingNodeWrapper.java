@@ -33,11 +33,10 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import info.magnolia.jcr.decoration.AbstractContentDecorator;
 import info.magnolia.jcr.decoration.ContentDecoratorNodeWrapper;
 
 import javax.jcr.Node;
-import javax.jcr.Property;
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -45,36 +44,18 @@ import javax.jcr.Property;
  * 
  * @see HTMLEscapingPropertyWrapper
  */
-public class HTMLEscapingNodeWrapper extends ContentDecoratorNodeWrapper {
+public class HTMLEscapingNodeWrapper extends ContentDecoratorNodeWrapper<HTMLEscapingContentDecorator> {
 
     public HTMLEscapingNodeWrapper(Node wrapped, final boolean transformLineBreaks) {
         super(wrapped, new HTMLEscapingContentDecorator(transformLineBreaks));
     }
 
-    /**
-     * HTML escaping content decorator for use by node and property wrapper classes.
-     */
-    public static class HTMLEscapingContentDecorator extends AbstractContentDecorator {
-
-        private final boolean transformLineBreaks;
-
-        public HTMLEscapingContentDecorator(boolean transformLineBreaks) {
-            this.transformLineBreaks = transformLineBreaks;
-        }
-
-        @Override
-        public Node wrapNode(Node node) {
-            if (node == null) {
-                return null;
-            }
-            return new HTMLEscapingNodeWrapper(node, transformLineBreaks);
-        }
-
-        @Override
-        public Property wrapProperty(Property property) {
-            return new HTMLEscapingPropertyWrapper(property, transformLineBreaks);
-        }
+    public HTMLEscapingNodeWrapper(Node wrapped, HTMLEscapingContentDecorator decorator) {
+        super(wrapped, decorator);
     }
 
-
+    @Override
+    public String getName() throws RepositoryException {
+        return getContentDecorator().decorate(super.getName());
+    }
 }

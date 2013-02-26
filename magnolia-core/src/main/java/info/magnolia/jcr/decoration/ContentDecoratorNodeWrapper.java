@@ -60,19 +60,19 @@ import javax.jcr.version.VersionException;
 
 /**
  * Node wrapper that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
- *
- * @version $Id$
+ * 
+ * @param <D> implementation of decorator.
  */
-public class ContentDecoratorNodeWrapper extends DelegateNodeWrapper {
+public class ContentDecoratorNodeWrapper<D extends ContentDecorator> extends DelegateNodeWrapper {
 
-    private final ContentDecorator contentDecorator;
+    private final D contentDecorator;
 
-    public ContentDecoratorNodeWrapper(Node node, ContentDecorator contentDecorator) {
+    public ContentDecoratorNodeWrapper(Node node, D contentDecorator) {
         super(node);
         this.contentDecorator = contentDecorator;
     }
 
-    public ContentDecorator getContentDecorator() {
+    public D getContentDecorator() {
         return contentDecorator;
     }
 

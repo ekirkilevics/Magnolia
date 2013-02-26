@@ -46,14 +46,14 @@ import javax.jcr.ValueFormatException;
 
 /**
  * Property wrapper that applies wrappers and filtering by delegating to a {@link ContentDecorator}.
- *
- * @version $Id$
+ * 
+ * @param <D> decorator implementation.
  */
-public class ContentDecoratorPropertyWrapper extends DelegatePropertyWrapper {
+public class ContentDecoratorPropertyWrapper<D extends ContentDecorator> extends DelegatePropertyWrapper {
 
-    private final ContentDecorator contentDecorator;
+    private final D contentDecorator;
 
-    public ContentDecoratorPropertyWrapper(Property property, ContentDecorator contentDecorator) {
+    public ContentDecoratorPropertyWrapper(Property property, D contentDecorator) {
         super(property);
         this.contentDecorator = contentDecorator;
     }
@@ -125,5 +125,9 @@ public class ContentDecoratorPropertyWrapper extends DelegatePropertyWrapper {
     @Override
     public int hashCode() {
         return (this.getWrappedProperty() == null ? 7 : this.getWrappedProperty().hashCode()) + (this.contentDecorator == null ? 6 : this.contentDecorator.hashCode());
+    }
+
+    public D getContentDecorator() {
+        return contentDecorator;
     }
 }

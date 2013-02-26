@@ -38,9 +38,6 @@ import info.magnolia.jcr.decoration.ContentDecoratorPropertyWrapper;
 import javax.jcr.Property;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * Node wrapper for escaping HTML in property values.
@@ -48,22 +45,27 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  * @see HTMLEscapingNodeWrapper
  */
-public class HTMLEscapingPropertyWrapper extends ContentDecoratorPropertyWrapper {
+public class HTMLEscapingPropertyWrapper extends ContentDecoratorPropertyWrapper<HTMLEscapingContentDecorator> {
 
     private final boolean transformLineBreaks;
 
     public HTMLEscapingPropertyWrapper(Property wrapped, boolean transformLineBreaks) {
-        super(wrapped, new HTMLEscapingNodeWrapper.HTMLEscapingContentDecorator(transformLineBreaks));
+        super(wrapped, new HTMLEscapingContentDecorator(transformLineBreaks));
         this.transformLineBreaks = transformLineBreaks;
+    }
+
+    public HTMLEscapingPropertyWrapper(Property wrapped, HTMLEscapingContentDecorator decorator) {
+        super(wrapped, decorator);
+        this.transformLineBreaks = decorator.getTransformLineBreaks();
     }
 
     @Override
     public String getString() throws RepositoryException {
-        final String str = StringEscapeUtils.escapeHtml(super.getString());
-        if (transformLineBreaks) {
-            return StringUtils.replace(str, "\n", "<br/>");
-        }
-        return str;
+        return getContentDecorator().decorate(super.getString());
     }
 
+    @Override
+    public String getName() throws RepositoryException {
+        return getContentDecorator().decorate(super.getName());
+    }
 }
