@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2011-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,10 +33,8 @@
  */
 package info.magnolia.jcr.wrapper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 import info.magnolia.test.mock.jcr.MockNode;
 
 import java.util.ArrayList;
@@ -48,7 +46,7 @@ import javax.jcr.RepositoryException;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests for DelegateNodeWrapper.
  */
 public class DelegateNodeWrapperTest {
 
@@ -152,6 +150,16 @@ public class DelegateNodeWrapperTest {
         // nodes between "test" and removed wrapper are not the same
         assertNotSame(test.getWrappedNode(), unwrapped.getWrappedNode());
         assertNotSame(thirdOriginal, thirdClone);
+    }
+
+    @Test (expected=IllegalArgumentException.class)
+    public void testWrapAlreadyWrappedWithThisClass() throws RepositoryException {
+        //GIVEN
+        Node node = new MockNode("test");
+        DelegateNodeWrapper test = new FirstDelegate(new SecondDelegate(new ThirdDelegate(new FourthDelegate(node))));
+        //WHEN
+        new SecondDelegate(test);
+        //THEN IllegalArgumentException is thrown
     }
 
     class FirstDelegate extends DelegateNodeWrapper {
