@@ -213,7 +213,6 @@ public class RangeSupportFilter extends AbstractMgnlFilter {
                 } else if (ranges.size() == 1) {
                     RangeInfo range = ranges.get(0);
                     log.debug("Serving range [{}].", range);
-                    response.setContentLength(range.lengthOfRange);
                     // setting 206 header is essential for some clients. The would abort if response is set to 200
                     response.setStatus(SC_PARTIAL_CONTENT);
                     stream = new RangedOutputStream(stream, range);
