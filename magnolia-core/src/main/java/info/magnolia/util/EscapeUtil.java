@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2012 Magnolia International
+ * This file Copyright (c) 2012-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -68,5 +68,14 @@ public class EscapeUtil {
               retValue[i] = unescapeXss(str[i]);
           }
           return retValue;
+    }
+
+    /**
+     * Use when need to be sure the value won't be escaped multiple times.
+     * @param str string to escape
+     * @return escaped string
+     */
+    public static String unescapeEscapeXss(String str) {
+        return escapeXss(unescapeXss(str));
     }
 }
