@@ -311,6 +311,12 @@ public class ExtendingNodeWrapper extends ChildWrappingNodeWrapper {
         return wrapped;
     }
 
+    @Override
+    public void setWrappedNode(Node node) {
+        // this wrapper can be used multiple times (multiple inheritance)
+        super.wrapped = node;
+    }
+
     /**
      * @return true if node extends another, false otherwise
      */

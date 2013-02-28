@@ -34,11 +34,11 @@
 package info.magnolia.cms.filters;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -67,7 +67,6 @@ public class RangeSupportFilterTest {
                 dummy.doFilter(request, response, this);
             }
         };
-        final StringWriter stringWriter = new StringWriter();
         final DummyOutputStream output = new DummyOutputStream();
 
         when(response.getOutputStream()).thenReturn(output);
@@ -94,6 +93,35 @@ public class RangeSupportFilterTest {
         out.write("hi there".getBytes());
         out.flush();
         assertEquals("hi there", output.toString());
+    }
+
+    @Test
+    public void testContentLengthIsNotSet() throws IOException, ServletException {
+        // GIVEN
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        final HttpServletResponse response = mock(HttpServletResponse.class);
+        final DummyFilter dummy = new DummyFilter();
+        final FilterChain chain = new FilterChain() {
+            @Override
+            public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+                dummy.doFilter(request, response, this);
+            }
+        };
+        final DummyOutputStream output = new DummyOutputStream();
+
+        when(response.getOutputStream()).thenReturn(output);
+        when(request.getHeader("Range")).thenReturn("bytes=0-56000");
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getDateHeader("If-Modified-Since")).thenReturn(-1L);
+
+        final RangeSupportFilter filter = new RangeSupportFilter();
+        filter.doFilter(request, response, chain);
+
+        // WHEN
+        dummy.getResponse().getOutputStream();
+
+        // THEN
+        verify(response, times(0)).setContentLength(anyInt());
     }
 
     public static class DummyFilter extends AbstractMgnlFilter {

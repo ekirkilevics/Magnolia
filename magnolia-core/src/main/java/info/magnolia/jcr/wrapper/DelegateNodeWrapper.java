@@ -33,6 +33,8 @@
  */
 package info.magnolia.jcr.wrapper;
 
+import info.magnolia.jcr.util.NodeUtil;
+
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -90,6 +92,9 @@ public abstract class DelegateNodeWrapper implements Node, Cloneable {
     }
 
     public void setWrappedNode(Node node) {
+        if (NodeUtil.isWrappedWith(node, this.getClass())) {
+            throw new IllegalArgumentException(node + " is already wrapped by " + this.getClass().getName() + " and double wrapping is not supported.");
+        }
         this.wrapped = node;
     }
 
