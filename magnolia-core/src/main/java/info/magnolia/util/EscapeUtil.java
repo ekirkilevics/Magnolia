@@ -38,10 +38,17 @@ package info.magnolia.util;
  *    <p>This class escapes only & (&amp;), "(&quot), <(&lt;), >(&gt;)  characters, but doesn't escape others characters.</p>
  *    <p>Use when StringEscapeUtils cannot be used because of escaping more or less character entities.</p>
  */
-public class EscapeUtil {
+public final class EscapeUtil {
+
+    private EscapeUtil() {
+    }
 
     public static String escapeXss(String str) {
-        return str == null ? null : str.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
+        return escape(unescapeXss(str));
+    }
+
+    public static String unescapeXss(String str) {
+        return str == null ? null : str.replace("&amp;", "&").replace("&quot;", "\"").replace("&lt;", "<").replace("&gt;", ">");
     }
 
     public static String[] escapeXss(String[] str) {
@@ -50,13 +57,9 @@ public class EscapeUtil {
         }
         String[] retValue = new String[str.length];
         for(int i = 0; i < retValue.length; i++) {
-            retValue[i] = escapeXss(unescapeXss(str[i]));
+            retValue[i] = escapeXss(str[i]);
         }
         return retValue;
-    }
-
-    public static String unescapeXss(String str) {
-        return str == null ? null : str.replace("&amp;", "&").replace("&quot;", "\"").replace("&lt;", "<").replace("&gt;", ">");
     }
 
     public static String[] unescapeXss(String[] str) {
@@ -70,12 +73,7 @@ public class EscapeUtil {
           return retValue;
     }
 
-    /**
-     * Use when need to be sure the value won't be escaped multiple times.
-     * @param str string to escape
-     * @return escaped string
-     */
-    public static String unescapeEscapeXss(String str) {
-        return escapeXss(unescapeXss(str));
+    private static String escape(String str) {
+        return str == null ? null : str.replace("&", "&amp;").replace("\"", "&quot;").replace("<", "&lt;").replace(">", "&gt;");
     }
 }
