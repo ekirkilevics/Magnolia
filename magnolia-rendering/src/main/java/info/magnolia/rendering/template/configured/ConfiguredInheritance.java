@@ -104,7 +104,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
             return Components.newInstance(predicateClass);
         }
         if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_ALL)) {
-            return new AllComponentsInheritancePredicate();
+            return new AllComponentsAndResourcesInheritancePredicate();
         }
         if (StringUtils.equalsIgnoreCase(StringUtils.trim(components), COMPONENTS_FILTERED)) {
             return new FilteredComponentInheritancePredicate();
@@ -149,12 +149,12 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
     /**
      * Predicate for component inheritance that includes all components.
      */
-    public static class AllComponentsInheritancePredicate extends AbstractPredicate<Node> {
+    public static class AllComponentsAndResourcesInheritancePredicate extends AbstractPredicate<Node> {
 
         @Override
         public boolean evaluateTyped(Node node) {
             try {
-                return NodeUtil.isNodeType(node, NodeTypes.Component.NAME);
+                return NodeUtil.isNodeType(node, NodeTypes.Component.NAME) || NodeUtil.isNodeType(node, NodeTypes.Resource.NAME);
             } catch (RepositoryException e) {
                 throw new RuntimeRepositoryException(e);
             }
@@ -180,7 +180,7 @@ public class ConfiguredInheritance implements InheritanceConfiguration {
 
         @Override
         public int compare(Node lhs, Node rhs) {
-            try { 
+            try {
                 if (lhs.getDepth() != rhs.getDepth())
                     return lhs.getDepth() - rhs.getDepth();
                 return getSiblingIndex(lhs) - getSiblingIndex(rhs);

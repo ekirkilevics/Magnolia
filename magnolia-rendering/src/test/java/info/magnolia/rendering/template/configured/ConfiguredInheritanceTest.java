@@ -33,19 +33,20 @@
  */
 package info.magnolia.rendering.template.configured;
 
+import static org.junit.Assert.*;
+
 import info.magnolia.jcr.predicate.AbstractPredicate;
 import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.objectfactory.Components;
 import info.magnolia.test.mock.MockComponentProvider;
 import info.magnolia.test.mock.jcr.MockNode;
-import org.junit.After;
-import org.junit.Test;
 
-import javax.jcr.Node;
 import java.util.Comparator;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import javax.jcr.Node;
+
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * Test case for {@link ConfiguredInheritance}.
@@ -197,7 +198,7 @@ public class ConfiguredInheritanceTest {
         ConfiguredInheritance inheritance = new ConfiguredInheritance();
         inheritance.setEnabled(true);
         inheritance.setComponents(ConfiguredInheritance.COMPONENTS_ALL);
-        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.AllComponentsInheritancePredicate);
+        assertTrue(inheritance.getComponentPredicate() instanceof ConfiguredInheritance.AllComponentsAndResourcesInheritancePredicate);
     }
 
     @Test

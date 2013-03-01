@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2011-2012 Magnolia International
+ * This file Copyright (c) 2011-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,12 +33,27 @@
  */
 package info.magnolia.templating.inheritance;
 
+import static org.junit.Assert.*;
+
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.MgnlNodeType;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.jcr.inheritance.InheritanceContentDecorator;
+import info.magnolia.rendering.template.InheritanceConfiguration;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance;
+import info.magnolia.rendering.template.configured.ConfiguredInheritance.AllComponentsAndResourcesInheritancePredicate;
+import info.magnolia.test.ComponentsTestUtil;
+import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.jcr.MockSession;
+import info.magnolia.test.mock.jcr.SessionTestUtil;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.Property;
@@ -46,22 +61,14 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import info.magnolia.rendering.template.InheritanceConfiguration;
-import info.magnolia.rendering.template.configured.ConfiguredInheritance;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Test;
 
-import info.magnolia.context.MgnlContext;
-import info.magnolia.test.ComponentsTestUtil;
-import info.magnolia.test.mock.jcr.MockSession;
-import info.magnolia.test.mock.jcr.SessionTestUtil;
-import static org.junit.Assert.assertEquals;
-
 /**
  * Test case for {@link DefaultInheritanceContentDecorator}.
- * 
+ *
  * @version $Id$
  */
 public class DefaultInheritanceContentDecoratorTest {
@@ -126,6 +133,26 @@ public class DefaultInheritanceContentDecoratorTest {
         inheritanceConfiguration.setEnabled(false);
         Session session = wrapSessionForInheritance(sections, "/page1/page2/page3/main", inheritanceConfiguration);
         assertEquals(sections.get("Expected"), sessionToString(session));
+    }
+
+    @Test
+    public void testResourcesInheritance() throws Exception {
+        // GIVEN
+        HierarchyManager hm = MockUtil.createAndSetHierarchyManager("website");
+        Node parentPage = hm.createContent("/", "parentPage", MgnlNodeType.NT_PAGE).getJCRNode();
+        Node childPage = hm.createContent("/parentPage", "childPage", MgnlNodeType.NT_PAGE).getJCRNode();
+        parentPage.addNode("binaryProperty", MgnlNodeType.NT_RESOURCE);
+
+        ConfiguredInheritance configuration = new ConfiguredInheritance();
+        configuration.setPredicateClass(AllComponentsAndResourcesInheritancePredicate.class);
+        configuration.setEnabled(true);
+
+        InheritanceContentDecorator decorator = new DefaultInheritanceContentDecorator(childPage, configuration);
+
+        // WHEN
+        childPage = decorator.wrapNode(childPage);
+        // THEN
+        assertTrue(childPage.hasNode("binaryProperty"));
     }
 
     private Session wrapSessionForInheritance(Map<String, String> sections, String inheritanceNode) throws RepositoryException, IOException {
