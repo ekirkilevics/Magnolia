@@ -33,22 +33,23 @@
  */
 package info.magnolia.cms.security;
 
-import static org.junit.Assert.assertTrue;
-
-import javax.jcr.LoginException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Value;
-import org.apache.jackrabbit.value.StringValue;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.RepositoryConstants;
 import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
+
+import javax.jcr.LoginException;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Value;
+
+import org.apache.jackrabbit.value.StringValue;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for MgnlUserManager with real repository.
@@ -93,6 +94,71 @@ public class MgnlUserManagerRepositoryTest extends RepositoryTestCase{
         user = um.getUser("test");
         String password = user.getPassword();
         assertTrue(SecurityUtil.matchBCrypted("test", password));
+    }
+
+    @Test
+    public void testDoNotCreateUserWhenExistInAnotherRealm() throws PathNotFoundException, RepositoryException {
+        // GIVEN
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.USERS);
+        session.getRootNode().addNode("public");
+        final MgnlUserManager userManagerPublicRealm = new MgnlUserManager();
+        userManagerPublicRealm.setRealmName("public");
+
+        SecuritySupportImpl securityManager = (SecuritySupportImpl) Security.getSecuritySupport();
+        securityManager.addUserManager("admin", um);
+        securityManager.addUserManager("public", userManagerPublicRealm);
+
+        // WHEN - THEN
+        try {
+            userManagerPublicRealm.createUser("test", "test");
+        } catch (IllegalArgumentException e) {
+            assertEquals("User with name test already exists.", e.getMessage());
+            assertFalse(session.getRootNode().hasNode("public/test"));
+            assertNull(userManagerPublicRealm.getUser("test"));
+        }
+    }
+
+    @Test
+    public void testDoNotCreateUserWhenExistInAnotherRealmAndCrossRealmDuplicateNamesAreNotAllowed() throws PathNotFoundException, RepositoryException {
+        // GIVEN
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.USERS);
+        session.getRootNode().addNode("public");
+        final MgnlUserManager userManagerPublicRealm = new MgnlUserManager();
+        userManagerPublicRealm.setRealmName("public");
+
+        SecuritySupportImpl securityManager = (SecuritySupportImpl) Security.getSecuritySupport();
+        securityManager.addUserManager("admin", um);
+        securityManager.addUserManager("public", userManagerPublicRealm);
+
+        // WHEN - THEN
+        try {
+            userManagerPublicRealm.createUser("test", "test");
+        } catch (IllegalArgumentException e) {
+            assertEquals("User with name test already exists.", e.getMessage());
+            assertFalse(session.getRootNode().hasNode("public/test"));
+            assertNull(userManagerPublicRealm.getUser("test"));
+        }
+    }
+
+    @Test
+    public void testCreateUserWhenExistInAnotherRealmAndCrossRealmDuplicateNamesAreAllowed() throws PathNotFoundException, RepositoryException {
+        // GIVEN
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.USERS);
+        session.getRootNode().addNode("public");
+        final MgnlUserManager userManagerPublicRealm = new MgnlUserManager();
+        userManagerPublicRealm.setRealmName("public");
+        userManagerPublicRealm.setAllowCrossRealmDuplicateNames(true);
+
+        SecuritySupportImpl securityManager = (SecuritySupportImpl) Security.getSecuritySupport();
+        securityManager.addUserManager("admin", um);
+        securityManager.addUserManager("public", userManagerPublicRealm);
+
+        // WHEN
+        userManagerPublicRealm.createUser("test", "test");
+
+        // THEN
+        assertNotNull(session.getNode("/public/test"));
+        assertNotNull(userManagerPublicRealm.getUser("test"));
     }
 
     @After

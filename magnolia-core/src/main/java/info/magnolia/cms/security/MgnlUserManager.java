@@ -34,6 +34,7 @@
 package info.magnolia.cms.security;
 
 import static info.magnolia.cms.security.SecurityConstants.*;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
@@ -93,6 +94,8 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
     public static final String NODE_ACLUSERS = "acl_users";
 
     private String realmName;
+
+    private boolean allowCrossRealmDuplicateNames = false;
 
     private int maxFailedLoginAttempts;
 
@@ -212,6 +215,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
 
     public String getRealmName() {
         return realmName;
+    }
+
+    public void setAllowCrossRealmDuplicateNames(boolean allowCrossRealmDuplicateNames) {
+        this.allowCrossRealmDuplicateNames = allowCrossRealmDuplicateNames;
+    }
+
+    public boolean isAllowCrossRealmDuplicateNames() {
+        return allowCrossRealmDuplicateNames;
     }
 
     /**
@@ -488,7 +499,14 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException(name + " is not a valid username.");
         }
-        if (Security.getUserManager().getUser(name) != null) {
+
+        User user;
+        if (isAllowCrossRealmDuplicateNames()) {
+            user = this.getUser(name);
+        } else {
+            user = Security.getUserManager().getUser(name);
+        }
+        if (user != null) {
             throw new IllegalArgumentException("User with name " + name + " already exists.");
         }
     }
