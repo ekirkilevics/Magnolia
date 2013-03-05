@@ -224,7 +224,7 @@ public final class CopyUtil {
         NodeIterator children = new FilteringNodeIterator(node1.getNodes(), filter);
         while (children.hasNext()) {
             Node child = children.nextNode();
-            this.clone(child, node2, filter, false);
+            this.clone(child, node2, filter, true);
         }
     }
 

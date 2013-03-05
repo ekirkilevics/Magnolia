@@ -38,6 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.MgnlNodeType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.Rule;
@@ -53,6 +54,7 @@ import java.util.Collections;
 
 import javax.jcr.LoginException;
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.version.Version;
@@ -199,6 +201,106 @@ public class BaseVersionManagerTest extends RepositoryTestCase {
         assertEquals("v3title", versionedNode.getProperty("title").getString());
         assertTrue(versionedNode.hasNode("v3child"));
         assertEquals("", versionManager.getSystemNode(versionedNode).getProperty(ContentVersion.VERSION_USER).getString());
+    }
+    
+    @Test
+    public void testCreateAndRestoreVersionAndCheckOrder() throws RepositoryException {
+        // GIVEN
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        VersionManager versionMan = VersionManager.getInstance();
+        Node node = session.getRootNode().addNode("page", MgnlNodeType.NT_PAGE);
+        node.addNode("component0", MgnlNodeType.NT_COMPONENT);
+        node.addNode("component1", MgnlNodeType.NT_COMPONENT);
+        node.addNode("component2", MgnlNodeType.NT_COMPONENT);
+        node.addNode("component3", MgnlNodeType.NT_COMPONENT);
+        Node area = node.addNode("area", MgnlNodeType.NT_AREA);
+        area.addNode("sub0", MgnlNodeType.NT_COMPONENT);
+        area.addNode("sub1", MgnlNodeType.NT_COMPONENT);
+        session.save();
+        Version version = versionMan.addVersion(node);
+
+        Node nodeInVersionWS = versionMan.getVersionedNode(node);
+        // sanity check
+        NodeIterator iterator = nodeInVersionWS.getNodes("compo*");
+        assertEquals("component0", iterator.nextNode().getName());
+        assertEquals("component1", iterator.nextNode().getName());
+        assertEquals("component2", iterator.nextNode().getName());
+        assertEquals("component3", iterator.nextNode().getName());
+        iterator = area.getNodes("sub*");
+        assertEquals("sub0", iterator.nextNode().getName());
+        assertEquals("sub1", iterator.nextNode().getName());
+
+        // WHEN
+        // swap subnodes - put first at the end
+        node.orderBefore("component0", null);
+        // and second before the fourth
+        node.orderBefore("component1", "component3");
+        area.orderBefore("sub0", null);
+        session.save();
+        // sanity check again
+        iterator = node.getNodes("compo*");
+        assertEquals("component2", iterator.nextNode().getName());
+        assertEquals("component1", iterator.nextNode().getName());
+        assertEquals("component3", iterator.nextNode().getName());
+        assertEquals("component0", iterator.nextNode().getName());
+        iterator = area.getNodes("sub*");
+        assertEquals("sub1", iterator.nextNode().getName());
+        assertEquals("sub0", iterator.nextNode().getName());
+
+        // restore
+        node.restore(version.getName(), true);
+
+        // THEN
+        // http://www.day.com/specs/jcr/2.0/23_Orderable_Child_Nodes.html
+        // If a node has orderable child nodes then at any time its child node set has a current order, reflected in the iterator returned by Node.getNodes()(see §5.2.2 Iterating Over Child Items). If a node does not have orderable child nodes then the order of nodes returned by Node.getNodes is not guaranteed and may change at any time.
+        iterator = node.getNodes("compo*");
+        assertEquals("component0", iterator.nextNode().getName());
+        assertEquals("component1", iterator.nextNode().getName());
+        iterator = node.getNode("area").getNodes("sub*");
+        assertEquals("sub0", iterator.nextNode().getName());
+        assertEquals("sub1", iterator.nextNode().getName());
+
+    }
+
+    @Test
+    public void testCreateAndRestoreVersionAndCheckOrderBetweenTwoVersions() throws RepositoryException {
+        // GIVEN
+        Session session = MgnlContext.getJCRSession(RepositoryConstants.WEBSITE);
+        VersionManager versionMan = VersionManager.getInstance();
+        Node node = session.getRootNode().addNode("page", MgnlNodeType.NT_PAGE);
+        node.addNode("component0", MgnlNodeType.NT_COMPONENT);
+        node.addNode("component1", MgnlNodeType.NT_COMPONENT);
+        session.save();
+        Version version1 = versionMan.addVersion(node);
+
+        // add 3rd and order on top
+        node.addNode("component2", MgnlNodeType.NT_COMPONENT);
+        node.orderBefore("component2", "component0");
+        session.save();
+        // version again
+        Version version2 = versionMan.addVersion(node);
+
+        // WHEN
+        // restore 1st
+        node.restore(version1.getName(), true);
+
+        // THEN
+        NodeIterator iterator = node.getNodes("compo*");
+        assertEquals("component0", iterator.nextNode().getName());
+        assertEquals("component1", iterator.nextNode().getName());
+        // comp2 is gone
+        assertFalse(iterator.hasNext());
+
+        // WHEN
+        // restore 2ndt
+        node.restore(version2.getName(), true);
+
+        // THEN
+        iterator = node.getNodes("compo*");
+        assertEquals("component2", iterator.nextNode().getName());
+        assertEquals("component0", iterator.nextNode().getName());
+        assertEquals("component1", iterator.nextNode().getName());
+
     }
 
     @Override
