@@ -33,14 +33,6 @@
  */
 package info.magnolia.templating.functions;
 
-import java.util.Calendar;
-import javax.inject.Provider;
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-
-import org.apache.jackrabbit.util.ISO8601;
-import org.junit.Before;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 import info.magnolia.cms.core.AggregationState;
@@ -50,6 +42,17 @@ import info.magnolia.jcr.util.NodeTypes;
 import info.magnolia.test.mock.MockContext;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.test.mock.jcr.MockNode;
+
+import java.util.Calendar;
+
+import javax.inject.Provider;
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+
+import org.apache.jackrabbit.util.ISO8601;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests for {@link info.magnolia.templating.functions.TemplatingFunctions#metaData}.
@@ -69,6 +72,11 @@ public class TemplatingFunctionsMetaDataTest {
             }
         };
         functions = new TemplatingFunctions(aggregationProvider);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
