@@ -73,6 +73,7 @@ import javax.jcr.query.Query;
 import javax.security.auth.Subject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -431,6 +432,7 @@ public class MgnlUserManager extends RepositoryBackedSecurityManager implements 
             public MgnlUser doExec(Session session) throws RepositoryException {
                 String uPath = path == null ? "/" + getRealmName() : path;
                 Node userNode = session.getNode(uPath).addNode(name, NodeTypes.User.NAME);
+                userNode.addMixin(JcrConstants.MIX_LOCKABLE);
                 userNode.setProperty("name", name);
                 setPasswordProperty(userNode, pw);
                 userNode.setProperty("language", "en");

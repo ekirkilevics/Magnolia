@@ -41,11 +41,13 @@ import info.magnolia.test.ComponentsTestUtil;
 import info.magnolia.test.RepositoryTestCase;
 
 import javax.jcr.LoginException;
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Value;
 
+import org.apache.jackrabbit.JcrConstants;
 import org.apache.jackrabbit.value.StringValue;
 import org.junit.After;
 import org.junit.Before;
@@ -159,6 +161,17 @@ public class MgnlUserManagerRepositoryTest extends RepositoryTestCase{
         // THEN
         assertNotNull(session.getNode("/public/test"));
         assertNotNull(userManagerPublicRealm.getUser("test"));
+    }
+
+    @Test
+    public void testNewlyCreatedUserNodeHasMixinLockable() throws PathNotFoundException, RepositoryException {
+        // WHEN
+        um.createUser("peter", "peter");
+
+        // THEN
+        Node userNode = MgnlContext.getJCRSession(RepositoryConstants.USERS).getNode("/admin/peter");
+        assertNotNull(userNode);
+        assertTrue(userNode.isNodeType(JcrConstants.MIX_LOCKABLE));
     }
 
     @After
