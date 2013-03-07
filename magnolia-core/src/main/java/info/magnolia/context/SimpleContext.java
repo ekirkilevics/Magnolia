@@ -33,13 +33,17 @@
  */
 package info.magnolia.context;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.core.HierarchyManager;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.jcr.LoginException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 
 /**
@@ -88,6 +92,11 @@ public class SimpleContext extends AbstractMapBasedContext {
     @Override
     public HierarchyManager getHierarchyManager(String workspaceId) {
         return this.ctx.getHierarchyManager(workspaceId);
+    }
+
+    @Override
+    public Session getJCRSession(String workspaceName) throws LoginException, RepositoryException {
+        return this.ctx.getJCRSession(workspaceName);
     }
 
     /**
