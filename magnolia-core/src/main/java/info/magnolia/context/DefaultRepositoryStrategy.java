@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,15 +33,15 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.User;
+import info.magnolia.repository.RepositoryManager;
+
 import javax.inject.Inject;
 import javax.jcr.Credentials;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
-
-import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.User;
-import info.magnolia.repository.RepositoryManager;
 
 /**
  * Uses a user based access manager.
@@ -76,7 +76,12 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
             String pwd = SystemProperty.getProperty("magnolia.connection.jcr.anonymous.password", "anonymous");
             return new SimpleCredentials(user1, pwd.toCharArray());
         }
-        return new SimpleCredentials(user.getName(), user.getPassword().toCharArray());
+        final String password = user.getPassword();
+        if (password == null) {
+            return new SimpleCredentials(user.getName(), "".toCharArray()); //user is already logged into instance, we can pass empty string
+        } else {
+            return new SimpleCredentials(user.getName(), password.toCharArray());
+        }
     }
 
     @Override

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2012 Magnolia International
+ * This file Copyright (c) 2003-2013 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,6 +36,7 @@ package info.magnolia.context;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+
 import info.magnolia.cms.security.User;
 import info.magnolia.repository.DefaultRepositoryManager;
 import info.magnolia.repository.RepositoryManager;
@@ -48,7 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @version $Id$
+ * Tests for DefaultRepositoryStrategy.
  */
 public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
 
@@ -79,6 +80,24 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         // THEN
         assertEquals("user", credentials.getUserID());
         assertEquals("password", new String(credentials.getPassword()));
+    }
+
+    @Test
+    public void testPasswordIsNull() {
+        // GIVEN
+        Context context = mock(Context.class);
+        MgnlContext.setInstance(context);
+        User user = mock(User.class);
+        when(context.getUser()).thenReturn(user);
+        when(user.getName()).thenReturn("user");
+        when(user.getPassword()).thenReturn(null);
+
+        // WHEN
+        SimpleCredentials credentials = (SimpleCredentials) strategy.getCredentials();
+
+        // THEN
+        assertEquals("user", credentials.getUserID());
+        assertEquals("", new String(credentials.getPassword()));
     }
 
     @Override
